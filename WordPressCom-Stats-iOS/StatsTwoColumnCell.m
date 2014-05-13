@@ -2,8 +2,8 @@
 #import "StatsTopPost.h"
 #import "StatsViewByCountry.h"
 #import "StatsTitleCountItem.h"
-//#import "WPImageSource.h"
-//#import "NSString+XMLExtensions.h"
+#import "WPImageSource.h"
+#import "NSString+XMLExtensions.h"
 #import "StatsGroup.h"
 #import "WPStatsStyleGuide.h"
 
@@ -76,9 +76,7 @@ static CGFloat const RowIconWidth = 20.0f;
 - (void)insertData:(StatsTitleCountItem *)cellData {
     self.cellData = cellData;
     
-//  TODO: Fix this
-//    NSString *left = [cellData.title stringByDecodingXMLCharacters];
-    NSString *left = cellData.title;
+    NSString *left = [cellData.title stringByDecodingXMLCharacters];
     NSString *right = [self.numberFormatter stringFromNumber:cellData.count];
     if ([cellData isKindOfClass:[StatsViewByCountry class]]) {
         [self setLeft:left withImageUrl:[(StatsViewByCountry *)cellData imageUrl] right:right titleCell:NO];
@@ -95,7 +93,6 @@ static CGFloat const RowIconWidth = 20.0f;
 - (void)setLinkEnabled:(BOOL)linkEnabled {
     _linkEnabled = linkEnabled;
   
-    // TODO :: Fix this
     UIColor *color = linkEnabled ? [WPStatsStyleGuide baseDarkerBlue] : [WPStatsStyleGuide whisperGrey];
     
     if (_linkEnabled) {
@@ -163,12 +160,12 @@ static CGFloat const RowIconWidth = 20.0f;
         };
 
         if (imageUrl != nil) {
-//            [[WPImageSource sharedSource] downloadImageForURL:imageUrl withSuccess:^(UIImage *image) {
-//                imageView.image = image;
-//                imageView.backgroundColor = [UIColor clearColor];
-//            } failure:^(NSError *error) {
-//                DDLogWarn(@"Unable to download icon %@", error);
-//            }];
+            [[WPImageSource sharedSource] downloadImageForURL:imageUrl withSuccess:^(UIImage *image) {
+                imageView.image = image;
+                imageView.backgroundColor = [UIColor clearColor];
+            } failure:^(NSError *error) {
+                DDLogWarn(@"Unable to download icon %@", error);
+            }];
         }
     }
 

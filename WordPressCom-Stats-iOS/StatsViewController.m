@@ -14,9 +14,9 @@
 #import "StatsTodayYesterdayButtonCell.h"
 #import "StatsTwoColumnCell.h"
 #import "StatsLinkToWebviewCell.h"
-//#import "WPTableViewSectionHeaderView.h"
+#import "WPTableViewSectionHeaderView.h"
 #import "StatsGroup.h"
-//#import "WPNoResultsView.h"
+#import "WPNoResultsView.h"
 #import "WPStatsService.h"
 #import "WPStatsStyleGuide.h"
 
@@ -66,8 +66,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 @property (nonatomic, strong) NSMutableDictionary *showingToday;
 @property (nonatomic, assign) StatsViewsVisitorsUnit currentViewsVisitorsGraphUnit;
 @property (nonatomic, assign) BOOL resultsAvailable;
-//@property (nonatomic, weak) WPNoResultsView *noResultsView;
-@property (nonatomic, weak) UIView *noResultsView;
+@property (nonatomic, weak) WPNoResultsView *noResultsView;
 @property (nonatomic, strong) NSMutableDictionary *expandedLinkGroups;
 
 @end
@@ -183,8 +182,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 - (void)showNoResultsWithTitle:(NSString *)title message:(NSString *)message {
     [_noResultsView removeFromSuperview];
-//    WPNoResultsView *noResultsView = [WPNoResultsView noResultsViewWithTitle:title message:message accessoryView:nil buttonTitle:nil];
-//    _noResultsView = noResultsView;
+    WPNoResultsView *noResultsView = [WPNoResultsView noResultsViewWithTitle:title message:message accessoryView:nil buttonTitle:nil];
+    _noResultsView = noResultsView;
     [self.tableView addSubview:_noResultsView];
 }
 
@@ -584,16 +583,15 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     [self.tableView endUpdates];
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//    NSString *title = [self headerTextForSection:section];
-//    return [WPTableViewSectionHeaderView heightForTitle:title andWidth:CGRectGetWidth(self.view.bounds)];
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    NSString *title = [self headerTextForSection:section];
+    return [WPTableViewSectionHeaderView heightForTitle:title andWidth:CGRectGetWidth(self.view.bounds)];
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-//    WPTableViewSectionHeaderView *header = [[WPTableViewSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
-//    header.title = [self headerTextForSection:section];
-//    return header;
-    return nil;
+    WPTableViewSectionHeaderView *header = [[WPTableViewSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
+    header.title = [self headerTextForSection:section];
+    return header;
 }
 
 - (NSString *)headerTextForSection:(StatsSection)section {

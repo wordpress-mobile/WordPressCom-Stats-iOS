@@ -9,10 +9,12 @@
 + (UIFont *)regularTextFontBold;
 + (UIFont *)subtitleFont;
 + (UIFont *)subtitleFontBold;
++ (UIFont *)tableviewSectionHeaderFont;
 + (UIFont *)tableviewSubtitleFont;
 
 
 // Colors
++ (UIColor *)allTAllShadeGrey;
 + (UIColor *)baseLighterBlue;
 + (UIColor *)baseDarkerBlue;
 + (UIColor *)itsEverywhereGrey;

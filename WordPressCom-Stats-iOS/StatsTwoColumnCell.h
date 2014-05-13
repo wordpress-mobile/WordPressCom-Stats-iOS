@@ -1,11 +1,9 @@
 #import <UIKit/UIKit.h>
 #import "StatsTitleCountItem.h"
-//#import "WPTableViewCell.h"
+#import "WPTableViewCell.h"
 
 
-// TODO - Figure out how to replace WPTableViewCell
-//@interface StatsTwoColumnCell : WPTableViewCell
-@interface StatsTwoColumnCell : UITableViewCell
+@interface StatsTwoColumnCell : WPTableViewCell
 
 @property (nonatomic, assign) BOOL linkEnabled;
 

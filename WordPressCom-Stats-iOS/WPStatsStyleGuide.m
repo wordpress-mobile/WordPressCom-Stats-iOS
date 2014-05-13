@@ -1,11 +1,3 @@
-//
-//  WPStatsStyleGuide.m
-//  WordPressCom-Stats-iOS
-//
-//  Created by Aaron Douglas on 5/13/14.
-//  Copyright (c) 2014 Automattic Inc. All rights reserved.
-//
-
 #import "WPStatsStyleGuide.h"
 
 @implementation WPStatsStyleGuide
@@ -44,12 +36,22 @@
     return [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
 }
 
++ (UIFont *)tableviewSectionHeaderFont
+{
+    return [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+}
+
 + (UIFont *)tableviewSubtitleFont
 {
     return [UIFont fontWithName:@"OpenSans-Light" size:18.0];
 }
 
 #pragma mark - UIColors
+
++ (UIColor *)allTAllShadeGrey
+{
+	return  [UIColor colorWithRed:153/255.0f green:153/255.0f blue:153/255.0f alpha:1.0f];
+}
 
 + (UIColor *)baseLighterBlue
 {

@@ -209,8 +209,7 @@
 
 - (NSString *)urlForViewsVisitorsForUnit:(NSString *)unit
 {
-//    NSInteger quantity = IS_IPAD ? 12 : 7;
-    NSInteger quantity = 7;
+    NSInteger quantity = IS_IPAD ? 12 : 7;
     return [NSString stringWithFormat:@"%@/visits?unit=%@&quantity=%@", self.statsPathPrefix, unit, @(quantity)];
 }
 
