@@ -1,0 +1,24 @@
+PODS:
+  - AFNetworking (1.2.0)
+  - CocoaLumberjack (1.8.1):
+    - CocoaLumberjack/Extensions
+  - CocoaLumberjack/Core (1.8.1)
+  - CocoaLumberjack/Extensions (1.8.1):
+    - CocoaLumberjack/Core
+  - NSObject-SafeExpectations (0.0.1)
+
+DEPENDENCIES:
+  - AFNetworking (= 1.2.0)
+  - CocoaLumberjack (~> 1.8.1)
+  - NSObject-SafeExpectations (from `https://raw.github.com/koke/NSObject-SafeExpectations/master/NSObject-SafeExpectations.podspec`)
+
+EXTERNAL SOURCES:
+  NSObject-SafeExpectations:
+    :podspec: https://raw.github.com/koke/NSObject-SafeExpectations/master/NSObject-SafeExpectations.podspec
+
+SPEC CHECKSUMS:
+  AFNetworking: 3cbae45f61a9f995cdbd56bd571223910d7f4e44
+  CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
+  NSObject-SafeExpectations: 241ab1289cbc33a00307cd025d22883646f2e1f0
+
+COCOAPODS: 0.32.1
