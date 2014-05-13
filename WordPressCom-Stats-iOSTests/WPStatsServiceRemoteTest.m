@@ -3,6 +3,7 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 #import "WPStatsServiceRemote.h"
 #import "AsyncTestHelper.h"
+#import "WordPressComApi.h"
 
 @interface WPStatsServiceRemoteTest : XCTestCase
 {
@@ -17,7 +18,7 @@
 - (void)setUp
 {
     [super setUp];
-    remoteApi = nil;//[[WordPressComApi alloc] initWithOAuthToken:@"moocow"];
+    remoteApi = [[WordPressComApi alloc] initWithOAuthToken:@"moocow"];
     subject = [[WPStatsServiceRemote alloc] initWithRemoteApi:remoteApi andSiteId:@66592863];
 }
 
@@ -33,10 +34,10 @@
     __block BOOL completionCalled = NO;
     ATHStart();
     
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1/batch"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFile:@"stats-batch.json" contentType:@"application/json" responseTime:OHHTTPStubsDownloadSpeedWifi];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-batch.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
 
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

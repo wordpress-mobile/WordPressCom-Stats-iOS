@@ -1,5 +1,6 @@
 #import "WPStatsService.h"
 #import "WPStatsServiceRemote.h"
+#import "WordPressComApi.h"
 
 @interface WPStatsService ()
 
@@ -49,7 +50,9 @@
 - (WPStatsServiceRemote *)remote
 {
     if (!_remote) {
-        _remote = [[WPStatsServiceRemote alloc] initWithRemoteApi:nil andSiteId:self.siteId];
+        WordPressComApi *api = [[WordPressComApi alloc] initWithOAuthToken:self.oauth2Token];
+        _remote = [[WPStatsServiceRemote alloc] initWithRemoteApi:api
+                                                        andSiteId:self.siteId];
     }
 
     return _remote;

@@ -9,7 +9,7 @@
 
 @interface WPStatsServiceRemote ()
 
-@property (nonatomic, strong) id api;
+@property (nonatomic, strong) WordPressComApi *api;
 @property (nonatomic, strong) NSNumber *siteId;
 @property (nonatomic, copy) NSString *statsPathPrefix;
 
@@ -19,7 +19,7 @@
 
 }
 
-- (instancetype)initWithRemoteApi:(id)api andSiteId:(NSNumber *)siteId
+- (instancetype)initWithRemoteApi:(WordPressComApi *)api andSiteId:(NSNumber *)siteId
 {
     self = [super init];
     if (self) {

@@ -4,6 +4,6 @@ pod 'NSObject-SafeExpectations', :podspec => 'https://raw.github.com/koke/NSObje
 pod 'CocoaLumberjack', '~>1.8.1'
 
 target 'WordPressCom-Stats-iOSTests', :exclusive => true do
-    pod 'OHHTTPStubs', '1.1.1'
+    pod 'OHHTTPStubs', '3.1.1'
     pod 'OCMock'
 end

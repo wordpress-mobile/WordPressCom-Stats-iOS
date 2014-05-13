@@ -41,6 +41,8 @@
 		93E367941922A80E000FB32A /* NSString+XMLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367931922A80E000FB32A /* NSString+XMLExtensions.m */; };
 		93E367971922A937000FB32A /* WPTableViewSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367961922A937000FB32A /* WPTableViewSectionHeaderView.m */; };
 		93E3679A1922AA03000FB32A /* NSString+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367991922AA03000FB32A /* NSString+Util.m */; };
+		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
+		93E367A01922BCDB000FB32A /* WordPressComApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3679F1922BCDB000FB32A /* WordPressComApi.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -129,6 +131,9 @@
 		93E367961922A937000FB32A /* WPTableViewSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPTableViewSectionHeaderView.m; sourceTree = "<group>"; };
 		93E367981922AA03000FB32A /* NSString+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Util.h"; sourceTree = "<group>"; };
 		93E367991922AA03000FB32A /* NSString+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Util.m"; sourceTree = "<group>"; };
+		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
+		93E3679E1922BCDB000FB32A /* WordPressComApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WordPressComApi.h; sourceTree = "<group>"; };
+		93E3679F1922BCDB000FB32A /* WordPressComApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WordPressComApi.m; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E746C226D376442480138F6D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -216,6 +221,7 @@
 			children = (
 				93E3677E19226C1C000FB32A /* WPStatsServiceRemoteTest.m */,
 				93E3677F19226C1C000FB32A /* WPStatsServiceTest.m */,
+				93E3679B1922B72E000FB32A /* Test Data */,
 				9396CFC91921096B006A66D7 /* Supporting Files */,
 			);
 			path = "WordPressCom-Stats-iOSTests";
@@ -304,8 +310,18 @@
 				93E3678A1922A5B5000FB32A /* WPTableViewCell.m */,
 				93E367951922A937000FB32A /* WPTableViewSectionHeaderView.h */,
 				93E367961922A937000FB32A /* WPTableViewSectionHeaderView.m */,
+				93E3679E1922BCDB000FB32A /* WordPressComApi.h */,
+				93E3679F1922BCDB000FB32A /* WordPressComApi.m */,
 			);
 			name = "Classes I'm Including For Now";
+			sourceTree = "<group>";
+		};
+		93E3679B1922B72E000FB32A /* Test Data */ = {
+			isa = PBXGroup;
+			children = (
+				93E3679C1922B751000FB32A /* stats-batch.json */,
+			);
+			name = "Test Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -382,6 +398,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93E3679D1922B751000FB32A /* stats-batch.json in Resources */,
 				9396CFCD1921096B006A66D7 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -479,6 +496,7 @@
 				9396CFE719215384006A66D7 /* StatsGroup.m in Sources */,
 				9396CFE919215384006A66D7 /* StatsSummary.m in Sources */,
 				9396CFF9192153DA006A66D7 /* WPStatsServiceRemote.m in Sources */,
+				93E367A01922BCDB000FB32A /* WordPressComApi.m in Sources */,
 				9396D01319215464006A66D7 /* StatsNoResultsCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
