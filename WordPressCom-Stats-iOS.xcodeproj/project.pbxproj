@@ -43,6 +43,7 @@
 		93E3679A1922AA03000FB32A /* NSString+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367991922AA03000FB32A /* NSString+Util.m */; };
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
 		93E367A01922BCDB000FB32A /* WordPressComApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3679F1922BCDB000FB32A /* WordPressComApi.m */; };
+		93E367A41923B5D4000FB32A /* NSDictionary+SafeExpectations.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -134,6 +135,9 @@
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
 		93E3679E1922BCDB000FB32A /* WordPressComApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WordPressComApi.h; sourceTree = "<group>"; };
 		93E3679F1922BCDB000FB32A /* WordPressComApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WordPressComApi.m; sourceTree = "<group>"; };
+		93E367A11923B5D4000FB32A /* NSDictionary+SafeExpectations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SafeExpectations.h"; sourceTree = "<group>"; };
+		93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SafeExpectations.m"; sourceTree = "<group>"; };
+		93E367A31923B5D4000FB32A /* NSObject+SafeExpectations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SafeExpectations.h"; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E746C226D376442480138F6D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -296,10 +300,15 @@
 		93E367851922A540000FB32A /* Classes I'm Including For Now */ = {
 			isa = PBXGroup;
 			children = (
+				93E367A11923B5D4000FB32A /* NSDictionary+SafeExpectations.h */,
+				93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */,
+				93E367A31923B5D4000FB32A /* NSObject+SafeExpectations.h */,
 				93E367981922AA03000FB32A /* NSString+Util.h */,
 				93E367991922AA03000FB32A /* NSString+Util.m */,
 				93E367921922A80E000FB32A /* NSString+XMLExtensions.h */,
 				93E367931922A80E000FB32A /* NSString+XMLExtensions.m */,
+				93E3679E1922BCDB000FB32A /* WordPressComApi.h */,
+				93E3679F1922BCDB000FB32A /* WordPressComApi.m */,
 				93E3678F1922A7DD000FB32A /* WPImageSource.h */,
 				93E367901922A7DD000FB32A /* WPImageSource.m */,
 				93E367861922A562000FB32A /* WPNoResultsView.h */,
@@ -310,8 +319,6 @@
 				93E3678A1922A5B5000FB32A /* WPTableViewCell.m */,
 				93E367951922A937000FB32A /* WPTableViewSectionHeaderView.h */,
 				93E367961922A937000FB32A /* WPTableViewSectionHeaderView.m */,
-				93E3679E1922BCDB000FB32A /* WordPressComApi.h */,
-				93E3679F1922BCDB000FB32A /* WordPressComApi.m */,
 			);
 			name = "Classes I'm Including For Now";
 			sourceTree = "<group>";
@@ -475,6 +482,7 @@
 			files = (
 				9396CFEF19215384006A66D7 /* StatsViewByCountry.m in Sources */,
 				93E367941922A80E000FB32A /* NSString+XMLExtensions.m in Sources */,
+				93E367A41923B5D4000FB32A /* NSDictionary+SafeExpectations.m in Sources */,
 				9396CFED19215384006A66D7 /* StatsTopPost.m in Sources */,
 				93E367911922A7DD000FB32A /* WPImageSource.m in Sources */,
 				9396CFF7192153DA006A66D7 /* WPStatsService.m in Sources */,

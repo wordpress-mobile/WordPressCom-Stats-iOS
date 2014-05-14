@@ -1,5 +1,5 @@
 #import "StatsGroup.h"
-#import <NSObject-SafeExpectations/NSDictionary+SafeExpectations.h>
+#import "NSObject+SafeExpectations.h"
 
 @implementation StatsGroup
 
