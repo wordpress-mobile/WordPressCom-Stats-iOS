@@ -1,5 +1,23 @@
 PODS:
-  - AFNetworking (1.2.0)
+  - AFNetworking (2.2.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.2.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.2.3):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.2.3)
+  - AFNetworking/Security (2.2.3)
+  - AFNetworking/Serialization (2.2.3)
+  - AFNetworking/UIKit (2.2.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - CocoaLumberjack (1.8.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.8.1)
@@ -9,13 +27,13 @@ PODS:
   - OHHTTPStubs (3.1.1)
 
 DEPENDENCIES:
-  - AFNetworking (= 1.2.0)
+  - AFNetworking (= 2.2.3)
   - CocoaLumberjack (~> 1.8.1)
   - OCMock
   - OHHTTPStubs (= 3.1.1)
 
 SPEC CHECKSUMS:
-  AFNetworking: 3cbae45f61a9f995cdbd56bd571223910d7f4e44
+  AFNetworking: ae513199cca79e9d7af2708ccabe2ed075550c42
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   OCMock: 5008fae4b4789b8fc3e48cd7660f2eb5ef8ce89e
   OHHTTPStubs: be1c4263e49191b586d8313dcd6068da6f699d2c
