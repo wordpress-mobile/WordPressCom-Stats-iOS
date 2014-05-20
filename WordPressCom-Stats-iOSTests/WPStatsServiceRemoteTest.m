@@ -3,12 +3,10 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 #import "WPStatsServiceRemote.h"
 #import "AsyncTestHelper.h"
-#import "WordPressComApi.h"
 
 @interface WPStatsServiceRemoteTest : XCTestCase
 {
     WPStatsServiceRemote *subject;
-    id remoteApi;
 }
 
 @end
@@ -18,7 +16,6 @@
 - (void)setUp
 {
     [super setUp];
-    remoteApi = [[WordPressComApi alloc] initWithOAuthToken:@"moocow"];
     subject = [[WPStatsServiceRemote alloc] initWithOAuth2Token:@"token" andSiteId:@66592863];
 }
 
@@ -26,7 +23,6 @@
 {
     [super tearDown];
     subject = nil;
-    remoteApi = nil;
 }
 
 - (void)testMarshallingMappingHappens
