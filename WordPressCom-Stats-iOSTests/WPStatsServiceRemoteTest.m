@@ -19,7 +19,7 @@
 {
     [super setUp];
     remoteApi = [[WordPressComApi alloc] initWithOAuthToken:@"moocow"];
-    subject = [[WPStatsServiceRemote alloc] initWithRemoteApi:remoteApi andSiteId:@66592863];
+    subject = [[WPStatsServiceRemote alloc] initWithOAuth2Token:@"token" andSiteId:@66592863];
 }
 
 - (void)tearDown
