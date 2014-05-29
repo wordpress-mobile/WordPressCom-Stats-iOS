@@ -36,7 +36,6 @@
 		93E3678119226C1C000FB32A /* WPStatsServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3677F19226C1C000FB32A /* WPStatsServiceTest.m */; };
 		93E3678419226DDB000FB32A /* AsyncTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3678319226DDB000FB32A /* AsyncTestHelper.m */; };
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
-		93E367A41923B5D4000FB32A /* NSDictionary+SafeExpectations.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -114,9 +113,6 @@
 		93E3678219226DDB000FB32A /* AsyncTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTestHelper.h; sourceTree = "<group>"; };
 		93E3678319226DDB000FB32A /* AsyncTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTestHelper.m; sourceTree = "<group>"; };
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
-		93E367A11923B5D4000FB32A /* NSDictionary+SafeExpectations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SafeExpectations.h"; sourceTree = "<group>"; };
-		93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SafeExpectations.m"; sourceTree = "<group>"; };
-		93E367A31923B5D4000FB32A /* NSObject+SafeExpectations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SafeExpectations.h"; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E746C226D376442480138F6D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -182,7 +178,6 @@
 		9396CFB41921096B006A66D7 /* WordPressCom-Stats-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				93E367851922A540000FB32A /* Classes I'm Including For Now */,
 				9396CFDA19215356006A66D7 /* UI */,
 				9396CFD91921534E006A66D7 /* Services */,
 				9396CFD819215346006A66D7 /* Model */,
@@ -276,16 +271,6 @@
 				93E3677B19224CF2000FB32A /* WPStatsStyleGuide.m */,
 			);
 			name = UI;
-			sourceTree = "<group>";
-		};
-		93E367851922A540000FB32A /* Classes I'm Including For Now */ = {
-			isa = PBXGroup;
-			children = (
-				93E367A11923B5D4000FB32A /* NSDictionary+SafeExpectations.h */,
-				93E367A21923B5D4000FB32A /* NSDictionary+SafeExpectations.m */,
-				93E367A31923B5D4000FB32A /* NSObject+SafeExpectations.h */,
-			);
-			name = "Classes I'm Including For Now";
 			sourceTree = "<group>";
 		};
 		93E3679B1922B72E000FB32A /* Test Data */ = {
@@ -446,7 +431,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9396CFEF19215384006A66D7 /* StatsViewByCountry.m in Sources */,
-				93E367A41923B5D4000FB32A /* NSDictionary+SafeExpectations.m in Sources */,
 				9396CFED19215384006A66D7 /* StatsTopPost.m in Sources */,
 				9396CFF7192153DA006A66D7 /* WPStatsService.m in Sources */,
 				9396D00D19215464006A66D7 /* StatsButtonCell.m in Sources */,
