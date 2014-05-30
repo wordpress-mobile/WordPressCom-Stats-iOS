@@ -1,6 +1,6 @@
-#import "StatsSummary.h"
+#import "WPStatsSummary.h"
 
-@implementation StatsSummary
+@implementation WPStatsSummary
 
 - (id)initWithData:(NSDictionary *)summary {
     self = [super init];

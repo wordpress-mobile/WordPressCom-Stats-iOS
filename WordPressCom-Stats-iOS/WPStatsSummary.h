@@ -1,4 +1,4 @@
-@interface StatsSummary : NSObject
+@interface WPStatsSummary : NSObject
 
 @property (nonatomic, strong) NSNumber *totalCategories;
 @property (nonatomic, strong) NSNumber *totalComments;

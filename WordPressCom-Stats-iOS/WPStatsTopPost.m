@@ -1,16 +1,16 @@
-#import "StatsTopPost.h"
+#import "WPStatsTopPost.h"
 
-@implementation StatsTopPost
+@implementation WPStatsTopPost
 
 + (NSDictionary *)postsFromTodaysData:(NSDictionary *)todaysData yesterdaysData:(NSDictionary *)yesterdaysData {
     NSMutableArray *todayPostList = [NSMutableArray array];
     for (NSDictionary *post in todaysData[@"top-posts"]) {
-        StatsTopPost *topPost = [[StatsTopPost alloc] initTopPost:post];
+        WPStatsTopPost *topPost = [[WPStatsTopPost alloc] initTopPost:post];
         [todayPostList addObject:topPost];
     }
     NSMutableArray *yesterdayPostList = [NSMutableArray array];
     for (NSDictionary *post in yesterdaysData[@"top-posts"]) {
-        StatsTopPost *topPost = [[StatsTopPost alloc] initTopPost:post];
+        WPStatsTopPost *topPost = [[WPStatsTopPost alloc] initTopPost:post];
         [yesterdayPostList addObject:topPost];
     }
 

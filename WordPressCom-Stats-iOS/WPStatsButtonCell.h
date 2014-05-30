@@ -1,9 +1,9 @@
 #import <UIKit/UIKit.h>
-#import "StatsViewController.h"
+#import "WPStatsViewController.h"
 
 @protocol StatsButtonCellDelegate;
 
-@interface StatsButtonCell : UITableViewCell
+@interface WPStatsButtonCell : UITableViewCell
 
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, weak) id<StatsButtonCellDelegate> delegate;
@@ -17,6 +17,6 @@
 
 @protocol StatsButtonCellDelegate  <NSObject>
 
-- (void)statsButtonCell:(StatsButtonCell *)statsButtonCell didSelectIndex:(NSUInteger)index;
+- (void)statsButtonCell:(WPStatsButtonCell *)statsButtonCell didSelectIndex:(NSUInteger)index;
 
 @end

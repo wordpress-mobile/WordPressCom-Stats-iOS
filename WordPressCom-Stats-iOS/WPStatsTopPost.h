@@ -1,6 +1,6 @@
-#import "StatsTitleCountItem.h"
+#import "WPStatsTitleCountItem.h"
 
-@interface StatsTopPost : StatsTitleCountItem
+@interface WPStatsTopPost : WPStatsTitleCountItem
 
 @property (nonatomic, strong) NSNumber *postID;
 

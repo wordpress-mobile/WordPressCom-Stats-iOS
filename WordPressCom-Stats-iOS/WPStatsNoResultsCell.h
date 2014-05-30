@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
-#import "StatsViewController.h"
+#import "WPStatsViewController.h"
 
-@interface StatsNoResultsCell : UITableViewCell
+@interface WPStatsNoResultsCell : UITableViewCell
 
 + (CGFloat)heightForRowForSection:(StatsSection)section withWidth:(CGFloat)width;
 

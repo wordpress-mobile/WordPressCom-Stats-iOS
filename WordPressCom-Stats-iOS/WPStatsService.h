@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
-#import "StatsSummary.h"
-#import "StatsViewsVisitors.h"
+#import "WPStatsSummary.h"
+#import "WPStatsViewsVisitors.h"
 
-typedef void (^StatsCompletion)(StatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, StatsViewsVisitors *viewsVisitors);
+typedef void (^StatsCompletion)(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors);
 
 @class WPStatsServiceRemote;
 

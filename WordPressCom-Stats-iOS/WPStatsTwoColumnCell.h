@@ -1,15 +1,15 @@
 #import <UIKit/UIKit.h>
-#import "StatsTitleCountItem.h"
+#import "WPStatsTitleCountItem.h"
 #import "WPTableViewCell.h"
 
 
-@interface StatsTwoColumnCell : WPTableViewCell
+@interface WPStatsTwoColumnCell : WPTableViewCell
 
 @property (nonatomic, assign) BOOL linkEnabled;
 
 + (CGFloat)heightForRow;
 
-- (void)insertData:(StatsTitleCountItem *)cellData;
+- (void)insertData:(WPStatsTitleCountItem *)cellData;
 - (void)setLeft:(NSString *)left withImageUrl:(NSURL *)imageUrl right:(NSString *)right titleCell:(BOOL)titleCell;
 
 @end

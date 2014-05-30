@@ -1,10 +1,10 @@
-#import "StatsTwoColumnCell.h"
-#import "StatsTopPost.h"
-#import "StatsViewByCountry.h"
-#import "StatsTitleCountItem.h"
+#import "WPStatsTwoColumnCell.h"
+#import "WPStatsTopPost.h"
+#import "WPStatsViewByCountry.h"
+#import "WPStatsTitleCountItem.h"
 #import "WPImageSource.h"
 #import "NSString+XMLExtensions.h"
-#import "StatsGroup.h"
+#import "WPStatsGroup.h"
 #import "WPStyleGuide.h"
 
 static CGFloat const CellHeight = 30.0f;
@@ -13,18 +13,18 @@ static CGFloat const PaddingBetweenLeftAndRightLabels = 15.0f;
 static CGFloat const PaddingImageText = 10.0f;
 static CGFloat const RowIconWidth = 20.0f;
 
-@interface StatsTwoColumnCell ()
+@interface WPStatsTwoColumnCell ()
 
 @property (nonatomic, weak) UIView *separator;
 @property (nonatomic, weak) UIView *leftView;
 @property (nonatomic, weak) UIView *rightView;
-@property (nonatomic, strong) StatsTitleCountItem *cellData;
+@property (nonatomic, strong) WPStatsTitleCountItem *cellData;
 @property (nonatomic, strong) NSNumberFormatter *numberFormatter;
 
 @end
 
 
-@implementation StatsTwoColumnCell
+@implementation WPStatsTwoColumnCell
 
 + (CGFloat)heightForRow {
     return CellHeight;
@@ -73,16 +73,16 @@ static CGFloat const RowIconWidth = 20.0f;
     return _numberFormatter;
 }
 
-- (void)insertData:(StatsTitleCountItem *)cellData {
+- (void)insertData:(WPStatsTitleCountItem *)cellData {
     self.cellData = cellData;
     
     NSString *left = [cellData.title stringByDecodingXMLCharacters];
     NSString *right = [self.numberFormatter stringFromNumber:cellData.count];
-    if ([cellData isKindOfClass:[StatsViewByCountry class]]) {
-        [self setLeft:left withImageUrl:[(StatsViewByCountry *)cellData imageUrl] right:right titleCell:NO];
-    } else if ([cellData isKindOfClass:[StatsGroup class]]) {
+    if ([cellData isKindOfClass:[WPStatsViewByCountry class]]) {
+        [self setLeft:left withImageUrl:[(WPStatsViewByCountry *)cellData imageUrl] right:right titleCell:NO];
+    } else if ([cellData isKindOfClass:[WPStatsGroup class]]) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
-        [self setLeft:left withImageUrl:[(StatsGroup *)cellData iconUrl] right:right titleCell:NO];
+        [self setLeft:left withImageUrl:[(WPStatsGroup *)cellData iconUrl] right:right titleCell:NO];
     } else {
         [self setLeft:left withImageUrl:nil right:right titleCell:NO];
     }
@@ -108,7 +108,7 @@ static CGFloat const RowIconWidth = 20.0f;
 
 - (void)setLeft:(NSString *)left withImageUrl:(NSURL *)imageUrl right:(NSString *)right titleCell:(BOOL)titleCell {
     UIView *leftView;
-    BOOL shouldShowImage = ([self.cellData isKindOfClass:[StatsViewByCountry class]] || [self.cellData isKindOfClass:[StatsGroup class]]);
+    BOOL shouldShowImage = ([self.cellData isKindOfClass:[WPStatsViewByCountry class]] || [self.cellData isKindOfClass:[WPStatsGroup class]]);
     if (shouldShowImage) {
         leftView = [self createLeftViewWithTitle:left imageUrl:imageUrl titleCell:titleCell];
     } else {

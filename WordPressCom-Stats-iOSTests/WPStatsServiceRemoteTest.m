@@ -42,7 +42,7 @@
     NSDate *today = [formatter dateFromString:@"2014-05-10"];
     NSDate *yesterday = [formatter dateFromString:@"2014-05-09"];
     
-    [subject fetchStatsForTodayDate:today andYesterdayDate:yesterday withCompletionHandler:^(StatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, StatsViewsVisitors *viewsVisitors) {
+    [subject fetchStatsForTodayDate:today andYesterdayDate:yesterday withCompletionHandler:^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
         completionCalled = YES;
         XCTAssertNotNil(summary, @"summary should not be nil.");
         XCTAssertNotNil(topPosts, @"topPosts should not be nil.");

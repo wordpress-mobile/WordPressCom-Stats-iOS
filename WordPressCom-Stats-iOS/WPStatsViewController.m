@@ -1,15 +1,15 @@
-#import "StatsViewController.h"
-#import "StatsButtonCell.h"
-#import "StatsCounterCell.h"
-#import "StatsNoResultsCell.h"
-#import "StatsViewsVisitorsBarGraphCell.h"
-#import "StatsSummary.h"
-#import "StatsTitleCountItem.h"
-#import "StatsTodayYesterdayButtonCell.h"
-#import "StatsTwoColumnCell.h"
-#import "StatsLinkToWebviewCell.h"
+#import "WPStatsViewController.h"
+#import "WPStatsButtonCell.h"
+#import "WPStatsCounterCell.h"
+#import "WPStatsNoResultsCell.h"
+#import "WPStatsViewsVisitorsBarGraphCell.h"
+#import "WPStatsSummary.h"
+#import "WPStatsTitleCountItem.h"
+#import "WPStatsTodayYesterdayButtonCell.h"
+#import "WPStatsTwoColumnCell.h"
+#import "WPStatsLinkToWebviewCell.h"
 #import "WPTableViewSectionHeaderView.h"
-#import "StatsGroup.h"
+#import "WPStatsGroup.h"
 #import "WPNoResultsView.h"
 #import "WPStatsService.h"
 #import "WPStyleGuide.h"
@@ -51,21 +51,21 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     TotalFollowersShareRowTotalRows
 };
 
-@interface StatsViewController () <UITableViewDataSource, UITableViewDelegate, StatsTodayYesterdayButtonCellDelegate, UIViewControllerRestoration, StatsButtonCellDelegate>
+@interface WPStatsViewController () <UITableViewDataSource, UITableViewDelegate, WPStatsTodayYesterdayButtonCellDelegate, UIViewControllerRestoration, StatsButtonCellDelegate>
 
 @property (nonatomic, strong) NSNumber *siteID;
 @property (nonatomic, copy)   NSString *oauth2Token;
 @property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, strong) NSMutableDictionary *statModels;
 @property (nonatomic, strong) NSMutableDictionary *showingToday;
-@property (nonatomic, assign) StatsViewsVisitorsUnit currentViewsVisitorsGraphUnit;
+@property (nonatomic, assign) WPStatsViewsVisitorsUnit currentViewsVisitorsGraphUnit;
 @property (nonatomic, assign) BOOL resultsAvailable;
 @property (nonatomic, weak) WPNoResultsView *noResultsView;
 @property (nonatomic, strong) NSMutableDictionary *expandedLinkGroups;
 
 @end
 
-@implementation StatsViewController
+@implementation WPStatsViewController
 
 + (UIViewController *)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
     NSNumber *siteID = [coder decodeObjectForKey:WPStatsSiteIDRestorationKey];
@@ -74,7 +74,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     
     NSString *oauth2Token = [coder decodeObjectForKey:WPStatsOAuth2TokenRestorationKey];
     
-    StatsViewController *viewController = [[self alloc] initWithSiteID:siteID andOAuth2Token:oauth2Token];
+    WPStatsViewController *viewController = [[self alloc] initWithSiteID:siteID andOAuth2Token:oauth2Token];
     
     return viewController;
 }
@@ -126,14 +126,14 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, HeaderHeight, 0);
     
-    [self.tableView registerClass:[StatsButtonCell class] forCellReuseIdentifier:VisitorsUnitButtonCellReuseIdentifier];
-    [self.tableView registerClass:[StatsTodayYesterdayButtonCell class] forCellReuseIdentifier:TodayYesterdayButtonCellReuseIdentifier];
-    [self.tableView registerClass:[StatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellReuseIdentifier];
-    [self.tableView registerClass:[StatsCounterCell class] forCellReuseIdentifier:CountCellReuseIdentifier];
-    [self.tableView registerClass:[StatsNoResultsCell class] forCellReuseIdentifier:NoResultsCellIdentifier];
-    [self.tableView registerClass:[StatsTwoColumnCell class] forCellReuseIdentifier:ResultRowCellIdentifier];
-    [self.tableView registerClass:[StatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellIdentifier];
-    [self.tableView registerClass:[StatsLinkToWebviewCell class] forCellReuseIdentifier:LinkToWebviewCellIdentifier];
+    [self.tableView registerClass:[WPStatsButtonCell class] forCellReuseIdentifier:VisitorsUnitButtonCellReuseIdentifier];
+    [self.tableView registerClass:[WPStatsTodayYesterdayButtonCell class] forCellReuseIdentifier:TodayYesterdayButtonCellReuseIdentifier];
+    [self.tableView registerClass:[WPStatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellReuseIdentifier];
+    [self.tableView registerClass:[WPStatsCounterCell class] forCellReuseIdentifier:CountCellReuseIdentifier];
+    [self.tableView registerClass:[WPStatsNoResultsCell class] forCellReuseIdentifier:NoResultsCellIdentifier];
+    [self.tableView registerClass:[WPStatsTwoColumnCell class] forCellReuseIdentifier:ResultRowCellIdentifier];
+    [self.tableView registerClass:[WPStatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellIdentifier];
+    [self.tableView registerClass:[WPStatsLinkToWebviewCell class] forCellReuseIdentifier:LinkToWebviewCellIdentifier];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshControlTriggered) forControlEvents:UIControlEventValueChanged];
@@ -196,7 +196,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         DDLogError(@"Stats: Error fetching stats %@", error);
     };
 
-    [self.statsService retrieveStatsWithCompletionHandler:^(StatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, StatsViewsVisitors *viewsVisitors) {
+    [self.statsService retrieveStatsWithCompletionHandler:^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
         self.statModels[@(StatsSectionVisitors)] = summary;
         self.statModels[@(StatsSectionVisitorsGraph)] = viewsVisitors;
         self.statModels[@(StatsSectionTopPosts)] = topPosts;
@@ -262,19 +262,19 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         case StatsSectionVisitors:
             switch (indexPath.row) {
                 case VisitorRowGraphUnitButton:
-                    return [StatsButtonCell heightForRow];
+                    return [WPStatsButtonCell heightForRow];
                 case VisitorRowGraph:
-                    return [StatsViewsVisitorsBarGraphCell heightForRow];
+                    return [WPStatsViewsVisitorsBarGraphCell heightForRow];
                 case VisitorRowTodayStats:
                 case VisitorRowBestEver:
                 case VisitorRowAllTime:
-                    return [StatsCounterCell heightForRow];
+                    return [WPStatsCounterCell heightForRow];
                 default:
                     return 0.0f;
             }
             break;
         case StatsSectionTotalsFollowersShares:
-            return [StatsCounterCell heightForRow];
+            return [WPStatsCounterCell heightForRow];
         case StatsSectionTopPosts:
         case StatsSectionViewsByCountry:
         case StatsSectionClicks:
@@ -282,14 +282,14 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         case StatsSectionSearchTerms:
             switch (indexPath.row) {
                 case StatsDataRowButtons:
-                    return [StatsButtonCell heightForRow];
+                    return [WPStatsButtonCell heightForRow];
                 case StatsDataRowTitle:
-                    return [self resultsForSection:indexPath.section].count > 0 ? [StatsTwoColumnCell heightForRow] : 0.0;
+                    return [self resultsForSection:indexPath.section].count > 0 ? [WPStatsTwoColumnCell heightForRow] : 0.0;
                 default:
-                    return [self resultsForSection:indexPath.section].count > 0 ? [StatsTwoColumnCell heightForRow] : [StatsNoResultsCell heightForRowForSection:(StatsSection)indexPath.section withWidth:CGRectGetWidth(self.view.bounds)];
+                    return [self resultsForSection:indexPath.section].count > 0 ? [WPStatsTwoColumnCell heightForRow] : [WPStatsNoResultsCell heightForRowForSection:(StatsSection)indexPath.section withWidth:CGRectGetWidth(self.view.bounds)];
             }
         case StatsSectionLinkToWebview:
-            return [StatsLinkToWebviewCell heightForRow];
+            return [WPStatsLinkToWebviewCell heightForRow];
         default:
             return 0.0f;
     }
@@ -302,7 +302,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
             switch (indexPath.row) {
                 case VisitorRowGraphUnitButton:
                 {
-                    StatsButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:VisitorsUnitButtonCellReuseIdentifier];
+                    WPStatsButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:VisitorsUnitButtonCellReuseIdentifier];
                     cell.delegate = self;
                     [cell addSegmentWithTitle:NSLocalizedString(@"Days", nil)];
                     [cell addSegmentWithTitle:NSLocalizedString(@"Weeks", nil)];
@@ -312,15 +312,15 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 }
                 case VisitorRowGraph:
                 {
-                    StatsViewsVisitorsBarGraphCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
+                    WPStatsViewsVisitorsBarGraphCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
                     [cell setViewsVisitors:_statModels[@(StatsSectionVisitorsGraph)]];
                     [cell showGraphForUnit:_currentViewsVisitorsGraphUnit];
                     return cell;
                 }
                 case VisitorRowTodayStats:
                 {
-                    StatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
-                    StatsSummary *summary = _statModels[@(StatsSectionVisitors)];
+                    WPStatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
+                    WPStatsSummary *summary = _statModels[@(StatsSectionVisitors)];
                     [cell setTitle:NSLocalizedString(@"Today", @"Title for Today cell")];
                     [cell addCount:summary.visitorCountToday withLabel:NSLocalizedString(@"Visitors", @"Visitor label for Today cell")];
                     [cell addCount:summary.viewCountToday withLabel:NSLocalizedString(@"Views", @"View label for Today cell")];
@@ -328,16 +328,16 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 }
                 case VisitorRowBestEver:
                 {
-                    StatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
-                    StatsSummary *summary = _statModels[@(StatsSectionVisitors)];
+                    WPStatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
+                    WPStatsSummary *summary = _statModels[@(StatsSectionVisitors)];
                     [cell setTitle:NSLocalizedString(@"Best Ever", nil)];
                     [cell addCount:summary.viewCountBest withLabel:NSLocalizedString(@"Views", nil)];
                     return cell;
                 }
                 case VisitorRowAllTime:
                 {
-                    StatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
-                    StatsSummary *summary = _statModels[@(StatsSectionVisitors)];
+                    WPStatsCounterCell *cell = [tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
+                    WPStatsSummary *summary = _statModels[@(StatsSectionVisitors)];
                     [cell setTitle:NSLocalizedString(@"All Time", nil)];
                     [cell addCount:summary.totalViews withLabel:NSLocalizedString(@"Views", nil)];
                     [cell addCount:summary.totalComments withLabel:NSLocalizedString(@"Comments", nil)];
@@ -358,7 +358,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         case StatsSectionLinkToWebview:
         {
             if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
-                StatsLinkToWebviewCell *cell = [tableView dequeueReusableCellWithIdentifier:LinkToWebviewCellIdentifier];
+                WPStatsLinkToWebviewCell *cell = [tableView dequeueReusableCellWithIdentifier:LinkToWebviewCellIdentifier];
                 [cell configureForSection:StatsSectionLinkToWebview];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 cell.onTappedLinkToWebview = ^{
@@ -383,7 +383,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     NSString *rightLabel;
     NSNumber *rightCount;
     
-    StatsSummary *summary = _statModels[@(StatsSectionVisitors)];
+    WPStatsSummary *summary = _statModels[@(StatsSectionVisitors)];
     switch (index) {
         case TotalFollowersShareRowContentPost:
             title = NSLocalizedString(@"Content", @"Stats - Title for the data cell");
@@ -410,7 +410,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
             break;
     }
     
-    StatsCounterCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
+    WPStatsCounterCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CountCellReuseIdentifier];
     [cell setTitle:title];
     [cell addCount:leftCount withLabel:leftLabel];
     if (rightLabel) {
@@ -445,23 +445,23 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         case StatsDataRowButtons:
         {
             cell = [self.tableView dequeueReusableCellWithIdentifier:TodayYesterdayButtonCellReuseIdentifier];
-            [(StatsTodayYesterdayButtonCell *)cell setupForSection:indexPath.section delegate:self todayActive:[self showingTodayForSection:indexPath.section]];
+            [(WPStatsTodayYesterdayButtonCell *)cell setupForSection:indexPath.section delegate:self todayActive:[self showingTodayForSection:indexPath.section]];
             break;
         }
         case StatsDataRowTitle:
         {
             cell = [self.tableView dequeueReusableCellWithIdentifier:ResultRowCellIdentifier];
-            [(StatsTwoColumnCell *)cell setLeft:[dataTitleRowLeft uppercaseStringWithLocale:[NSLocale currentLocale]] withImageUrl:nil right:[dataTitleRowRight uppercaseStringWithLocale:[NSLocale currentLocale]] titleCell:YES];
+            [(WPStatsTwoColumnCell *)cell setLeft:[dataTitleRowLeft uppercaseStringWithLocale:[NSLocale currentLocale]] withImageUrl:nil right:[dataTitleRowRight uppercaseStringWithLocale:[NSLocale currentLocale]] titleCell:YES];
             break;
         }
         default:
         {
             if ([self resultsForSection:indexPath.section].count == 0) {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:NoResultsCellIdentifier];
-                [(StatsNoResultsCell *)cell configureForSection:indexPath.section];
+                [(WPStatsNoResultsCell *)cell configureForSection:indexPath.section];
             } else {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:ResultRowCellIdentifier];
-                [(StatsTwoColumnCell *)cell insertData:[self resultForIndexPath:indexPath]];
+                [(WPStatsTwoColumnCell *)cell insertData:[self resultForIndexPath:indexPath]];
             }
         }
     }
@@ -469,11 +469,11 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    StatsTitleCountItem *item = [self itemSelectedAtIndexPath:indexPath];
-    return [item isKindOfClass:[StatsGroup class]] || item.URL != nil || indexPath.section == StatsSectionLinkToWebview;
+    WPStatsTitleCountItem *item = [self itemSelectedAtIndexPath:indexPath];
+    return [item isKindOfClass:[WPStatsGroup class]] || item.URL != nil || indexPath.section == StatsSectionLinkToWebview;
 }
 
-- (StatsTitleCountItem *)itemSelectedAtIndexPath:(NSIndexPath *)indexPath {
+- (WPStatsTitleCountItem *)itemSelectedAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row != StatsDataRowTitle &&
         (indexPath.section == StatsSectionTopPosts ||
          indexPath.section == StatsSectionClicks ||
@@ -492,7 +492,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     return @[];
 }
 
-- (StatsTitleCountItem *)resultForIndexPath:(NSIndexPath *)indexPath {
+- (WPStatsTitleCountItem *)resultForIndexPath:(NSIndexPath *)indexPath {
     NSArray *sectionResults = [self resultsForSection:indexPath.section];
     NSIndexPath *expandedGroup = [self expandedGroupIndexPath:indexPath.section];
     NSUInteger offset = StatsDataRowTitle+1; // Column titles + Today/Yesterday buttons
@@ -506,7 +506,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
         // Row outside the group row & a child, or below the expanded group
         if (indexPath.row > expandedGroup.row) {
-            StatsGroup *group = sectionResults[expandedGroup.row-offset];
+            WPStatsGroup *group = sectionResults[expandedGroup.row-offset];
             NSUInteger childCount = group.children.count;
 
             if (indexPath.row > expandedGroup.row + childCount) {
@@ -533,9 +533,9 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    StatsTitleCountItem *item = [self itemSelectedAtIndexPath:indexPath];
-    if ([item isKindOfClass:[StatsGroup class]]) {
-        [self toggleGroupExpanded:indexPath childCount:[(StatsGroup *)item children].count];
+    WPStatsTitleCountItem *item = [self itemSelectedAtIndexPath:indexPath];
+    if ([item isKindOfClass:[WPStatsGroup class]]) {
+        [self toggleGroupExpanded:indexPath childCount:[(WPStatsGroup *)item children].count];
     } else {
         [[UIApplication sharedApplication] openURL:item.URL];
     }
@@ -638,15 +638,15 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 #pragma mark - Visitors Graph button selectors
 
-- (void)graphUnitSelected:(StatsViewsVisitorsUnit)unit {
+- (void)graphUnitSelected:(WPStatsViewsVisitorsUnit)unit {
     _currentViewsVisitorsGraphUnit = unit;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:StatsSectionVisitors] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - StatsButtonCellDelegate methods
 
-- (void)statsButtonCell:(StatsButtonCell *)statsButtonCell didSelectIndex:(NSUInteger)index {
-    StatsViewsVisitorsUnit unit = (StatsViewsVisitorsUnit)index;
+- (void)statsButtonCell:(WPStatsButtonCell *)statsButtonCell didSelectIndex:(NSUInteger)index {
+    WPStatsViewsVisitorsUnit unit = (WPStatsViewsVisitorsUnit)index;
     [self graphUnitSelected:unit];
 }
 

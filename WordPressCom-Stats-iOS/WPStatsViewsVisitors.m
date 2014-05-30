@@ -1,18 +1,18 @@
-#import "StatsViewsVisitors.h"
+#import "WPStatsViewsVisitors.h"
 
 NSString *const StatsViewsCategory = @"Views";
 NSString *const StatsVisitorsCategory = @"Visitors";
 NSString *const StatsPointNameKey = @"name";
 NSString *const StatsPointCountKey = @"count";
 
-@interface StatsViewsVisitors ()
+@interface WPStatsViewsVisitors ()
 
 @property (nonatomic, strong) NSMutableDictionary *viewsVisitorsData;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
 @end
 
-@implementation StatsViewsVisitors
+@implementation WPStatsViewsVisitors
 
 - (id)init {
     self = [super init];
@@ -32,7 +32,8 @@ NSString *const StatsPointCountKey = @"count";
     return _dateFormatter;
 }
 
-- (void)addViewsVisitorsWithData:(NSDictionary *)data unit:(StatsViewsVisitorsUnit)unit {
+- (void)addViewsVisitorsWithData:(NSDictionary *)data unit:(WPStatsViewsVisitorsUnit)unit
+{
     NSMutableArray *periodToViews = [NSMutableArray array];
     NSMutableArray *periodToVisitors = [NSMutableArray array];
     NSArray *periodData = data[@"data"];
@@ -47,11 +48,11 @@ NSString *const StatsPointCountKey = @"count";
                                     StatsVisitorsCategory: periodToVisitors};
 }
 
-- (NSDictionary *)viewsVisitorsForUnit:(StatsViewsVisitorsUnit)unit {
+- (NSDictionary *)viewsVisitorsForUnit:(WPStatsViewsVisitorsUnit)unit {
     return _viewsVisitorsData[@(unit)];
 }
 
-- (NSString *)nicePointName:(NSString *)name forUnit:(StatsViewsVisitorsUnit)unit {
+- (NSString *)nicePointName:(NSString *)name forUnit:(WPStatsViewsVisitorsUnit)unit {
     if (name.length == 0) {
         DDLogWarn(@"Invalid date/name passed into nicePointName for unit: %@", @(unit));
         return @"";

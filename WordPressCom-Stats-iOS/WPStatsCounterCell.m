@@ -1,7 +1,7 @@
-#import "StatsCounterCell.h"
+#import "WPStatsCounterCell.h"
 #import "WPStyleGuide.h"
 
-@interface StatsCounterCell ()
+@interface WPStatsCounterCell ()
 
 @property (nonatomic, strong) NSMutableArray *countViews;
 @property (nonatomic, weak) UILabel *titleLabel;
@@ -17,7 +17,7 @@ static CGFloat const CountPadding = 10.0f;
 static CGFloat const TitleHeight = 20.0f;
 static CGFloat const StatCounterCellHeight = 100.0f;
 
-@implementation StatsCounterCell
+@implementation WPStatsCounterCell
 
 + (CGFloat)heightForRow {
     return StatCounterCellHeight;

@@ -1,17 +1,17 @@
-#import "StatsNoResultsCell.h"
+#import "WPStatsNoResultsCell.h"
 #import "WPStyleGuide.h"
 
 static CGFloat const CellPadding = 15.0f;
 static CGFloat const MinCellHeight = 60.0f;
 
-@interface StatsNoResultsCell ()
+@interface WPStatsNoResultsCell ()
 
 @property (nonatomic, weak) UILabel *noStatsDescriptionLabel;
 @property (nonatomic, assign) StatsSection currentSection;
 
 @end
 
-@implementation StatsNoResultsCell
+@implementation WPStatsNoResultsCell
 
 + (CGFloat)heightForRowForSection:(StatsSection)section withWidth:(CGFloat)width
 {
@@ -50,7 +50,7 @@ static CGFloat const MinCellHeight = 60.0f;
 {
     [super layoutSubviews];
     
-    CGRect insetFrame = CGRectInset(CGRectMake(0, 0, CGRectGetWidth(self.contentView.frame), [StatsNoResultsCell heightForRowForSection:self.currentSection withWidth:CGRectGetWidth(self.contentView.frame)]), CellPadding, 0);
+    CGRect insetFrame = CGRectInset(CGRectMake(0, 0, CGRectGetWidth(self.contentView.frame), [WPStatsNoResultsCell heightForRowForSection:self.currentSection withWidth:CGRectGetWidth(self.contentView.frame)]), CellPadding, 0);
     CGRect labelRect = [self.noStatsDescriptionLabel.attributedText boundingRectWithSize:insetFrame.size options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     self.noStatsDescriptionLabel.frame = (CGRect) {

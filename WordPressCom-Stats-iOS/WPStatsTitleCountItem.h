@@ -4,7 +4,7 @@
 extern NSString *const StatsResultsToday;
 extern NSString *const StatsResultsYesterday;
 
-@interface StatsTitleCountItem : NSObject
+@interface WPStatsTitleCountItem : NSObject
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSNumber *count;

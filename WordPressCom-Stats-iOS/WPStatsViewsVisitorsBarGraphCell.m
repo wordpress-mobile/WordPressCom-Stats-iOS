@@ -1,4 +1,4 @@
-#import "StatsViewsVisitorsBarGraphCell.h"
+#import "WPStatsViewsVisitorsBarGraphCell.h"
 #import "WPStyleGuide.h"
 
 static CGFloat const AxisPadding = 18.0f;
@@ -233,15 +233,15 @@ CGFloat heightFromRangeToRange(NSUInteger height, CGFloat maxOldRange, CGFloat m
 
 @end
 
-@interface StatsViewsVisitorsBarGraphCell ()
+@interface WPStatsViewsVisitorsBarGraphCell ()
 
 @property (nonatomic, weak) WPBarGraphView *barGraph;
-@property (nonatomic, assign) StatsViewsVisitorsUnit currentUnit;
-@property (nonatomic, strong) StatsViewsVisitors *viewsVisitorsData;
+@property (nonatomic, assign) WPStatsViewsVisitorsUnit currentUnit;
+@property (nonatomic, strong) WPStatsViewsVisitors *viewsVisitorsData;
 
 @end
 
-@implementation StatsViewsVisitorsBarGraphCell
+@implementation WPStatsViewsVisitorsBarGraphCell
 
 + (CGFloat)heightForRow {
     return 200.0f;
@@ -273,11 +273,11 @@ CGFloat heightFromRangeToRange(NSUInteger height, CGFloat maxOldRange, CGFloat m
     [self.contentView addSubview:self.barGraph];
 }
 
-- (void)setViewsVisitors:(StatsViewsVisitors *)viewsVisitors {
+- (void)setViewsVisitors:(WPStatsViewsVisitors *)viewsVisitors {
     _viewsVisitorsData = viewsVisitors;
 }
 
-- (void)showGraphForUnit:(StatsViewsVisitorsUnit)unit {
+- (void)showGraphForUnit:(WPStatsViewsVisitorsUnit)unit {
     _currentUnit = unit;
     [self setNeedsDisplay];
 }

@@ -1,14 +1,14 @@
-#import "StatsTodayYesterdayButtonCell.h"
+#import "WPStatsTodayYesterdayButtonCell.h"
 
-@interface StatsTodayYesterdayButtonCell ()
+@interface WPStatsTodayYesterdayButtonCell ()
 
 // This overrides the StatsButtonDelegate from the parent class
-@property (nonatomic, weak) id<StatsTodayYesterdayButtonCellDelegate> delegate;
+@property (nonatomic, weak) id<WPStatsTodayYesterdayButtonCellDelegate> delegate;
 @property (nonatomic, assign) StatsSection currentSection;
 
 @end
 
-@implementation StatsTodayYesterdayButtonCell
+@implementation WPStatsTodayYesterdayButtonCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -19,7 +19,7 @@
     return self;
 }
 
-- (void)setupForSection:(StatsSection)section delegate:(id<StatsTodayYesterdayButtonCellDelegate>)delegate todayActive:(BOOL)todayActive {
+- (void)setupForSection:(StatsSection)section delegate:(id<WPStatsTodayYesterdayButtonCellDelegate>)delegate todayActive:(BOOL)todayActive {
     self.currentSection = section;
     self.delegate = delegate;
     self.segmentedControl.selectedSegmentIndex = todayActive ? 0 : 1;

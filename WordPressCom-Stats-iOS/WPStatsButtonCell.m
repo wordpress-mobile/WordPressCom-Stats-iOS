@@ -1,9 +1,9 @@
-#import "StatsButtonCell.h"
+#import "WPStatsButtonCell.h"
 #import "WPStyleGuide.h"
 
 static CGFloat const StatsButtonHeight = 50.0f;
 
-@implementation StatsButtonCell
+@implementation WPStatsButtonCell
 
 + (CGFloat)heightForRow {
     return StatsButtonHeight;

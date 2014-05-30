@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "StatsTitleCountItem.h"
+#import "WPStatsTitleCountItem.h"
 
-@interface StatsGroup : StatsTitleCountItem
+@interface WPStatsGroup : WPStatsTitleCountItem
 
 @property (nonatomic, strong) NSString *groupName;
 @property (nonatomic, strong) NSURL *iconUrl;

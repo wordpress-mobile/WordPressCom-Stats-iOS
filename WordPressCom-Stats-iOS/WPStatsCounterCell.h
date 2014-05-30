@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface StatsCounterCell : UITableViewCell
+@interface WPStatsCounterCell : UITableViewCell
 
 + (CGFloat)heightForRow;
 

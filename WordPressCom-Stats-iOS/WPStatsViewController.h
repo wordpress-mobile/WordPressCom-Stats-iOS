@@ -13,20 +13,20 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionVisitorsGraph   // Not a real section!
 };
 
-@protocol StatsViewControllerDelegate;
+@protocol WPStatsViewControllerDelegate;
 
-@interface StatsViewController : UITableViewController
+@interface WPStatsViewController : UITableViewController
 
-@property (nonatomic, weak) id<StatsViewControllerDelegate> statsDelegate;
+@property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 
 - (instancetype)initWithSiteID:(NSNumber *)siteID andOAuth2Token:(NSString *)oauth2Token;
 
 @end
 
-@protocol StatsViewControllerDelegate <NSObject>
+@protocol WPStatsViewControllerDelegate <NSObject>
 
 @optional
 
-- (void)statsViewController:(StatsViewController *)statsViewController didSelectViewWebStatsForSiteID:(NSNumber *)siteID;
+- (void)statsViewController:(WPStatsViewController *)statsViewController didSelectViewWebStatsForSiteID:(NSNumber *)siteID;
 
 @end

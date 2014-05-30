@@ -1,16 +1,16 @@
-#import "StatsLinkToWebviewCell.h"
+#import "WPStatsLinkToWebviewCell.h"
 #import "WPStyleGuide.h"
 
 static CGFloat const CellPadding = 15.0f;
 static CGFloat const LabelVerticalOffset = 2.0f;
 
-@interface StatsLinkToWebviewCell ()
+@interface WPStatsLinkToWebviewCell ()
 
 @property (nonatomic, weak) UILabel *linkToWebviewLabel;
 
 @end
 
-@implementation StatsLinkToWebviewCell
+@implementation WPStatsLinkToWebviewCell
 
 + (CGFloat)heightForRow {
     return 60.0f;
@@ -54,7 +54,7 @@ static CGFloat const LabelVerticalOffset = 2.0f;
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    CGRect insetFrame = CGRectInset(CGRectMake(0, 0, self.contentView.frame.size.width, [StatsLinkToWebviewCell heightForRow]), CellPadding, 0);
+    CGRect insetFrame = CGRectInset(CGRectMake(0, 0, self.contentView.frame.size.width, [WPStatsLinkToWebviewCell heightForRow]), CellPadding, 0);
     CGRect labelRect = [self.linkToWebviewLabel.attributedText boundingRectWithSize:insetFrame.size options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     CGFloat x = CGRectGetMinX(insetFrame);
     CGFloat y = floorf((CGRectGetHeight(self.contentView.frame) - CGRectGetHeight(labelRect)) / 2.0) - LabelVerticalOffset;

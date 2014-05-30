@@ -1,6 +1,6 @@
-#import "StatsTitleCountItem.h"
+#import "WPStatsTitleCountItem.h"
 
-@interface StatsViewByCountry : StatsTitleCountItem
+@interface WPStatsViewByCountry : WPStatsTitleCountItem
 
 @property (nonatomic, strong) NSURL *imageUrl;
 

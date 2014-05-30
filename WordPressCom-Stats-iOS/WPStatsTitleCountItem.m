@@ -1,14 +1,14 @@
-#import "StatsTitleCountItem.h"
+#import "WPStatsTitleCountItem.h"
 
 NSString *const StatsResultsToday = @"today";
 NSString *const StatsResultsYesterday = @"yesterday";
 
-@implementation StatsTitleCountItem
+@implementation WPStatsTitleCountItem
 
 + (NSArray *)titleCountItemsFromData:(NSDictionary *)data {
     NSMutableArray *finalArray = [NSMutableArray array];
     for (NSArray *titleCountArray in data) {
-        StatsTitleCountItem *titleCountItem = [[StatsTitleCountItem alloc] initWithData:titleCountArray];
+        WPStatsTitleCountItem *titleCountItem = [[WPStatsTitleCountItem alloc] initWithData:titleCountArray];
         [finalArray addObject:titleCountItem];
     }
     return finalArray;

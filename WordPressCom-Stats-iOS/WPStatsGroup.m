@@ -1,12 +1,12 @@
-#import "StatsGroup.h"
+#import "WPStatsGroup.h"
 #import "NSObject+SafeExpectations.h"
 
-@implementation StatsGroup
+@implementation WPStatsGroup
 
 + (NSArray *)groupsFromData:(NSArray *)groups {
     NSMutableArray *groupList = [NSMutableArray array];
     for (NSDictionary *group in groups) {
-        StatsGroup *rg = [[self alloc] init];
+        WPStatsGroup *rg = [[self alloc] init];
         rg.title = [group stringForKey:@"name"];
         rg.iconUrl = [NSURL URLWithString:[group stringForKey:@"icon"]];
         rg.count = [group numberForKey:@"total"];
@@ -19,7 +19,7 @@
 - (void)addChildrenFromArray:(NSArray *)results {
     NSMutableArray *children = [NSMutableArray array];
     for (NSArray *c in results) {
-        StatsTitleCountItem *r = [[StatsTitleCountItem alloc] init];
+        WPStatsTitleCountItem *r = [[WPStatsTitleCountItem alloc] init];
         r.title = c[0];
         r.URL = [NSURL URLWithString:c[0]];
         r.count = c[1];
