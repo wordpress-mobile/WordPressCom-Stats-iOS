@@ -1,16 +1,16 @@
 #import "StatsViewsVisitorsBarGraphCell.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static CGFloat const AxisPadding = 18.0f;
 static CGFloat InitialBarWidth = 30.0f;
 static NSString *const CategoryKey = @"category";
 static NSString *const PointsKey = @"points";
 
-@interface WPStatsStyleGuide (WPBarGraphView)
+@interface WPStyleGuide (WPBarGraphView)
 + (UIFont *)axisLabelFont;
 @end
 
-@implementation WPStatsStyleGuide (WPBarGraphView)
+@implementation WPStyleGuide (WPBarGraphView)
 + (UIFont *)axisLabelFont {
     return [UIFont fontWithName:@"OpenSans" size:8.0f];
 }
@@ -190,8 +190,8 @@ CGFloat heightFromRangeToRange(NSUInteger height, CGFloat maxOldRange, CGFloat m
 - (UILabel *)axisLabelWithText:(NSString *)text {
     UILabel *label = [[UILabel alloc] init];
     label.text = text;
-    label.font = [WPStatsStyleGuide axisLabelFont];
-    label.textColor = [WPStatsStyleGuide littleEddieGrey];
+    label.font = [WPStyleGuide axisLabelFont];
+    label.textColor = [WPStyleGuide littleEddieGrey];
     label.backgroundColor = [UIColor whiteColor];
     label.opaque = YES;
     [label sizeToFit];
@@ -201,8 +201,8 @@ CGFloat heightFromRangeToRange(NSUInteger height, CGFloat maxOldRange, CGFloat m
 - (UILabel *)legendLabelWithText:(NSString *)text {
     UILabel *label = [[UILabel alloc] init];
     label.text = text;
-    label.font = [WPStatsStyleGuide subtitleFont];
-    label.textColor = [WPStatsStyleGuide littleEddieGrey];
+    label.font = [WPStyleGuide subtitleFont];
+    label.textColor = [WPStyleGuide littleEddieGrey];
     label.opaque = YES;
     label.backgroundColor = [UIColor whiteColor];
     [label sizeToFit];
@@ -264,8 +264,8 @@ CGFloat heightFromRangeToRange(NSUInteger height, CGFloat maxOldRange, CGFloat m
     NSDictionary *categoryData = [_viewsVisitorsData viewsVisitorsForUnit:_currentUnit];
     WPBarGraphView *barGraph = [[WPBarGraphView alloc] initWithFrame:self.bounds];
     self.barGraph = barGraph;
-    [self.barGraph addCategory:StatsViewsCategory color:[WPStatsStyleGuide statsLighterBlue]];
-    [self.barGraph addCategory:StatsVisitorsCategory color:[WPStatsStyleGuide statsDarkerBlue]];
+    [self.barGraph addCategory:StatsViewsCategory color:[WPStyleGuide statsLighterBlue]];
+    [self.barGraph addCategory:StatsVisitorsCategory color:[WPStyleGuide statsDarkerBlue]];
     if (categoryData && [categoryData count] > 0) {
         [self.barGraph setBarsWithCount:categoryData[StatsViewsCategory] forCategory:StatsViewsCategory];
         [self.barGraph setBarsWithCount:categoryData[StatsVisitorsCategory] forCategory:StatsVisitorsCategory];

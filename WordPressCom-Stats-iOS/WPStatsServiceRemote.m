@@ -60,6 +60,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             [self urlForViewsVisitorsForUnit:@"month"],
     ];
 
+    // This needs to eventually be replaced with an instance of WordPressComApi when it's decoupled from Core Data
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.oauth2Token]

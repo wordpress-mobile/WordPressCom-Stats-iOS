@@ -1,5 +1,5 @@
 #import "StatsLinkToWebviewCell.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static CGFloat const CellPadding = 15.0f;
 static CGFloat const LabelVerticalOffset = 2.0f;
@@ -28,9 +28,9 @@ static CGFloat const LabelVerticalOffset = 2.0f;
 
 - (void)configureForSection:(StatsSection)section {
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"View web version of stats", @"Stats - Link at bottom of stats page allowing the user to open the web version of stats") attributes:[WPStatsStyleGuide regularTextAttributes]];
+    label.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"View web version of stats", @"Stats - Link at bottom of stats page allowing the user to open the web version of stats") attributes:[WPStyleGuide regularTextAttributes]];
     label.lineBreakMode = NSLineBreakByWordWrapping;
-    label.textColor = [WPStatsStyleGuide littleEddieGrey];
+    label.textColor = [WPStyleGuide littleEddieGrey];
     label.numberOfLines = 0;
     label.opaque = YES;
     label.backgroundColor = [UIColor whiteColor];

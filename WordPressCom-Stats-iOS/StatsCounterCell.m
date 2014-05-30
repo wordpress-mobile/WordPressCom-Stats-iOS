@@ -1,5 +1,5 @@
 #import "StatsCounterCell.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 @interface StatsCounterCell ()
 
@@ -29,7 +29,7 @@ static CGFloat const StatCounterCellHeight = 100.0f;
     if (self) {
         self.countViews = [[NSMutableArray alloc] init];
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CountPadding, 0, self.contentView.frame.size.width-2*CountPadding, TitleHeight)];
-        titleLabel.font = [WPStatsStyleGuide subtitleFontBold];
+        titleLabel.font = [WPStyleGuide subtitleFontBold];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.opaque = YES;
         titleLabel.backgroundColor = [UIColor whiteColor];
@@ -53,7 +53,7 @@ static CGFloat const StatCounterCellHeight = 100.0f;
             .origin = CGPointMake(CGRectGetMinX(self.titleLabel.frame), CGRectGetMaxY(self.titleLabel.frame)),
             .size = CGSizeMake(self.contentView.frame.size.width-2*CountPadding, IS_RETINA ? 0.5f : 1.0f)
         };
-        topSeparator.backgroundColor = [WPStatsStyleGuide newKidOnTheBlockBlue];
+        topSeparator.backgroundColor = [WPStyleGuide newKidOnTheBlockBlue];
     } else {
         self.titleLabel.frame = (CGRect) {
             .origin = self.titleLabel.frame.origin,
@@ -63,7 +63,7 @@ static CGFloat const StatCounterCellHeight = 100.0f;
             .origin = CGPointMake(CountPadding, 0),
             .size = CGSizeMake(self.contentView.frame.size.width-2*CountPadding, IS_RETINA ? 0.5f : 1.0f)
         };
-        topSeparator.backgroundColor = [WPStatsStyleGuide readGrey];
+        topSeparator.backgroundColor = [WPStyleGuide readGrey];
     }
 
     CGFloat yOffset = CGRectGetMaxY(self.titleLabel.frame) + 10.0f;
@@ -88,7 +88,7 @@ static CGFloat const StatCounterCellHeight = 100.0f;
                 .origin = CGPointMake(width*0.5, CGRectGetMinY(leftView.frame)),
                 .size = CGSizeMake(IS_RETINA ? 0.5f : 1.0f, leftView.frame.size.height)
             };
-            separator.backgroundColor = [WPStatsStyleGuide readGrey];
+            separator.backgroundColor = [WPStyleGuide readGrey];
         }
     }
 }
@@ -98,7 +98,7 @@ static CGFloat const StatCounterCellHeight = 100.0f;
     if (title.length > 0) {
         self.titleLabel.text = [title uppercaseStringWithLocale:[NSLocale currentLocale]];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
-        self.titleLabel.textColor = [WPStatsStyleGuide whisperGrey];
+        self.titleLabel.textColor = [WPStyleGuide whisperGrey];
     }
     [self.separatorLines addObject:separator];
     [self addSubview:separator];
@@ -111,15 +111,15 @@ static CGFloat const StatCounterCellHeight = 100.0f;
     
     countNumber.text = count ? [self.numberFormatter stringFromNumber:count] : @"0";
     countNumber.textAlignment = NSTextAlignmentCenter;
-    countNumber.textColor = [WPStatsStyleGuide whisperGrey];
-    countNumber.font = [WPStatsStyleGuide largePostTitleFont];
+    countNumber.textColor = [WPStyleGuide whisperGrey];
+    countNumber.font = [WPStyleGuide largePostTitleFont];
     countNumber.opaque = YES;
     countNumber.backgroundColor = [UIColor whiteColor];
     
     countText.text = label;
     countText.textAlignment = NSTextAlignmentCenter;
-    countText.textColor = [WPStatsStyleGuide whisperGrey];
-    countText.font = [WPStatsStyleGuide tableviewSubtitleFont];
+    countText.textColor = [WPStyleGuide whisperGrey];
+    countText.font = [WPStyleGuide tableviewSubtitleFont];
     countText.opaque = YES;
     countText.backgroundColor = [UIColor whiteColor];
 

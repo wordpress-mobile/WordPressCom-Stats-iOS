@@ -1,10 +1,4 @@
 #import "StatsViewController.h"
-//#import "Blog+Jetpack.h"
-//#import "WordPressAppDelegate.h"
-//#import "JetpackSettingsViewController.h"
-//#import "StatsWebViewController.h"
-//#import "WPAccount.h"
-//#import "ContextManager.h"
 #import "StatsButtonCell.h"
 #import "StatsCounterCell.h"
 #import "StatsNoResultsCell.h"
@@ -18,7 +12,7 @@
 #import "StatsGroup.h"
 #import "WPNoResultsView.h"
 #import "WPStatsService.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static NSString *const VisitorsUnitButtonCellReuseIdentifier = @"VisitorsUnitButtonCellReuseIdentifier";
 static NSString *const TodayYesterdayButtonCellReuseIdentifier = @"TodayYesterdayButtonCellReuseIdentifier";
@@ -128,7 +122,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
   
-    [WPStatsStyleGuide configureColorsForView:self.view andTableView:self.tableView];
+    [WPStyleGuide configureColorsForView:self.view andTableView:self.tableView];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, HeaderHeight, 0);
     
@@ -146,7 +140,15 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
     [self showNoResultsWithTitle:NSLocalizedString(@"No stats to display", nil) message:nil];
     
-    // May need a better place for this
+    // TODO Show a message when no connection is available (need a modular way to do this)
+    //    WordPressAppDelegate *appDelegate = [WordPressAppDelegate sharedWordPressApplicationDelegate];
+    //    if (!appDelegate.connectionAvailable) {
+    //        [self showNoResultsWithTitle:NSLocalizedString(@"No Connection", @"") message:NSLocalizedString(@"An active internet connection is required to view stats", @"")];
+    //    } else {
+    //        [self initStats];
+    //    }
+
+    // TODO This may not be the right place for this now that it's a component
     [self initStats];
 }
 
@@ -157,41 +159,34 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     _statModels = nil;
 }
 
-- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder
+{
     [coder encodeObject:self.siteID forKey:WPStatsSiteIDRestorationKey];
     [coder encodeObject:self.oauth2Token forKey:WPStatsOAuth2TokenRestorationKey];
     [super encodeRestorableStateWithCoder:coder];
 }
 
-//- (void)setBlog:(Blog *)blog {
-//    _blog = blog;
-//    DDLogInfo(@"Loading Stats for the following blog: %@", [blog url]);
-//    
-//    WordPressAppDelegate *appDelegate = [WordPressAppDelegate sharedWordPressApplicationDelegate];
-//    if (!appDelegate.connectionAvailable) {
-//        [self showNoResultsWithTitle:NSLocalizedString(@"No Connection", @"") message:NSLocalizedString(@"An active internet connection is required to view stats", @"")];
-//    } else {
-//        [self initStats];
-//    }
-//}
-
-- (void)initStats {
+- (void)initStats
+{
     self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID andOAuth2Token:self.oauth2Token];
     [self loadStats];
 }
 
-- (void)showNoResultsWithTitle:(NSString *)title message:(NSString *)message {
+- (void)showNoResultsWithTitle:(NSString *)title message:(NSString *)message
+{
     [_noResultsView removeFromSuperview];
     WPNoResultsView *noResultsView = [WPNoResultsView noResultsViewWithTitle:title message:message accessoryView:nil buttonTitle:nil];
     _noResultsView = noResultsView;
     [self.tableView addSubview:_noResultsView];
 }
 
-- (void)hideNoResultsView {
+- (void)hideNoResultsView
+{
     [_noResultsView removeFromSuperview];
 }
 
-- (void)loadStats {
+- (void)loadStats
+{
     void (^failure)(NSError *error) = ^(NSError *error) {
         if (!_resultsAvailable) {
             [self showNoResultsWithTitle:NSLocalizedString(@"Error displaying stats", nil) message:NSLocalizedString(@"Please try again later", nil)];
@@ -217,19 +212,25 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     } failureHandler:failure];
 }
 
-- (void)refreshControlTriggered {
+- (void)refreshControlTriggered
+{
     [self loadStats];
 }
 
-- (BOOL)showingTodayForSection:(StatsSection)section {
+- (BOOL)showingTodayForSection:(StatsSection)section
+{
     return [_showingToday[@(section)] boolValue];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _resultsAvailable ? StatsSectionTotalCount : 0;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    NSInteger statsWebViewSectionAdjustment = [self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)] ? 0 : -1;
+    
+    return _resultsAvailable ? StatsSectionTotalCount + statsWebViewSectionAdjustment : 0;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     if (!_resultsAvailable) {
         return 0;
     }
@@ -255,7 +256,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     switch (indexPath.section) {
         case StatsSectionVisitors:
             switch (indexPath.row) {
@@ -293,7 +295,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     switch (indexPath.section) {
         case StatsSectionVisitors:
             switch (indexPath.row) {
@@ -354,15 +357,17 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
             return [self cellForItemListSectionAtIndexPath:indexPath];
         case StatsSectionLinkToWebview:
         {
-            StatsLinkToWebviewCell *cell = [tableView dequeueReusableCellWithIdentifier:LinkToWebviewCellIdentifier];
-            [cell configureForSection:StatsSectionLinkToWebview];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.onTappedLinkToWebview = ^{
-//                StatsWebViewController *vc = [[StatsWebViewController alloc] init];
-//                vc.blog = self.blog;
-//                [self.navigationController pushViewController:vc animated:YES];
-            };
-            return cell;
+            if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
+                StatsLinkToWebviewCell *cell = [tableView dequeueReusableCellWithIdentifier:LinkToWebviewCellIdentifier];
+                [cell configureForSection:StatsSectionLinkToWebview];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.onTappedLinkToWebview = ^{
+                    [self.statsDelegate statsViewController:self didSelectViewWebStatsForSiteID:self.siteID];
+                };
+                return cell;
+            } else {
+                return nil;
+            }
         }
         default:
             return nil;

@@ -5,7 +5,7 @@
 #import "WPImageSource.h"
 #import "NSString+XMLExtensions.h"
 #import "StatsGroup.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static CGFloat const CellHeight = 30.0f;
 static CGFloat const PaddingForCellSides = 10.0f;
@@ -93,7 +93,7 @@ static CGFloat const RowIconWidth = 20.0f;
 - (void)setLinkEnabled:(BOOL)linkEnabled {
     _linkEnabled = linkEnabled;
   
-    UIColor *color = linkEnabled ? [WPStatsStyleGuide baseDarkerBlue] : [WPStatsStyleGuide whisperGrey];
+    UIColor *color = linkEnabled ? [WPStyleGuide baseDarkerBlue] : [WPStyleGuide whisperGrey];
     
     if (_linkEnabled) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -127,7 +127,7 @@ static CGFloat const RowIconWidth = 20.0f;
             .origin = CGPointMake(CGRectGetMinX(self.leftView.frame), 0),
             .size = CGSizeMake(CGRectGetMaxX(self.rightView.frame) - CGRectGetMinX(self.leftView.frame), IS_RETINA ? 0.5f : 1.0f)
         }];
-        separator.backgroundColor = [WPStatsStyleGuide readGrey];
+        separator.backgroundColor = [WPStyleGuide readGrey];
         self.separator = separator;
         [self addSubview:separator];
     }
@@ -135,11 +135,11 @@ static CGFloat const RowIconWidth = 20.0f;
 
 - (UILabel *)createLabelWithTitle:(NSString *)title titleCell:(BOOL)titleCell {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.textColor = [WPStatsStyleGuide whisperGrey];
+    titleLabel.textColor = [WPStyleGuide whisperGrey];
     titleLabel.text = title;
     titleLabel.backgroundColor = [UIColor whiteColor];
     titleLabel.opaque = YES;
-    titleLabel.font = titleCell ? [WPStatsStyleGuide subtitleFontBold] : [WPStatsStyleGuide subtitleFont];
+    titleLabel.font = titleCell ? [WPStyleGuide subtitleFontBold] : [WPStyleGuide subtitleFont];
     [titleLabel sizeToFit];
     return titleLabel;
 }
@@ -151,7 +151,7 @@ static CGFloat const RowIconWidth = 20.0f;
     
     if (!titleCell) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, RowIconWidth, RowIconWidth)];
-        imageView.backgroundColor = [WPStatsStyleGuide readGrey];
+        imageView.backgroundColor = [WPStyleGuide readGrey];
         [view addSubview:imageView];
 
         label.frame = (CGRect) {

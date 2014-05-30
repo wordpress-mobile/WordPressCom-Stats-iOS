@@ -1,5 +1,5 @@
 #import "StatsNoResultsCell.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static CGFloat const CellPadding = 15.0f;
 static CGFloat const MinCellHeight = 60.0f;
@@ -40,7 +40,7 @@ static CGFloat const MinCellHeight = 60.0f;
     label.attributedText = [[self class] attributedStringMessageForSection:section];
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.numberOfLines = 0;
-    label.textColor = [WPStatsStyleGuide littleEddieGrey];
+    label.textColor = [WPStyleGuide littleEddieGrey];
     
     self.noStatsDescriptionLabel = label;
     [self.contentView addSubview:label];
@@ -72,8 +72,8 @@ static CGFloat const MinCellHeight = 60.0f;
     NSString *description = [[self class] descriptionForSection:section];
     NSString *completeString = [NSString stringWithFormat:@"%@ %@", boldMessage, description];
     
-    NSDictionary *defaultAttributes = [WPStatsStyleGuide regularTextAttributes];
-    NSDictionary *boldAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[WPStatsStyleGuide regularTextFontBold], NSFontAttributeName, nil];
+    NSDictionary *defaultAttributes = [WPStyleGuide regularTextAttributes];
+    NSDictionary *boldAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[WPStyleGuide regularTextFontBold], NSFontAttributeName, nil];
     NSMutableAttributedString *noResultsAttributedString = [[NSMutableAttributedString alloc] initWithString:completeString attributes:defaultAttributes];
     [noResultsAttributedString setAttributes:boldAttributes range:NSMakeRange(0, boldMessage.length)];
     

@@ -1,5 +1,5 @@
 #import "StatsButtonCell.h"
-#import "WPStatsStyleGuide.h"
+#import "WPStyleGuide.h"
 
 static CGFloat const StatsButtonHeight = 50.0f;
 
@@ -15,7 +15,7 @@ static CGFloat const StatsButtonHeight = 50.0f;
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[]];
-        [_segmentedControl setTitleTextAttributes:@{NSFontAttributeName : [WPStatsStyleGuide subtitleFont]} forState:UIControlStateNormal];
+        [_segmentedControl setTitleTextAttributes:@{NSFontAttributeName : [WPStyleGuide subtitleFont]} forState:UIControlStateNormal];
         [_segmentedControl addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:_segmentedControl];
     }
