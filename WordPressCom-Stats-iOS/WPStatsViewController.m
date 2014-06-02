@@ -53,8 +53,6 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 @interface WPStatsViewController () <UITableViewDataSource, UITableViewDelegate, WPStatsTodayYesterdayButtonCellDelegate, UIViewControllerRestoration, StatsButtonCellDelegate>
 
-@property (nonatomic, strong) NSNumber *siteID;
-@property (nonatomic, copy)   NSString *oauth2Token;
 @property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, strong) NSMutableDictionary *statModels;
 @property (nonatomic, strong) NSMutableDictionary *showingToday;
@@ -168,8 +166,10 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 - (void)initStats
 {
-    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID andOAuth2Token:self.oauth2Token];
-    [self loadStats];
+    if (self.statsService == nil) {
+        self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID andOAuth2Token:self.oauth2Token];
+        [self loadStats];
+    }
 }
 
 - (void)showNoResultsWithTitle:(NSString *)title message:(NSString *)message
