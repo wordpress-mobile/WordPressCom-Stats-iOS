@@ -1,6 +1,6 @@
 //
 //  main.m
-//  StatsExample
+//  StatsDemo
 //
 //  Created by Aaron Douglas on 6/16/14.
 //  Copyright (c) 2014 Automattic Inc. All rights reserved.

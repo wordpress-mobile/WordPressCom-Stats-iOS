@@ -1,6 +1,6 @@
 //
-//  StatsExampleTests.m
-//  StatsExampleTests
+//  StatsDemoTests.m
+//  StatsDemoTests
 //
 //  Created by Aaron Douglas on 6/16/14.
 //  Copyright (c) 2014 Automattic Inc. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface StatsExampleTests : XCTestCase
+@interface StatsDemoTests : XCTestCase
 
 @end
 
-@implementation StatsExampleTests
+@implementation StatsDemoTests
 
 - (void)setUp
 {
