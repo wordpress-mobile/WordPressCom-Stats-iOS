@@ -16,7 +16,6 @@
 
 static NSString *const VisitorsUnitButtonCellReuseIdentifier = @"VisitorsUnitButtonCellReuseIdentifier";
 static NSString *const TodayYesterdayButtonCellReuseIdentifier = @"TodayYesterdayButtonCellReuseIdentifier";
-static NSString *const GraphCellReuseIdentifier = @"GraphCellReuseIdentifier";
 static NSString *const CountCellReuseIdentifier = @"DoubleCountCellReuseIdentifier";
 static NSString *const NoResultsCellIdentifier = @"NoResultsCellIdentifier";
 static NSString *const ResultRowCellIdentifier = @"ResultRowCellIdentifier";
@@ -126,7 +125,6 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     
     [self.tableView registerClass:[WPStatsButtonCell class] forCellReuseIdentifier:VisitorsUnitButtonCellReuseIdentifier];
     [self.tableView registerClass:[WPStatsTodayYesterdayButtonCell class] forCellReuseIdentifier:TodayYesterdayButtonCellReuseIdentifier];
-    [self.tableView registerClass:[WPStatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellReuseIdentifier];
     [self.tableView registerClass:[WPStatsCounterCell class] forCellReuseIdentifier:CountCellReuseIdentifier];
     [self.tableView registerClass:[WPStatsNoResultsCell class] forCellReuseIdentifier:NoResultsCellIdentifier];
     [self.tableView registerClass:[WPStatsTwoColumnCell class] forCellReuseIdentifier:ResultRowCellIdentifier];
