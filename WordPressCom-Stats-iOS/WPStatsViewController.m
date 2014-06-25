@@ -13,6 +13,7 @@
 #import "WPNoResultsView.h"
 #import "WPStatsService.h"
 #import "WPStyleGuide.h"
+#import "WPStatsGraphViewController.h"
 
 static NSString *const VisitorsUnitButtonCellReuseIdentifier = @"VisitorsUnitButtonCellReuseIdentifier";
 static NSString *const TodayYesterdayButtonCellReuseIdentifier = @"TodayYesterdayButtonCellReuseIdentifier";
@@ -59,6 +60,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 @property (nonatomic, assign) BOOL resultsAvailable;
 @property (nonatomic, weak) WPNoResultsView *noResultsView;
 @property (nonatomic, strong) NSMutableDictionary *expandedLinkGroups;
+@property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 
 @end
 
@@ -92,6 +94,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                          @YES, @(StatsSectionReferrers), nil];
         
         _resultsAvailable = NO;
+        _graphViewController = [[WPStatsGraphViewController alloc] init];
+        [self addChildViewController:_graphViewController];
         
         self.restorationIdentifier = NSStringFromClass([self class]);
         self.restorationClass = [self class];
@@ -128,7 +132,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     [self.tableView registerClass:[WPStatsCounterCell class] forCellReuseIdentifier:CountCellReuseIdentifier];
     [self.tableView registerClass:[WPStatsNoResultsCell class] forCellReuseIdentifier:NoResultsCellIdentifier];
     [self.tableView registerClass:[WPStatsTwoColumnCell class] forCellReuseIdentifier:ResultRowCellIdentifier];
-    [self.tableView registerClass:[WPStatsViewsVisitorsBarGraphCell class] forCellReuseIdentifier:GraphCellIdentifier];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:GraphCellIdentifier];
     [self.tableView registerClass:[WPStatsLinkToWebviewCell class] forCellReuseIdentifier:LinkToWebviewCellIdentifier];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -302,9 +306,17 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 }
                 case VisitorRowGraph:
                 {
-                    WPStatsViewsVisitorsBarGraphCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
-                    [cell setViewsVisitors:_statModels[@(StatsSectionVisitorsGraph)]];
-                    [cell showGraphForUnit:_currentViewsVisitorsGraphUnit];
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
+                    self.graphViewController.viewsVisitors = self.statModels[@(StatsSectionVisitorsGraph)];
+                    self.graphViewController.currentUnit = self.currentViewsVisitorsGraphUnit;
+                    
+                    if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
+                        UIView *graphView = self.graphViewController.view;
+                        graphView.frame = cell.contentView.bounds;
+                        graphView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+                        [cell.contentView addSubview:graphView];
+                    }
+                    
                     return cell;
                 }
                 case VisitorRowTodayStats:
