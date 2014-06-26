@@ -16,7 +16,7 @@ static CGFloat const AxisPadding = 18.0f;
 {
     [super layoutSubviews];
 
-    CGFloat legendXOffset = self.frame.size.width - AxisPadding;
+    CGFloat legendXOffset = CGRectGetWidth(self.frame);
     
     for (NSString *category in self.categoryBars) {
         UILabel *legendName = self.categoryObjects[category][@"label"];

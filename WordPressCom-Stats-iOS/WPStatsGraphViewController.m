@@ -1,5 +1,6 @@
 #import "WPStatsGraphViewController.h"
 #import "WPStatsGraphLegendView.h"
+#import "WPStatsGraphBarCell.h"
 #import <WPStyleGuide.h>
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
@@ -30,8 +31,12 @@ static NSString *const LegendView = @"LegendView";
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
     
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.showsVerticalScrollIndicator = NO;
+    self.collectionView.scrollEnabled = NO;
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 40.0f, 0.0f, 5.0f);
     
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CategoryBarCell];
+    [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
     [self.collectionView registerClass:[WPStatsGraphLegendView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LegendView];
 }
 
@@ -45,7 +50,7 @@ static NSString *const LegendView = @"LegendView";
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
-    [self.flowLayout invalidateLayout];
+    [self.collectionView performBatchUpdates:nil completion:nil];
 }
 
 #pragma mark - UICollectionViewDelegate methods
@@ -59,8 +64,38 @@ static NSString *const LegendView = @"LegendView";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CategoryBarCell forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor redColor];
+    WPStatsGraphBarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CategoryBarCell forIndexPath:indexPath];
+    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
+    NSArray *barData = @[@{ @"color" : [WPStyleGuide statsLighterBlue],
+                            @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
+                            @"name" : categoryData[StatsViewsCategory][indexPath.row][@"name"]
+                            },
+                         @{ @"color" : [WPStyleGuide statsDarkerBlue],
+                            @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
+                            @"name" : categoryData[StatsVisitorsCategory][indexPath.row][@"name"],
+                            }
+                         ];
+
+    // TODO - Move this to be calculated once per data set
+    CGFloat maximumY = 0.0f;
+    for (NSDictionary *dict in categoryData[StatsViewsCategory]) {
+        NSNumber *number = dict[@"count"];
+        if (maximumY < [number floatValue]) {
+            maximumY = [number floatValue];
+        }
+    }
+    for (NSDictionary *dict in categoryData[StatsVisitorsCategory]) {
+        NSNumber *number = dict[@"count"];
+        if (maximumY < [number floatValue]) {
+            maximumY = [number floatValue];
+        }
+    }
+    
+    [cell setMaximumY:maximumY];
+    [cell setCategoryBars:barData];
+    // TODO :: Name is the same for all points - should put this somewhere better
+    [cell setCategoryName:barData[0][@"name"]];
+    [cell finishedSettingProperties];
     
     return cell;
 }
@@ -86,7 +121,10 @@ static NSString *const LegendView = @"LegendView";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGSize size = CGSizeMake(10, 150);//CGRectGetHeight(collectionView.frame));
+    CGFloat width = 30.0f;
+    CGFloat height = CGRectGetHeight(collectionView.frame) - 25.0;
+    
+    CGSize size = CGSizeMake(width, height);
     
     return size;
 }
@@ -102,9 +140,20 @@ static NSString *const LegendView = @"LegendView";
 //}
 
 
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0.0, 40.0, 0.0, 0.0);
+//}
+
 //- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 45 - (30.0 * 7)) / 7);
+    
+    return spacing;
+}
+
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 

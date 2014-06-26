@@ -1,20 +1,11 @@
 #import "WPStatsViewsVisitorsBarGraphCell.h"
 #import "WPStyleGuide.h"
+#import "WPStyleGuide+Stats.h"
 
 static CGFloat const AxisPadding = 18.0f;
 static CGFloat InitialBarWidth = 30.0f;
 static NSString *const CategoryKey = @"category";
 static NSString *const PointsKey = @"points";
-
-@interface WPStyleGuide (WPBarGraphView)
-+ (UIFont *)axisLabelFont;
-@end
-
-@implementation WPStyleGuide (WPBarGraphView)
-+ (UIFont *)axisLabelFont {
-    return [UIFont fontWithName:@"OpenSans" size:8.0f];
-}
-@end
 
 @interface WPBarGraphView : UIView
 
