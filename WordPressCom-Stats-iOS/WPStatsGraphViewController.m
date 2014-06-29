@@ -2,21 +2,26 @@
 #import "WPStatsGraphLegendView.h"
 #import "WPStatsGraphBarCell.h"
 #import <WPStyleGuide.h>
+#import "WPStatsCollectionViewFlowLayout.h"
+#import "WPStatsGraphBackgroundView.h"
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, weak) UICollectionViewFlowLayout *flowLayout;
+@property (nonatomic, weak) WPStatsCollectionViewFlowLayout *flowLayout;
+@property (nonatomic, assign) CGFloat maximumY;
+@property (nonatomic, assign) NSUInteger numberOfXValues;
 
 @end
 
 static NSString *const CategoryBarCell = @"CategoryBarCell";
 static NSString *const LegendView = @"LegendView";
+static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 @implementation WPStatsGraphViewController
 
 - (instancetype)init
 {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    WPStatsCollectionViewFlowLayout *layout = [[WPStatsCollectionViewFlowLayout alloc] init];
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
         _flowLayout = layout;
@@ -34,10 +39,12 @@ static NSString *const LegendView = @"LegendView";
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;
-    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 40.0f, 0.0f, 5.0f);
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 40.0f, 0.0f, 15.0f);
     
     [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
     [self.collectionView registerClass:[WPStatsGraphLegendView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LegendView];
+    [self.collectionView registerClass:[WPStatsGraphBackgroundView class] forSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground withReuseIdentifier:GraphBackgroundView];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,22 +83,8 @@ static NSString *const LegendView = @"LegendView";
                             }
                          ];
 
-    // TODO - Move this to be calculated once per data set
-    CGFloat maximumY = 0.0f;
-    for (NSDictionary *dict in categoryData[StatsViewsCategory]) {
-        NSNumber *number = dict[@"count"];
-        if (maximumY < [number floatValue]) {
-            maximumY = [number floatValue];
-        }
-    }
-    for (NSDictionary *dict in categoryData[StatsVisitorsCategory]) {
-        NSNumber *number = dict[@"count"];
-        if (maximumY < [number floatValue]) {
-            maximumY = [number floatValue];
-        }
-    }
     
-    [cell setMaximumY:maximumY];
+    [cell setMaximumY:self.maximumY];
     [cell setCategoryBars:barData];
     // TODO :: Name is the same for all points - should put this somewhere better
     [cell setCategoryName:barData[0][@"name"]];
@@ -110,11 +103,15 @@ static NSString *const LegendView = @"LegendView";
         [legend finishedAddingCategories];
 
         return legend;
+    } else if ([kind isEqualToString:WPStatsCollectionElementKindGraphBackground]) {
+        WPStatsGraphBackgroundView *background = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:GraphBackgroundView forIndexPath:indexPath];
+        background.maximumYValue = self.maximumY;
+        background.numberOfXValues = self.numberOfXValues;
+        
+        return background;
     }
     
-    UICollectionReusableView *supplementaryView = [[UICollectionReusableView alloc] init];
-    
-    return supplementaryView;
+    return nil;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout methods
@@ -149,7 +146,7 @@ static NSString *const LegendView = @"LegendView";
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
-    CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 45 - (30.0 * 7)) / 7);
+    CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 55 - (30.0 * self.numberOfXValues)) / self.numberOfXValues);
     
     return spacing;
 }
@@ -158,5 +155,42 @@ static NSString *const LegendView = @"LegendView";
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 
 
+- (void)setViewsVisitors:(WPStatsViewsVisitors *)viewsVisitors
+{
+    _viewsVisitors = viewsVisitors;
+    [self calculateMaximumYValue];
+}
+
+- (void)setCurrentUnit:(WPStatsViewsVisitorsUnit)currentUnit
+{
+    _currentUnit = currentUnit;
+    [self calculateMaximumYValue];
+}
+
+- (void)calculateMaximumYValue
+{
+    // TODO - Move this to be calculated once per data set
+    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
+    CGFloat maximumY = 0.0f;
+
+    for (NSDictionary *dict in categoryData[StatsViewsCategory]) {
+        NSNumber *number = dict[@"count"];
+        if (maximumY < [number floatValue]) {
+            maximumY = [number floatValue];
+        }
+    }
+    for (NSDictionary *dict in categoryData[StatsVisitorsCategory]) {
+        NSNumber *number = dict[@"count"];
+        if (maximumY < [number floatValue]) {
+            maximumY = [number floatValue];
+        }
+    }
+    
+    self.maximumY = maximumY;
+    
+    NSUInteger countViews = [categoryData[StatsViewsCategory] count];
+    NSUInteger countVisitors = [categoryData[StatsVisitorsCategory] count];
+    self.numberOfXValues = MAX(countViews, countVisitors);
+}
 
 @end
