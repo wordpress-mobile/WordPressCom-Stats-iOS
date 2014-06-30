@@ -3,6 +3,7 @@
 @interface WPStatsGraphBarCell : UICollectionViewCell
 
 @property (nonatomic, assign) CGFloat maximumY;
+@property (nonatomic, assign) NSUInteger numberOfYValues;
 
 // @[ @{ @"color" : UIColor, @"value" : CGFloat }, @{ ... } ]
 @property (nonatomic, strong) NSArray *categoryBars;

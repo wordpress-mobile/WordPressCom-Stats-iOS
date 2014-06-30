@@ -54,7 +54,7 @@ static CGFloat const AxisPadding = 18.0f;
     
     // Y axis line markers and values
     // Round up and extend past max value to the next 10s
-    NSUInteger yAxisTicks = 7;
+    NSUInteger yAxisTicks = self.numberOfYValues;
     NSUInteger stepValue = 1;
     if (maxYPoint > 0) {
         CGFloat s = (CGFloat)maxYPoint/(CGFloat)yAxisTicks;
@@ -64,7 +64,7 @@ static CGFloat const AxisPadding = 18.0f;
     }
     CGFloat yAxisStepSize = yAxisHeight/yAxisTicks;
     
-    for (NSUInteger tick = 0; tick <= yAxisTicks; tick++) {
+    for (NSUInteger tick = 0; tick < yAxisTicks; tick++) {
         CGFloat linePosition = yAxisStartPoint+yAxisHeight-(yAxisStepSize*tick)-0.5f;
         CGContextMoveToPoint(context, xAxisStartPoint, linePosition);
         CGContextAddLineToPoint(context, xAxisStartPoint+xAxisWidth-2*AxisPadding, linePosition);

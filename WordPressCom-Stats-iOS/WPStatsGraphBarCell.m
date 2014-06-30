@@ -26,7 +26,7 @@
 {
     // Y axis line markers and values
     // Round up and extend past max value to the next 10s
-    NSUInteger yAxisTicks = 7;
+    NSUInteger yAxisTicks = self.numberOfYValues;
     NSUInteger stepValue = 1;
     CGFloat yAxisHeight = CGRectGetHeight(self.contentView.bounds) - 20.0;
     

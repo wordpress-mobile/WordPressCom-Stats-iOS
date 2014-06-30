@@ -10,6 +10,7 @@
 @property (nonatomic, weak) WPStatsCollectionViewFlowLayout *flowLayout;
 @property (nonatomic, assign) CGFloat maximumY;
 @property (nonatomic, assign) NSUInteger numberOfXValues;
+@property (nonatomic, assign) NSUInteger numberOfYValues;
 
 @end
 
@@ -25,6 +26,7 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
         _flowLayout = layout;
+        _numberOfYValues = 7;
     }
     return self;
 }
@@ -84,7 +86,9 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
                          ];
 
     
-    [cell setMaximumY:self.maximumY];
+    cell.maximumY = self.maximumY;
+    cell.numberOfYValues = self.numberOfYValues;
+    
     [cell setCategoryBars:barData];
     // TODO :: Name is the same for all points - should put this somewhere better
     [cell setCategoryName:barData[0][@"name"]];
@@ -107,6 +111,7 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
         WPStatsGraphBackgroundView *background = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:GraphBackgroundView forIndexPath:indexPath];
         background.maximumYValue = self.maximumY;
         background.numberOfXValues = self.numberOfXValues;
+        background.numberOfYValues = self.numberOfYValues;
         
         return background;
     }
