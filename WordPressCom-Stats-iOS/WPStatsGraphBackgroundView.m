@@ -10,6 +10,7 @@ static CGFloat const AxisPadding = 18.0f;
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        self.contentMode = UIViewContentModeRedraw;
     }
     return self;
 }
