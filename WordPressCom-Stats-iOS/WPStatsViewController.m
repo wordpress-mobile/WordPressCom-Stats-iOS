@@ -2,7 +2,6 @@
 #import "WPStatsButtonCell.h"
 #import "WPStatsCounterCell.h"
 #import "WPStatsNoResultsCell.h"
-#import "WPStatsViewsVisitorsBarGraphCell.h"
 #import "WPStatsSummary.h"
 #import "WPStatsTitleCountItem.h"
 #import "WPStatsTodayYesterdayButtonCell.h"
@@ -257,7 +256,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 case VisitorRowGraphUnitButton:
                     return [WPStatsButtonCell heightForRow];
                 case VisitorRowGraph:
-                    return [WPStatsViewsVisitorsBarGraphCell heightForRow];
+                    return 200.0f;
                 case VisitorRowTodayStats:
                 case VisitorRowBestEver:
                 case VisitorRowAllTime:
