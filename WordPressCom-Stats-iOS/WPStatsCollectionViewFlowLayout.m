@@ -8,7 +8,7 @@ NSString * const WPStatsCollectionElementKindGraphBackground = @"WPStatsCollecti
 {
     NSMutableArray *allAttributes = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect]];
     
-    // FIXME :: This is a hack - make the layout retain this object layout somewhere instead of shoe-horning it in
+    // Assumption is background supplementary view is always visible; may not be the case in the future
     UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground
                                                                                                                   withIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     attributes.frame = self.collectionView.bounds;
