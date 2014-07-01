@@ -8,7 +8,7 @@
 // @[ @{ @"color" : UIColor, @"value" : CGFloat }, @{ ... } ]
 @property (nonatomic, strong) NSArray *categoryBars;
 
-@property (nonatomic, copy) NSString *categoryName;
+@property (nonatomic, copy) NSString *barName;
 
 - (void)finishedSettingProperties;
 

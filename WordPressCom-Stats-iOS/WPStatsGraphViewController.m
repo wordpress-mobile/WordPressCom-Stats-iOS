@@ -77,21 +77,20 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     NSArray *barData = @[@{ @"color" : [WPStyleGuide statsLighterBlue],
                             @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
-                            @"name" : categoryData[StatsViewsCategory][indexPath.row][@"name"]
+                            @"name" : StatsViewsCategory,
                             },
                          @{ @"color" : [WPStyleGuide statsDarkerBlue],
                             @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
-                            @"name" : categoryData[StatsVisitorsCategory][indexPath.row][@"name"],
+                            @"name" : StatsVisitorsCategory,
                             }
                          ];
 
-    
     cell.maximumY = self.maximumY;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
     // TODO :: Name is the same for all points - should put this somewhere better
-    [cell setCategoryName:barData[0][@"name"]];
+    [cell setBarName:categoryData[StatsViewsCategory][indexPath.row][@"name"]];
     [cell finishedSettingProperties];
     
     return cell;

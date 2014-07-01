@@ -11,6 +11,8 @@ static CGFloat const AxisPadding = 18.0f;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.contentMode = UIViewContentModeRedraw;
+        self.accessibilityLabel = NSLocalizedString(@"Visitors and Views Graph", @"Accessibility label for visitors and views graph view");
+        self.isAccessibilityElement = YES;
     }
     return self;
 }
@@ -83,6 +85,7 @@ static CGFloat const AxisPadding = 18.0f;
     label.textColor = [WPStyleGuide littleEddieGrey];
     label.backgroundColor = [UIColor whiteColor];
     label.opaque = YES;
+    label.isAccessibilityElement = NO;
     [label sizeToFit];
     return label;
 }

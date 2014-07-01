@@ -72,6 +72,7 @@ static CGFloat const AxisPadding = 18.0f;
     label.textColor = [WPStyleGuide littleEddieGrey];
     label.opaque = YES;
     label.backgroundColor = [UIColor whiteColor];
+    label.isAccessibilityElement = NO;
     [label sizeToFit];
     return label;
 }
