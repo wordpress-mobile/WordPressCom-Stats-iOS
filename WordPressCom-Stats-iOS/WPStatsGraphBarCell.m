@@ -51,7 +51,7 @@
         
         [self.contentView addSubview:view];
 
-        [accessibilityValue appendString:[NSString stringWithFormat:@"%@ %i ", name, value]];
+        [accessibilityValue appendString:[NSString stringWithFormat:@"%@ %@ ", name, @(value)]];
     
         inset += 2.0;
     }];
