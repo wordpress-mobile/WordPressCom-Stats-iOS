@@ -4,16 +4,6 @@
 
 @implementation WPStatsGraphBarCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.isAccessibilityElement = YES;
-        self.accessibilityLabel = @"Moo cow";
-    }
-    return self;
-}
-
 - (void)prepareForReuse
 {
     [super prepareForReuse];
