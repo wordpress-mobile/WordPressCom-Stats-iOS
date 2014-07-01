@@ -140,7 +140,6 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
     [self showNoResultsWithTitle:NSLocalizedString(@"Fetching latest stats", @"Message to display while initially loading stats") message:nil];
     
-    // TODO This may not be the right place for this now that it's a component
     [self initStats];
 }
 

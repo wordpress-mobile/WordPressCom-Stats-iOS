@@ -135,29 +135,12 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     return CGSizeMake(CGRectGetWidth(collectionView.frame), 25.0);
 }
 
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
-//{
-//    
-//}
-
-
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-//{
-//    return UIEdgeInsetsMake(0.0, 40.0, 0.0, 0.0);
-//}
-
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
-
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 55 - (30.0 * self.numberOfXValues)) / self.numberOfXValues);
     
     return spacing;
 }
-
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
-
 
 - (void)setViewsVisitors:(WPStatsViewsVisitors *)viewsVisitors
 {
@@ -173,7 +156,6 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 - (void)calculateMaximumYValue
 {
-    // TODO - Move this to be calculated once per data set
     NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     CGFloat maximumY = 0.0f;
 
