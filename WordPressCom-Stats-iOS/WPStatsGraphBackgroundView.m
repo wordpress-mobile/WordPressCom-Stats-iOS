@@ -34,12 +34,12 @@ static CGFloat const AxisPadding = 18.0f;
     CGFloat xAxisStepWidth = 0;
     NSUInteger maxXAxisPointCount = 0; // # points along the x axis
     
-    CGFloat xAxisStartPoint = AxisPadding*2;
+    CGFloat xAxisStartPoint = AxisPadding * 2;
     CGFloat xAxisWidth = rect.size.width - 10.0;
     CGFloat yAxisStartPoint = AxisPadding + 10.0f;
     CGFloat yAxisHeight = rect.size.height - AxisPadding - yAxisStartPoint;
 
-    xAxisStepWidth = (self.frame.size.width-3*AxisPadding)/(self.numberOfXValues);
+    xAxisStepWidth = (CGRectGetWidth(self.frame) - 3 * AxisPadding) / self.numberOfXValues;
 
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, 1.0f);
@@ -59,7 +59,7 @@ static CGFloat const AxisPadding = 18.0f;
     NSUInteger yAxisTicks = self.numberOfYValues;
     NSUInteger stepValue = 1;
     if (maxYPoint > 0) {
-        CGFloat s = (CGFloat)maxYPoint/(CGFloat)yAxisTicks;
+        CGFloat s = (CGFloat)maxYPoint / (CGFloat)yAxisTicks;
         long len = (long)(double)log10(s);
         long div = (long)(double)pow(10, len);
         stepValue = ceil(s / div) * div;

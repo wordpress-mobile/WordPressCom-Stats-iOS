@@ -40,7 +40,7 @@
         
         CGFloat percentHeight = value / self.maximumY;
         CGFloat height = floorf((CGRectGetHeight(self.contentView.bounds) - 20.0) * percentHeight);
-        CGFloat offsetY = CGRectGetHeight(self.contentView.bounds) - (height + 20);
+        CGFloat offsetY = CGRectGetHeight(self.contentView.bounds) - (height + 20.0);
         
         CGRect rect = CGRectInset(self.contentView.bounds, inset, 0.0);
         rect.size.height = height;
