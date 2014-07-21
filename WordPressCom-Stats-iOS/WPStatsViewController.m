@@ -662,7 +662,16 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectData:(NSArray *)data withXLocation:(CGFloat)xLocation
 {
     self.showingGraphToast = YES;
-//    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:VisitorRowGraph inSection:StatsSectionVisitors]] withRowAnimation:UITableViewRowAnimationNone];
+
+    // Causes table rows to be redrawn if heights have changed
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
+}
+
+- (void)statsGraphViewControllerDidDeselectAllBars:(WPStatsGraphViewController *)controller
+{
+    self.showingGraphToast = NO;
+    
     // Causes table rows to be redrawn if heights have changed
     [self.tableView beginUpdates];
     [self.tableView endUpdates];

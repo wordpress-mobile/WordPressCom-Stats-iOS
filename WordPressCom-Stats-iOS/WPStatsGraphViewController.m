@@ -39,6 +39,7 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
     
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.collectionView.allowsMultipleSelection = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;
@@ -64,6 +65,11 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 {
     NSLog(@"didSelect");
     NSArray *selectedIndexPaths = [collectionView indexPathsForSelectedItems];
+    [selectedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *selectedIndexPath, NSUInteger idx, BOOL *stop) {
+        if (!([selectedIndexPath compare:indexPath] == NSOrderedSame)) {
+            [collectionView deselectItemAtIndexPath:selectedIndexPath animated:YES];
+        }
+    }];
     
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectData:withXLocation:)]) {
         [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:0.0f];
@@ -73,6 +79,11 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"didDeselect");
+    
+    if ([[collectionView indexPathsForSelectedItems] count] == 0
+        && [self.graphDelegate respondsToSelector:@selector(statsGraphViewControllerDidDeselectAllBars:)]) {
+        [self.graphDelegate statsGraphViewControllerDidDeselectAllBars:self];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource methods
