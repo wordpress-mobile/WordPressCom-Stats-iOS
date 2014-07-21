@@ -16,6 +16,7 @@
 
 static NSString *const CategoryBarCell = @"CategoryBarCell";
 static NSString *const LegendView = @"LegendView";
+static NSString *const FooterView = @"FooterView";
 static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 @implementation WPStatsGraphViewController
@@ -45,6 +46,7 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     
     [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
     [self.collectionView registerClass:[WPStatsGraphLegendView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LegendView];
+    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
     [self.collectionView registerClass:[WPStatsGraphBackgroundView class] forSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground withReuseIdentifier:GraphBackgroundView];
     
 }
@@ -58,6 +60,21 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 #pragma mark - UICollectionViewDelegate methods
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"didSelect");
+    NSArray *selectedIndexPaths = [collectionView indexPathsForSelectedItems];
+    
+    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectData:withXLocation:)]) {
+        [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:0.0f];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"didDeselect");
+}
+
 #pragma mark - UICollectionViewDataSource methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -68,23 +85,14 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     WPStatsGraphBarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CategoryBarCell forIndexPath:indexPath];
-    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
-    NSArray *barData = @[@{ @"color" : [WPStyleGuide statsLighterBlue],
-                            @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
-                            @"name" : StatsViewsCategory,
-                            },
-                         @{ @"color" : [WPStyleGuide statsDarkerBlue],
-                            @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
-                            @"name" : StatsVisitorsCategory,
-                            }
-                         ];
-
+    NSArray *barData = [self barDataForIndexPath:indexPath];
+    
     cell.maximumY = self.maximumY;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
     // TODO :: Name is the same for all points - should put this somewhere better
-    [cell setBarName:categoryData[StatsViewsCategory][indexPath.row][@"name"]];
+    [cell setBarName:[self.viewsVisitors viewsVisitorsForUnit:self.currentUnit][StatsViewsCategory][indexPath.row][@"name"]];
     [cell finishedSettingProperties];
     
     return cell;
@@ -136,6 +144,8 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     return spacing;
 }
 
+#pragma mark - Property methods
+
 - (void)setViewsVisitors:(WPStatsViewsVisitors *)viewsVisitors
 {
     _viewsVisitors = viewsVisitors;
@@ -147,6 +157,8 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     _currentUnit = currentUnit;
     [self calculateMaximumYValue];
 }
+
+#pragma mark - Private methods
 
 - (void)calculateMaximumYValue
 {
@@ -171,6 +183,23 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     NSUInteger countViews = [categoryData[StatsViewsCategory] count];
     NSUInteger countVisitors = [categoryData[StatsVisitorsCategory] count];
     self.numberOfXValues = MAX(countViews, countVisitors);
+}
+
+- (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
+    
+    return @[@{ @"color" : [WPStyleGuide statsLighterBlue],
+                @"selectedColor" : [UIColor orangeColor],
+                @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
+                @"name" : StatsViewsCategory,
+                },
+             @{ @"color" : [WPStyleGuide statsDarkerBlue],
+                @"selectedColor" : [UIColor redColor],
+                @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
+                @"name" : StatsVisitorsCategory,
+                }
+             ];
 }
 
 @end
