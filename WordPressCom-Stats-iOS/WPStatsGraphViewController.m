@@ -72,7 +72,9 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     }];
     
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectData:withXLocation:)]) {
-        [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:0.0f];
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        CGFloat x = cell.center.x + collectionView.contentInset.left;
+        [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:x];
     }
 }
 
@@ -202,11 +204,13 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
                 @"selectedColor" : [WPStyleGuide statsLighterOrange],
                 @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
                 @"name" : StatsViewsCategory,
+                @"x-label" : categoryData[StatsViewsCategory][indexPath.row][@"name"]
                 },
              @{ @"color" : [WPStyleGuide statsDarkerBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
                 @"name" : StatsVisitorsCategory,
+                @"x-label" : categoryData[StatsVisitorsCategory][indexPath.row][@"name"]
                 }
              ];
 }

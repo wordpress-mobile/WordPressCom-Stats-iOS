@@ -13,6 +13,7 @@
 #import "WPStatsService.h"
 #import "WPStyleGuide.h"
 #import "WPStatsGraphViewController.h"
+#import "WPStatsGraphToastView.h"
 
 static NSString *const VisitorsUnitButtonCellReuseIdentifier = @"VisitorsUnitButtonCellReuseIdentifier";
 static NSString *const TodayYesterdayButtonCellReuseIdentifier = @"TodayYesterdayButtonCellReuseIdentifier";
@@ -28,7 +29,7 @@ static NSString *const WPStatsOAuth2TokenRestorationKey = @"WPStatsOAuth2TokenRe
 static NSUInteger const ResultRowMaxItems = 10;
 static CGFloat const HeaderHeight = 44.0f;
 static CGFloat const GraphHeight = 200.0f;
-static CGFloat const GraphToastHeight = 50.0f;
+static CGFloat const GraphToastHeight = 95.0f;
 
 typedef NS_ENUM(NSInteger, VisitorsRow) {
     VisitorRowGraphUnitButton,
@@ -62,6 +63,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 @property (nonatomic, weak) WPNoResultsView *noResultsView;
 @property (nonatomic, strong) NSMutableDictionary *expandedLinkGroups;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
+@property (nonatomic, strong) WPStatsGraphToastView *graphToastView;
 @property (nonatomic, assign, getter=isShowingGraphToast) BOOL showingGraphToast;
 
 @end
@@ -313,6 +315,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 case VisitorRowGraph:
                 {
                     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
+                    cell.clipsToBounds = YES;
                     self.graphViewController.viewsVisitors = self.statModels[@(StatsSectionVisitorsGraph)];
                     self.graphViewController.currentUnit = self.currentViewsVisitorsGraphUnit;
                     
@@ -321,6 +324,10 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                         graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), GraphHeight);
                         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                         [cell.contentView addSubview:graphView];
+                        
+                        WPStatsGraphToastView *toastView = [[WPStatsGraphToastView alloc] initWithFrame:CGRectMake(0, GraphHeight, CGRectGetWidth(cell.contentView.bounds), GraphToastHeight)];
+                        [cell.contentView addSubview:toastView];
+                        self.graphToastView = toastView;
                     }
                     
                     return cell;
@@ -666,6 +673,10 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectData:(NSArray *)data withXLocation:(CGFloat)xLocation
 {
     self.showingGraphToast = YES;
+    self.graphToastView.xOffset = xLocation;
+    self.graphToastView.dateText = data[0][@"x-label"];
+    self.graphToastView.viewCount = [data[0][@"value"] unsignedIntegerValue];
+    self.graphToastView.visitorsCount = [data[1][@"value"] unsignedIntegerValue];
 
     // Causes table rows to be redrawn if heights have changed
     [self.tableView beginUpdates];
