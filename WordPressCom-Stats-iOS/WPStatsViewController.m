@@ -645,6 +645,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 #pragma mark - Visitors Graph button selectors
 
 - (void)graphUnitSelected:(WPStatsViewsVisitorsUnit)unit {
+    [self statsGraphViewControllerDidDeselectAllBars:self.graphViewController];
+    
     self.currentViewsVisitorsGraphUnit = unit;
     self.graphViewController.currentUnit = unit;
     [self.graphViewController.collectionView reloadData];
