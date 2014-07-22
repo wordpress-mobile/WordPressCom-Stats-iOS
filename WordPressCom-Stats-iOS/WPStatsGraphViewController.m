@@ -4,6 +4,7 @@
 #import <WPStyleGuide.h>
 #import "WPStatsCollectionViewFlowLayout.h"
 #import "WPStatsGraphBackgroundView.h"
+#import "WPStyleGuide+Stats.h"
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
 
@@ -63,7 +64,6 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelect");
     NSArray *selectedIndexPaths = [collectionView indexPathsForSelectedItems];
     [selectedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *selectedIndexPath, NSUInteger idx, BOOL *stop) {
         if (!([selectedIndexPath compare:indexPath] == NSOrderedSame)) {
@@ -78,8 +78,6 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didDeselect");
-    
     if ([[collectionView indexPathsForSelectedItems] count] == 0
         && [self.graphDelegate respondsToSelector:@selector(statsGraphViewControllerDidDeselectAllBars:)]) {
         [self.graphDelegate statsGraphViewControllerDidDeselectAllBars:self];
@@ -201,12 +199,12 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     
     return @[@{ @"color" : [WPStyleGuide statsLighterBlue],
-                @"selectedColor" : [UIColor orangeColor],
+                @"selectedColor" : [WPStyleGuide statsLighterOrange],
                 @"value" : categoryData[StatsViewsCategory][indexPath.row][@"count"],
                 @"name" : StatsViewsCategory,
                 },
              @{ @"color" : [WPStyleGuide statsDarkerBlue],
-                @"selectedColor" : [UIColor redColor],
+                @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : categoryData[StatsVisitorsCategory][indexPath.row][@"count"],
                 @"name" : StatsVisitorsCategory,
                 }
