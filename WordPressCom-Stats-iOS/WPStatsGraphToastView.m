@@ -2,6 +2,42 @@
 
 #import "WPStyleGuide+Stats.h"
 
+@interface WPStatsGraphToastTriangleView : UIView
+
+@end
+
+@implementation WPStatsGraphToastTriangleView
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+    }
+    
+    return self;
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    CGFloat height = CGRectGetHeight(self.frame);
+    CGFloat width = CGRectGetWidth(self.frame);
+    CGFloat xOffset = width / 2.0f;
+    
+    // Drawing code
+    UIBezierPath *trianglePath = [UIBezierPath bezierPath];
+    [trianglePath moveToPoint:CGPointMake(xOffset, 0.0f)];
+    [trianglePath addLineToPoint:CGPointMake(xOffset * 2.0, height)];
+    [trianglePath addLineToPoint:CGPointMake(0.0, height)];
+    [trianglePath closePath];
+    
+    [[WPStyleGuide itsEverywhereGrey] setFill];
+    [trianglePath fill];
+}
+
+@end
+
 @interface WPStatsGraphToastView ()
 
 @property (nonatomic, strong) UILabel *dateLabel;
@@ -9,6 +45,7 @@
 @property (nonatomic, strong) UILabel *visitorsLabel;
 @property (nonatomic, strong) UILabel *viewsPerVisitorLabel;
 @property (nonatomic, strong) NSNumberFormatter *numberFormatter;
+@property (nonatomic, strong) WPStatsGraphToastTriangleView *triangleView;
 
 @end
 
@@ -51,29 +88,23 @@
         [_viewsPerVisitorLabel sizeToFit];
         [self addSubview:_viewsPerVisitorLabel];
         
+        _triangleView = [[WPStatsGraphToastTriangleView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 11.0f)];
+        [self addSubview:_triangleView];
+        
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-    UIBezierPath *trianglePath = [UIBezierPath bezierPath];
-    [trianglePath moveToPoint:CGPointMake(self.xOffset, 0.0f)];
-    [trianglePath addLineToPoint:CGPointMake(self.xOffset + 10.0f, 11.0f)];
-    [trianglePath addLineToPoint:CGPointMake(self.xOffset - 10.0f, 11.0f)];
-    [trianglePath closePath];
-    
-    [[WPStyleGuide itsEverywhereGrey] setFill];
-    [trianglePath fill];
-}
-
 - (void)setXOffset:(CGFloat)xOffset
 {
     _xOffset = xOffset;
+    CGPoint center = self.triangleView.center;
+    center.x = xOffset;
     
-    [self setNeedsDisplay];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.triangleView.center = center;
+    }];
 }
 
 - (void)setDateText:(NSString *)dateText
@@ -123,3 +154,4 @@
 }
 
 @end
+
