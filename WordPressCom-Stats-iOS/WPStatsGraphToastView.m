@@ -24,30 +24,30 @@
         _numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
         UIView *blueView = [[UIView alloc] initWithFrame:CGRectMake(0, 10.0f, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10.0f)];
-        blueView.backgroundColor = [WPStyleGuide baseLighterBlue];
+        blueView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
         [self addSubview:blueView];
         
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 20.0f, 0.0f, 0.0f)];
         _dateLabel.font = [WPStyleGuide subtitleFontBoldItalic];
-        _dateLabel.textColor = [UIColor whiteColor];
+        _dateLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_dateLabel sizeToFit];
         [self addSubview:_dateLabel];
         
         _viewsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 40.0f, 0.0f, 0.0f)];
         _viewsLabel.font = [WPStyleGuide subtitleFontBold];
-        _viewsLabel.textColor = [UIColor whiteColor];
+        _viewsLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_viewsLabel sizeToFit];
         [self addSubview:_viewsLabel];
         
         _visitorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 55.0f, 0.0f, 0.0f)];
         _visitorsLabel.font = [WPStyleGuide subtitleFontBold];
-        _visitorsLabel.textColor = [UIColor whiteColor];
+        _visitorsLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_visitorsLabel sizeToFit];
         [self addSubview:_visitorsLabel];
         
         _viewsPerVisitorLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 70.0f, 0.0f, 0.0f)];
         _viewsPerVisitorLabel.font = [WPStyleGuide subtitleFontBold];
-        _viewsPerVisitorLabel.textColor = [UIColor whiteColor];
+        _viewsPerVisitorLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_viewsPerVisitorLabel sizeToFit];
         [self addSubview:_viewsPerVisitorLabel];
         
@@ -65,7 +65,7 @@
     [trianglePath addLineToPoint:CGPointMake(self.xOffset - 10.0f, 11.0f)];
     [trianglePath closePath];
     
-    [[WPStyleGuide baseLighterBlue] setFill];
+    [[WPStyleGuide itsEverywhereGrey] setFill];
     [trianglePath fill];
 }
 
@@ -118,7 +118,7 @@
     self.numberFormatter.minimumFractionDigits = 2;
     NSString *ratioString = [self.numberFormatter stringFromNumber:@(ratio)];
     
-    self.viewsPerVisitorLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Views per Visitor: %@", @""), ratioString];
+    self.viewsPerVisitorLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Views per Visitor: %@", @"Views per Visitor graph label"), ratioString];
     [self.viewsPerVisitorLabel sizeToFit];
 }
 
