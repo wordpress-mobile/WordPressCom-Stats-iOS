@@ -137,7 +137,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     [self.tableView registerClass:[WPStatsCounterCell class] forCellReuseIdentifier:CountCellReuseIdentifier];
     [self.tableView registerClass:[WPStatsNoResultsCell class] forCellReuseIdentifier:NoResultsCellIdentifier];
     [self.tableView registerClass:[WPStatsTwoColumnCell class] forCellReuseIdentifier:ResultRowCellIdentifier];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:GraphCellIdentifier];
+    [self.tableView registerClass:[WPTableViewCell class] forCellReuseIdentifier:GraphCellIdentifier];
     [self.tableView registerClass:[WPStatsLinkToWebviewCell class] forCellReuseIdentifier:LinkToWebviewCellIdentifier];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -314,7 +314,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 }
                 case VisitorRowGraph:
                 {
-                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
+                    WPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
                     cell.clipsToBounds = YES;
                     self.graphViewController.viewsVisitors = self.statModels[@(StatsSectionVisitorsGraph)];
                     self.graphViewController.currentUnit = self.currentViewsVisitorsGraphUnit;
