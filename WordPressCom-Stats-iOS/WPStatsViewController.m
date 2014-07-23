@@ -326,6 +326,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                         [cell.contentView addSubview:graphView];
                         
                         WPStatsGraphToastView *toastView = [[WPStatsGraphToastView alloc] initWithFrame:CGRectMake(0, GraphHeight, CGRectGetWidth(cell.contentView.bounds), GraphToastHeight)];
+                        toastView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                         [cell.contentView addSubview:toastView];
                         self.graphToastView = toastView;
                     }

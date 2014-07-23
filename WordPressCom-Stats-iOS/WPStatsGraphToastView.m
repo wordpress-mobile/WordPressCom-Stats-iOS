@@ -59,8 +59,9 @@
         
         _numberFormatter = [[NSNumberFormatter alloc] init];
         _numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-    
+        
         UIView *blueView = [[UIView alloc] initWithFrame:CGRectMake(0, 10.0f, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10.0f)];
+        blueView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         blueView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
         [self addSubview:blueView];
         

@@ -58,6 +58,11 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
     [self.collectionView performBatchUpdates:nil completion:nil];
+    
+    if ([[self.collectionView indexPathsForSelectedItems] count] > 0) {
+        NSIndexPath *indexPath = [self.collectionView indexPathsForSelectedItems][0];
+        [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
+    }
 }
 
 #pragma mark - UICollectionViewDelegate methods
