@@ -9,7 +9,6 @@ typedef NS_ENUM(NSInteger, WPStatsViewsVisitorsUnit) {
 extern NSString *const StatsViewsCategory;
 extern NSString *const StatsVisitorsCategory;
 extern NSString *const StatsPointNameKey;
-extern NSString *const StatsLongerPointNameKey;
 extern NSString *const StatsPointCountKey;
 
 @interface WPStatsViewsVisitors : NSObject

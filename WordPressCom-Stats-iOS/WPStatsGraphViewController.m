@@ -205,32 +205,15 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 {
     NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     
-    NSString *longerPointName;
-    switch (self.currentUnit) {
-        case StatsViewsVisitorsUnitDay:
-        case StatsViewsVisitorsUnitMonth:
-            longerPointName = categoryData[StatsVisitorsCategory][indexPath.row][StatsLongerPointNameKey];
-            break;
-        case StatsViewsVisitorsUnitWeek:
-            longerPointName = [NSString stringWithFormat:NSLocalizedString(@"Week of %@", @"Stats graph longer point name week prefix"), categoryData[StatsVisitorsCategory][indexPath.row][StatsLongerPointNameKey]];
-            break;
-            
-        default:
-            longerPointName = @"";
-            break;
-    }
-    
     return @[@{ @"color" : [WPStyleGuide statsLighterBlue],
                 @"selectedColor" : [WPStyleGuide statsLighterOrange],
                 @"value" : categoryData[StatsViewsCategory][indexPath.row][StatsPointCountKey],
-                @"name" : StatsViewsCategory,
-                @"x-label" : longerPointName
+                @"name" : StatsViewsCategory
                 },
              @{ @"color" : [WPStyleGuide statsDarkerBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : categoryData[StatsVisitorsCategory][indexPath.row][StatsPointCountKey],
-                @"name" : StatsVisitorsCategory,
-                @"x-label" : longerPointName
+                @"name" : StatsVisitorsCategory
                 }
              ];
 }

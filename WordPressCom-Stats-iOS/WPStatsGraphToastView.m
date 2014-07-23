@@ -65,25 +65,19 @@
         blueView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
         [self addSubview:blueView];
         
-        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 20.0f, 0.0f, 0.0f)];
-        _dateLabel.font = [WPStyleGuide subtitleFontBoldItalic];
-        _dateLabel.textColor = [WPStyleGuide darkAsNightGrey];
-        [_dateLabel sizeToFit];
-        [self addSubview:_dateLabel];
-        
-        _viewsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 40.0f, 0.0f, 0.0f)];
+        _viewsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 20.0f, 0.0f, 0.0f)];
         _viewsLabel.font = [WPStyleGuide subtitleFontBold];
         _viewsLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_viewsLabel sizeToFit];
         [self addSubview:_viewsLabel];
         
-        _visitorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 55.0f, 0.0f, 0.0f)];
+        _visitorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 35.0f, 0.0f, 0.0f)];
         _visitorsLabel.font = [WPStyleGuide subtitleFontBold];
         _visitorsLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_visitorsLabel sizeToFit];
         [self addSubview:_visitorsLabel];
         
-        _viewsPerVisitorLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 70.0f, 0.0f, 0.0f)];
+        _viewsPerVisitorLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 50.0f, 0.0f, 0.0f)];
         _viewsPerVisitorLabel.font = [WPStyleGuide subtitleFontBold];
         _viewsPerVisitorLabel.textColor = [WPStyleGuide darkAsNightGrey];
         [_viewsPerVisitorLabel sizeToFit];
@@ -108,23 +102,21 @@
     }];
 }
 
-- (void)setDateText:(NSString *)dateText
-{
-    _dateText = dateText;
-    
-    self.dateLabel.text = _dateText;
-    [self.dateLabel sizeToFit];
-}
-
 - (void)setViewCount:(NSUInteger)viewCount
 {
     _viewCount = viewCount;
     
     self.numberFormatter.maximumFractionDigits = 0;
     NSString *count = [self.numberFormatter stringFromNumber:@(_viewCount)];
-    
-    self.viewsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Views: %@", @"Views graph label"), count];
+    NSString *labelText = [NSString stringWithFormat:NSLocalizedString(@"%@ views", @"Views graph label"), count];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText attributes:[WPStyleGuide subtitleAttributes]];
+    [attributedString addAttributes:[WPStyleGuide subtitleAttributesBold] range:[labelText rangeOfString:count]];
+    self.viewsLabel.attributedText = attributedString;
     [self.viewsLabel sizeToFit];
+
+    CGPoint center = self.viewsLabel.center;
+    center.x = self.center.x;
+    self.viewsLabel.center = center;
 
     [self updateViewsPerVisitorsCalculation];
 }
@@ -135,10 +127,16 @@
     
     self.numberFormatter.maximumFractionDigits = 0;
     NSString *count = [self.numberFormatter stringFromNumber:@(_visitorsCount)];
-
-    self.visitorsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Visitors: %@", @"Visitors graph label"), count];
+    NSString *labelText = [NSString stringWithFormat:NSLocalizedString(@"%@ visitors", @"Visitors graph label"), count];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText attributes:[WPStyleGuide subtitleAttributes]];
+    [attributedString addAttributes:[WPStyleGuide subtitleAttributesBold] range:[labelText rangeOfString:count]];
+    self.visitorsLabel.attributedText = attributedString;
     [self.visitorsLabel sizeToFit];
-    
+
+    CGPoint center = self.visitorsLabel.center;
+    center.x = self.center.x;
+    self.visitorsLabel.center = center;
+
     [self updateViewsPerVisitorsCalculation];
 }
 
@@ -150,8 +148,15 @@
     self.numberFormatter.minimumFractionDigits = 2;
     NSString *ratioString = [self.numberFormatter stringFromNumber:@(ratio)];
     
-    self.viewsPerVisitorLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Views per Visitor: %@", @"Views per Visitor graph label"), ratioString];
+    NSString *labelText = [NSString stringWithFormat:NSLocalizedString(@"%@ views per visitor", @"Views per Visitor graph label"), ratioString];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText attributes:[WPStyleGuide subtitleAttributes]];
+    [attributedString addAttributes:[WPStyleGuide subtitleAttributesBold] range:[labelText rangeOfString:ratioString]];
+    self.viewsPerVisitorLabel.attributedText = attributedString;
     [self.viewsPerVisitorLabel sizeToFit];
+    
+    CGPoint center = self.viewsPerVisitorLabel.center;
+    center.x = self.center.x;
+    self.viewsPerVisitorLabel.center = center;
 }
 
 @end

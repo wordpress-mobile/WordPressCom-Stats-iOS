@@ -3,7 +3,6 @@
 NSString *const StatsViewsCategory = @"Views";
 NSString *const StatsVisitorsCategory = @"Visitors";
 NSString *const StatsPointNameKey = @"name";
-NSString *const StatsLongerPointNameKey = @"longname";
 NSString *const StatsPointCountKey = @"count";
 
 @interface WPStatsViewsVisitors ()
@@ -42,8 +41,8 @@ NSString *const StatsPointCountKey = @"count";
     [periodData enumerateObjectsUsingBlock:^(NSArray *d, NSUInteger idx, BOOL *stop) {
         NSDictionary *nicePointNames = [self nicePointNames:d[0] forUnit:unit];
         
-        [periodToViews addObject:@{StatsPointNameKey: nicePointNames[StatsPointNameKey], StatsLongerPointNameKey: nicePointNames[StatsLongerPointNameKey], StatsPointCountKey: d[1]}];
-        [periodToVisitors addObject:@{StatsPointNameKey: nicePointNames[StatsPointNameKey], StatsLongerPointNameKey: nicePointNames[StatsLongerPointNameKey], StatsPointCountKey: d[2]}];
+        [periodToViews addObject:@{StatsPointNameKey: nicePointNames[StatsPointNameKey], StatsPointCountKey: d[1]}];
+        [periodToVisitors addObject:@{StatsPointNameKey: nicePointNames[StatsPointNameKey], StatsPointCountKey: d[2]}];
     }];
     
     self.dateFormatter = nil;
@@ -62,7 +61,7 @@ NSString *const StatsPointCountKey = @"count";
         return @{};
     }
 
-    NSString *niceName, *longerNiceName;
+    NSString *niceName;
     
     switch (unit) {
         case StatsViewsVisitorsUnitDay:
@@ -71,9 +70,6 @@ NSString *const StatsPointCountKey = @"count";
             NSDate *d = [self.dateFormatter dateFromString:name];
             self.dateFormatter.dateFormat = @"LLL dd";
             niceName = [self.dateFormatter stringFromDate:d];
-            self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
-            self.dateFormatter.timeStyle = NSDateFormatterNoStyle;
-            longerNiceName = [self.dateFormatter stringFromDate:d];
             break;
         }
         case StatsViewsVisitorsUnitWeek:
@@ -83,9 +79,6 @@ NSString *const StatsPointCountKey = @"count";
             NSDate *d = [self.dateFormatter dateFromString:name];
             self.dateFormatter.dateFormat = @"LLL dd";
             niceName = [self.dateFormatter stringFromDate:d];
-            self.dateFormatter.dateStyle = NSDateFormatterLongStyle;
-            self.dateFormatter.timeStyle = NSDateFormatterNoStyle;
-            longerNiceName = [self.dateFormatter stringFromDate:d];
             break;
         }
         case StatsViewsVisitorsUnitMonth:
@@ -94,18 +87,15 @@ NSString *const StatsPointCountKey = @"count";
             NSDate *d = [self.dateFormatter dateFromString:name];
             self.dateFormatter.dateFormat = @"LLL yyyy"; // L is stand-alone month
             niceName = [self.dateFormatter stringFromDate:d];
-            self.dateFormatter.dateFormat = @"LLLL yyyy";
-            longerNiceName = [self.dateFormatter stringFromDate:d];
             break;
         }
         default:
         {
             niceName = @"";
-            longerNiceName = @"";
         }
     }
     
-    return @{StatsPointNameKey : niceName, StatsLongerPointNameKey : longerNiceName};
+    return @{StatsPointNameKey : niceName};
 }
 
 @end
