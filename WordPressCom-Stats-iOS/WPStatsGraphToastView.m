@@ -32,7 +32,7 @@
     [trianglePath addLineToPoint:CGPointMake(0.0, height)];
     [trianglePath closePath];
     
-    [[WPStyleGuide itsEverywhereGrey] setFill];
+    [[WPStyleGuide wordPressBlue] setFill];
     [trianglePath fill];
 }
 
@@ -62,24 +62,24 @@
         
         UIView *blueView = [[UIView alloc] initWithFrame:CGRectMake(0, 10.0f, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10.0f)];
         blueView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        blueView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+        blueView.backgroundColor = [WPStyleGuide wordPressBlue];
         [self addSubview:blueView];
         
         _viewsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 20.0f, 0.0f, 0.0f)];
         _viewsLabel.font = [WPStyleGuide subtitleFontBold];
-        _viewsLabel.textColor = [WPStyleGuide darkAsNightGrey];
+        _viewsLabel.textColor = [WPStyleGuide littleEddieGrey];
         [_viewsLabel sizeToFit];
         [self addSubview:_viewsLabel];
         
         _visitorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 35.0f, 0.0f, 0.0f)];
         _visitorsLabel.font = [WPStyleGuide subtitleFontBold];
-        _visitorsLabel.textColor = [WPStyleGuide darkAsNightGrey];
+        _visitorsLabel.textColor = [WPStyleGuide littleEddieGrey];
         [_visitorsLabel sizeToFit];
         [self addSubview:_visitorsLabel];
         
         _viewsPerVisitorLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 50.0f, 0.0f, 0.0f)];
         _viewsPerVisitorLabel.font = [WPStyleGuide subtitleFontBold];
-        _viewsPerVisitorLabel.textColor = [WPStyleGuide darkAsNightGrey];
+        _viewsPerVisitorLabel.textColor = [WPStyleGuide littleEddieGrey];
         [_viewsPerVisitorLabel sizeToFit];
         [self addSubview:_viewsPerVisitorLabel];
         
