@@ -32,7 +32,7 @@
     [trianglePath addLineToPoint:CGPointMake(0.0, height)];
     [trianglePath closePath];
     
-    [[WPStyleGuide wordPressBlue] setFill];
+    [[WPStyleGuide itsEverywhereGrey] setFill];
     [trianglePath fill];
 }
 
@@ -62,7 +62,7 @@
         
         UIView *blueView = [[UIView alloc] initWithFrame:CGRectMake(0, 10.0f, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10.0f)];
         blueView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        blueView.backgroundColor = [WPStyleGuide wordPressBlue];
+        blueView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
         [self addSubview:blueView];
         
         _viewsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 20.0f, 0.0f, 0.0f)];

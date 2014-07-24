@@ -29,7 +29,7 @@ static NSString *const WPStatsOAuth2TokenRestorationKey = @"WPStatsOAuth2TokenRe
 static NSUInteger const ResultRowMaxItems = 10;
 static CGFloat const HeaderHeight = 44.0f;
 static CGFloat const GraphHeight = 200.0f;
-static CGFloat const GraphToastHeight = 78.0f;
+static CGFloat const GraphToastHeight = 75.0f;
 
 typedef NS_ENUM(NSInteger, VisitorsRow) {
     VisitorRowGraphUnitButton,
@@ -266,7 +266,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 case VisitorRowGraphUnitButton:
                     return [WPStatsButtonCell heightForRow];
                 case VisitorRowGraph:
-                    return GraphHeight + (self.isShowingGraphToast ? GraphToastHeight : 0.0f);
+                    return GraphHeight + (self.isShowingGraphToast ? GraphToastHeight + 6.0f : 0.0f);
                 case VisitorRowTodayStats:
                 case VisitorRowBestEver:
                 case VisitorRowAllTime:
