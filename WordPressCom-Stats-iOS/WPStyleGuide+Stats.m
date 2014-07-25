@@ -14,7 +14,7 @@
 
 + (UIColor *)statsDarkerOrange
 {
-    return [UIColor colorWithRed:0.941 green:0.51 blue:0.118 alpha:1]; /*#f0821e*/
+    return [self jazzyOrange];
 }
 
 + (UIFont *)subtitleFontBoldItalic

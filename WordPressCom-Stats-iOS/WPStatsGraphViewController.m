@@ -119,8 +119,8 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         WPStatsGraphLegendView *legend = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:LegendView forIndexPath:indexPath];
         // FIXME - These category titles ARE NOT LOCALIZABLE
-        [legend addCategory:StatsViewsCategory withColor:[WPStyleGuide statsLighterBlue]];
-        [legend addCategory:StatsVisitorsCategory withColor:[WPStyleGuide statsDarkerBlue]];
+        [legend addCategory:StatsViewsCategory withColor:[WPStyleGuide textFieldPlaceholderGrey]];
+        [legend addCategory:StatsVisitorsCategory withColor:[WPStyleGuide littleEddieGrey]];
         [legend finishedAddingCategories];
 
         return legend;
@@ -205,13 +205,13 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 {
     NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     
-    return @[@{ @"color" : [WPStyleGuide statsLighterBlue],
+    return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
                 @"selectedColor" : [WPStyleGuide statsLighterOrange],
                 @"value" : categoryData[StatsViewsCategory][indexPath.row][StatsPointCountKey],
                 @"name" : StatsViewsCategory
                 },
-             @{ @"color" : [WPStyleGuide statsDarkerBlue],
-                @"selectedColor" : [WPStyleGuide statsDarkerOrange],
+             @{ @"color" : [WPStyleGuide littleEddieGrey],
+                @"selectedColor" : [WPStyleGuide jazzyOrange],
                 @"value" : categoryData[StatsVisitorsCategory][indexPath.row][StatsPointCountKey],
                 @"name" : StatsVisitorsCategory
                 }
