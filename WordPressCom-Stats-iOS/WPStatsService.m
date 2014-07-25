@@ -5,6 +5,7 @@
 
 @property (nonatomic, strong) NSNumber *siteId;
 @property (nonatomic, strong) NSString *oauth2Token;
+@property (nonatomic, strong) NSTimeZone *siteTimeZone;
 
 @end
 
@@ -13,12 +14,13 @@
 
 }
 
-- (instancetype)initWithSiteId:(NSNumber *)siteId andOAuth2Token:(NSString *)oauth2Token
+- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token
 {
     self = [super init];
     if (self) {
         _siteId = siteId;
         _oauth2Token = oauth2Token;
+        _siteTimeZone = timeZone ?: [NSTimeZone systemTimeZone];
     }
 
     return self;
@@ -49,7 +51,7 @@
 - (WPStatsServiceRemote *)remote
 {
     if (!_remote) {
-        _remote = [[WPStatsServiceRemote alloc] initWithOAuth2Token:self.oauth2Token andSiteId:self.siteId];
+        _remote = [[WPStatsServiceRemote alloc] initWithOAuth2Token:self.oauth2Token siteId:self.siteId andSiteTimeZone:self.siteTimeZone];
     }
 
     return _remote;
