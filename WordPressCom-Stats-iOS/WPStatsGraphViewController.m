@@ -118,9 +118,8 @@ static NSString *const GraphBackgroundView = @"GraphBackgroundView";
 {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         WPStatsGraphLegendView *legend = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:LegendView forIndexPath:indexPath];
-        // FIXME - These category titles ARE NOT LOCALIZABLE
-        [legend addCategory:StatsViewsCategory withColor:[WPStyleGuide textFieldPlaceholderGrey]];
-        [legend addCategory:StatsVisitorsCategory withColor:[WPStyleGuide littleEddieGrey]];
+        [legend addCategory:NSLocalizedString(@"Views", @"Views Category in Site Stats") withColor:[WPStyleGuide statsLighterBlue]];
+        [legend addCategory:NSLocalizedString(@"Visitors", @"Visitors Category in Site Stats") withColor:[WPStyleGuide statsDarkerBlue]];
         [legend finishedAddingCategories];
 
         return legend;
