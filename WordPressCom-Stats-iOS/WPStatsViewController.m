@@ -25,6 +25,7 @@ static NSString *const StatsGroupedCellIdentifier = @"StatsGroupedCellIdentifier
 static NSString *const LinkToWebviewCellIdentifier = @"LinkToWebviewCellIdentifier";
 static NSString *const WPStatsSiteIDRestorationKey = @"WPStatsSiteIDRestorationKey";
 static NSString *const WPStatsOAuth2TokenRestorationKey = @"WPStatsOAuth2TokenRestorationKey";
+static NSString *const WPStatsTimeZoneRestorationKey = @"WPStatsTimeZoneRestorationKey";
 
 static NSUInteger const ResultRowMaxItems = 10;
 static CGFloat const HeaderHeight = 44.0f;
@@ -76,8 +77,9 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         return nil;
     
     NSString *oauth2Token = [coder decodeObjectForKey:WPStatsOAuth2TokenRestorationKey];
+    NSTimeZone *timeZone = [coder decodeObjectForKey:WPStatsTimeZoneRestorationKey];
     
-    WPStatsViewController *viewController = [[self alloc] initWithSiteID:siteID andOAuth2Token:oauth2Token];
+    WPStatsViewController *viewController = [[self alloc] initWithSiteID:siteID siteTimeZone:timeZone andOAuth2Token:oauth2Token];
     
     return viewController;
 }
@@ -108,12 +110,13 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     return self;
 }
 
-- (instancetype)initWithSiteID:(NSNumber *)siteID andOAuth2Token:(NSString *)oauth2Token
+- (instancetype)initWithSiteID:(NSNumber *)siteID siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token
 {
     self = [self init];
     if (self) {
         _siteID = siteID;
         _oauth2Token = oauth2Token;
+        _siteTimeZone = timeZone;
     }
     
     return self;
@@ -167,7 +170,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 - (void)initStats
 {
     if (self.statsService == nil) {
-        self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID andOAuth2Token:self.oauth2Token];
+        self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
         [self loadStats];
     }
 }
