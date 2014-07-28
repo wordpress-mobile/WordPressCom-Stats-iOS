@@ -16,6 +16,10 @@
 
 - (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token
 {
+    NSAssert(oauth2Token.length > 0, @"OAuth2 token must not be empty.");
+    NSAssert(siteId != nil, @"Site ID must not be nil.");
+    NSAssert(timeZone != nil, @"Timezone must not be nil.");
+
     self = [super init];
     if (self) {
         _siteId = siteId;

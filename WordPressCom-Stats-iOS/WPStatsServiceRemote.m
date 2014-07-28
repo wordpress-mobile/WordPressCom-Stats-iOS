@@ -25,6 +25,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone
 {
+    NSAssert(oauth2Token.length > 0, @"OAuth2 token must not be empty.");
+    NSAssert(siteId != nil, @"Site ID must not be nil.");
+    NSAssert(timeZone != nil, @"Timezone must not be nil.");
+    
     self = [super init];
     if (self) {
         _oauth2Token = oauth2Token;
