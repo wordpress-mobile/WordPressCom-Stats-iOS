@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
                    * Requires an OAuth2 Token for WordPress.com generated currently by WordPress-Mobile/WordPress-iOS
                    DESC
 
-  s.homepage     = "http://make.wordpress.org/mobile"
+  s.homepage     = "http://apps.wordpress.org"
   s.license      = "GPLv2"
   s.author             = { "Aaron Douglas" => "astralbodies@gmail.com" }
   # s.authors            = { "Aaron Douglas" => "astralbodies@gmail.com" }
