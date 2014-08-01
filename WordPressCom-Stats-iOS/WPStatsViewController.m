@@ -405,7 +405,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     WPStatsSummary *summary = _statModels[@(StatsSectionVisitors)];
     switch (index) {
         case TotalFollowersShareRowContentPost:
-            title = NSLocalizedString(@"Content", @"Stats - Title for the data cell");
+            title = nil;
             leftLabel = NSLocalizedString(@"Posts", @"Stats - Label for the count");
             leftCount = summary.totalPosts;
             break;
