@@ -609,19 +609,30 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     NSString *title = [self headerTextForSection:section];
-    return [WPTableViewSectionHeaderView heightForTitle:title andWidth:CGRectGetWidth(self.view.bounds)];
+    
+    if (title.length > 0) {
+        return [WPTableViewSectionHeaderView heightForTitle:title andWidth:CGRectGetWidth(self.view.bounds)];
+    } else {
+        return 0.0f;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    WPTableViewSectionHeaderView *header = [[WPTableViewSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
-    header.title = [self headerTextForSection:section];
-    return header;
+    NSString *headerText = [self headerTextForSection:section];
+    
+    if (headerText.length > 0) {
+        WPTableViewSectionHeaderView *header = [[WPTableViewSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
+        header.title = headerText;
+        return header;
+    } else {
+        return nil;
+    }
 }
 
 - (NSString *)headerTextForSection:(StatsSection)section {
     switch (section) {
         case StatsSectionVisitors:
-            return NSLocalizedString(@"Visitors and Views", @"Stats: Section title");
+            return nil;
         case StatsSectionTopPosts:
             return NSLocalizedString(@"Top Posts & Pages", @"Stats: Section title");
         case StatsSectionViewsByCountry:
