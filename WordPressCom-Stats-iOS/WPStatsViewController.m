@@ -450,7 +450,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
             dataTitleRowRight = NSLocalizedString(@"Clicks", nil);
             break;
         case StatsSectionReferrers:
-            dataTitleRowLeft = NSLocalizedString(@"Referrers", nil);
+            dataTitleRowLeft = NSLocalizedString(@"Referrer", @"Stats - Referrer section label");
             break;
         case StatsSectionSearchTerms:
             dataTitleRowLeft = NSLocalizedString(@"Search", nil);
