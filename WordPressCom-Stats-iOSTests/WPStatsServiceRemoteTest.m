@@ -58,4 +58,26 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testFetchSummaryStats
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1/batch"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-batch.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [subject fetchSummaryStatsForTodayWithCompletionHandler:^(WPStatsSummary *summary) {
+        XCTAssertNotNil(summary, @"summary should not be nil.");
+        
+        [expectation fulfill];
+    } failureHandler:^(NSError *error) {
+        XCTFail(@"Failure handler should not be called here.");
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 @end
