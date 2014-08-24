@@ -1,3 +1,4 @@
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "WPStatsViewController.h"
 #import "WPStatsButtonCell.h"
 #import "WPStatsCounterCell.h"
@@ -377,10 +378,12 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         case StatsSectionLinkToWebview:
         {
             if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
+                [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom];
                 WPStatsLinkToWebviewCell *cell = [tableView dequeueReusableCellWithIdentifier:LinkToWebviewCellIdentifier];
                 [cell configureForSection:StatsSectionLinkToWebview];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 cell.onTappedLinkToWebview = ^{
+                    [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
                     [self.statsDelegate statsViewController:self didSelectViewWebStatsForSiteID:self.siteID];
                 };
                 return cell;
@@ -687,6 +690,9 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectData:(NSArray *)data withXLocation:(CGFloat)xLocation
 {
+    NSDictionary *properties = @{ @"unit" : [self currentUnitDescription]};
+    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart withProperties:properties];
+    
     self.showingGraphToast = YES;
     self.graphToastView.xOffset = xLocation;
     self.graphToastView.viewCount = [data[0][@"value"] unsignedIntegerValue];
@@ -704,6 +710,24 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     // Causes table rows to be redrawn if heights have changed
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
+}
+
+- (NSString *)currentUnitDescription
+{
+    switch (self.graphViewController.currentUnit) {
+        case StatsViewsVisitorsUnitDay:
+            return @"day";
+            break;
+        case StatsViewsVisitorsUnitWeek:
+            return @"week";
+            break;
+        case StatsViewsVisitorsUnitMonth:
+            return @"month";
+            break;
+        default:
+            return @"";
+            break;
+    }
 }
 
 @end
