@@ -199,7 +199,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
         DDLogError(@"Stats: Error fetching stats %@", error);
     };
     
-    [self.statsService retrieveStatsWithCompletionHandler:^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
+    [self.statsService retrieveAllStatsWithCompletionHandler:^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
         self.statModels[@(StatsSectionVisitors)] = summary;
         self.statModels[@(StatsSectionVisitorsGraph)] = viewsVisitors;
         self.statModels[@(StatsSectionTopPosts)] = topPosts;

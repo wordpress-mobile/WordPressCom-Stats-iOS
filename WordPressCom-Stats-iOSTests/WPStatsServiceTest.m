@@ -31,17 +31,32 @@
     self.remoteMock = nil;
 }
 
-- (void)testRemoteCalled
+- (void)testRetrieveAllStatsRemoteCalled
 {
     void (^failure)(NSError *error) = ^void(NSError *error) {
     };
-
+    
     StatsCompletion completion = ^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
     };
-
+    
     [[self.remoteMock expect] fetchStatsForTodayDate:[OCMArg any] andYesterdayDate:[OCMArg any] withCompletionHandler:completion failureHandler:[OCMArg isNotNil]];
+    
+    [self.statsService retrieveAllStatsWithCompletionHandler:completion failureHandler:failure];
+    
+    [self.remoteMock verify];
+}
 
-    [self.statsService retrieveStatsWithCompletionHandler:completion failureHandler:failure];
+- (void)testRetrieveStatsSummaryRemoteCalled
+{
+    void (^failure)(NSError *error) = ^void(NSError *error) {
+    };
+    
+    void (^completion)(WPStatsSummary *) = ^void(WPStatsSummary *summary) {
+    };
+    
+    [[self.remoteMock expect] fetchSummaryStatsForTodayWithCompletionHandler:completion failureHandler:[OCMArg isNotNil]];
+    
+    [self.statsService retrieveTodayStatsWithCompletionHandler:completion failureHandler:failure];
     
     [self.remoteMock verify];
 }
@@ -60,7 +75,7 @@
         return [yesterday timeIntervalSinceDate:obj] < 1000;
     }] withCompletionHandler:[OCMArg isNil] failureHandler:[OCMArg isNotNil]];
     
-    [self.statsService retrieveStatsWithCompletionHandler:nil failureHandler:nil];
+    [self.statsService retrieveAllStatsWithCompletionHandler:nil failureHandler:nil];
     
     [self.remoteMock verify];
 }
