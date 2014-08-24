@@ -38,7 +38,7 @@ PODS:
     - DTFoundation/Core
   - Fingertips (0.3.0)
   - NSObject-SafeExpectations (0.0.2)
-  - WordPress-iOS-Shared (0.0.7):
+  - WordPress-iOS-Shared (0.0.9):
     - AFNetworking (~> 2.3.1)
     - CocoaLumberjack (~> 1.8.1)
     - DTCoreText (= 1.6.13)
@@ -63,7 +63,7 @@ SPEC CHECKSUMS:
   DTFoundation: 126729614911ae7dbab3dcc1c078f189943bee66
   Fingertips: 09d223a390349b317a51d4c941d778bdb661c4e1
   NSObject-SafeExpectations: c31276ef7209016849fc4e5c8ed5ae5453e1e208
-  WordPress-iOS-Shared: 6506b3c45abc64cd8e5146901d12a1eff3f3ae4e
-  WordPressCom-Stats-iOS: ed7b2272aff94624df895dd806e83f69924fcc96
+  WordPress-iOS-Shared: 77dd3f5efdb0ac32167767fabc1faa0f6b0c1980
+  WordPressCom-Stats-iOS: 3084aa03b3ac61bf05ebd345b2383765d452f652
 
 COCOAPODS: 0.33.1
