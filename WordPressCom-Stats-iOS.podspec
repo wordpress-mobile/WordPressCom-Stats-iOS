@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "WordPressCom-Stats-iOS"
-  s.version      = "0.1.1"
+  s.version      = "0.1.2"
   s.summary      = "Reusable component for displaying WordPress.com site stats in an iOS application."
 
   s.description  = <<-DESC
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   # s.authors            = { "Aaron Douglas" => "astralbodies@gmail.com" }
   s.social_media_url   = "http://twitter.com/WordPressiOS"
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/wordpress-mobile/WordPressCom-Stats-iOS.git", :tag => "0.1.0" }
+  s.source       = { :git => "https://github.com/wordpress-mobile/WordPressCom-Stats-iOS.git", :tag => s.version.to_s }
   s.source_files  = "WordPressCom-Stats-iOS", "WordPressCom-Stats-iOS/**/*.{h,m}"
   s.exclude_files = "WordPressCom-Stats-iOS/Exclude"
   s.prefix_header_file = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Prefix.pch"
