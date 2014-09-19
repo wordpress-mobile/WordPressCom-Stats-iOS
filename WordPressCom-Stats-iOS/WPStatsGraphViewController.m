@@ -142,7 +142,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat width = 30.0f;
-    CGFloat height = CGRectGetHeight(collectionView.frame) - 25.0;
+    CGFloat height = CGRectGetHeight(collectionView.frame) - 24.0;
     
     CGSize size = CGSizeMake(width, height);
     
