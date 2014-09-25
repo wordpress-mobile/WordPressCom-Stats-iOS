@@ -3,3 +3,4 @@
 //
 
 #import "WPStatsGroup.h"
+#import "WPStatsViewsVisitors.h"
