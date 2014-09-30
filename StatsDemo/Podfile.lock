@@ -30,24 +30,24 @@ PODS:
     - DTFoundation/DTAnimatedGIF (~> 1.7.1)
     - DTFoundation/DTHTMLParser (~> 1.7.1)
     - DTFoundation/UIKit (~> 1.7.1)
-  - DTFoundation/Core (1.7.2)
-  - DTFoundation/DTAnimatedGIF (1.7.2)
-  - DTFoundation/DTHTMLParser (1.7.2):
+  - DTFoundation/Core (1.7.3)
+  - DTFoundation/DTAnimatedGIF (1.7.3)
+  - DTFoundation/DTHTMLParser (1.7.3):
     - DTFoundation/Core
-  - DTFoundation/UIKit (1.7.2):
+  - DTFoundation/UIKit (1.7.3):
     - DTFoundation/Core
   - Fingertips (0.3.0)
   - NSObject-SafeExpectations (0.0.2)
-  - WordPress-iOS-Shared (0.0.9):
+  - WordPress-iOS-Shared (0.1.1):
     - AFNetworking (~> 2.3.1)
     - CocoaLumberjack (~> 1.8.1)
     - DTCoreText (= 1.6.13)
-  - WordPressCom-Analytics-iOS (0.0.3)
-  - WordPressCom-Stats-iOS (0.1.0):
+  - WordPressCom-Analytics-iOS (0.0.6)
+  - WordPressCom-Stats-iOS (0.1.3):
     - AFNetworking (~> 2.3.1)
     - CocoaLumberjack (~> 1.8.1)
     - NSObject-SafeExpectations (= 0.0.2)
-    - WordPress-iOS-Shared (~> 0.0.1)
+    - WordPress-iOS-Shared (~> 0.1.0)
     - WordPressCom-Analytics-iOS
 
 DEPENDENCIES:
@@ -62,11 +62,11 @@ SPEC CHECKSUMS:
   AFNetworking: 6d7b76aa5d04c8c37daad3eef4b7e3f2a7620da3
   CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
   DTCoreText: 84eb8ba2e70448fdd9d837540e371f9f587b65ba
-  DTFoundation: 126729614911ae7dbab3dcc1c078f189943bee66
+  DTFoundation: 360bc65ab44f588611f47324b8cfb0f18e04b263
   Fingertips: 09d223a390349b317a51d4c941d778bdb661c4e1
   NSObject-SafeExpectations: c31276ef7209016849fc4e5c8ed5ae5453e1e208
-  WordPress-iOS-Shared: 77dd3f5efdb0ac32167767fabc1faa0f6b0c1980
-  WordPressCom-Analytics-iOS: 8a485b98564ce4ea5a16ff43b526f59909acdc34
-  WordPressCom-Stats-iOS: f5b69e9fbf460372af331e62b988dd6cf2444055
+  WordPress-iOS-Shared: 44463dbfdc0fa6bd40fa38eeff14d8e0fe9a7d9c
+  WordPressCom-Analytics-iOS: 8a61cd361b7d27c23917e70d237af4d990b4f785
+  WordPressCom-Stats-iOS: 52dd93d420dac278b75ed2e89c628eb9a9d95e4a
 
 COCOAPODS: 0.33.1
