@@ -1,13 +1,24 @@
 import Foundation
 
-class StatsItem {
-    var value: NSNumber?
+struct StatsItemAction {
+    var url: NSURL?
     var label: String?
     var icon: UIImage?
-    var actions: Array<AnyObject>?
-    var children: Array<StatsItem>?
+    var defaultAction: Bool = false
+}
+
+class StatsItem {
+    var value: NSNumber
+    var label: String
+    var icon: UIImage?
+    var actions: Array<StatsItemAction>
+    var children: Array<StatsItem>
     
-    init() {
-        
+    init(value: NSNumber, label: String, icon: UIImage?, actions: Array<StatsItemAction>, children: Array<StatsItem>) {
+        self.value = value
+        self.label = label
+        self.icon = icon
+        self.actions = actions
+        self.children = children
     }
 }
