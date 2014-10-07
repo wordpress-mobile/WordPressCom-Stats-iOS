@@ -1,6 +1,6 @@
 import Foundation
 
-class StatsSummary {
+public class StatsSummary {
     var views: NSNumber
     var visitors: NSNumber
     var likes: NSNumber

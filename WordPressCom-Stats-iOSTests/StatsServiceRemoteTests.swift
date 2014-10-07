@@ -8,7 +8,7 @@ class StatsServiceRemoteTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        statsServiceRemote = StatsServiceRemote(oauth2Token: "", siteId: 1234, siteTimeZone: NSTimeZone(name: "America/Chicago")!)
+        statsServiceRemote = StatsServiceRemote(oauth2Token: "8FQL!KdgYxEwtGOUB(F6nnM74Abg@m0EaLq1XeWnL8ftg9!Hu3UA&E%DHilWSMgH", siteId: 54117, siteTimeZone: NSTimeZone(name: "America/Chicago")!)
     }
     
     override func tearDown() {
@@ -16,8 +16,15 @@ class StatsServiceRemoteTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
+    func testSummary() {
+        let expection = self.expectationWithDescription("summaryFetched")
+        
+        statsServiceRemote.fetchStatsSummary { (summary, error) -> () in
+            expection.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2.0, handler: nil)
+        
         XCTAssert(true, "Pass")
     }
 

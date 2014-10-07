@@ -16,11 +16,17 @@ public class StatsServiceRemote {
         self.stringStatsUrl = "\(self.baseUrl)/sites/\(self.siteId)/stats"
     }
     
-    public func fetchStatsSummary() {
+    public func fetchStatsSummary(success: (summary: StatsSummary, error: NSError?) -> ()) {
+        
         request(Method.GET, "\(stringStatsUrl)/summary", parameters: nil, encoding: ParameterEncoding.URL)
-        .response { (request, response, JSON, error) -> Void in
+        .responseJSON { (request, response, JSON, error) -> Void in
             println(request)
-            println(JSON)
+            println("**** JSON: \(JSON)")
+            
+//            let views = JSON["views"]
+            
+//            let statsSummary = StatsSummary(views: <#NSNumber#>, visitors: <#NSNumber#>, likes: <#NSNumber#>, reblogs: <#NSNumber#>, comments: <#NSNumber#>))
+            
         }
         
 //        var manager: AFHTTPRequestOperationManager = AFHTTPRequestOperationManager()
