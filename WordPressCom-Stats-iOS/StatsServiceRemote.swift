@@ -17,22 +17,22 @@ public class StatsServiceRemote {
     }
     
     public func fetchStatsSummary(success: (summary: StatsSummary, error: NSError?) -> ()) {
+        var manager: AFHTTPRequestOperationManager = AFHTTPRequestOperationManager()
+        manager.responseSerializer = AFJSONResponseSerializer(readingOptions: NSJSONReadingOptions.allZeros)
+        manager.requestSerializer.setValue("Bearer \(self.oauth2Token)", forHTTPHeaderField: "Authorization")
         
-        request(Method.GET, "\(stringStatsUrl)/summary", parameters: nil, encoding: ParameterEncoding.URL)
-        .responseJSON { (request, response, JSON, error) -> Void in
-            println(request)
-            println("**** JSON: \(JSON)")
-            
-//            let views = JSON["views"]
-            
-//            let statsSummary = StatsSummary(views: <#NSNumber#>, visitors: <#NSNumber#>, likes: <#NSNumber#>, reblogs: <#NSNumber#>, comments: <#NSNumber#>))
-            
-        }
+        manager.GET("\(stringStatsUrl)/summary",
+            parameters: nil,
+            success: { (operation: AFHTTPRequestOperation!, JSON: AnyObject!) -> Void in
+                println(JSON)
+                let statsSummary = StatsSummary(views: 1, visitors: 1, likes: 1, reblogs: 1, comments: 1)
+                success(summary: statsSummary, error: nil)
+            },
+            failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println(error)
+            }
+        )
         
-//        var manager: AFHTTPRequestOperationManager = AFHTTPRequestOperationManager()
-//        manager.responseSerializer = AFJSONResponseSerializer()
-//        manager.requestSerializer.setValue("Bearer \(self.oauth2Token)", forHTTPHeaderField: "Authorization")
-
     }
     
 }
