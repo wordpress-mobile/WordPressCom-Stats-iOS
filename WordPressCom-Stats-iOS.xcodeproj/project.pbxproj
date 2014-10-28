@@ -11,10 +11,8 @@
 		9309B530192BF02F00B69F69 /* WordPressStats.m in Sources */ = {isa = PBXBuildFile; fileRef = 9309B52F192BF02F00B69F69 /* WordPressStats.m */; };
 		930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */; };
 		930C2EEB195DB4D300C6964D /* WPStatsGraphBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */; };
-		930CECA919DEDB200083ABA4 /* StatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930CECA819DEDB200083ABA4 /* StatsItem.swift */; };
-		930CECAB19DEE6840083ABA4 /* StatsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930CECAA19DEE6840083ABA4 /* StatsGroup.swift */; };
-		930CECAD19DEE80A0083ABA4 /* StatsSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930CECAC19DEE80A0083ABA4 /* StatsSummary.swift */; };
-		930CECAF19DF1CA90083ABA4 /* StatsServiceRemoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930CECAE19DF1CA90083ABA4 /* StatsServiceRemoteTests.swift */; };
+		9358D15B19FFFB740094BBF5 /* WPStatsServiceV2RemoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358D15A19FFFB740094BBF5 /* WPStatsServiceV2RemoteTests.m */; };
+		93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */ = {isa = PBXBuildFile; fileRef = 93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */; };
 		936B22481958C3840058C828 /* WPStatsGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 936B22471958C3840058C828 /* WPStatsGraphViewController.m */; };
 		936B224E195AFD380058C828 /* WPStatsGraphLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 936B224D195AFD380058C828 /* WPStatsGraphLegendView.m */; };
 		936B2251195C48700058C828 /* WPStatsGraphBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 936B2250195C48700058C828 /* WPStatsGraphBarCell.m */; };
@@ -42,7 +40,11 @@
 		9396D01319215464006A66D7 /* WPStatsNoResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9396D00619215464006A66D7 /* WPStatsNoResultsCell.m */; };
 		9396D01519215464006A66D7 /* WPStatsTodayYesterdayButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9396D00819215464006A66D7 /* WPStatsTodayYesterdayButtonCell.m */; };
 		9396D01719215464006A66D7 /* WPStatsTwoColumnCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9396D00A19215464006A66D7 /* WPStatsTwoColumnCell.m */; };
-		93D3079D19DC543F006826B0 /* StatsServiceRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D3079C19DC543F006826B0 /* StatsServiceRemote.swift */; };
+		93A379DE19FEA9E400415023 /* StatsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379DD19FEA9E400415023 /* StatsItem.m */; };
+		93A379E119FEAB1C00415023 /* StatsItemAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E019FEAB1C00415023 /* StatsItemAction.m */; };
+		93A379E419FEAB8100415023 /* StatsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E319FEAB8100415023 /* StatsGroup.m */; };
+		93A379E719FEAD8400415023 /* StatsSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E619FEAD8400415023 /* StatsSummary.m */; };
+		93A379EA19FEDEE100415023 /* WPStatsServiceV2Remote.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E919FEDEE100415023 /* WPStatsServiceV2Remote.m */; };
 		93E3678019226C1C000FB32A /* WPStatsServiceRemoteTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3677E19226C1C000FB32A /* WPStatsServiceRemoteTest.m */; };
 		93E3678119226C1C000FB32A /* WPStatsServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E3677F19226C1C000FB32A /* WPStatsServiceTest.m */; };
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
@@ -81,10 +83,8 @@
 		930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		930C2EE9195DB4D300C6964D /* WPStatsGraphBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphBackgroundView.h; sourceTree = "<group>"; };
 		930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphBackgroundView.m; sourceTree = "<group>"; };
-		930CECA819DEDB200083ABA4 /* StatsItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsItem.swift; sourceTree = "<group>"; };
-		930CECAA19DEE6840083ABA4 /* StatsGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsGroup.swift; sourceTree = "<group>"; };
-		930CECAC19DEE80A0083ABA4 /* StatsSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsSummary.swift; sourceTree = "<group>"; };
-		930CECAE19DF1CA90083ABA4 /* StatsServiceRemoteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsServiceRemoteTests.swift; sourceTree = "<group>"; };
+		9358D15A19FFFB740094BBF5 /* WPStatsServiceV2RemoteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceV2RemoteTests.m; sourceTree = "<group>"; };
+		93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-summary.json"; sourceTree = "<group>"; };
 		936B22461958C3840058C828 /* WPStatsGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphViewController.h; sourceTree = "<group>"; };
 		936B22471958C3840058C828 /* WPStatsGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphViewController.m; sourceTree = "<group>"; };
 		936B224C195AFD380058C828 /* WPStatsGraphLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphLegendView.h; sourceTree = "<group>"; };
@@ -135,8 +135,17 @@
 		9396D00819215464006A66D7 /* WPStatsTodayYesterdayButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsTodayYesterdayButtonCell.m; sourceTree = "<group>"; };
 		9396D00919215464006A66D7 /* WPStatsTwoColumnCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsTwoColumnCell.h; sourceTree = "<group>"; };
 		9396D00A19215464006A66D7 /* WPStatsTwoColumnCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsTwoColumnCell.m; sourceTree = "<group>"; };
+		93A379DC19FEA9E400415023 /* StatsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItem.h; sourceTree = "<group>"; };
+		93A379DD19FEA9E400415023 /* StatsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItem.m; sourceTree = "<group>"; };
+		93A379DF19FEAB1C00415023 /* StatsItemAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItemAction.h; sourceTree = "<group>"; };
+		93A379E019FEAB1C00415023 /* StatsItemAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItemAction.m; sourceTree = "<group>"; };
+		93A379E219FEAB8100415023 /* StatsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsGroup.h; sourceTree = "<group>"; };
+		93A379E319FEAB8100415023 /* StatsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsGroup.m; sourceTree = "<group>"; };
+		93A379E519FEAD8400415023 /* StatsSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsSummary.h; sourceTree = "<group>"; };
+		93A379E619FEAD8400415023 /* StatsSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsSummary.m; sourceTree = "<group>"; };
+		93A379E819FEDEE100415023 /* WPStatsServiceV2Remote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsServiceV2Remote.h; sourceTree = "<group>"; };
+		93A379E919FEDEE100415023 /* WPStatsServiceV2Remote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceV2Remote.m; sourceTree = "<group>"; };
 		93D3079B19DC543F006826B0 /* WordPressCom-Stats-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		93D3079C19DC543F006826B0 /* StatsServiceRemote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsServiceRemote.swift; sourceTree = "<group>"; };
 		93E3677E19226C1C000FB32A /* WPStatsServiceRemoteTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceRemoteTest.m; sourceTree = "<group>"; };
 		93E3677F19226C1C000FB32A /* WPStatsServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceTest.m; sourceTree = "<group>"; };
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
@@ -255,7 +264,7 @@
 				93E3677E19226C1C000FB32A /* WPStatsServiceRemoteTest.m */,
 				93E3677F19226C1C000FB32A /* WPStatsServiceTest.m */,
 				93FAAE5619CF53FF0069D876 /* WPStatsViewsVisitorsTests.swift */,
-				930CECAE19DF1CA90083ABA4 /* StatsServiceRemoteTests.swift */,
+				9358D15A19FFFB740094BBF5 /* WPStatsServiceV2RemoteTests.m */,
 			);
 			path = "WordPressCom-Stats-iOSTests";
 			sourceTree = "<group>";
@@ -284,9 +293,14 @@
 				9396CFE419215384006A66D7 /* WPStatsViewByCountry.m */,
 				9396CFE519215384006A66D7 /* WPStatsViewsVisitors.h */,
 				9396CFE619215384006A66D7 /* WPStatsViewsVisitors.m */,
-				930CECA819DEDB200083ABA4 /* StatsItem.swift */,
-				930CECAA19DEE6840083ABA4 /* StatsGroup.swift */,
-				930CECAC19DEE80A0083ABA4 /* StatsSummary.swift */,
+				93A379DC19FEA9E400415023 /* StatsItem.h */,
+				93A379DD19FEA9E400415023 /* StatsItem.m */,
+				93A379DF19FEAB1C00415023 /* StatsItemAction.h */,
+				93A379E019FEAB1C00415023 /* StatsItemAction.m */,
+				93A379E219FEAB8100415023 /* StatsGroup.h */,
+				93A379E319FEAB8100415023 /* StatsGroup.m */,
+				93A379E519FEAD8400415023 /* StatsSummary.h */,
+				93A379E619FEAD8400415023 /* StatsSummary.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -298,7 +312,8 @@
 				9396CFF4192153DA006A66D7 /* WPStatsService.m */,
 				9396CFF5192153DA006A66D7 /* WPStatsServiceRemote.h */,
 				9396CFF6192153DA006A66D7 /* WPStatsServiceRemote.m */,
-				93D3079C19DC543F006826B0 /* StatsServiceRemote.swift */,
+				93A379E819FEDEE100415023 /* WPStatsServiceV2Remote.h */,
+				93A379E919FEDEE100415023 /* WPStatsServiceV2Remote.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -332,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				93E3679C1922B751000FB32A /* stats-batch.json */,
+				93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */,
 			);
 			name = "Test Data";
 			sourceTree = "<group>";
@@ -412,6 +428,7 @@
 			files = (
 				93E3679D1922B751000FB32A /* stats-batch.json in Resources */,
 				9396CFCD1921096B006A66D7 /* InfoPlist.strings in Resources */,
+				93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,9 +503,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9396CFEF19215384006A66D7 /* WPStatsViewByCountry.m in Sources */,
+				93A379DE19FEA9E400415023 /* StatsItem.m in Sources */,
 				9396CFED19215384006A66D7 /* WPStatsTopPost.m in Sources */,
-				930CECAD19DEE80A0083ABA4 /* StatsSummary.swift in Sources */,
-				930CECAB19DEE6840083ABA4 /* StatsGroup.swift in Sources */,
 				9396CFF7192153DA006A66D7 /* WPStatsService.m in Sources */,
 				930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */,
 				9396D00D19215464006A66D7 /* WPStatsButtonCell.m in Sources */,
@@ -496,19 +512,21 @@
 				9396D01119215464006A66D7 /* WPStatsLinkToWebviewCell.m in Sources */,
 				9396D01719215464006A66D7 /* WPStatsTwoColumnCell.m in Sources */,
 				9396CFF119215384006A66D7 /* WPStatsViewsVisitors.m in Sources */,
+				93A379E419FEAB8100415023 /* StatsGroup.m in Sources */,
 				9396CFEB19215384006A66D7 /* WPStatsTitleCountItem.m in Sources */,
 				9389C94E197EBBAF0036D437 /* WPStatsGraphToastView.m in Sources */,
-				930CECA919DEDB200083ABA4 /* StatsItem.swift in Sources */,
 				9396D01519215464006A66D7 /* WPStatsTodayYesterdayButtonCell.m in Sources */,
+				93A379E119FEAB1C00415023 /* StatsItemAction.m in Sources */,
 				9396CFFD1921544B006A66D7 /* WPStatsViewController.m in Sources */,
 				930C2EEB195DB4D300C6964D /* WPStatsGraphBackgroundView.m in Sources */,
 				9396CFE719215384006A66D7 /* WPStatsGroup.m in Sources */,
-				93D3079D19DC543F006826B0 /* StatsServiceRemote.swift in Sources */,
+				93A379EA19FEDEE100415023 /* WPStatsServiceV2Remote.m in Sources */,
 				936B2251195C48700058C828 /* WPStatsGraphBarCell.m in Sources */,
 				9396CFE919215384006A66D7 /* WPStatsSummary.m in Sources */,
 				936B22481958C3840058C828 /* WPStatsGraphViewController.m in Sources */,
 				9396CFF9192153DA006A66D7 /* WPStatsServiceRemote.m in Sources */,
 				9396D01319215464006A66D7 /* WPStatsNoResultsCell.m in Sources */,
+				93A379E719FEAD8400415023 /* StatsSummary.m in Sources */,
 				9309B530192BF02F00B69F69 /* WordPressStats.m in Sources */,
 				936B2254195CB2FE0058C828 /* WPStyleGuide+Stats.m in Sources */,
 				936B224E195AFD380058C828 /* WPStatsGraphLegendView.m in Sources */,
@@ -521,7 +539,7 @@
 			files = (
 				93FAAE5719CF53FF0069D876 /* WPStatsViewsVisitorsTests.swift in Sources */,
 				93E3678019226C1C000FB32A /* WPStatsServiceRemoteTest.m in Sources */,
-				930CECAF19DF1CA90083ABA4 /* StatsServiceRemoteTests.swift in Sources */,
+				9358D15B19FFFB740094BBF5 /* WPStatsServiceV2RemoteTests.m in Sources */,
 				938318121994F9A9003B953A /* WPStatsGroupTest.swift in Sources */,
 				93E3678119226C1C000FB32A /* WPStatsServiceTest.m in Sources */,
 			);
