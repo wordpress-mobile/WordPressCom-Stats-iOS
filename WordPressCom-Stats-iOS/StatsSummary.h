@@ -1,16 +1,16 @@
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, StatsSummaryPeriod) {
-    StatsSummaryPeriodDay,
-    StatsSummaryPeriodWeek,
-    StatsSummaryPeriodMonth,
-    StatsSummaryPeriodYear
+typedef NS_ENUM(NSInteger, StatsPeriodUnit) {
+    StatsPeriodUnitDay,
+    StatsPeriodUnitWeek,
+    StatsPeriodUnitMonth,
+    StatsPeriodUnitYear
 };
 
 @interface StatsSummary : NSObject
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, assign) StatsSummaryPeriod period;
+@property (nonatomic, assign) StatsPeriodUnit periodUnit;
 @property (nonatomic, strong) NSNumber *views;
 @property (nonatomic, strong) NSNumber *visitors;
 @property (nonatomic, strong) NSNumber *likes;

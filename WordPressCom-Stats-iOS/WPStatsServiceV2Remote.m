@@ -216,7 +216,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
          
          NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
          StatsSummary *statsSummary = [StatsSummary new];
-         statsSummary.period = [self summaryPeriodForString:statsSummaryDict[@"period"]];
+         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
          statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"]];
          statsSummary.views = statsSummaryDict[@"views"];
          statsSummary.visitors = statsSummaryDict[@"visitors"];
@@ -238,13 +238,16 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
      }];
 }
 
-- (void)fetchVisitsStatsForTodayWithCompletionHandler:(void (^)(StatsVisits *visits))completionHandler failureHandler:(void (^)(NSError *error))failureHandler
+- (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
+                withCompletionHandler:(void (^)(StatsVisits *visits))completionHandler
+                       failureHandler:(void (^)(NSError *error))failureHandler
 {
     // TODO :: Abstract this out to the local service
     NSNumber *quantity = IS_IPAD ? @12 : @7;
     
     [self.manager GET:[self urlForVisits]
-           parameters:@{@"quantity" : quantity}
+           parameters:@{@"quantity" : quantity,
+                        @"unit"     : [self stringForPeriodUnit:unit]}
               success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
          if (![responseObject isKindOfClass:[NSDictionary class]]) {
@@ -262,6 +265,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
          StatsVisits *statsVisits = [StatsVisits new];
          statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"]];
+         statsVisits.unit = unit;
          
          NSArray *fields = (NSArray *)statsVisitsDict[@"fields"];
          
@@ -353,19 +357,35 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return localDate;
 }
 
-- (StatsSummaryPeriod)summaryPeriodForString:(NSString *)periodString
+- (StatsPeriodUnit)periodUnitForString:(NSString *)unitString
 {
-    if ([periodString isEqualToString:@"day"]) {
-        return StatsSummaryPeriodDay;
-    } else if ([periodString isEqualToString:@"week"]) {
-        return StatsSummaryPeriodWeek;
-    } else if ([periodString isEqualToString:@"month"]) {
-        return StatsSummaryPeriodMonth;
-    } else if ([periodString isEqualToString:@"year"]) {
-        return StatsSummaryPeriodYear;
+    if ([unitString isEqualToString:@"day"]) {
+        return StatsPeriodUnitDay;
+    } else if ([unitString isEqualToString:@"week"]) {
+        return StatsPeriodUnitWeek;
+    } else if ([unitString isEqualToString:@"month"]) {
+        return StatsPeriodUnitMonth;
+    } else if ([unitString isEqualToString:@"year"]) {
+        return StatsPeriodUnitYear;
     }
     
-    return StatsSummaryPeriodDay;
+    return StatsPeriodUnitDay;
+}
+
+- (NSString *)stringForPeriodUnit:(StatsPeriodUnit)unit
+{
+    switch (unit) {
+        case StatsPeriodUnitDay:
+            return @"day";
+        case StatsPeriodUnitWeek:
+            return @"week";
+        case StatsPeriodUnitMonth:
+            return @"month";
+        case StatsPeriodUnitYear:
+            return @"year";
+    }
+    
+    return @"";
 }
 
 @end

@@ -12,6 +12,8 @@ typedef void (^StatsRemoteCompletion)(StatsSummary *summary, NSDictionary *topPo
 
 - (void)fetchSummaryStatsForTodayWithCompletionHandler:(void (^)(StatsSummary *summary))completionHandler failureHandler:(void (^)(NSError *error))failureHandler;
 
-- (void)fetchVisitsStatsForTodayWithCompletionHandler:(void (^)(StatsVisits *visits))completionHandler failureHandler:(void (^)(NSError *error))failureHandler;
+- (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
+                withCompletionHandler:(void (^)(StatsVisits *visits))completionHandler
+                       failureHandler:(void (^)(NSError *error))failureHandler;
 
 @end

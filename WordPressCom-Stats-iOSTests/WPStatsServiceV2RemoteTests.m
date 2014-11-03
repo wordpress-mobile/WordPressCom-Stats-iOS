@@ -37,7 +37,7 @@
     [self.subject fetchSummaryStatsForTodayWithCompletionHandler:^(StatsSummary *summary) {
         XCTAssertNotNil(summary, @"summary should not be nil.");
         XCTAssertNotNil(summary.date);
-        XCTAssertTrue(summary.period == StatsSummaryPeriodDay);
+        XCTAssertTrue(summary.periodUnit == StatsPeriodUnitDay);
         XCTAssertTrue([summary.views isEqualToNumber:@56]);
         XCTAssertTrue([summary.visitors isEqualToNumber:@44]);
         XCTAssertTrue([summary.likes isEqualToNumber:@1]);
@@ -63,10 +63,13 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchVisitsStatsForTodayWithCompletionHandler:^(StatsVisits *visits) {
+    [self.subject fetchVisitsStatsForPeriodUnit:StatsPeriodUnitDay
+                          withCompletionHandler:^(StatsVisits *visits)
+    {
         XCTAssertNotNil(visits, @"visits should not be nil.");
         XCTAssertNotNil(visits.date);
         XCTAssertEqual(30, visits.statsData.count);
+        XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
         
         StatsSummary *firstSummary = visits.statsData[0];
         XCTAssertNotNil(firstSummary.date);
