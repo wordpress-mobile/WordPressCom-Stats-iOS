@@ -8,12 +8,20 @@ typedef void (^StatsRemoteCompletion)(StatsSummary *summary, NSDictionary *topPo
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone;
 
-- (void)fetchStatsForTodayDate:(NSDate *)today andYesterdayDate:(NSDate *)yesterday withCompletionHandler:(StatsCompletion)completionHandler failureHandler:(void (^)(NSError *error))failureHandler;
-
-- (void)fetchSummaryStatsForTodayWithCompletionHandler:(void (^)(StatsSummary *summary))completionHandler failureHandler:(void (^)(NSError *error))failureHandler;
+- (void)fetchSummaryStatsForTodayWithCompletionHandler:(void (^)(StatsSummary *summary))completionHandler
+                                        failureHandler:(void (^)(NSError *error))failureHandler;
 
 - (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
                 withCompletionHandler:(void (^)(StatsVisits *visits))completionHandler
                        failureHandler:(void (^)(NSError *error))failureHandler;
 
+- (void)fetchPostsStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews))completionHandler
+                failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchReferrersStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler;
 @end

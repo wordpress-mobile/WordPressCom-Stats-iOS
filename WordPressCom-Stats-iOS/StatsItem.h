@@ -2,6 +2,7 @@
 
 @interface StatsItem : NSObject
 
+@property (nonatomic, strong)   NSNumber *itemID;
 @property (nonatomic, strong)   NSNumber *value;
 @property (nonatomic, copy)     NSString *label;
 @property (nonatomic, strong)   NSURL *iconURL;

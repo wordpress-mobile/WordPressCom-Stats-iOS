@@ -6,7 +6,9 @@
 #import "WPStatsTitleCountItem.h"
 #import "WPStatsTopPost.h"
 #import <AFNetworking/AFNetworking.h>
-
+#import "StatsItem.h"
+#import "StatsItemAction.h"
+#import <NSObject+SafeExpectations.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
@@ -50,153 +52,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return self;
 }
 
-- (void)fetchStatsForTodayDate:(NSDate *)today andYesterdayDate:(NSDate *)yesterday withCompletionHandler:(StatsCompletion)completionHandler failureHandler:(void (^)(NSError *error))failureHandler
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    formatter.dateFormat = @"yyyy-MM-dd";
-    formatter.timeZone = self.siteTimeZone;
-    
-    NSString *todayString = [formatter stringFromDate:today];
-    NSString *yesterdayString = [formatter stringFromDate:yesterday];
-    
-    NSArray *urls = @[
-                      [self urlForSummary],
-                      [self urlForClicksForDate:todayString],
-                      [self urlForClicksForDate:yesterdayString],
-                      [self urlForCountryViewsForDate:todayString],
-                      [self urlForCountryViewsForDate:yesterdayString],
-                      [self urlForReferrerForDate:todayString],
-                      [self urlForReferrerForDate:yesterdayString],
-                      [self urlForSearchTermsForDate:todayString],
-                      [self urlForSearchTermsForDate:yesterdayString],
-                      [self urlForTopPostsForDate:todayString],
-                      [self urlForTopPostsForDate:yesterdayString],
-                      [self urlForViewsVisitorsForUnit:@"day"],
-                      [self urlForViewsVisitorsForUnit:@"week"],
-                      [self urlForViewsVisitorsForUnit:@"month"],
-                      ];
-    
-    [self.manager GET:[self urlForBatch]
-           parameters:@{ @"urls" : urls}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *batch = (NSDictionary *)responseObject;
-         
-         WPStatsSummary *statsSummary;
-         NSDictionary *statsSummaryDict = [batch dictionaryForKey:urls[0]];
-         if (statsSummaryDict) {
-             statsSummary = [[WPStatsSummary alloc] initWithData:statsSummaryDict];
-         }
-         
-         NSArray *clicksToday = @[];
-         NSDictionary *clicksTodayDict = [batch dictionaryForKey:urls[1]];
-         if (clicksTodayDict) {
-             clicksToday = [WPStatsGroup groupsFromData:clicksTodayDict[@"clicks"]];
-         }
-         
-         NSArray *clicksYesterday = @[];
-         NSDictionary *clicksYesterdayDict = [batch dictionaryForKey:urls[2]];
-         if (clicksYesterdayDict) {
-             clicksYesterday = [WPStatsGroup groupsFromData:clicksYesterdayDict[@"clicks"]];
-         }
-         
-         NSArray *countryViewsToday = @[];
-         NSDictionary *countryViewsTodayDict = [batch dictionaryForKey:urls[3]];
-         if (countryViewsTodayDict) {
-             countryViewsToday = [WPStatsViewByCountry viewByCountryFromData:countryViewsTodayDict];
-         }
-         
-         NSArray *countryViewsYesterday = @[];
-         NSDictionary *countryViewsYesterdayDict = [batch dictionaryForKey:urls[4]];
-         if (countryViewsYesterdayDict) {
-             countryViewsYesterday = [WPStatsViewByCountry viewByCountryFromData:countryViewsYesterdayDict];
-         }
-         
-         NSArray *referrersToday = @[];
-         NSDictionary *referrersTodayDict = [batch dictionaryForKey:urls[5]];
-         if (referrersTodayDict) {
-             referrersToday = [WPStatsGroup groupsFromData:referrersTodayDict[@"referrers"]];
-         }
-         
-         NSArray *referrersYesterday = @[];
-         NSDictionary *referrersYesterdayDict = [batch dictionaryForKey:urls[6]];
-         if (referrersYesterdayDict) {
-             referrersYesterday = [WPStatsGroup groupsFromData:referrersYesterdayDict[@"referrers"]];
-         }
-         
-         NSArray *searchTermsToday = @[];
-         NSDictionary *searchTermsTodayDict = [batch dictionaryForKey:urls[7]];
-         if (searchTermsTodayDict) {
-             searchTermsToday = [WPStatsTitleCountItem titleCountItemsFromData:searchTermsTodayDict[@"search-terms"]];
-         }
-         
-         NSArray *searchTermsYesterday = @[];
-         NSDictionary *searchTermsYesterdayDict = [batch dictionaryForKey:urls[8]];
-         if (searchTermsYesterdayDict) {
-             searchTermsYesterday = [WPStatsTitleCountItem titleCountItemsFromData:searchTermsYesterdayDict[@"search-terms"]];
-         }
-         
-         NSDictionary *topPosts = @{};
-         NSDictionary *topPostsTodayDict = [batch dictionaryForKey:urls[9]];
-         NSDictionary *topPostsYesterdayDict = [batch dictionaryForKey:urls[10]];
-         if (topPostsTodayDict && topPostsYesterdayDict) {
-             topPosts = [WPStatsTopPost postsFromTodaysData:topPostsTodayDict yesterdaysData:topPostsYesterdayDict];
-         }
-         
-         WPStatsViewsVisitors *viewsVisitors = [[WPStatsViewsVisitors alloc] init];
-         NSDictionary *viewsVisitorsDayDict = [batch dictionaryForKey:urls[11]];
-         if (viewsVisitorsDayDict) {
-             [viewsVisitors addViewsVisitorsWithData:viewsVisitorsDayDict unit:StatsViewsVisitorsUnitDay];
-         }
-         
-         NSDictionary *viewsVisitorsWeekDict = [batch dictionaryForKey:urls[12]];
-         if (viewsVisitorsWeekDict) {
-             [viewsVisitors addViewsVisitorsWithData:viewsVisitorsWeekDict unit:StatsViewsVisitorsUnitWeek];
-         }
-         
-         NSDictionary *viewsVisitorsMonthDict = [batch dictionaryForKey:urls[13]];
-         if (viewsVisitorsMonthDict) {
-             [viewsVisitors addViewsVisitorsWithData:viewsVisitorsMonthDict unit:StatsViewsVisitorsUnitMonth];
-         }
-         
-         // (StatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, StatsViewsVisitors *viewsVisitors);
-         if (completionHandler) {
-             completionHandler(
-                               statsSummary,
-                               topPosts,
-                               @{StatsResultsToday : clicksToday, StatsResultsYesterday : clicksYesterday},
-                               @{StatsResultsToday : countryViewsToday, StatsResultsYesterday : countryViewsYesterday},
-                               @{StatsResultsToday : referrersToday, StatsResultsYesterday : referrersYesterday},
-                               @{StatsResultsToday : searchTermsToday, StatsResultsYesterday : searchTermsYesterday},
-                               viewsVisitors
-                               );
-             
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with batch stats: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
-}
-
-
-// For simplicity of implementation (copy & paste), batch is being used here even though its not necessary
 - (void)fetchSummaryStatsForTodayWithCompletionHandler:(void (^)(StatsSummary *summary))completionHandler failureHandler:(void (^)(NSError *error))failureHandler
 {
     [self.manager GET:[self urlForSummary]
@@ -304,6 +159,165 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
      }];
 }
 
+- (void)fetchPostsStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews))completionHandler
+                failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    [self.manager GET:[self urlForTopPosts]
+           parameters:@{@"period" : [self stringForPeriodUnit:unit],
+                        @"date"   : [self siteLocalStringForDate:date]}
+              success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (![responseObject isKindOfClass:[NSDictionary class]]) {
+             if (failureHandler) {
+                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                                      code:NSURLErrorBadServerResponse
+                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
+                 failureHandler(error);
+             }
+             
+             return;
+         }
+         
+         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
+         NSDictionary *days = statsPostsDict[@"days"];
+         NSDictionary *postViewsDict = [days allValues][0][@"postviews"];
+         NSNumber *totalViews = [days allValues][0][@"total_views"];
+         NSMutableArray *items = [NSMutableArray new];
+
+         for (NSDictionary *post in postViewsDict) {
+             StatsItem *statsItem = [StatsItem new];
+             statsItem.itemID = post[@"id"];
+             statsItem.value = post[@"views"];
+             statsItem.label = post[@"title"];
+             
+             StatsItemAction *statsItemAction = [StatsItemAction new];
+             statsItemAction.url = [NSURL URLWithString:post[@"href"]];
+             statsItemAction.defaultAction = YES;
+             
+             statsItem.actions = @[statsItemAction];
+             
+             [items addObject:statsItem];
+         }
+         
+         
+         if (completionHandler) {
+             completionHandler(items, totalViews);
+         }
+     }
+              failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         DDLogError(@"Error with fetchPostsStatsForDate: %@", error);
+         
+         if (failureHandler) {
+             failureHandler(error);
+         }
+     }];
+}
+
+
+- (void)fetchReferrersStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    [self.manager GET:[self urlForReferrers]
+           parameters:@{@"period" : [self stringForPeriodUnit:unit],
+                        @"date"   : [self siteLocalStringForDate:date]}
+              success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (![responseObject isKindOfClass:[NSDictionary class]]) {
+             if (failureHandler) {
+                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                                      code:NSURLErrorBadServerResponse
+                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
+                 failureHandler(error);
+             }
+             
+             return;
+         }
+         
+         NSDictionary *referrersDict = (NSDictionary *)responseObject;
+         NSDictionary *days = referrersDict[@"days"];
+         NSDictionary *groupsDict = [days allValues][0][@"groups"];
+         NSNumber *totalViews = [days allValues][0][@"total_views"];
+         NSNumber *otherViews = [days allValues][0][@"other_views"];
+         NSMutableArray *items = [NSMutableArray new];
+         
+         for (NSDictionary *group in groupsDict) {
+             StatsItem *statsItem = [StatsItem new];
+             statsItem.label = [group stringForKey:@"name"];
+             statsItem.value = [group numberForKey:@"total"];
+             statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
+             
+             NSString *url = [group stringForKey:@"url"];
+             if (url) {
+                 StatsItemAction *action = [StatsItemAction new];
+                 action.url = [NSURL URLWithString:url];
+                 action.defaultAction = YES;
+                 statsItem.actions = @[action];
+             }
+             // TODO :: group[@"group"] - where does this go
+             // TODO :: group[@"total"]
+             
+             NSDictionary *results = group[@"results"];
+             NSMutableArray *resultsItems = [NSMutableArray new];
+             for (id result in results) {
+                 // TODO :: Conditional - if name doesn't exist, skip?
+                 if ([result isKindOfClass:[NSDictionary class]]) {
+                     StatsItem *resultItem = [StatsItem new];
+                     resultItem.label = [result stringForKey:@"name"];
+                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
+                     resultItem.value = [result numberForKey:@"views"];
+                     [resultsItems addObject:resultItem];
+                     
+                     NSArray *children = result[@"children"];
+                     NSMutableArray *childItems = [NSMutableArray new];
+                     for (NSDictionary *child in children) {
+                         StatsItem *childItem = [StatsItem new];
+                         childItem.label = [child stringForKey:@"name"];
+                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
+                         childItem.value = [child numberForKey:@"views"];
+                         
+                         NSString *url = [child stringForKey:@"url"];
+                         if (url) {
+                             StatsItemAction *action = [StatsItemAction new];
+                             action.url = [NSURL URLWithString:url];
+                             action.defaultAction = YES;
+                             childItem.actions = @[action];
+                         }
+
+                         [childItems addObject:childItem];
+                     }
+                     resultItem.children = childItems;
+                 }
+             }
+             statsItem.children = resultsItems;
+             
+             [items addObject:statsItem];
+         }
+         
+         
+         if (completionHandler) {
+             completionHandler(items, totalViews, otherViews);
+         }
+     }
+              failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         DDLogError(@"Error with fetchPostsStatsForDate: %@", error);
+         
+         if (failureHandler) {
+             failureHandler(error);
+         }
+     }];
+}
+
+
 - (NSString *)urlForBatch
 {
     return [NSString stringWithFormat:@"%@/batch", WordPressComApiClientEndpointURL];
@@ -329,9 +343,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return [NSString stringWithFormat:@"%@/country-views?date=%@", self.statsPathPrefix, date];
 }
 
-- (NSString *)urlForReferrerForDate:(NSString *)date
+- (NSString *)urlForReferrers
 {
-    return [NSString stringWithFormat:@"%@/referrers?date=%@", self.statsPathPrefix, date];
+    return [NSString stringWithFormat:@"%@/referrers/", self.statsPathPrefix];
 }
 
 - (NSString *)urlForSearchTermsForDate:(NSString *)date
@@ -339,9 +353,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return [NSString stringWithFormat:@"%@/search-terms?date=%@", self.statsPathPrefix, date];
 }
 
-- (NSString *)urlForTopPostsForDate:(NSString *)date
+- (NSString *)urlForTopPosts
 {
-    return [NSString stringWithFormat:@"%@/top-posts?date=%@", self.statsPathPrefix, date];
+    return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
 
 - (NSString *)urlForViewsVisitorsForUnit:(NSString *)unit
@@ -355,6 +369,18 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     NSDate *localDate = [self.deviceDateFormatter dateFromString:dateString];
     
     return localDate;
+}
+
+- (NSString *)siteLocalStringForDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    formatter.timeZone = self.siteTimeZone;
+    
+    NSString *todayString = [formatter stringFromDate:date];
+
+    return todayString;
 }
 
 - (StatsPeriodUnit)periodUnitForString:(NSString *)unitString
