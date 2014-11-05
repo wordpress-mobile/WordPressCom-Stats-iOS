@@ -265,10 +265,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
              // TODO :: group[@"group"] - where does this go
              // TODO :: group[@"total"]
              
-             NSDictionary *results = group[@"results"];
+             NSArray *results = [group arrayForKey:@"results"];
              NSMutableArray *resultsItems = [NSMutableArray new];
              for (id result in results) {
-                 // TODO :: Conditional - if name doesn't exist, skip?
                  if ([result isKindOfClass:[NSDictionary class]]) {
                      StatsItem *resultItem = [StatsItem new];
                      resultItem.label = [result stringForKey:@"name"];
@@ -276,7 +275,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                      resultItem.value = [result numberForKey:@"views"];
                      [resultsItems addObject:resultItem];
                      
-                     NSArray *children = result[@"children"];
+                     NSArray *children = [result arrayForKey:@"children"];
                      NSMutableArray *childItems = [NSMutableArray new];
                      for (NSDictionary *child in children) {
                          StatsItem *childItem = [StatsItem new];
@@ -291,7 +290,104 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                              action.defaultAction = YES;
                              childItem.actions = @[action];
                          }
+                         
+                         [childItems addObject:childItem];
+                     }
+                     resultItem.children = childItems;
+                 }
+             }
+             statsItem.children = resultsItems;
+             
+             [items addObject:statsItem];
+         }
+         
+         
+         if (completionHandler) {
+             completionHandler(items, totalViews, otherViews);
+         }
+     }
+              failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         DDLogError(@"Error with fetchPostsStatsForDate: %@", error);
+         
+         if (failureHandler) {
+             failureHandler(error);
+         }
+     }];
+}
 
+- (void)fetchClicksStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks))completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    [self.manager GET:[self urlForClicks]
+           parameters:@{@"period" : [self stringForPeriodUnit:unit],
+                        @"date"   : [self siteLocalStringForDate:date]}
+              success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (![responseObject isKindOfClass:[NSDictionary class]]) {
+             if (failureHandler) {
+                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                                      code:NSURLErrorBadServerResponse
+                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
+                 failureHandler(error);
+             }
+             
+             return;
+         }
+         
+         NSDictionary *referrersDict = (NSDictionary *)responseObject;
+         NSDictionary *days = referrersDict[@"days"];
+         NSDictionary *groupsDict = [days allValues][0][@"groups"];
+         NSNumber *totalViews = [days allValues][0][@"total_views"];
+         NSNumber *otherViews = [days allValues][0][@"other_views"];
+         NSMutableArray *items = [NSMutableArray new];
+         
+         for (NSDictionary *group in groupsDict) {
+             StatsItem *statsItem = [StatsItem new];
+             statsItem.label = [group stringForKey:@"name"];
+             statsItem.value = [group numberForKey:@"total"];
+             statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
+             
+             NSString *url = [group stringForKey:@"url"];
+             if (url) {
+                 StatsItemAction *action = [StatsItemAction new];
+                 action.url = [NSURL URLWithString:url];
+                 action.defaultAction = YES;
+                 statsItem.actions = @[action];
+             }
+             // TODO :: group[@"group"] - where does this go
+             // TODO :: group[@"total"]
+             
+             NSArray *results = [group arrayForKey:@"results"];
+             NSMutableArray *resultsItems = [NSMutableArray new];
+             for (id result in results) {
+                 if ([result isKindOfClass:[NSDictionary class]]) {
+                     StatsItem *resultItem = [StatsItem new];
+                     resultItem.label = [result stringForKey:@"name"];
+                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
+                     resultItem.value = [result numberForKey:@"views"];
+                     [resultsItems addObject:resultItem];
+                     
+                     NSArray *children = [result arrayForKey:@"children"];
+                     NSMutableArray *childItems = [NSMutableArray new];
+                     for (NSDictionary *child in children) {
+                         StatsItem *childItem = [StatsItem new];
+                         childItem.label = [child stringForKey:@"name"];
+                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
+                         childItem.value = [child numberForKey:@"views"];
+                         
+                         NSString *url = [child stringForKey:@"url"];
+                         if (url) {
+                             StatsItemAction *action = [StatsItemAction new];
+                             action.url = [NSURL URLWithString:url];
+                             action.defaultAction = YES;
+                             childItem.actions = @[action];
+                         }
+                         
                          [childItems addObject:childItem];
                      }
                      resultItem.children = childItems;
@@ -318,11 +414,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
-- (NSString *)urlForBatch
-{
-    return [NSString stringWithFormat:@"%@/batch", WordPressComApiClientEndpointURL];
-}
-
 - (NSString *)urlForSummary
 {
     return [NSString stringWithFormat:@"%@/summary/", self.statsPathPrefix];
@@ -333,9 +424,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return [NSString stringWithFormat:@"%@/visits/", self.statsPathPrefix];
 }
 
-- (NSString *)urlForClicksForDate:(NSString *)date
+- (NSString *)urlForClicks
 {
-    return [NSString stringWithFormat:@"%@/clicks?date=%@", self.statsPathPrefix, date];
+    return [NSString stringWithFormat:@"%@/clicks", self.statsPathPrefix];
 }
 
 - (NSString *)urlForCountryViewsForDate:(NSString *)date

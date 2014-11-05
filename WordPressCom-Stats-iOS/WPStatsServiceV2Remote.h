@@ -24,4 +24,10 @@ typedef void (^StatsRemoteCompletion)(StatsSummary *summary, NSDictionary *topPo
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
                     failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchClicksStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks))completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler;
+
 @end
