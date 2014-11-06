@@ -371,7 +371,7 @@
 
 - (void)testClicksDay
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchClicksStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks"];
@@ -409,6 +409,67 @@
          XCTAssertEqual(0, statsItem2.children.count);
          StatsItemAction *statsItemAction2 = statsItem2.actions[0];
          XCTAssertTrue([statsItemAction2.url.absoluteString isEqualToString:@"https://devforums.apple.com/thread/86137"]);
+         XCTAssertTrue(statsItemAction2.defaultAction);
+         XCTAssertNil(statsItemAction2.label);
+         XCTAssertNil(statsItemAction2.iconURL);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testClicksMonthLarge
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchClicksStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-clicks-month-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchClicksStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitMonth
+                    withCompletionHandler:^(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertTrue([@9 isEqualToNumber:totalClicks]);
+         XCTAssertTrue([@0 isEqualToNumber:otherClicks]);
+         
+         XCTAssertEqual(6, items.count);
+         
+         StatsItem *statsItem1 = items[0];
+         XCTAssertTrue([statsItem1.label isEqualToString:@"wp.com"]);
+         XCTAssertNil(statsItem1.iconURL);
+         XCTAssertTrue([@3 isEqualToNumber:statsItem1.value]);
+         XCTAssertEqual(1, statsItem1.actions.count);
+         XCTAssertEqual(0, statsItem1.children.count);
+         StatsItemAction *statsItemAction1 = statsItem1.actions[0];
+         XCTAssertTrue([statsItemAction1.url.absoluteString isEqualToString:@"http://wp.com/"]);
+         XCTAssertTrue(statsItemAction1.defaultAction);
+         XCTAssertNil(statsItemAction1.label);
+         XCTAssertNil(statsItemAction1.iconURL);
+         
+         StatsItem *statsItem2 = items[1];
+         XCTAssertTrue([statsItem2.label isEqualToString:@"blog.wordpress.tv"]);
+         XCTAssertNil(statsItem2.iconURL);
+         XCTAssertTrue([@2 isEqualToNumber:statsItem2.value]);
+         XCTAssertEqual(0, statsItem2.actions.count);
+         XCTAssertEqual(2, statsItem2.children.count);
+         
+         StatsItem *child1 = statsItem2.children[0];
+         XCTAssertTrue([child1.label isEqualToString:@"blog.wordpress.tv/2014/10/03/build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/"]);
+         XCTAssertNil(child1.iconURL);
+         XCTAssertTrue([@1 isEqualToNumber:child1.value]);
+         XCTAssertEqual(1, child1.actions.count);
+         XCTAssertEqual(0, child1.children.count);
+         
+         StatsItemAction *statsItemAction2 = child1.actions[0];
+         XCTAssertTrue([statsItemAction2.url.absoluteString isEqualToString:@"http://blog.wordpress.tv/2014/10/03/build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/"]);
          XCTAssertTrue(statsItemAction2.defaultAction);
          XCTAssertNil(statsItemAction2.label);
          XCTAssertNil(statsItemAction2.iconURL);
