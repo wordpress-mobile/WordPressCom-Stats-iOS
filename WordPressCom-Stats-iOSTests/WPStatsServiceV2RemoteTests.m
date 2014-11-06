@@ -17,7 +17,7 @@
 - (void)setUp {
     [super setUp];
     
-    self.subject = [[WPStatsServiceV2Remote alloc] initWithOAuth2Token:@"token" siteId:@66592863 andSiteTimeZone:[NSTimeZone systemTimeZone]];
+    self.subject = [[WPStatsServiceV2Remote alloc] initWithOAuth2Token:@"token" siteId:@123456 andSiteTimeZone:[NSTimeZone systemTimeZone]];
 }
 
 - (void)tearDown {
@@ -31,7 +31,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/summary"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-summary.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
@@ -55,14 +55,14 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
-- (void)testVisits
+- (void)testVisitsDaySmall
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVisitsStatsForPeriodUnit completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/visits"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVisitsStatsForPeriodUnit:StatsPeriodUnitDay
@@ -90,14 +90,50 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+
+- (void)testVisitsDayLarge
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVisitsStatsForPeriodUnit completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchVisitsStatsForPeriodUnit:StatsPeriodUnitDay
+                          withCompletionHandler:^(StatsVisits *visits)
+     {
+         XCTAssertNotNil(visits, @"visits should not be nil.");
+         XCTAssertNotNil(visits.date);
+         XCTAssertEqual(30, visits.statsData.count);
+         XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
+         
+         StatsSummary *firstSummary = visits.statsData[0];
+         XCTAssertNotNil(firstSummary.date);
+         XCTAssertTrue([firstSummary.views isEqualToNumber:@7808]);
+         XCTAssertTrue([firstSummary.visitors isEqualToNumber:@4331]);
+         XCTAssertTrue([firstSummary.likes isEqualToNumber:@0]);
+         XCTAssertTrue([firstSummary.reblogs isEqualToNumber:@0]);
+         XCTAssertTrue([firstSummary.comments isEqualToNumber:@0]);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 - (void)testTopPostsDay
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostsStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/top-posts"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
@@ -128,12 +164,50 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testTopPostsDayLarge
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostsStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchPostsStatsForDate:[NSDate date]
+                                 andUnit:StatsPeriodUnitDay
+                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews)
+     {
+         XCTAssertNotNil(items, @"Posts should not be nil.");
+         XCTAssertNotNil(totalViews, @"There should be a number provided.");
+         
+         XCTAssertEqual(10, items.count);
+         
+         StatsItem *item = items[0];
+         XCTAssertTrue([item.itemID isEqualToNumber:@39806]);
+         XCTAssertTrue([item.label isEqualToString:@"Home"]);
+         XCTAssertTrue([item.value isEqualToNumber:@2420]);
+         XCTAssertEqual(1, item.actions.count);
+         
+         StatsItemAction *action = item.actions[0];
+         XCTAssertTrue(action.defaultAction);
+         XCTAssertTrue([action.url.absoluteString isEqualToString:@"http://automattic.com/home/"]);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 - (void)testReferrersDay
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchReferrersStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/referrers"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-referrers-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
@@ -213,7 +287,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/clicks"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-clicks-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
@@ -266,7 +340,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchCountryStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/country-views"];
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/country-views"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-country-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
