@@ -92,7 +92,7 @@
 
 - (void)testTopPostsDay
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostsStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/top-posts"];
@@ -130,7 +130,7 @@
 
 - (void)testReferrersDay
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchReferrersStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/referrers"];
@@ -148,7 +148,7 @@
          
          XCTAssertEqual(4, items.count);
          
-         /* 
+         /*
           * Search Engines (children + children)
           */
          StatsItem *searchEnginesItem = items[0];
@@ -197,7 +197,90 @@
          XCTAssertNil(flipBoardItemAction.label);
          XCTAssertNil(flipBoardItemAction.iconURL);
          XCTAssertTrue(flipBoardItemAction.defaultAction);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
 
+
+- (void)testClicksDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/clicks"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-clicks-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchClicksStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks)
+     {
+         XCTAssertNotNil(items, @"Posts should not be nil.");
+         XCTAssertNotNil(totalClicks, @"There should be a number provided.");
+         XCTAssertNotNil(otherClicks, @"There should be a number provided.");
+         
+         XCTAssertEqual(2, items.count);
+         
+         StatsItem *statsItem1 = items[0];
+         XCTAssertTrue([statsItem1.label isEqualToString:@"astralbodies.net/blog/2013/10/31/paying-attention-at-automattic/"]);
+         XCTAssertNil(statsItem1.iconURL);
+         XCTAssertTrue([@1 isEqualToNumber:statsItem1.value]);
+         XCTAssertEqual(1, statsItem1.actions.count);
+         XCTAssertEqual(0, statsItem1.children.count);
+         StatsItemAction *statsItemAction1 = statsItem1.actions[0];
+         XCTAssertTrue([statsItemAction1.url.absoluteString isEqualToString:@"http://astralbodies.net/blog/2013/10/31/paying-attention-at-automattic/"]);
+         XCTAssertTrue(statsItemAction1.defaultAction);
+         XCTAssertNil(statsItemAction1.label);
+         XCTAssertNil(statsItemAction1.iconURL);
+         
+         StatsItem *statsItem2 = items[1];
+         XCTAssertTrue([statsItem2.label isEqualToString:@"devforums.apple.com/thread/86137"]);
+         XCTAssertNil(statsItem2.iconURL);
+         XCTAssertTrue([@1 isEqualToNumber:statsItem2.value]);
+         XCTAssertEqual(1, statsItem2.actions.count);
+         XCTAssertEqual(0, statsItem2.children.count);
+         StatsItemAction *statsItemAction2 = statsItem2.actions[0];
+         XCTAssertTrue([statsItemAction2.url.absoluteString isEqualToString:@"https://devforums.apple.com/thread/86137"]);
+         XCTAssertTrue(statsItemAction2.defaultAction);
+         XCTAssertNil(statsItemAction2.label);
+         XCTAssertNil(statsItemAction2.iconURL);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testCountryViewsDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchCountryStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/66592863/stats/country-views"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-country-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchCountryStatsForDate:[NSDate date]
+                                   andUnit:StatsPeriodUnitDay
+                     withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+     {
+         XCTAssertNotNil(items, @"Posts should not be nil.");
+         XCTAssertNotNil(totalViews, @"There should be a number provided.");
+         XCTAssertNotNil(otherViews, @"There should be a number provided.");
+         
+         XCTAssertEqual(12, items.count);
+         
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
          XCTFail(@"Failure handler should not be called here.");

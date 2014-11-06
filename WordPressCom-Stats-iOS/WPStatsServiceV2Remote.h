@@ -30,4 +30,8 @@ typedef void (^StatsRemoteCompletion)(StatsSummary *summary, NSDictionary *topPo
           withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks))completionHandler
                  failureHandler:(void (^)(NSError *error))failureHandler;
 
+- (void)fetchCountryStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
+                  failureHandler:(void (^)(NSError *error))failureHandler;
 @end
