@@ -15,6 +15,7 @@
 		931193EA1A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */; };
 		931193EC1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json in Resources */ = {isa = PBXBuildFile; fileRef = 931193EB1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json */; };
 		931193EE1A0C0D050005BED2 /* stats-v1.1-top-posts-day-large.json in Resources */ = {isa = PBXBuildFile; fileRef = 931193ED1A0C0D050005BED2 /* stats-v1.1-top-posts-day-large.json */; };
+		931193F01A0C12170005BED2 /* stats-v1.1-referrers-day-large.json in Resources */ = {isa = PBXBuildFile; fileRef = 931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */; };
 		93274AE41A07C7EA0017238F /* StatsVisits.m in Sources */ = {isa = PBXBuildFile; fileRef = 93274AE31A07C7EA0017238F /* StatsVisits.m */; };
 		93274AE61A07CCE40017238F /* stats-v1.1-visits-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 93274AE51A07CCE40017238F /* stats-v1.1-visits-day.json */; };
 		93274AE81A091E840017238F /* stats-v1.1-top-posts-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 93274AE71A091E840017238F /* stats-v1.1-top-posts-day.json */; };
@@ -95,6 +96,7 @@
 		931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-country-views-day.json"; sourceTree = "<group>"; };
 		931193EB1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-visits-day-large.json"; sourceTree = "<group>"; };
 		931193ED1A0C0D050005BED2 /* stats-v1.1-top-posts-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day-large.json"; sourceTree = "<group>"; };
+		931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-referrers-day-large.json"; sourceTree = "<group>"; };
 		93274AE21A07C7EA0017238F /* StatsVisits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsVisits.h; sourceTree = "<group>"; };
 		93274AE31A07C7EA0017238F /* StatsVisits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsVisits.m; sourceTree = "<group>"; };
 		93274AE51A07CCE40017238F /* stats-v1.1-visits-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-visits-day.json"; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				93274AE71A091E840017238F /* stats-v1.1-top-posts-day.json */,
 				931193ED1A0C0D050005BED2 /* stats-v1.1-top-posts-day-large.json */,
 				93274AE91A09B4FA0017238F /* stats-v1.1-referrers-day.json */,
+				931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */,
 				931193E71A0BAA660005BED2 /* stats-v1.1-clicks-day.json */,
 				931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */,
 			);
@@ -459,6 +462,7 @@
 				93E3679D1922B751000FB32A /* stats-batch.json in Resources */,
 				931193EC1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json in Resources */,
 				9396CFCD1921096B006A66D7 /* InfoPlist.strings in Resources */,
+				931193F01A0C12170005BED2 /* stats-v1.1-referrers-day-large.json in Resources */,
 				93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */,
 				931193EA1A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json in Resources */,
 				93274AE61A07CCE40017238F /* stats-v1.1-visits-day.json in Resources */,

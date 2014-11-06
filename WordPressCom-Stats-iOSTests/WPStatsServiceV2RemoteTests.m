@@ -282,6 +282,93 @@
 }
 
 
+- (void)testReferrersDayLarge
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchReferrersStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-referrers-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchReferrersStatsForDate:[NSDate date]
+                                     andUnit:StatsPeriodUnitDay
+                       withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+     {
+         XCTAssertNotNil(items, @"Posts should not be nil.");
+         XCTAssertTrue([@2161 isEqualToNumber:totalViews]);
+         XCTAssertTrue([@938 isEqualToNumber:otherViews]);
+         
+         XCTAssertEqual(10, items.count);
+         
+         /*
+          * Search Engines (children + children)
+          */
+         StatsItem *searchEnginesItem = items[0];
+         XCTAssertNil(searchEnginesItem.itemID);
+         XCTAssertTrue([searchEnginesItem.value isEqualToNumber:@480]);
+         XCTAssertTrue([searchEnginesItem.label isEqualToString:@"Search Engines"]);
+         XCTAssertTrue([searchEnginesItem.iconURL.absoluteString isEqualToString:@"https://wordpress.com/i/stats/search-engine.png"]);
+         XCTAssertEqual(0, searchEnginesItem.actions.count);
+         XCTAssertEqual(7, searchEnginesItem.children.count);
+         
+         StatsItem *googleSearchItem = searchEnginesItem.children.firstObject;
+         XCTAssertNil(googleSearchItem.itemID);
+         XCTAssertTrue([googleSearchItem.value isEqualToNumber:@461]);
+         XCTAssertTrue([googleSearchItem.label isEqualToString:@"Google Search"]);
+         XCTAssertTrue([googleSearchItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48"]);
+         XCTAssertEqual(0, googleSearchItem.actions.count);
+         XCTAssertEqual(11, googleSearchItem.children.count);
+         
+         StatsItem *googleDotComItem = googleSearchItem.children[0];
+         XCTAssertNil(googleDotComItem.itemID);
+         XCTAssertTrue([googleDotComItem.value isEqualToNumber:@176]);
+         XCTAssertTrue([googleDotComItem.label isEqualToString:@"google.com"]);
+         XCTAssertTrue([googleDotComItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48"]);
+         XCTAssertEqual(1, googleDotComItem.actions.count);
+         XCTAssertEqual(0, googleDotComItem.children.count);
+         
+         StatsItemAction *googleDotComItemAction = googleDotComItem.actions.firstObject;
+         XCTAssertTrue([googleDotComItemAction.url.absoluteString isEqualToString:@"http://www.google.com/"]);
+         XCTAssertNil(googleDotComItemAction.label);
+         XCTAssertNil(googleDotComItemAction.iconURL);
+         XCTAssertTrue(googleDotComItemAction.defaultAction);
+         
+         /*
+          * Ma.tt
+          */
+         StatsItem *mattItem = items[6];
+         XCTAssertNil(mattItem.itemID);
+         XCTAssertTrue([mattItem.value isEqualToNumber:@56]);
+         XCTAssertTrue([mattItem.label isEqualToString:@"ma.tt"]);
+         XCTAssertTrue([mattItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/733a27a6b983dd89d6dd64d0445a3e8e?s=48"]);
+         XCTAssertEqual(0, mattItem.actions.count);
+         XCTAssertEqual(11, mattItem.children.count);
+         
+         StatsItem *mattRootItem = mattItem.children[0];
+         XCTAssertTrue([mattRootItem.value isEqualToNumber:@34]);
+         XCTAssertTrue([mattRootItem.label isEqualToString:@"ma.tt"]);
+         XCTAssertNil(mattRootItem.iconURL);
+         XCTAssertEqual(1, mattRootItem.actions.count);
+         XCTAssertEqual(0, mattRootItem.children.count);
+
+         StatsItemAction *mattRootItemAction = mattRootItem.actions.firstObject;
+         XCTAssertTrue([mattRootItemAction.url.absoluteString isEqualToString:@"http://ma.tt/"]);
+         XCTAssertNil(mattRootItemAction.label);
+         XCTAssertNil(mattRootItemAction.iconURL);
+         XCTAssertTrue(mattRootItemAction.defaultAction);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+
 - (void)testClicksDay
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];

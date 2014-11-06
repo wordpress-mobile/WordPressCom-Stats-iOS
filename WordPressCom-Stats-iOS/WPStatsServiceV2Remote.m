@@ -273,6 +273,15 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                      resultItem.label = [result stringForKey:@"name"];
                      resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
                      resultItem.value = [result numberForKey:@"views"];
+                     
+                     NSString *url = [result stringForKey:@"url"];
+                     if (url) {
+                         StatsItemAction *action = [StatsItemAction new];
+                         action.url = [NSURL URLWithString:url];
+                         action.defaultAction = YES;
+                         resultItem.actions = @[action];
+                     }
+
                      [resultsItems addObject:resultItem];
                      
                      NSArray *children = [result arrayForKey:@"children"];
