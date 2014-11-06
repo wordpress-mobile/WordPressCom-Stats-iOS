@@ -429,15 +429,15 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
          NSNumber *otherViews = [days allValues][0][@"other_views"];
          NSMutableArray *items = [NSMutableArray new];
          
-         for (id key in viewsDict) {
+         for (NSDictionary *view in viewsDict) {
+             NSString *key = [view stringForKey:@"country_code"];
              StatsItem *statsItem = [StatsItem new];
              statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
-             statsItem.value = [viewsDict numberForKey:key];
+             statsItem.value = [view numberForKey:@"views"];
              statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
              
              [items addObject:statsItem];
          }
-         
          
          if (completionHandler) {
              completionHandler(items, totalViews, otherViews);

@@ -281,6 +281,14 @@
          
          XCTAssertEqual(12, items.count);
          
+         StatsItem *item = items[0];
+         XCTAssertTrue([item.label isEqualToString:@"United States"]);
+         XCTAssertTrue([@23 isEqualToNumber:item.value]);
+         XCTAssertNil(item.itemID);
+         XCTAssertTrue([item.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48"]);
+         XCTAssertEqual(0, item.actions.count);
+         XCTAssertEqual(0, item.children.count);
+         
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
          XCTFail(@"Failure handler should not be called here.");

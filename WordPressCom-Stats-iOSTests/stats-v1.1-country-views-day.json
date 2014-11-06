@@ -2,22 +2,58 @@
     "date": "2014-11-06",
     "days": {
         "2014-11-06": {
-            "views": {
-                "US": 11,
-                "IN": 3,
-                "JP": 3,
-                "VN": 3,
-                "DE": 3,
-                "FR": 2,
-                "RU": 2,
-                "IL": 2,
-                "TW": 1,
-                "PL": 1,
-                "PH": 1,
-                "KR": 1
-            },
-            "other_views": 5,
-            "total_views": 38
+            "views": [
+                      {
+                      "country_code": "US",
+                      "views": 23
+                      },
+                      {
+                      "country_code": "DE",
+                      "views": 7
+                      },
+                      {
+                      "country_code": "GB",
+                      "views": 4
+                      },
+                      {
+                      "country_code": "BR",
+                      "views": 3
+                      },
+                      {
+                      "country_code": "FR",
+                      "views": 3
+                      },
+                      {
+                      "country_code": "IN",
+                      "views": 3
+                      },
+                      {
+                      "country_code": "VN",
+                      "views": 3
+                      },
+                      {
+                      "country_code": "JP",
+                      "views": 3
+                      },
+                      {
+                      "country_code": "IL",
+                      "views": 2
+                      },
+                      {
+                      "country_code": "KR",
+                      "views": 2
+                      },
+                      {
+                      "country_code": "RU",
+                      "views": 2
+                      },
+                      {
+                      "country_code": "TW",
+                      "views": 1
+                      }
+                      ],
+            "other_views": 11,
+            "total_views": 67
         }
     },
     "country-info": {
@@ -31,30 +67,30 @@
             "country_full": "Germany",
             "map_region": "155"
         },
-        "VN": {
-            "flag_icon": "https://secure.gravatar.com/blavatar/dd0d10af3ce85b0dc0bb7bbceea4f5e7?s=48",
-            "country_full": "Viet Nam",
-            "map_region": "035"
+        "GB": {
+            "flag_icon": "https://secure.gravatar.com/blavatar/45d1fd3f398678452fd02153f569ce01?s=48",
+            "country_full": "United Kingdom",
+            "map_region": "154"
         },
         "JP": {
             "flag_icon": "https://secure.gravatar.com/blavatar/bd3a57cba61df97cc0f73363dea7dc4d?s=48",
             "country_full": "Japan",
             "map_region": "030"
         },
+        "VN": {
+            "flag_icon": "https://secure.gravatar.com/blavatar/dd0d10af3ce85b0dc0bb7bbceea4f5e7?s=48",
+            "country_full": "Viet Nam",
+            "map_region": "035"
+        },
         "IN": {
             "flag_icon": "https://secure.gravatar.com/blavatar/217b6ac82c316e3a176351cef1d2d0b6?s=48",
             "country_full": "India",
             "map_region": "034"
         },
-        "RU": {
-            "flag_icon": "https://secure.gravatar.com/blavatar/ba1ad9dc288f3d105f2512336502c473?s=48",
-            "country_full": "Russian Federation",
-            "map_region": "151"
-        },
-        "IL": {
-            "flag_icon": "https://secure.gravatar.com/blavatar/201a002496cebf356519bec9edba5c05?s=48",
-            "country_full": "Israel",
-            "map_region": "145"
+        "BR": {
+            "flag_icon": "https://secure.gravatar.com/blavatar/2eb39070460892f8d51479ce95484f09?s=48",
+            "country_full": "Brazil",
+            "map_region": "005"
         },
         "FR": {
             "flag_icon": "https://secure.gravatar.com/blavatar/bff4fa191e38bc0a316410b8fd2958fd?s=48",
@@ -66,15 +102,15 @@
             "country_full": "Republic of Korea",
             "map_region": "030"
         },
-        "PH": {
-            "flag_icon": "https://secure.gravatar.com/blavatar/9fb5caa12630ee351f854526887036b5?s=48",
-            "country_full": "Philippines",
-            "map_region": "035"
-        },
-        "PL": {
-            "flag_icon": "https://secure.gravatar.com/blavatar/07ca9bf8d0106aa7cc6245a629412322?s=48",
-            "country_full": "Poland",
+        "RU": {
+            "flag_icon": "https://secure.gravatar.com/blavatar/ba1ad9dc288f3d105f2512336502c473?s=48",
+            "country_full": "Russian Federation",
             "map_region": "151"
+        },
+        "IL": {
+            "flag_icon": "https://secure.gravatar.com/blavatar/201a002496cebf356519bec9edba5c05?s=48",
+            "country_full": "Israel",
+            "map_region": "145"
         },
         "TW": {
             "flag_icon": "https://secure.gravatar.com/blavatar/f983fff0dda7387746b697cfd865e657?s=48",
