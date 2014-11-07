@@ -138,7 +138,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews)
+                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -176,7 +176,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews)
+                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");

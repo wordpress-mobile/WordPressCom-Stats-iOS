@@ -52,282 +52,283 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return self;
 }
 
-- (void)fetchSummaryStatsForTodayWithCompletionHandler:(void (^)(StatsSummary *summary))completionHandler failureHandler:(void (^)(NSError *error))failureHandler
+
+#pragma mark - Public methods
+
+- (void)fetchSummaryStatsForTodayWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler failureHandler:(void (^)(NSError *error))failureHandler
 {
-    [self.manager GET:[self urlForSummary]
-           parameters:nil
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
-         StatsSummary *statsSummary = [StatsSummary new];
-         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
-         statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"]];
-         statsSummary.views = statsSummaryDict[@"views"];
-         statsSummary.visitors = statsSummaryDict[@"visitors"];
-         statsSummary.likes = statsSummaryDict[@"likes"];
-         statsSummary.reblogs = statsSummaryDict[@"reblogs"];
-         statsSummary.comments = statsSummaryDict[@"comments"];
-         
-         if (completionHandler) {
-             completionHandler(statsSummary);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with today summary stats: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSummary]
+                                                                parameters:nil
+                                                                   success:[self successForSummaryWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
 }
 
+
 - (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
-                withCompletionHandler:(void (^)(StatsVisits *visits))completionHandler
+                withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
                        failureHandler:(void (^)(NSError *error))failureHandler
 {
     // TODO :: Abstract this out to the local service
     NSNumber *quantity = IS_IPAD ? @12 : @7;
+    NSDictionary *parameters = @{@"quantity" : quantity,
+                                 @"unit"     : [self stringForPeriodUnit:unit]};
     
-    [self.manager GET:[self urlForVisits]
-           parameters:@{@"quantity" : quantity,
-                        @"unit"     : [self stringForPeriodUnit:unit]}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *statsVisitsDict = (NSDictionary *)responseObject;
-
-         StatsVisits *statsVisits = [StatsVisits new];
-         statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"]];
-         statsVisits.unit = unit;
-         
-         NSArray *fields = (NSArray *)statsVisitsDict[@"fields"];
-         
-         NSUInteger periodIndex = [fields indexOfObject:@"period"];
-         NSUInteger viewsIndex = [fields indexOfObject:@"views"];
-         NSUInteger visitorsIndex = [fields indexOfObject:@"visitors"];
-         NSUInteger likesIndex = [fields indexOfObject:@"likes"];
-         NSUInteger reblogsIndex = [fields indexOfObject:@"reblogs"];
-         NSUInteger commentsIndex = [fields indexOfObject:@"comments"];
-         
-         NSMutableArray *array = [NSMutableArray new];
-         for (NSArray *period in statsVisitsDict[@"data"]) {
-             StatsSummary *periodSummary = [StatsSummary new];
-             periodSummary.date = [self deviceLocalDateForString:period[periodIndex]];
-             periodSummary.views = period[viewsIndex];
-             periodSummary.visitors = period[visitorsIndex];
-             periodSummary.likes = period[likesIndex];
-             periodSummary.reblogs = period[reblogsIndex];
-             periodSummary.comments = period[commentsIndex];
-             [array addObject:periodSummary];
-         }
-
-         statsVisits.statsData = array;
-         
-         if (completionHandler) {
-             completionHandler(statsVisits);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with today summary stats: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVisits]
+                                                                parameters:parameters
+                                                                   success:[self successForVisitsWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
 }
+
 
 - (void)fetchPostsStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit
-         withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews))completionHandler
+         withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    [self.manager GET:[self urlForTopPosts]
-           parameters:@{@"period" : [self stringForPeriodUnit:unit],
-                        @"date"   : [self siteLocalStringForDate:date]}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
-         NSDictionary *days = statsPostsDict[@"days"];
-         NSDictionary *postViewsDict = [days allValues][0][@"postviews"];
-         NSNumber *totalViews = [days allValues][0][@"total_views"];
-         NSMutableArray *items = [NSMutableArray new];
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
 
-         for (NSDictionary *post in postViewsDict) {
-             StatsItem *statsItem = [StatsItem new];
-             statsItem.itemID = post[@"id"];
-             statsItem.value = post[@"views"];
-             statsItem.label = post[@"title"];
-             
-             StatsItemAction *statsItemAction = [StatsItemAction new];
-             statsItemAction.url = [NSURL URLWithString:post[@"href"]];
-             statsItemAction.defaultAction = YES;
-             
-             statsItem.actions = @[statsItemAction];
-             
-             [items addObject:statsItem];
-         }
-         
-         
-         if (completionHandler) {
-             completionHandler(items, totalViews);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with fetchPostsStatsForDate: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTopPosts]
+                                                                parameters:parameters
+                                                                   success:[self successForPostsWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
 }
 
 
 - (void)fetchReferrersStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                     failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    [self.manager GET:[self urlForReferrers]
-           parameters:@{@"period" : [self stringForPeriodUnit:unit],
-                        @"date"   : [self siteLocalStringForDate:date]}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *referrersDict = (NSDictionary *)responseObject;
-         NSDictionary *days = referrersDict[@"days"];
-         NSDictionary *groupsDict = [days allValues][0][@"groups"];
-         NSNumber *totalViews = [days allValues][0][@"total_views"];
-         NSNumber *otherViews = [days allValues][0][@"other_views"];
-         NSMutableArray *items = [NSMutableArray new];
-         
-         for (NSDictionary *group in groupsDict) {
-             StatsItem *statsItem = [StatsItem new];
-             statsItem.label = [group stringForKey:@"name"];
-             statsItem.value = [group numberForKey:@"total"];
-             statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
-             
-             NSString *url = [group stringForKey:@"url"];
-             if (url) {
-                 StatsItemAction *action = [StatsItemAction new];
-                 action.url = [NSURL URLWithString:url];
-                 action.defaultAction = YES;
-                 statsItem.actions = @[action];
-             }
-             // TODO :: group[@"group"] - where does this go
-             // TODO :: group[@"total"]
-             
-             NSArray *results = [group arrayForKey:@"results"];
-             NSMutableArray *resultsItems = [NSMutableArray new];
-             for (id result in results) {
-                 if ([result isKindOfClass:[NSDictionary class]]) {
-                     StatsItem *resultItem = [StatsItem new];
-                     resultItem.label = [result stringForKey:@"name"];
-                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
-                     resultItem.value = [result numberForKey:@"views"];
-                     
-                     NSString *url = [result stringForKey:@"url"];
-                     if (url) {
-                         StatsItemAction *action = [StatsItemAction new];
-                         action.url = [NSURL URLWithString:url];
-                         action.defaultAction = YES;
-                         resultItem.actions = @[action];
-                     }
-
-                     [resultsItems addObject:resultItem];
-                     
-                     NSArray *children = [result arrayForKey:@"children"];
-                     NSMutableArray *childItems = [NSMutableArray new];
-                     for (NSDictionary *child in children) {
-                         StatsItem *childItem = [StatsItem new];
-                         childItem.label = [child stringForKey:@"name"];
-                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                         childItem.value = [child numberForKey:@"views"];
-                         
-                         NSString *url = [child stringForKey:@"url"];
-                         if (url) {
-                             StatsItemAction *action = [StatsItemAction new];
-                             action.url = [NSURL URLWithString:url];
-                             action.defaultAction = YES;
-                             childItem.actions = @[action];
-                         }
-                         
-                         [childItems addObject:childItem];
-                     }
-                     resultItem.children = childItems;
-                 }
-             }
-             statsItem.children = resultsItems;
-             
-             [items addObject:statsItem];
-         }
-         
-         
-         if (completionHandler) {
-             completionHandler(items, totalViews, otherViews);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with fetchReferrersStatsForDate: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
+                                                                parameters:parameters
+                                                                   success:[self successForReferrersWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
 }
+
+
+#pragma mark - Private completion handlers for mapping purposes
+
+
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForSummaryWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
+        StatsSummary *statsSummary = [StatsSummary new];
+        statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
+        statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"]];
+        statsSummary.views = statsSummaryDict[@"views"];
+        statsSummary.visitors = statsSummaryDict[@"visitors"];
+        statsSummary.likes = statsSummaryDict[@"likes"];
+        statsSummary.reblogs = statsSummaryDict[@"reblogs"];
+        statsSummary.comments = statsSummaryDict[@"comments"];
+        
+        if (completionHandler) {
+            completionHandler(statsSummary);
+        }
+    };
+}
+
+
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForVisitsWithCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *statsVisitsDict = (NSDictionary *)responseObject;
+        
+        StatsVisits *statsVisits = [StatsVisits new];
+        statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"]];
+        //        statsVisits.unit = unit;
+        
+        NSArray *fields = (NSArray *)statsVisitsDict[@"fields"];
+        
+        NSUInteger periodIndex = [fields indexOfObject:@"period"];
+        NSUInteger viewsIndex = [fields indexOfObject:@"views"];
+        NSUInteger visitorsIndex = [fields indexOfObject:@"visitors"];
+        NSUInteger likesIndex = [fields indexOfObject:@"likes"];
+        NSUInteger reblogsIndex = [fields indexOfObject:@"reblogs"];
+        NSUInteger commentsIndex = [fields indexOfObject:@"comments"];
+        
+        NSMutableArray *array = [NSMutableArray new];
+        for (NSArray *period in statsVisitsDict[@"data"]) {
+            StatsSummary *periodSummary = [StatsSummary new];
+            periodSummary.date = [self deviceLocalDateForString:period[periodIndex]];
+            periodSummary.views = period[viewsIndex];
+            periodSummary.visitors = period[visitorsIndex];
+            periodSummary.likes = period[likesIndex];
+            periodSummary.reblogs = period[reblogsIndex];
+            periodSummary.comments = period[commentsIndex];
+            [array addObject:periodSummary];
+        }
+        
+        statsVisits.statsData = array;
+        
+        if (completionHandler) {
+            completionHandler(statsVisits);
+        }
+    };
+}
+
+
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForPostsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
+        NSDictionary *days = statsPostsDict[@"days"];
+        NSDictionary *postViewsDict = [days allValues][0][@"postviews"];
+        NSNumber *totalViews = [days allValues][0][@"total_views"];
+        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *post in postViewsDict) {
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.itemID = post[@"id"];
+            statsItem.value = post[@"views"];
+            statsItem.label = post[@"title"];
+            
+            StatsItemAction *statsItemAction = [StatsItemAction new];
+            statsItemAction.url = [NSURL URLWithString:post[@"href"]];
+            statsItemAction.defaultAction = YES;
+            
+            statsItem.actions = @[statsItemAction];
+            
+            [items addObject:statsItem];
+        }
+        
+        
+        if (completionHandler) {
+            completionHandler(items, totalViews, otherViews);
+        }
+    };
+}
+
+
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForReferrersWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *referrersDict = (NSDictionary *)responseObject;
+        NSDictionary *days = referrersDict[@"days"];
+        NSDictionary *groupsDict = [days allValues][0][@"groups"];
+        NSNumber *totalViews = [days allValues][0][@"total_views"];
+        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *group in groupsDict) {
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.label = [group stringForKey:@"name"];
+            statsItem.value = [group numberForKey:@"total"];
+            statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
+            
+            NSString *url = [group stringForKey:@"url"];
+            if (url) {
+                StatsItemAction *action = [StatsItemAction new];
+                action.url = [NSURL URLWithString:url];
+                action.defaultAction = YES;
+                statsItem.actions = @[action];
+            }
+            // TODO :: group[@"group"] - where does this go
+            // TODO :: group[@"total"]
+            
+            NSArray *results = [group arrayForKey:@"results"];
+            NSMutableArray *resultsItems = [NSMutableArray new];
+            for (id result in results) {
+                if ([result isKindOfClass:[NSDictionary class]]) {
+                    StatsItem *resultItem = [StatsItem new];
+                    resultItem.label = [result stringForKey:@"name"];
+                    resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
+                    resultItem.value = [result numberForKey:@"views"];
+                    
+                    NSString *url = [result stringForKey:@"url"];
+                    if (url) {
+                        StatsItemAction *action = [StatsItemAction new];
+                        action.url = [NSURL URLWithString:url];
+                        action.defaultAction = YES;
+                        resultItem.actions = @[action];
+                    }
+                    
+                    [resultsItems addObject:resultItem];
+                    
+                    NSArray *children = [result arrayForKey:@"children"];
+                    NSMutableArray *childItems = [NSMutableArray new];
+                    for (NSDictionary *child in children) {
+                        StatsItem *childItem = [StatsItem new];
+                        childItem.label = [child stringForKey:@"name"];
+                        childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
+                        childItem.value = [child numberForKey:@"views"];
+                        
+                        NSString *url = [child stringForKey:@"url"];
+                        if (url) {
+                            StatsItemAction *action = [StatsItemAction new];
+                            action.url = [NSURL URLWithString:url];
+                            action.defaultAction = YES;
+                            childItem.actions = @[action];
+                        }
+                        
+                        [childItems addObject:childItem];
+                    }
+                    resultItem.children = childItems;
+                }
+            }
+            statsItem.children = resultsItems;
+            
+            [items addObject:statsItem];
+        }
+        
+        
+        if (completionHandler) {
+            completionHandler(items, totalViews, otherViews);
+        }
+    };
+}
+
+#pragma mark - Private convenience methods for building requests
+
+- (AFHTTPRequestOperation *)requestOperationForURLString:(NSString *)url
+                                              parameters:(NSDictionary *)parameters
+                                                 success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                                                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSURLRequest *request = [self.manager.requestSerializer requestWithMethod:@"GET" URLString:url parameters:parameters error:nil];
+    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request success:success failure:failure];
+    
+    return operation;
+}
+
+
+- (void(^)(AFHTTPRequestOperation *operation, NSError *error))failureForFailureCompletionHandler:(void (^)(NSError *error))failureHandler
+{
+    return ^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        DDLogError(@"Error with today summary stats: %@", error);
+        
+        if (failureHandler) {
+            failureHandler(error);
+        }
+    };
+}
+
+
+
+
+
 
 - (void)fetchClicksStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
-          withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks))completionHandler
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                  failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
@@ -409,7 +410,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (void)fetchCountryStatsForDate:(NSDate *)date
                          andUnit:(StatsPeriodUnit)unit
-           withCompletionHandler:(void (^)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews))completionHandler
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                   failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
