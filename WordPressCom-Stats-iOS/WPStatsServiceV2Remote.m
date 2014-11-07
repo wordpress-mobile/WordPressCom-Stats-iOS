@@ -55,12 +55,28 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 #pragma mark - Public methods
 
+
+- (void)batchFetchStatsForDates:(NSArray *)dates
+                        andUnit:(StatsPeriodUnit)unit
+   withSummaryCompletionHandler:(StatsRemoteSummaryCompletion)summaryCompletion
+        visitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       andOverallFailureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSMutableArray *operations = [NSMutableArray new];
+    [operations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:summaryCompletion failureHandler:nil]];
+    
+    for (NSDate *date in dates) {
+        
+    }
+}
+
 - (void)fetchSummaryStatsForTodayWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler failureHandler:(void (^)(NSError *error))failureHandler
 {
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSummary]
-                                                                parameters:nil
-                                                                   success:[self successForSummaryWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -69,15 +85,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
                        failureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
-    NSDictionary *parameters = @{@"quantity" : quantity,
-                                 @"unit"     : [self stringForPeriodUnit:unit]};
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVisits]
-                                                                parameters:parameters
-                                                                   success:[self successForVisitsWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:nil andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -89,13 +98,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 {
     NSParameterAssert(date != nil);
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
-
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTopPosts]
-                                                                parameters:parameters
-                                                                   success:[self successForPostsWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -107,13 +110,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 {
     NSParameterAssert(date != nil);
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
-    
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
-                                                                parameters:parameters
-                                                                   success:[self successForReferrersWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -125,13 +122,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 {
     NSParameterAssert(date != nil);
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
-    
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
-                                                                parameters:parameters
-                                                                   success:[self successForClicksWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -143,23 +134,21 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 {
     NSParameterAssert(date != nil);
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
-    
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
-                                                                parameters:parameters
-                                                                   success:[self successForCountryWithCompletionHandler:completionHandler]
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
 
-#pragma mark - Private completion handlers for mapping purposes
+#pragma mark - Private methods to compose request operations to be reusable
 
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForSummaryWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForSummaryForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                 withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
         StatsSummary *statsSummary = [StatsSummary new];
@@ -175,12 +164,21 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(statsSummary);
         }
     };
+    
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
+                                                                 parameters:nil
+                                                                    success:handler
+                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForVisitsWithCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
+                                              andUnit:(StatsPeriodUnit)unit
+                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *statsVisitsDict = (NSDictionary *)responseObject;
         
@@ -215,12 +213,25 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(statsVisits);
         }
     };
+    
+    // TODO :: Abstract this out to the local service
+    NSNumber *quantity = IS_IPAD ? @12 : @7;
+    NSDictionary *parameters = @{@"quantity" : quantity,
+                                 @"unit"     : [self stringForPeriodUnit:unit]};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
+                                                                 parameters:parameters
+                                                                    success:handler
+                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForPostsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForPostsForDate:(NSDate *)date
+                                             andUnit:(StatsPeriodUnit)unit
+                               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                      failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
         NSDictionary *days = statsPostsDict[@"days"];
@@ -249,12 +260,23 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(items, totalViews, otherViews);
         }
     };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
+                                                                 parameters:parameters
+                                                                    success:handler
+                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForReferrersWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForReferrersForDate:(NSDate *)date
+                                                 andUnit:(StatsPeriodUnit)unit
+                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                          failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = referrersDict[@"days"];
@@ -329,11 +351,25 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(items, totalViews, otherViews);
         }
     };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    
+    return operation;
 }
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForClicksWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+
+- (AFHTTPRequestOperation *)operationForClicksForDate:(NSDate *)date
+                                              andUnit:(StatsPeriodUnit)unit
+                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = referrersDict[@"days"];
@@ -384,12 +420,24 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(items, totalClicks, otherClicks);
         }
     };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForCountryWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForCountryForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
-    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
@@ -413,6 +461,16 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             completionHandler(items, totalViews, otherViews);
         }
     };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+
+    return operation;
 }
 
 
@@ -443,9 +501,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
-
-
-
+// TODO :: These could probably go into the operation methods since it's not really helpful any more
+#pragma mark - Private methods for URL convenience
 
 
 - (NSString *)urlForSummary
@@ -477,6 +534,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 {
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
+
+
+#pragma mark - Private convenience methods for data conversion
+
 
 - (NSDate *)deviceLocalDateForString:(NSString *)dateString
 {

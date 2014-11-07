@@ -11,6 +11,30 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews,
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone;
 
+/**
+ Batches all remote calls locally to retrieve stats for a particular set of dates and period.  Completion handlers are called
+ 
+ @param dates An array with at least one date.  Completion handlers may be called more than once if multiple dates are given.
+ @param unit Period unit to run stats for
+ @param summaryCompletion
+ @param visitsCompletion
+ @param postsCompletion
+ @param referrersCompletion
+ @param clicksCompletion
+ @param countryCompletion
+ @param failureHandler
+ 
+ */
+- (void)batchFetchStatsForDates:(NSArray *)dates
+                        andUnit:(StatsPeriodUnit)unit
+   withSummaryCompletionHandler:(StatsRemoteSummaryCompletion)summaryCompletion
+        visitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       andOverallFailureHandler:(void (^)(NSError *error))failureHandler;
+
 - (void)fetchSummaryStatsForTodayWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
                                         failureHandler:(void (^)(NSError *error))failureHandler;
 
