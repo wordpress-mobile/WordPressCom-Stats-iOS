@@ -118,6 +118,42 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
+- (void)fetchClicksStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
+                                                                parameters:parameters
+                                                                   success:[self successForClicksWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
+}
+
+
+- (void)fetchCountryStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                  failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
+                                                                parameters:parameters
+                                                                   success:[self successForCountryWithCompletionHandler:completionHandler]
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    [operation start];
+}
+
+
 #pragma mark - Private completion handlers for mapping purposes
 
 
@@ -295,6 +331,91 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     };
 }
 
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForClicksWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *referrersDict = (NSDictionary *)responseObject;
+        NSDictionary *days = referrersDict[@"days"];
+        NSDictionary *clicksDict = [days allValues][0][@"clicks"];
+        NSNumber *totalClicks = [days allValues][0][@"total_clicks"];
+        NSNumber *otherClicks = [days allValues][0][@"other_clicks"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *click in clicksDict) {
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.label = [click stringForKey:@"name"];
+            statsItem.value = [click numberForKey:@"views"];
+            statsItem.iconURL = [NSURL URLWithString:[click stringForKey:@"icon"]];
+            
+            NSString *url = [click stringForKey:@"url"];
+            if (url) {
+                StatsItemAction *action = [StatsItemAction new];
+                action.url = [NSURL URLWithString:url];
+                action.defaultAction = YES;
+                statsItem.actions = @[action];
+            }
+            
+            NSArray *children = [click arrayForKey:@"children"];
+            NSMutableArray *childItems = [NSMutableArray new];
+            for (NSDictionary *child in children) {
+                StatsItem *childItem = [StatsItem new];
+                childItem.label = [child stringForKey:@"name"];
+                childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
+                childItem.value = [child numberForKey:@"views"];
+                
+                NSString *url = [child stringForKey:@"url"];
+                if (url) {
+                    StatsItemAction *action = [StatsItemAction new];
+                    action.url = [NSURL URLWithString:url];
+                    action.defaultAction = YES;
+                    childItem.actions = @[action];
+                }
+                
+                [childItems addObject:childItem];
+            }
+            statsItem.children = childItems;
+            
+            [items addObject:statsItem];
+        }
+        
+        
+        if (completionHandler) {
+            completionHandler(items, totalClicks, otherClicks);
+        }
+    };
+}
+
+
+- (void(^)(AFHTTPRequestOperation *operation, id responseObject))successForCountryWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    return ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
+        NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
+        NSDictionary *viewsDict = [days allValues][0][@"views"];
+        NSNumber *totalViews = [days allValues][0][@"total_views"];
+        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *view in viewsDict) {
+            NSString *key = [view stringForKey:@"country_code"];
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
+            statsItem.value = [view numberForKey:@"views"];
+            statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
+            
+            [items addObject:statsItem];
+        }
+        
+        if (completionHandler) {
+            completionHandler(items, totalViews, otherViews);
+        }
+    };
+}
+
+
 #pragma mark - Private convenience methods for building requests
 
 - (AFHTTPRequestOperation *)requestOperationForURLString:(NSString *)url
@@ -325,143 +446,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 
-
-- (void)fetchClicksStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
-          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler
-{
-    NSParameterAssert(date != nil);
-    
-    [self.manager GET:[self urlForClicks]
-           parameters:@{@"period" : [self stringForPeriodUnit:unit],
-                        @"date"   : [self siteLocalStringForDate:date]}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *referrersDict = (NSDictionary *)responseObject;
-         NSDictionary *days = referrersDict[@"days"];
-         NSDictionary *clicksDict = [days allValues][0][@"clicks"];
-         NSNumber *totalClicks = [days allValues][0][@"total_clicks"];
-         NSNumber *otherClicks = [days allValues][0][@"other_clicks"];
-         NSMutableArray *items = [NSMutableArray new];
-         
-         for (NSDictionary *click in clicksDict) {
-             StatsItem *statsItem = [StatsItem new];
-             statsItem.label = [click stringForKey:@"name"];
-             statsItem.value = [click numberForKey:@"views"];
-             statsItem.iconURL = [NSURL URLWithString:[click stringForKey:@"icon"]];
-             
-             NSString *url = [click stringForKey:@"url"];
-             if (url) {
-                 StatsItemAction *action = [StatsItemAction new];
-                 action.url = [NSURL URLWithString:url];
-                 action.defaultAction = YES;
-                 statsItem.actions = @[action];
-             }
-             
-             NSArray *children = [click arrayForKey:@"children"];
-             NSMutableArray *childItems = [NSMutableArray new];
-             for (NSDictionary *child in children) {
-                 StatsItem *childItem = [StatsItem new];
-                 childItem.label = [child stringForKey:@"name"];
-                 childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                 childItem.value = [child numberForKey:@"views"];
-                 
-                 NSString *url = [child stringForKey:@"url"];
-                 if (url) {
-                     StatsItemAction *action = [StatsItemAction new];
-                     action.url = [NSURL URLWithString:url];
-                     action.defaultAction = YES;
-                     childItem.actions = @[action];
-                 }
-                 
-                 [childItems addObject:childItem];
-             }
-             statsItem.children = childItems;
-             
-             [items addObject:statsItem];
-         }
-         
-         
-         if (completionHandler) {
-             completionHandler(items, totalClicks, otherClicks);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with fetchClicksStatsForDate: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
-}
-
-- (void)fetchCountryStatsForDate:(NSDate *)date
-                         andUnit:(StatsPeriodUnit)unit
-           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                  failureHandler:(void (^)(NSError *error))failureHandler
-{
-    NSParameterAssert(date != nil);
-    
-    [self.manager GET:[self urlForCountryViews]
-           parameters:@{@"period" : [self stringForPeriodUnit:unit],
-                        @"date"   : [self siteLocalStringForDate:date]}
-              success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if (![responseObject isKindOfClass:[NSDictionary class]]) {
-             if (failureHandler) {
-                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                                      code:NSURLErrorBadServerResponse
-                                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The server returned an empty response. This usually means you need to increase the memory limit for your site.", @"")}];
-                 failureHandler(error);
-             }
-             
-             return;
-         }
-         
-         NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
-         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
-         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
-         NSDictionary *viewsDict = [days allValues][0][@"views"];
-         NSNumber *totalViews = [days allValues][0][@"total_views"];
-         NSNumber *otherViews = [days allValues][0][@"other_views"];
-         NSMutableArray *items = [NSMutableArray new];
-         
-         for (NSDictionary *view in viewsDict) {
-             NSString *key = [view stringForKey:@"country_code"];
-             StatsItem *statsItem = [StatsItem new];
-             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
-             statsItem.value = [view numberForKey:@"views"];
-             statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
-             
-             [items addObject:statsItem];
-         }
-         
-         if (completionHandler) {
-             completionHandler(items, totalViews, otherViews);
-         }
-     }
-              failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         DDLogError(@"Error with fetchCountryStatsForDate: %@", error);
-         
-         if (failureHandler) {
-             failureHandler(error);
-         }
-     }];
-}
 
 
 - (NSString *)urlForSummary
