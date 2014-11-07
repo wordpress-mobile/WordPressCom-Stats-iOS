@@ -1,5 +1,5 @@
 #import "WPStatsService.h"
-#import "WPStatsServiceRemote.h"
+#import "WPStatsServiceV2Remote.h"
 
 @interface WPStatsService ()
 
@@ -46,10 +46,11 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDate *yesterday = [calendar dateByAddingComponents:dateComponents toDate:today options:0];
 
-    [self.remote fetchStatsForTodayDate:today
-                       andYesterdayDate:yesterday
-                  withCompletionHandler:completion
-                         failureHandler:failure];
+//    [self.remote fetchStatsForTodayDate:today
+//                       andYesterdayDate:yesterday
+//                  withCompletionHandler:completion
+//                         failureHandler:failure];
+    
 }
 
 - (void)retrieveTodayStatsWithCompletionHandler:(void (^)(WPStatsSummary *))completion failureHandler:(void (^)(NSError *))failureHandler
@@ -62,14 +63,32 @@
         }
     };
     
-    [self.remote fetchSummaryStatsForTodayWithCompletionHandler:completion
-                                                 failureHandler:failure];
+//    [self.remote fetchSummaryStatsForTodayWithCompletionHandler:completion
+//                                                 failureHandler:failure];
+    [self.remote fetchSummaryStatsForTodayWithCompletionHandler:^(StatsSummary *summary) {
+        WPStatsSummary *summaryResult = [WPStatsSummary new];
+        summaryResult.totalCategories = @-1;
+        summaryResult.totalComments = @-1;
+        summaryResult.totalFollowersBlog = @-1;
+        summaryResult.totalFollowersComments = @-1;
+        summaryResult.totalPosts = @-1;
+        summaryResult.totalShares = @-1;
+        summaryResult.totalTags = @-1;
+        summaryResult.totalViews = @-1;
+        summaryResult.viewCountBest = @-1;
+        summaryResult.viewCountToday = summary.views;
+        summaryResult.visitorCountToday = summary.visitors;
+        
+        if (completion) {
+            completion(summaryResult);
+        }
+    } failureHandler:failure];
 }
 
-- (WPStatsServiceRemote *)remote
+- (WPStatsServiceV2Remote *)remote
 {
     if (!_remote) {
-        _remote = [[WPStatsServiceRemote alloc] initWithOAuth2Token:self.oauth2Token siteId:self.siteId andSiteTimeZone:self.siteTimeZone];
+        _remote = [[WPStatsServiceV2Remote alloc] initWithOAuth2Token:self.oauth2Token siteId:self.siteId andSiteTimeZone:self.siteTimeZone];
     }
 
     return _remote;

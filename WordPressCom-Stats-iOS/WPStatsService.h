@@ -4,11 +4,11 @@
 
 typedef void (^StatsCompletion)(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors);
 
-@class WPStatsServiceRemote;
+@class WPStatsServiceV2Remote;
 
 @interface WPStatsService : NSObject
 
-@property (nonatomic, strong) WPStatsServiceRemote *remote;
+@property (nonatomic, strong) WPStatsServiceV2Remote *remote;
 
 - (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token;
 
