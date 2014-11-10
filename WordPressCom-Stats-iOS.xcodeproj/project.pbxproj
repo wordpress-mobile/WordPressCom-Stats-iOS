@@ -175,6 +175,8 @@
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
 		93E4D0EF193CC47500E410A2 /* WPStatsViewController_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WPStatsViewController_Private.h; sourceTree = "<group>"; };
 		93FAAE5619CF53FF0069D876 /* WPStatsViewsVisitorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WPStatsViewsVisitorsTests.swift; sourceTree = "<group>"; };
+		93FABB7C1A115D90000C15ED /* SiteStats.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SiteStats.storyboard; sourceTree = "<group>"; };
+		93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Noticons-Regular.otf"; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -268,6 +270,7 @@
 		9396CFB51921096B006A66D7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */,
 				93D3079B19DC543F006826B0 /* WordPressCom-Stats-iOS-Bridging-Header.h */,
 				9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */,
 				9309B52E192BF02F00B69F69 /* WordPressStats.h */,
@@ -363,6 +366,7 @@
 				93E4D0EF193CC47500E410A2 /* WPStatsViewController_Private.h */,
 				936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */,
 				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
+				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 			);
 			name = UI;
 			sourceTree = "<group>";
