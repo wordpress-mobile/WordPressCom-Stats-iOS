@@ -64,29 +64,60 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-       andOverallFailureHandler:(void (^)(NSError *error))failureHandler
+    andOverallCompletionHandler:(void (^)())completionHandler
+          overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
-    NSMutableArray *operations = [NSMutableArray new];
-    [operations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:summaryCompletion failureHandler:nil]];
+    NSMutableArray *mutableOperations = [NSMutableArray new];
+    
+    if (summaryCompletion) {
+        [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:summaryCompletion failureHandler:nil]];
+    }
     
     for (NSDate *date in dates) {
-        
+        if (visitsCompletion) {
+            [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion failureHandler:nil]];
+        }
+        if (postsCompletion) {
+            [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion failureHandler:nil]];
+        }
+        if (referrersCompletion) {
+            [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion failureHandler:nil]];
+        }
+        if (clicksCompletion) {
+            [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion failureHandler:nil]];
+        }
+        if (countryCompletion) {
+            [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion failureHandler:nil]];
+        }
     }
+    
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+        
+    } completionBlock:^(NSArray *operations) {
+        if (completionHandler) {
+            completionHandler();
+        }
+    }];
+    
+    [[NSOperationQueue mainQueue] addOperations:operations waitUntilFinished:NO];
 }
 
-- (void)fetchSummaryStatsForTodayWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler failureHandler:(void (^)(NSError *error))failureHandler
+- (void)fetchSummaryStatsForDate:(NSDate *)date
+           withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+                  failureHandler:(void (^)(NSError *error))failureHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:date andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
 
-- (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
-                withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
-                       failureHandler:(void (^)(NSError *error))failureHandler
+- (void)fetchVisitsStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:nil andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 

@@ -39,7 +39,7 @@
     StatsCompletion completion = ^(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors) {
     };
     
-//    [[self.remoteMock expect] fetchStatsForTodayDate:[OCMArg any] andYesterdayDate:[OCMArg any] withCompletionHandler:completion failureHandler:[OCMArg isNotNil]];
+    [[self.remoteMock expect] batchFetchStatsForDates:[OCMArg isNotNil] andUnit:StatsPeriodUnitDay withSummaryCompletionHandler:[OCMArg isNotNil] visitsCompletionHandler:[OCMArg isNotNil] postsCompletionHandler:[OCMArg isNotNil] referrersCompletionHandler:[OCMArg isNotNil] clicksCompletionHandler:[OCMArg isNotNil] countryCompletionHandler:[OCMArg isNotNil] andOverallCompletionHandler:[OCMArg isNotNil] overallFailureHandler:[OCMArg isNotNil]];
     
     [self.statsService retrieveAllStatsWithCompletionHandler:completion failureHandler:failure];
     
@@ -55,7 +55,7 @@
     };
     
 //    [[self.remoteMock expect] fetchSummaryStatsForTodayWithCompletionHandler:completion failureHandler:[OCMArg isNotNil]];
-    [[self.remoteMock expect] fetchSummaryStatsForTodayWithCompletionHandler:[OCMArg isNotNil] failureHandler:[OCMArg isNotNil]];
+    [[self.remoteMock expect] fetchSummaryStatsForDate:[OCMArg any] withCompletionHandler:[OCMArg isNotNil] failureHandler:[OCMArg isNotNil]];
     
     [self.statsService retrieveTodayStatsWithCompletionHandler:completion failureHandler:failure];
     

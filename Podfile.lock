@@ -39,11 +39,11 @@ PODS:
   - NSObject-SafeExpectations (0.0.2)
   - OCMock (3.1.1)
   - OHHTTPStubs (3.1.1)
-  - WordPress-iOS-Shared (0.1.0):
+  - WordPress-iOS-Shared (0.1.3):
     - AFNetworking (~> 2.3.1)
     - CocoaLumberjack (~> 1.8.1)
     - DTCoreText (= 1.6.13)
-  - WordPressCom-Analytics-iOS (0.0.4)
+  - WordPressCom-Analytics-iOS (0.0.12)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.3.1)
@@ -62,7 +62,7 @@ SPEC CHECKSUMS:
   NSObject-SafeExpectations: c31276ef7209016849fc4e5c8ed5ae5453e1e208
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
   OHHTTPStubs: 58b42d245ad2416bac170ce18e1383913d17e315
-  WordPress-iOS-Shared: 0cdb2cc94ec0da4aef40fa561a7b3fd5eec8749a
-  WordPressCom-Analytics-iOS: a15aef24435a332b3b87cc61adb9a1a12d22658b
+  WordPress-iOS-Shared: 48ca916221bec8731a6bd5e5fcf683977f15766d
+  WordPressCom-Analytics-iOS: d62898a09b4ce8005206c8ae7f4d59b24a7690d1
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.4

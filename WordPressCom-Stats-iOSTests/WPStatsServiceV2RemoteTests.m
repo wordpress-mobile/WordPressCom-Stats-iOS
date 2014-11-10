@@ -36,7 +36,7 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-summary.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchSummaryStatsForTodayWithCompletionHandler:^(StatsSummary *summary) {
+    [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary) {
         XCTAssertNotNil(summary, @"summary should not be nil.");
         XCTAssertNotNil(summary.date);
         XCTAssertTrue(summary.periodUnit == StatsPeriodUnitDay);
@@ -65,8 +65,9 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchVisitsStatsForPeriodUnit:StatsPeriodUnitDay
-                          withCompletionHandler:^(StatsVisits *visits)
+    [self.subject fetchVisitsStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(StatsVisits *visits)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
          XCTAssertNotNil(visits.date);
@@ -101,8 +102,9 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchVisitsStatsForPeriodUnit:StatsPeriodUnitDay
-                          withCompletionHandler:^(StatsVisits *visits)
+    [self.subject fetchVisitsStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(StatsVisits *visits)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
          XCTAssertNotNil(visits.date);

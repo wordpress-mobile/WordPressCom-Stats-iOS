@@ -33,14 +33,17 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews,
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-       andOverallFailureHandler:(void (^)(NSError *error))failureHandler;
+    andOverallCompletionHandler:(void (^)())completionHandler
+          overallFailureHandler:(void (^)(NSError *error))failureHandler;
 
-- (void)fetchSummaryStatsForTodayWithCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
-                                        failureHandler:(void (^)(NSError *error))failureHandler;
+- (void)fetchSummaryStatsForDate:(NSDate *)date
+           withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+                  failureHandler:(void (^)(NSError *error))failureHandler;
 
-- (void)fetchVisitsStatsForPeriodUnit:(StatsPeriodUnit)unit
-                withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
-                       failureHandler:(void (^)(NSError *error))failureHandler;
+- (void)fetchVisitsStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler;
 
 - (void)fetchPostsStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit
