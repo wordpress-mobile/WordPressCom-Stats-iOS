@@ -4,6 +4,9 @@
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 #import "WPStatsTopPost.h"
+#import "WPStatsGroup.h"
+#import "WPStatsTitleCountItem.h"
+#import "WPStatsViewsVisitors.h"
 
 @interface WPStatsService ()
 
@@ -54,13 +57,11 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDate *yesterday = [calendar dateByAddingComponents:dateComponents toDate:today options:0];
 
-//    typedef void (^StatsCompletion)(WPStatsSummary *summary, NSDictionary *topPosts, NSDictionary *clicks, NSDictionary *countryViews, NSDictionary *referrers, NSDictionary *searchTerms, WPStatsViewsVisitors *viewsVisitors);
-
     __block WPStatsSummary *summaryResult = [WPStatsSummary new];
     __block NSDictionary *topPosts = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
-    __block NSMutableDictionary *clicks = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
-    __block NSMutableDictionary *countryViews = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
-    __block NSMutableDictionary *referrers = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
+    __block NSDictionary *clicks = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
+    __block NSDictionary *countryViews = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
+    __block NSDictionary *referrers = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
     __block NSMutableDictionary *searchTerms = [@{StatsResultsToday : @[], StatsResultsYesterday : @[]} mutableCopy];
     __block WPStatsViewsVisitors *viewsVisitors = [WPStatsViewsVisitors new];
     
@@ -78,8 +79,23 @@
         summaryResult.visitorCountToday = summary.visitors;
 
     } visitsCompletionHandler:^(StatsVisits *visits) {
+        NSDateFormatter *formatter = [NSDateFormatter new];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter.dateFormat = @"yyyy-MM-dd";
+        formatter.timeZone = self.siteTimeZone;
         
+        NSMutableArray *data = [NSMutableArray new];
+        for (StatsSummary *summary in visits.statsData) {
+            NSString *dateString = [formatter stringFromDate:summary.date];
+            [data addObject:@[dateString, summary.views, summary.visitors]];
+        }
+        
+        NSDictionary *dataDict = @{ @"data" :  data};
+        [viewsVisitors addViewsVisitorsWithData:dataDict unit:StatsViewsVisitorsUnitDay];
+
     } postsCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews) {
+        // TODO - Handle today vs yesterday
+        
         NSMutableArray *topPostsArray = [NSMutableArray array];
         for (StatsItem *item in items) {
             WPStatsTopPost *topPost = [[WPStatsTopPost alloc] init];
@@ -92,11 +108,80 @@
         topPosts = @{ StatsResultsToday : topPostsArray, StatsResultsYesterday : @[]};
 
     } referrersCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews) {
+        // TODO - Handle today vs yesterday
+        
+        NSMutableArray *referrersArray = [NSMutableArray new];
+        for (StatsItem *item in items) {
+            WPStatsGroup *statsGroup = [WPStatsGroup new];
+            statsGroup.title = item.label;
+            statsGroup.iconUrl = item.iconURL;
+            statsGroup.count = item.value;
+            
+            NSMutableArray *children = [NSMutableArray new];
+            for (StatsItem *childItem in item.children) {
+                WPStatsTitleCountItem *titleItem = [WPStatsTitleCountItem new];
+                titleItem.title = childItem.label;
+                titleItem.URL = [childItem.actions[0] url];
+                titleItem.count = childItem.value;
+                
+                [children addObject:titleItem];
+            }
+            statsGroup.children = children;
+            [referrersArray addObject:statsGroup];
+        }
+        
+        referrers = @{ StatsResultsToday : referrersArray, StatsResultsYesterday : @[]};
 
     } clicksCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews) {
-
+        // TODO - Handle today vs yesterday
+        
+        NSMutableArray *clicksArray = [NSMutableArray new];
+        for (StatsItem *item in items) {
+            WPStatsGroup *statsGroup = [WPStatsGroup new];
+            statsGroup.title = item.label;
+            statsGroup.iconUrl = item.iconURL;
+            statsGroup.count = item.value;
+            
+            NSMutableArray *children = [NSMutableArray new];
+            for (StatsItem *childItem in item.children) {
+                WPStatsTitleCountItem *titleItem = [WPStatsTitleCountItem new];
+                titleItem.title = childItem.label;
+                titleItem.URL = [childItem.actions[0] url];
+                titleItem.count = childItem.value;
+                
+                [children addObject:titleItem];
+            }
+            statsGroup.children = children;
+            [clicksArray addObject:statsGroup];
+        }
+        
+        clicks = @{ StatsResultsToday : clicksArray, StatsResultsYesterday : @[]};
+        
     } countryCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews) {
-
+        // TODO - Handle today vs yesterday
+        
+        NSMutableArray *countryArray = [NSMutableArray new];
+        for (StatsItem *item in items) {
+            WPStatsGroup *statsGroup = [WPStatsGroup new];
+            statsGroup.title = item.label;
+            statsGroup.iconUrl = item.iconURL;
+            statsGroup.count = item.value;
+            
+            NSMutableArray *children = [NSMutableArray new];
+            for (StatsItem *childItem in item.children) {
+                WPStatsTitleCountItem *titleItem = [WPStatsTitleCountItem new];
+                titleItem.title = childItem.label;
+                titleItem.URL = [childItem.actions[0] url];
+                titleItem.count = childItem.value;
+                
+                [children addObject:titleItem];
+            }
+            statsGroup.children = children;
+            [countryArray addObject:statsGroup];
+        }
+        
+        countryViews = @{ StatsResultsToday : countryArray, StatsResultsYesterday : @[]};
+        
     } andOverallCompletionHandler:^{
         completion(summaryResult, topPosts, clicks, countryViews, referrers, searchTerms, viewsVisitors);
 
