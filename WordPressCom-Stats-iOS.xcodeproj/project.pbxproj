@@ -208,6 +208,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03F0D1668DBF9E61DB24C06C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CC932522749B8AAFDB106454 /* Pods.debug.xcconfig */,
+				8480B2977720A32E07E4B219 /* Pods.release.xcconfig */,
+				46E4311F44A4029C7F10D05E /* Pods-WordPressCom-Stats-iOSTests.debug.xcconfig */,
+				09F009961CD4BC51633B8CAB /* Pods-WordPressCom-Stats-iOSTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		936B22491958C65A0058C828 /* Graph */ = {
 			isa = PBXGroup;
 			children = (
