@@ -1,6 +1,8 @@
 #import "StatsTableViewController.h"
 #import "WPStatsGraphViewController.h"
 #import "WPStatsServiceV2.h"
+#import "StatsGroup.h"
+#import "StatsItem.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionGraph,
@@ -19,6 +21,7 @@ static CGFloat const kGraphHeight = 200.0f;
 @interface StatsTableViewController ()
 
 @property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 @property (nonatomic, strong) WPStatsServiceV2 *statsService;
 
@@ -38,6 +41,7 @@ static CGFloat const kGraphHeight = 200.0f;
                        @(StatsSectionComments),
                        @(StatsSectionTagsCategories),
                        @(StatsSectionFollowers)];
+    self.sectionData = [NSMutableDictionary new];
     self.graphViewController = [WPStatsGraphViewController new];
 }
 
@@ -46,7 +50,67 @@ static CGFloat const kGraphHeight = 200.0f;
     [super viewDidAppear:animated];
     
     self.statsService = [[WPStatsServiceV2 alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
-    
+
+    [self.statsService retrieveAllStatsForDates:@[]
+                                        andUnit:StatsPeriodUnitDay
+                   withSummaryCompletionHandler:^(StatsSummary *summary)
+    {
+        
+    }
+                        visitsCompletionHandler:^(StatsVisits *visits)
+    {
+
+    }
+                         postsCompletionHandler:^(StatsGroup *group)
+    {
+        self.sectionData[@(StatsSectionPosts)] = group;
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPosts)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView endUpdates];
+    }
+                     referrersCompletionHandler:^(StatsGroup *group)
+    {
+
+    }
+                        clicksCompletionHandler:^(StatsGroup *group)
+    {
+
+    }
+                       countryCompletionHandler:^(StatsGroup *group)
+    {
+
+    }
+                         videosCompetionHandler:^(StatsGroup *group)
+    {
+
+    }
+                             commentsCompletion:^(StatsGroup *group)
+    {
+
+    }
+                       tagsCategoriesCompletion:^(StatsGroup *group)
+    {
+
+    }
+                            followersCompletion:^(StatsGroup *group)
+    {
+
+    }
+                            publicizeCompletion:^(StatsGroup *group)
+    {
+
+    }
+                    andOverallCompletionHandler:^
+    {
+
+    }
+                          overallFailureHandler:^(NSError *error)
+    {
+
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -54,7 +118,7 @@ static CGFloat const kGraphHeight = 200.0f;
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.sections.count;
@@ -65,8 +129,10 @@ static CGFloat const kGraphHeight = 200.0f;
     switch (statsSection) {
         case StatsSectionGraph:
             return 5;
-        case StatsSectionPosts:
-            return 12;
+        case StatsSectionPosts: {
+            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionPosts)]).items.count;
+            return count == 0 ? 3 : 2 + count;
+        }
         case StatsSectionReferrers:
             return 3;
         case StatsSectionClicks:
@@ -95,6 +161,9 @@ static CGFloat const kGraphHeight = 200.0f;
     return cell;
 }
 
+
+#pragma mark - UITableViewDelegate methods
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
@@ -109,6 +178,8 @@ static CGFloat const kGraphHeight = 200.0f;
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
+
+#pragma mark - Private methods
 
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
 {
@@ -145,7 +216,7 @@ static CGFloat const kGraphHeight = 200.0f;
                     identifier = @"TwoColumnHeader";
                     break;
                 default:
-                    if (statsSection == StatsSectionPosts) {
+                    if (((StatsGroup *)self.sectionData[@(statsSection)]).items.count > 0) {
                         identifier = @"TwoColumnRow";
                     } else {
                         identifier = @"NoResultsRow";
@@ -251,12 +322,17 @@ static CGFloat const kGraphHeight = 200.0f;
 
 - (void)configureSectionPostsCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
+    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPosts)];
+
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages")];
     } else if (row == 1) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Title", @"")
                                      andRightText:NSLocalizedString(@"Views", @"")];
+    } else if (row > 1 && group.items.count > 0) {
+        StatsItem *item = group.items[row - 2];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value.stringValue];
     }
     
 }
@@ -352,6 +428,15 @@ static CGFloat const kGraphHeight = 200.0f;
 }
 
 - (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText andRightText:(NSString *)rightText
+{
+    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
+    label1.text = leftText;
+    
+    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
+    label2.text = rightText;
+}
+
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText andRightText:(NSString *)rightText
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;

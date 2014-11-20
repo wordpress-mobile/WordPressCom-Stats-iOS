@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
+#import "StatsGroup.h"
 
 typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits);
-typedef void (^StatsItemsCompletion)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews);
+typedef void (^StatsItemsCompletion)(StatsGroup *group);
 
 @class WPStatsServiceV2Remote;
 

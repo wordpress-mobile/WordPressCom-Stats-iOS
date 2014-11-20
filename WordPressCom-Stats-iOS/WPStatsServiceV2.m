@@ -81,57 +81,62 @@
     __block StatsGroup *followersResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
-    [_remote batchFetchStatsForDates:@[today]
-                             andUnit:StatsPeriodUnitDay
-        withSummaryCompletionHandler:^(StatsSummary *summary)
+    [self.remote batchFetchStatsForDates:@[today]
+                                 andUnit:StatsPeriodUnitDay
+            withSummaryCompletionHandler:^(StatsSummary *summary)
     {
         summaryResult = summary;
     }
-             visitsCompletionHandler:^(StatsVisits *visits)
+                 visitsCompletionHandler:^(StatsVisits *visits)
     {
         visitsResult = visits;
     }
-              postsCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                  postsCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         postsResult.items = items;
+        postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
+        
+        if (postsCompletion) {
+            postsCompletion(postsResult);
+        }
     }
-          referrersCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+              referrersCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         referrersResult.items = items;
     }
-             clicksCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                 clicksCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         clicksResult.items = items;
     }
-            countryCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                countryCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         countriesResult.items = items;
     }
-              videosCompetionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                  videosCompetionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         videosResult.items = items;
     }
-                  commentsCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                      commentsCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         commentsResult.items = items;
     }
-            tagsCategoriesCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                tagsCategoriesCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         tagsCategoriesResult.items = items;
     }
-                 followersCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                     followersCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         followersResult.items = items;
     }
-                 publicizeCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                     publicizeCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         publicizeResult.items = items;
     }
-         andOverallCompletionHandler:^
+             andOverallCompletionHandler:^
     {
         completionHandler();
     }
-               overallFailureHandler:failure];
+                   overallFailureHandler:failure];
 }
 
 
