@@ -64,9 +64,16 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+         videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
+             commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
+       tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+            followersCompletion:(StatsRemoteItemsCompletion)followersCompletion
+            publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
+    // TODO - Implement videos, comments, tags, followers and publicize endpoints
+    
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     if (summaryCompletion) {

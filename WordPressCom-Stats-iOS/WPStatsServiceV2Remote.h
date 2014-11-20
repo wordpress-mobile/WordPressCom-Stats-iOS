@@ -1,11 +1,10 @@
-#import "WPStatsService.h"
+#import <Foundation/Foundation.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
 
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews);
-
 
 @interface WPStatsServiceV2Remote : NSObject
 
@@ -33,6 +32,11 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews,
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+         videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
+             commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
+       tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+            followersCompletion:(StatsRemoteItemsCompletion)followersCompletion
+            publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler;
 
