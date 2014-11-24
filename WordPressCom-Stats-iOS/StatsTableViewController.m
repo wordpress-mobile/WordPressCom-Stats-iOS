@@ -5,6 +5,7 @@
 #import "StatsItem.h"
 #import "StatsGroup+View.h"
 #import "StatsItem+View.h"
+#import <WPFontManager.h>
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionGraph,
@@ -36,7 +37,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
+    // Force load fonts from bundle
+    [WPFontManager openSansBoldFontOfSize:1.0f];
+    [WPFontManager openSansRegularFontOfSize:1.0f];
+
     self.sections = @[ @(StatsSectionGraph),
                        @(StatsSectionPosts),
                        @(StatsSectionReferrers),
