@@ -3,6 +3,8 @@
 #import "WPStatsServiceV2.h"
 #import "StatsGroup.h"
 #import "StatsItem.h"
+#import "StatsGroup+View.h"
+#import "StatsItem+View.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionGraph,
@@ -16,7 +18,8 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionFollowers
 };
 
-static CGFloat const kGraphHeight = 200.0f;
+static CGFloat const kGraphHeight = 175.0f;
+static CGFloat const kNoResultsHeight = 100.0f;
 
 @interface StatsTableViewController ()
 
@@ -24,6 +27,8 @@ static CGFloat const kGraphHeight = 200.0f;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 @property (nonatomic, strong) WPStatsServiceV2 *statsService;
+@property (nonatomic, assign) NSUInteger selectedGraphBar;
+@property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
 
 @end
 
@@ -42,7 +47,10 @@ static CGFloat const kGraphHeight = 200.0f;
                        @(StatsSectionTagsCategories),
                        @(StatsSectionFollowers)];
     self.sectionData = [NSMutableDictionary new];
+    
     self.graphViewController = [WPStatsGraphViewController new];
+    self.selectedPeriodUnit = StatsPeriodUnitDay;
+    self.selectedGraphBar = 0;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -59,29 +67,63 @@ static CGFloat const kGraphHeight = 200.0f;
     }
                         visitsCompletionHandler:^(StatsVisits *visits)
     {
+        self.sectionData[@(StatsSectionGraph)] = visits;
 
+        [self.tableView beginUpdates];
+
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionGraph)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                          postsCompletionHandler:^(StatsGroup *group)
     {
         self.sectionData[@(StatsSectionPosts)] = group;
+        
         [self.tableView beginUpdates];
         
         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPosts)];
         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
         [self.tableView endUpdates];
     }
                      referrersCompletionHandler:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionReferrers)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionReferrers)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                         clicksCompletionHandler:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionClicks)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionClicks)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                        countryCompletionHandler:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionCountry)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionCountry)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                          videosCompetionHandler:^(StatsGroup *group)
     {
@@ -133,12 +175,18 @@ static CGFloat const kGraphHeight = 200.0f;
             NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionPosts)]).items.count;
             return count == 0 ? 3 : 2 + count;
         }
-        case StatsSectionReferrers:
-            return 3;
-        case StatsSectionClicks:
-            return 3;
-        case StatsSectionCountry:
-            return 3;
+        case StatsSectionReferrers: {
+            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionReferrers)]).items.count;
+            return count == 0 ? 3 : 2 + count;
+        }
+        case StatsSectionClicks: {
+            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionClicks)]).items.count;
+            return count == 0 ? 3 : 2 + count;
+        }
+        case StatsSectionCountry: {
+            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionCountry)]).items.count;
+            return count == 0 ? 3 : 2 + count;
+        }
         case StatsSectionVideos:
             return 3;
         case StatsSectionComments:
@@ -169,9 +217,9 @@ static CGFloat const kGraphHeight = 200.0f;
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
 
     if ([cellIdentifier isEqualToString:@"GraphRow"]) {
-        return 200.0f;
+        return kGraphHeight;
     } else if ([cellIdentifier isEqualToString:@"NoResultsRow"]) {
-        return 100.0f;
+        return kNoResultsHeight;
     } else if ([cellIdentifier isEqualToString:@"SelectableRow"]) {
         return 35.0f;
     }
@@ -274,7 +322,11 @@ static CGFloat const kGraphHeight = 200.0f;
 {
     UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
     UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
-
+    UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
+    StatsVisits *visits = self.sectionData[@(StatsSectionGraph)];
+    // TODO - Indicate selected visit date
+    StatsSummary *summary = visits.statsData.lastObject;
+    
     switch (row) {
         case 0: // Graph Row
         {
@@ -284,6 +336,10 @@ static CGFloat const kGraphHeight = 200.0f;
                 graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                 [cell.contentView addSubview:graphView];
             }
+            
+            self.graphViewController.visits = visits;
+            self.graphViewController.currentUnit = StatsPeriodUnitDay;
+            [self.graphViewController.collectionView reloadData];
             break;
         }
             
@@ -291,6 +347,7 @@ static CGFloat const kGraphHeight = 200.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Views", @"");
+            valueLabel.text = summary.views.stringValue;
             break;
         }
             
@@ -298,6 +355,7 @@ static CGFloat const kGraphHeight = 200.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Visitors", @"");
+            valueLabel.text = summary.visitors.stringValue;
             break;
         }
             
@@ -305,6 +363,7 @@ static CGFloat const kGraphHeight = 200.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Likes", @"");
+            valueLabel.text = summary.likes.stringValue;
             break;
         }
             
@@ -312,6 +371,7 @@ static CGFloat const kGraphHeight = 200.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Comments", @"");
+            valueLabel.text = summary.comments.stringValue;
             break;
         }
             
@@ -443,6 +503,26 @@ static CGFloat const kGraphHeight = 200.0f;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+}
+
+- (NSUInteger)numberOfRowsForStatsGroup:(StatsGroup *)group
+{
+    return group.expanded == NO ? 0 : [self numberOfRowsForStatsItems:group.items];
+}
+
+- (NSUInteger)numberOfRowsForStatsItems:(NSArray *)items
+{
+    if (items.count == 0) {
+        return 0;
+    }
+    
+    NSUInteger itemCount = items.count;
+    
+    for (StatsItem *item in items) {
+        itemCount += [self numberOfRowsForStatsItems:item.children];
+    }
+    
+    return itemCount;
 }
 
 @end

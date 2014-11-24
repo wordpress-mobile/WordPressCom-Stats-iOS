@@ -1,13 +1,14 @@
 #import <UIKit/UIKit.h>
-#import "WPStatsViewsVisitors.h"
+#import "StatsVisits.h"
+#import "StatsSummary.h"
 
 @protocol WPStatsGraphViewControllerDelegate;
 
 @interface WPStatsGraphViewController : UICollectionViewController
 
 @property (nonatomic, weak) id<WPStatsGraphViewControllerDelegate> graphDelegate;
-@property (nonatomic, strong) WPStatsViewsVisitors *viewsVisitors;
-@property (nonatomic, assign) WPStatsViewsVisitorsUnit currentUnit;
+@property (nonatomic, strong) StatsVisits *visits;
+@property (nonatomic, assign) StatsPeriodUnit currentUnit;
 
 @end
 

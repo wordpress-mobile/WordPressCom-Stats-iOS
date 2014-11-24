@@ -90,6 +90,10 @@
                  visitsCompletionHandler:^(StatsVisits *visits)
     {
         visitsResult = visits;
+        
+        if (visitsCompletion) {
+            visitsCompletion(visits);
+        }
     }
                   postsCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
@@ -103,34 +107,66 @@
               referrersCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         referrersResult.items = items;
+        
+        if (referrersCompletion) {
+            referrersCompletion(referrersResult);
+        }
     }
                  clicksCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         clicksResult.items = items;
+        
+        if (clicksCompletion) {
+            clicksCompletion(clicksResult);
+        }
     }
                 countryCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         countriesResult.items = items;
+        
+        if (countryCompletion) {
+            countryCompletion(countriesResult);
+        }
     }
                   videosCompetionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         videosResult.items = items;
+        
+        if (videosCompletion) {
+            videosCompletion(videosResult);
+        }
     }
                       commentsCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         commentsResult.items = items;
+        
+        if (commentsCompletion) {
+            commentsCompletion(commentsResult);
+        }
     }
                 tagsCategoriesCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         tagsCategoriesResult.items = items;
+        
+        if (tagsCategoriesCompletion) {
+            tagsCategoriesCompletion(tagsCategoriesResult);
+        }
     }
                      followersCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         followersResult.items = items;
+        
+        if (followersCompletion) {
+            followersCompletion(followersResult);
+        }
     }
                      publicizeCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
     {
         publicizeResult.items = items;
+        
+        if (publicizeCompletion) {
+            publicizeCompletion(publicizeResult);
+        }
     }
              andOverallCompletionHandler:^
     {

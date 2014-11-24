@@ -320,8 +320,8 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
                 {
                     WPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GraphCellIdentifier];
                     cell.clipsToBounds = YES;
-                    self.graphViewController.viewsVisitors = self.statModels[@(StatsSectionVisitorsGraph)];
-                    self.graphViewController.currentUnit = self.currentViewsVisitorsGraphUnit;
+//                    self.graphViewController.viewsVisitors = self.statModels[@(StatsSectionVisitorsGraph)];
+//                    self.graphViewController.currentUnit = self.currentViewsVisitorsGraphUnit;
                     
                     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
                         UIView *graphView = self.graphViewController.view;
@@ -681,7 +681,7 @@ typedef NS_ENUM(NSInteger, TotalFollowersShareRow) {
     [self statsGraphViewControllerDidDeselectAllBars:nil];
     
     self.currentViewsVisitorsGraphUnit = unit;
-    self.graphViewController.currentUnit = unit;
+//    self.graphViewController.currentUnit = unit;
     [self.graphViewController.collectionView reloadData];
 }
 
