@@ -7,6 +7,9 @@
 #import "WPStyleGuide+Stats.h"
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
+{
+    NSUInteger _selectedBarIndex;
+}
 
 @property (nonatomic, weak) WPStatsCollectionViewFlowLayout *flowLayout;
 @property (nonatomic, assign) CGFloat maximumY;
@@ -31,6 +34,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
         _flowLayout = layout;
         _numberOfYValues = 7;
         _maximumY = 0;
+        _allowDeselection = YES;
     }
     return self;
 }
@@ -67,6 +71,11 @@ static NSInteger const RecommendedYAxisTicks = 7;
 }
 
 #pragma mark - UICollectionViewDelegate methods
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.allowDeselection;
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -147,6 +156,19 @@ static NSInteger const RecommendedYAxisTicks = 7;
     CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 55 - (30.0 * self.numberOfXValues)) / self.numberOfXValues);
     
     return spacing;
+}
+
+#pragma mark - Public class methods
+
+- (void)selectGraphBarWithDate:(NSDate *)selectedDate
+{
+    for (StatsSummary *summary in self.visits.statsData) {
+        if ([summary.date isEqualToDate:selectedDate]) {
+            NSUInteger index = [self.visits.statsData indexOfObject:summary];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+            [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        }
+    }
 }
 
 #pragma mark - Property methods

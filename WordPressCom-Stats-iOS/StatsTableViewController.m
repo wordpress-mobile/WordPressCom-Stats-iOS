@@ -345,6 +345,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
             self.graphViewController.visits = visits;
             self.graphViewController.currentUnit = StatsPeriodUnitDay;
             [self.graphViewController.collectionView reloadData];
+            self.graphViewController.allowDeselection = NO;
+            [self.graphViewController selectGraphBarWithDate:summary.date];
+            
             break;
         }
             
