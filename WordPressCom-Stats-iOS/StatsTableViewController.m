@@ -6,6 +6,7 @@
 #import "StatsGroup+View.h"
 #import "StatsItem+View.h"
 #import <WPFontManager.h>
+#import "WPStyleGuide+Stats.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionGraph,
@@ -28,8 +29,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 @property (nonatomic, strong) WPStatsServiceV2 *statsService;
-@property (nonatomic, assign) NSUInteger selectedGraphBar;
 @property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
+@property (nonatomic, assign) StatsSummaryType selectedSummaryType;
+@property (nonatomic, strong) NSDate *selectedDate;
 
 @end
 
@@ -55,7 +57,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     self.graphViewController = [WPStatsGraphViewController new];
     self.selectedPeriodUnit = StatsPeriodUnitDay;
-    self.selectedGraphBar = 0;
+    self.selectedSummaryType = StatsSummaryTypeViews;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -65,7 +67,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
     self.statsService = [[WPStatsServiceV2 alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
 
     [self.statsService retrieveAllStatsForDates:@[]
-                                        andUnit:StatsPeriodUnitDay
+                                        andUnit:self.selectedPeriodUnit
                    withSummaryCompletionHandler:^(StatsSummary *summary)
     {
         
@@ -73,6 +75,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                         visitsCompletionHandler:^(StatsVisits *visits)
     {
         self.sectionData[@(StatsSectionGraph)] = visits;
+        self.selectedDate = ((StatsSummary *)visits.statsData.lastObject).date;
 
         [self.tableView beginUpdates];
 
@@ -81,6 +84,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
         
         [self.tableView endUpdates];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
                          postsCompletionHandler:^(StatsGroup *group)
     {
@@ -232,6 +238,40 @@ static CGFloat const kNoResultsHeight = 100.0f;
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+        for (NSIndexPath *selectedIndexPath in [tableView indexPathsForSelectedRows]) {
+            [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
+        }
+        
+        return indexPath;
+    }
+    
+    return nil;
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+        return nil;
+    }
+    
+    return indexPath;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+        self.selectedSummaryType = (StatsSummaryType)(indexPath.row - 1);
+        
+        NSIndexPath *graphIndexPath = [NSIndexPath indexPathForItem:0 inSection:indexPath.section];
+        [tableView beginUpdates];
+        [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [tableView endUpdates];
+    }
+}
+
 #pragma mark - Private methods
 
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
@@ -328,9 +368,16 @@ static CGFloat const kNoResultsHeight = 100.0f;
     UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
     UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
     UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
+
+    // Find the selected summary
     StatsVisits *visits = self.sectionData[@(StatsSectionGraph)];
-    // TODO - Indicate selected visit date
-    StatsSummary *summary = visits.statsData.lastObject;
+    StatsSummary *summary;
+    for (StatsSummary *s in visits.statsData) {
+        if ([s.date isEqualToDate:self.selectedDate]) {
+            summary = s;
+            break;
+        }
+    }
     
     switch (row) {
         case 0: // Graph Row
@@ -342,8 +389,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
                 [cell.contentView addSubview:graphView];
             }
             
+            self.graphViewController.currentUnit = self.selectedPeriodUnit;
+            self.graphViewController.currentSummaryType = self.selectedSummaryType;
             self.graphViewController.visits = visits;
-            self.graphViewController.currentUnit = StatsPeriodUnitDay;
             [self.graphViewController.collectionView reloadData];
             self.graphViewController.allowDeselection = NO;
             [self.graphViewController selectGraphBarWithDate:summary.date];
@@ -356,6 +404,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Views", @"");
             valueLabel.text = summary.views.stringValue;
+//            cell.backgroundColor = self.selectedSummaryType == StatsSummaryTypeViews ? [WPStyleGuide statsLighterOrange] : [UIColor whiteColor];
             break;
         }
             
@@ -364,6 +413,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Visitors", @"");
             valueLabel.text = summary.visitors.stringValue;
+//            cell.backgroundColor = self.selectedSummaryType == StatsSummaryTypeVisitors ? [WPStyleGuide statsLighterOrange] : [UIColor whiteColor];
             break;
         }
             
@@ -372,6 +422,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Likes", @"");
             valueLabel.text = summary.likes.stringValue;
+//            cell.backgroundColor = self.selectedSummaryType == StatsSummaryTypeLikes ? [WPStyleGuide statsLighterOrange] : [UIColor whiteColor];
             break;
         }
             
@@ -380,6 +431,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Comments", @"");
             valueLabel.text = summary.comments.stringValue;
+//            cell.backgroundColor = self.selectedSummaryType == StatsSummaryTypeComments ? [WPStyleGuide statsLighterOrange] : [UIColor whiteColor];
             break;
         }
             

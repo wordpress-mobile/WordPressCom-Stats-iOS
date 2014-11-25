@@ -195,7 +195,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         statsSummary.views = statsSummaryDict[@"views"];
         statsSummary.visitors = statsSummaryDict[@"visitors"];
         statsSummary.likes = statsSummaryDict[@"likes"];
-        statsSummary.reblogs = statsSummaryDict[@"reblogs"];
         statsSummary.comments = statsSummaryDict[@"comments"];
         
         if (completionHandler) {
@@ -230,7 +229,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSUInteger viewsIndex = [fields indexOfObject:@"views"];
         NSUInteger visitorsIndex = [fields indexOfObject:@"visitors"];
         NSUInteger likesIndex = [fields indexOfObject:@"likes"];
-        NSUInteger reblogsIndex = [fields indexOfObject:@"reblogs"];
         NSUInteger commentsIndex = [fields indexOfObject:@"comments"];
         
         NSMutableArray *array = [NSMutableArray new];
@@ -240,7 +238,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             periodSummary.views = period[viewsIndex];
             periodSummary.visitors = period[visitorsIndex];
             periodSummary.likes = period[likesIndex];
-            periodSummary.reblogs = period[reblogsIndex];
             periodSummary.comments = period[commentsIndex];
             [array addObject:periodSummary];
         }

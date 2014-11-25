@@ -35,6 +35,8 @@ static NSInteger const RecommendedYAxisTicks = 7;
         _numberOfYValues = 7;
         _maximumY = 0;
         _allowDeselection = YES;
+        _currentUnit = StatsPeriodUnitDay;
+        _currentSummaryType = StatsSummaryTypeViews;
     }
     return self;
 }
@@ -191,9 +193,9 @@ static NSInteger const RecommendedYAxisTicks = 7;
 {
     CGFloat maximumY = 0.0f;
     for (StatsSummary *summary in self.visits.statsData) {
-        // TODO: Pick the right value based upon what is selected (views/visitors/whatevs)
-        if (maximumY < summary.views.floatValue) {
-            maximumY = summary.views.floatValue;
+        NSNumber *value = [self valueForCurrentTypeFromSummary:summary];
+        if (maximumY < value.floatValue) {
+            maximumY = value.floatValue;
         }
     }
     
@@ -223,16 +225,33 @@ static NSInteger const RecommendedYAxisTicks = 7;
     
     return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
                 @"selectedColor" : [WPStyleGuide statsLighterOrange],
-//                @"value" : categoryData[StatsViewsCategory][indexPath.row][StatsPointCountKey],
-                @"value" : [self.visits.statsData[indexPath.row] views],
+                @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
                 @"name" : @"views"
                 },
-//             @{ @"color" : [WPStyleGuide littleEddieGrey],
-//                @"selectedColor" : [WPStyleGuide jazzyOrange],
-//                @"value" : categoryData[StatsVisitorsCategory][indexPath.row][StatsPointCountKey],
-//                @"name" : StatsVisitorsCategory
-//                }
              ];
+}
+
+- (NSNumber *)valueForCurrentTypeFromSummary:(StatsSummary *)summary
+{
+    NSNumber *value = @0.0f;
+    switch (self.currentSummaryType) {
+        case StatsSummaryTypeViews:
+            value = summary.views;
+            break;
+        case StatsSummaryTypeVisitors:
+            value = summary.visitors;
+            break;
+        case StatsSummaryTypeComments:
+            value = summary.comments;
+            break;
+        case StatsSummaryTypeLikes:
+            value = summary.likes;
+            break;
+        default:
+            break;
+    }
+
+    return value;
 }
 
 @end
