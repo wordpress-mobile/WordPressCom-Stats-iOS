@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xkR-9V-KCm">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -30,6 +30,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodSelector" id="y6t-fT-X57" userLabel="PeriodSelector">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="y6t-fT-X57" id="xOE-3o-GEM">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wxx-2G-3HH">
+                                            <rect key="frame" x="15" y="8" width="570" height="29"/>
+                                            <segments>
+                                                <segment title="Days"/>
+                                                <segment title="Weeks"/>
+                                                <segment title="Months"/>
+                                                <segment title="Years"/>
+                                            </segments>
+                                        </segmentedControl>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Wxx-2G-3HH" firstAttribute="leading" secondItem="xOE-3o-GEM" secondAttribute="leadingMargin" constant="7" id="GbI-5r-G8O"/>
+                                        <constraint firstAttribute="centerX" secondItem="Wxx-2G-3HH" secondAttribute="centerX" id="SLE-lT-8WB"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Wxx-2G-3HH" secondAttribute="trailing" constant="7" id="YEJ-mp-7Cl"/>
+                                        <constraint firstAttribute="centerY" secondItem="Wxx-2G-3HH" secondAttribute="centerY" id="hnS-Rv-3Ln"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" id="Ex4-nH-VUK">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ex4-nH-VUK" id="aL3-p0-bNa">
@@ -120,14 +143,14 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fhY-TT-0EH" id="Dnr-8L-jIZ">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
-                                            <rect key="frame" x="15" y="10" width="510" height="24"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
+                                            <rect key="frame" x="15" y="11" width="516" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" misplaced="YES" text="10000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rwp-nF-8c1">
-                                            <rect key="frame" x="535" y="10" width="49" height="24"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="10000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rwp-nF-8c1">
+                                            <rect key="frame" x="541" y="11" width="43" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -184,7 +207,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7L-pU-m4M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2055" y="94"/>
+            <point key="canvasLocation" x="2055" y="91"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2Kt-k2-d36">
