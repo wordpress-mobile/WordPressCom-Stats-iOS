@@ -18,7 +18,8 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionVideos,
     StatsSectionComments,
     StatsSectionTagsCategories,
-    StatsSectionFollowers
+    StatsSectionFollowers,
+    StatsSectionPublicize
 };
 
 static CGFloat const kGraphHeight = 175.0f;
@@ -54,7 +55,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                        @(StatsSectionVideos),
                        @(StatsSectionComments),
                        @(StatsSectionTagsCategories),
-                       @(StatsSectionFollowers)];
+                       @(StatsSectionFollowers),
+                       @(StatsSectionPublicize)];
     self.sectionData = [NSMutableDictionary new];
     
     self.graphViewController = [WPStatsGraphViewController new];
@@ -190,7 +192,15 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
                             publicizeCompletion:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionPublicize)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPublicize)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                     andOverallCompletionHandler:^
     {
@@ -254,7 +264,12 @@ static CGFloat const kNoResultsHeight = 100.0f;
             NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionFollowers)]).items.count;
             return count == 0 ? 3 : 2 + count;
         }
+        case StatsSectionPublicize: {
+            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionPublicize)]).items.count;
+            return count == 0 ? 3 : 2 + count;
+        }
     }
+    
     return 0;
 }
 
@@ -369,7 +384,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
         case StatsSectionVideos:
         case StatsSectionComments:
         case StatsSectionTagsCategories:
-        case StatsSectionFollowers: {
+        case StatsSectionFollowers:
+        case StatsSectionPublicize:
+        {
             switch (indexPath.row) {
                 case 0:
                     identifier = @"GroupHeader";
@@ -387,9 +404,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
             }
             break;
         }
-            
-        default:
-            break;
     }
     
     return identifier;
@@ -428,6 +442,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
             break;
         case StatsSectionFollowers:
             [self configureSectionFollowersCell:cell forRow:indexPath.row];
+            break;
+        case StatsSectionPublicize:
+            [self configureSectionPublicizeCell:cell forRow:indexPath.row];
             break;
     }
 }
@@ -625,13 +642,30 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionFollowersCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionFollowers)];
-
+    
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
     } else if (row == 1) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Follower", @"")
                                      andRightText:NSLocalizedString(@"Since", @"")];
+    } else if (row > 1 && group.items.count > 0) {
+        StatsItem *item = group.items[row - 2];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+    }
+    
+}
+
+- (void)configureSectionPublicizeCell:(UITableViewCell *)cell forRow:(NSInteger)row
+{
+    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPublicize)];
+    
+    if (row == 0) {
+        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Publicize", @"Title for stats section for Publicize")];
+    } else if (row == 1) {
+        [self configureSectionTwoColumnHeaderCell:cell
+                                     withLeftText:NSLocalizedString(@"Service", @"")
+                                     andRightText:NSLocalizedString(@"Followers", @"")];
     } else if (row > 1 && group.items.count > 0) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
