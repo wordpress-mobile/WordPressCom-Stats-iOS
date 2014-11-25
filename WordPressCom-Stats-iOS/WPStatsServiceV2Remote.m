@@ -192,6 +192,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         StatsSummary *statsSummary = [StatsSummary new];
         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
         statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"]];
+        statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
         statsSummary.views = statsSummaryDict[@"views"];
         statsSummary.visitors = statsSummaryDict[@"visitors"];
         statsSummary.likes = statsSummaryDict[@"likes"];
@@ -234,7 +235,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSMutableArray *array = [NSMutableArray new];
         for (NSArray *period in statsVisitsDict[@"data"]) {
             StatsSummary *periodSummary = [StatsSummary new];
+            periodSummary.periodUnit = unit;
             periodSummary.date = [self deviceLocalDateForString:period[periodIndex]];
+            periodSummary.label = [self nicePointNameForDate:periodSummary.date forStatsPeriodUnit:periodSummary.periodUnit];
             periodSummary.views = period[viewsIndex];
             periodSummary.visitors = period[visitorsIndex];
             periodSummary.likes = period[likesIndex];
@@ -623,5 +626,34 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     
     return @"";
 }
+
+- (NSString *)nicePointNameForDate:(NSDate *)date forStatsPeriodUnit:(StatsPeriodUnit)unit {
+    if (!date) {
+        return @"";
+    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [NSLocale currentLocale];
+    
+    switch (unit) {
+        case StatsPeriodUnitDay:
+            dateFormatter.dateFormat = @"LLL dd";
+            break;
+        case StatsPeriodUnitWeek:
+            dateFormatter.dateFormat = @"LLL dd";
+            break;
+        case StatsPeriodUnitMonth:
+            dateFormatter.dateFormat = @"LLL";
+            break;
+        case StatsPeriodUnitYear:
+            dateFormatter.dateFormat = @"yyyy";
+            break;
+    }
+    
+    NSString *niceName = [dateFormatter stringFromDate:date] ?: @"";
+
+    return niceName;
+}
+
 
 @end

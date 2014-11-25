@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, StatsSummaryType) {
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, assign) StatsPeriodUnit periodUnit;
+@property (nonatomic, copy)   NSString *label;
 @property (nonatomic, strong) NSNumber *views;
 @property (nonatomic, strong) NSNumber *visitors;
 @property (nonatomic, strong) NSNumber *likes;

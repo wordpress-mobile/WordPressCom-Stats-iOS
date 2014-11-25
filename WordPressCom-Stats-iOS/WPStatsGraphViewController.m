@@ -118,8 +118,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
-    // TODO :: Name is the same for all points - should put this somewhere better
-//    [cell setBarName:[self.viewsVisitors viewsVisitorsForUnit:self.currentUnit][StatsViewsCategory][indexPath.row][@"name"]];
+    cell.barName = [self.visits.statsData[indexPath.row] label];
     [cell finishedSettingProperties];
     
     return cell;
