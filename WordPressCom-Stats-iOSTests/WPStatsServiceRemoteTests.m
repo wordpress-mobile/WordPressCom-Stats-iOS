@@ -6,13 +6,13 @@
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 
-@interface WPStatsServiceV2RemoteTests : XCTestCase
+@interface WPStatsServiceRemoteTests : XCTestCase
 
 @property (nonatomic, strong) WPStatsServiceRemote *subject;
 
 @end
 
-@implementation WPStatsServiceV2RemoteTests
+@implementation WPStatsServiceRemoteTests
 
 - (void)setUp {
     [super setUp];
