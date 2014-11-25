@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, StatsSection) {
 static CGFloat const kGraphHeight = 175.0f;
 static CGFloat const kNoResultsHeight = 100.0f;
 
-@interface StatsTableViewController ()
+@interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
@@ -58,6 +58,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
     self.graphViewController = [WPStatsGraphViewController new];
     self.selectedPeriodUnit = StatsPeriodUnitDay;
     self.selectedSummaryType = StatsSummaryTypeViews;
+    self.graphViewController.allowDeselection = NO;
+    self.graphViewController.graphDelegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -272,6 +274,24 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
 }
 
+
+#pragma mark - WPStatsGraphViewControllerDelegate methods
+
+- (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
+{
+    self.selectedDate = date;
+    
+    NSUInteger section = [self.sections indexOfObject:@(StatsSectionGraph)];
+    NSArray *indexPaths = @[[NSIndexPath indexPathForItem:1 inSection:section],
+                            [NSIndexPath indexPathForItem:2 inSection:section],
+                            [NSIndexPath indexPathForItem:3 inSection:section],
+                            [NSIndexPath indexPathForItem:4 inSection:section]];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+
 #pragma mark - Private methods
 
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
@@ -393,7 +413,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
             self.graphViewController.currentSummaryType = self.selectedSummaryType;
             self.graphViewController.visits = visits;
             [self.graphViewController.collectionView reloadData];
-            self.graphViewController.allowDeselection = NO;
             [self.graphViewController selectGraphBarWithDate:summary.date];
             
             break;
@@ -452,7 +471,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row > 1 && group.items.count > 0) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value.stringValue];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
     }
     
 }
@@ -584,5 +603,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     return itemCount;
 }
+
 
 @end

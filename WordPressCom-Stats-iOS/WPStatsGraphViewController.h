@@ -20,7 +20,7 @@
 
 @optional
 
-- (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectData:(NSArray *)data withXLocation:(CGFloat)xLocation;
+- (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date;
 - (void)statsGraphViewControllerDidDeselectAllBars:(WPStatsGraphViewController *)controller;
 
 @end

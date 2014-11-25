@@ -278,8 +278,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSDictionary *post in postViewsDict) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
-            statsItem.value = post[@"views"];
-            statsItem.label = post[@"title"];
+            statsItem.value = [post stringForKey:@"views"];
+            statsItem.label = [post stringForKey:@"title"];
             
             StatsItemAction *statsItemAction = [StatsItemAction new];
             statsItemAction.url = [NSURL URLWithString:post[@"href"]];
@@ -323,7 +323,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSDictionary *group in groupsDict) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [group stringForKey:@"name"];
-            statsItem.value = [group numberForKey:@"total"];
+            statsItem.value = [group stringForKey:@"total"];
             statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
             
             NSString *url = [group stringForKey:@"url"];
@@ -343,7 +343,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                     StatsItem *resultItem = [StatsItem new];
                     resultItem.label = [result stringForKey:@"name"];
                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
-                    resultItem.value = [result numberForKey:@"views"];
+                    resultItem.value = [result stringForKey:@"views"];
                     
                     NSString *url = [result stringForKey:@"url"];
                     if (url) {
@@ -361,7 +361,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                         StatsItem *childItem = [StatsItem new];
                         childItem.label = [child stringForKey:@"name"];
                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                        childItem.value = [child numberForKey:@"views"];
+                        childItem.value = [child stringForKey:@"views"];
                         
                         NSString *url = [child stringForKey:@"url"];
                         if (url) {
@@ -416,7 +416,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSDictionary *click in clicksDict) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [click stringForKey:@"name"];
-            statsItem.value = [click numberForKey:@"views"];
+            statsItem.value = [click stringForKey:@"views"];
             statsItem.iconURL = [NSURL URLWithString:[click stringForKey:@"icon"]];
             
             NSString *url = [click stringForKey:@"url"];
@@ -433,7 +433,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 StatsItem *childItem = [StatsItem new];
                 childItem.label = [child stringForKey:@"name"];
                 childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                childItem.value = [child numberForKey:@"views"];
+                childItem.value = [child stringForKey:@"views"];
                 
                 NSString *url = [child stringForKey:@"url"];
                 if (url) {
@@ -486,7 +486,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             NSString *key = [view stringForKey:@"country_code"];
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
-            statsItem.value = [view numberForKey:@"views"];
+            statsItem.value = [view stringForKey:@"views"];
             statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
             
             [items addObject:statsItem];

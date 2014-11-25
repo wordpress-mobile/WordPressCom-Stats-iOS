@@ -88,10 +88,9 @@ static NSInteger const RecommendedYAxisTicks = 7;
         }
     }];
     
-    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectData:withXLocation:)]) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        CGFloat x = cell.center.x + collectionView.contentInset.left;
-        [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:x];
+    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectDate:)]) {
+        StatsSummary *summary = (StatsSummary *)self.visits.statsData[indexPath.row];
+        [self.graphDelegate statsGraphViewController:self didSelectDate:summary.date];
     }
 }
 
@@ -107,7 +106,6 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-//    return [[self.viewsVisitors viewsVisitorsForUnit:self.currentUnit][StatsViewsCategory] count];
     return self.visits.statsData.count;
 }
 
