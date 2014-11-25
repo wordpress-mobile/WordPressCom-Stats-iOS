@@ -264,12 +264,12 @@
 			isa = PBXGroup;
 			children = (
 				93BCFD901A236FC200EBE204 /* View Model */,
+				93A379E219FEAB8100415023 /* StatsGroup.h */,
+				93A379E319FEAB8100415023 /* StatsGroup.m */,
 				93A379DC19FEA9E400415023 /* StatsItem.h */,
 				93A379DD19FEA9E400415023 /* StatsItem.m */,
 				93A379DF19FEAB1C00415023 /* StatsItemAction.h */,
 				93A379E019FEAB1C00415023 /* StatsItemAction.m */,
-				93A379E219FEAB8100415023 /* StatsGroup.h */,
-				93A379E319FEAB8100415023 /* StatsGroup.m */,
 				93A379E519FEAD8400415023 /* StatsSummary.h */,
 				93A379E619FEAD8400415023 /* StatsSummary.m */,
 				93274AE21A07C7EA0017238F /* StatsVisits.h */,
@@ -293,11 +293,11 @@
 			isa = PBXGroup;
 			children = (
 				936B22491958C65A0058C828 /* Graph */,
-				936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */,
-				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 				93FABB811A126DC5000C15ED /* StatsTableViewController.h */,
 				93FABB821A126DC5000C15ED /* StatsTableViewController.m */,
+				936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */,
+				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";

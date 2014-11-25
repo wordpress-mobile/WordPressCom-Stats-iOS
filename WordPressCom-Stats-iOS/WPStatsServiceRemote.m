@@ -92,6 +92,21 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         if (countryCompletion) {
             [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion failureHandler:nil]];
         }
+        if (videosCompletion) {
+            [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion failureHandler:nil]];
+        }
+        if (commentsCompletion) {
+            
+        }
+        if (tagsCategoriesCompletion) {
+            
+        }
+        if (followersCompletion) {
+            
+        }
+        if (publicizeCompletion) {
+            
+        }
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
@@ -169,6 +184,66 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     NSParameterAssert(date != nil);
     
     AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchVideosStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchCommentsStatsForDate:(NSDate *)date
+                          andUnit:(StatsPeriodUnit)unit
+            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                   failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForCommentsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
+                                andUnit:(StatsPeriodUnit)unit
+                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                         failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchFollowersStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForFollowersForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchPublicizeStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -508,6 +583,94 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
+- (AFHTTPRequestOperation *)operationForVideosForDate:(NSDate *)date
+                                              andUnit:(StatsPeriodUnit)unit
+                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                       failureHandler:(void (^)(NSError *error))failureHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *videosDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [videosDict dictionaryForKey:@"days"];
+        NSDictionary *playsDict = [days allValues][0][@"plays"];
+        NSNumber *totalPlays = [days allValues][0][@"total_plays"];
+        NSNumber *otherPlays = [days allValues][0][@"other_plays"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *play in playsDict) {
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.itemID = [play numberForKey:@"post_id"];
+            statsItem.label = [play stringForKey:@"title"];
+            statsItem.value = [play stringForKey:@"plays"];
+
+            NSString *url = [play stringForKey:@"url"];
+            if (url) {
+                StatsItemAction *action = [StatsItemAction new];
+                action.url = [NSURL URLWithString:url];
+                action.defaultAction = YES;
+                statsItem.actions = @[action];
+            }
+
+            [items addObject:statsItem];
+        }
+        
+        if (completionHandler) {
+            completionHandler(items, totalPlays, otherPlays);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
+                                                andUnit:(StatsPeriodUnit)unit
+                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                         failureHandler:(void (^)(NSError *error))failureHandler
+{
+    // TODO :: Implement
+    return nil;
+}
+
+
+- (AFHTTPRequestOperation *)operationForTagsCategoriesForDate:(NSDate *)date
+                                                      andUnit:(StatsPeriodUnit)unit
+                                        withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                               failureHandler:(void (^)(NSError *error))failureHandler
+{
+    // TODO :: Implement
+    return nil;
+}
+
+
+- (AFHTTPRequestOperation *)operationForFollowersForDate:(NSDate *)date
+                                                 andUnit:(StatsPeriodUnit)unit
+                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                          failureHandler:(void (^)(NSError *error))failureHandler
+{
+    // TODO :: Implement
+    return nil;
+}
+
+
+- (AFHTTPRequestOperation *)operationForPublicizeForDate:(NSDate *)date
+                                                 andUnit:(StatsPeriodUnit)unit
+                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                          failureHandler:(void (^)(NSError *error))failureHandler
+{
+    // TODO :: Implement
+    return nil;
+}
+
+
 #pragma mark - Private convenience methods for building requests
 
 - (AFHTTPRequestOperation *)requestOperationForURLString:(NSString *)url
@@ -515,8 +678,13 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                                  success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                                                  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
-    NSURLRequest *request = [self.manager.requestSerializer requestWithMethod:@"GET" URLString:url parameters:parameters error:nil];
-    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request success:success failure:failure];
+    NSURLRequest *request = [self.manager.requestSerializer requestWithMethod:@"GET"
+                                                                    URLString:url
+                                                                   parameters:parameters
+                                                                        error:nil];
+    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request
+                                                                              success:success
+                                                                              failure:failure];
     
     return operation;
 }
@@ -544,29 +712,64 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return [NSString stringWithFormat:@"%@/summary/", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForVisits
 {
     return [NSString stringWithFormat:@"%@/visits/", self.statsPathPrefix];
 }
+
 
 - (NSString *)urlForClicks
 {
     return [NSString stringWithFormat:@"%@/clicks", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForCountryViews
 {
     return [NSString stringWithFormat:@"%@/country-views", self.statsPathPrefix];
 }
+
 
 - (NSString *)urlForReferrers
 {
     return [NSString stringWithFormat:@"%@/referrers/", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForTopPosts
 {
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForVideos
+{
+    return [NSString stringWithFormat:@"%@/video-plays/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForComments
+{
+    return [NSString stringWithFormat:@"%@/something/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForTagsCategories
+{
+    return [NSString stringWithFormat:@"%@/something/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForFollowers
+{
+    return [NSString stringWithFormat:@"%@/something/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForPublicize
+{
+    return [NSString stringWithFormat:@"%@/something/", self.statsPathPrefix];
 }
 
 

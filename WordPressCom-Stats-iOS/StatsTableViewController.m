@@ -142,19 +142,51 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
                          videosCompetionHandler:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionVideos)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionVideos)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                              commentsCompletion:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionComments)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                        tagsCategoriesCompletion:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionTagsCategories)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionTagsCategories)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                             followersCompletion:^(StatsGroup *group)
     {
-
+        self.sectionData[@(StatsSectionFollowers)] = group;
+        
+        [self.tableView beginUpdates];
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
     }
                             publicizeCompletion:^(StatsGroup *group)
     {

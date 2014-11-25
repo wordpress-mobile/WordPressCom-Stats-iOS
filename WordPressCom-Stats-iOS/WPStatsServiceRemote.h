@@ -68,4 +68,29 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews,
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                   failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchVideosStatsForDate:(NSDate *)date
+                        andUnit:(StatsPeriodUnit)unit
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchCommentsStatsForDate:(NSDate *)date
+                          andUnit:(StatsPeriodUnit)unit
+            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                   failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
+                                andUnit:(StatsPeriodUnit)unit
+                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                         failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchFollowersStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler;
+
+- (void)fetchPublicizeStatsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                    failureHandler:(void (^)(NSError *error))failureHandler;
 @end
