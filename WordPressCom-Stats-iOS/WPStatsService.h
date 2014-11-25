@@ -7,11 +7,11 @@ typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits);
 typedef void (^StatsItemsCompletion)(StatsGroup *group);
 
-@class WPStatsServiceV2Remote;
+@class WPStatsServiceRemote;
 
-@interface WPStatsServiceV2 : NSObject
+@interface WPStatsService : NSObject
 
-@property (nonatomic, strong) WPStatsServiceV2Remote *remote;
+@property (nonatomic, strong) WPStatsServiceRemote *remote;
 
 - (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token;
 

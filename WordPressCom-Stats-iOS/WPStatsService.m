@@ -1,12 +1,12 @@
-#import "WPStatsServiceV2.h"
-#import "WPStatsServiceV2Remote.h"
+#import "WPStatsService.h"
+#import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 #import "StatsGroup.h"
 #import "StatsVisits.h"
 #import "StatsSummary.h"
 
-@interface WPStatsServiceV2 ()
+@interface WPStatsService ()
 
 @property (nonatomic, strong) NSNumber *siteId;
 @property (nonatomic, strong) NSString *oauth2Token;
@@ -14,7 +14,7 @@
 
 @end
 
-@implementation WPStatsServiceV2
+@implementation WPStatsService
 {
 
 }
@@ -188,10 +188,10 @@
     
 }
 
-- (WPStatsServiceV2Remote *)remote
+- (WPStatsServiceRemote *)remote
 {
     if (!_remote) {
-        _remote = [[WPStatsServiceV2Remote alloc] initWithOAuth2Token:self.oauth2Token siteId:self.siteId andSiteTimeZone:self.siteTimeZone];
+        _remote = [[WPStatsServiceRemote alloc] initWithOAuth2Token:self.oauth2Token siteId:self.siteId andSiteTimeZone:self.siteTimeZone];
     }
 
     return _remote;

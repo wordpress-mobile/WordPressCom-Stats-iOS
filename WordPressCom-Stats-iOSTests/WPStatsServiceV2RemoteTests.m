@@ -2,13 +2,13 @@
 #import <XCTest/XCTest.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 #import <OCMock/OCMock.h>
-#import "WPStatsServiceV2Remote.h"
+#import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 
 @interface WPStatsServiceV2RemoteTests : XCTestCase
 
-@property (nonatomic, strong) WPStatsServiceV2Remote *subject;
+@property (nonatomic, strong) WPStatsServiceRemote *subject;
 
 @end
 
@@ -17,7 +17,7 @@
 - (void)setUp {
     [super setUp];
     
-    self.subject = [[WPStatsServiceV2Remote alloc] initWithOAuth2Token:@"token" siteId:@123456 andSiteTimeZone:[NSTimeZone systemTimeZone]];
+    self.subject = [[WPStatsServiceRemote alloc] initWithOAuth2Token:@"token" siteId:@123456 andSiteTimeZone:[NSTimeZone systemTimeZone]];
 }
 
 - (void)tearDown {
@@ -43,7 +43,6 @@
         XCTAssertTrue([summary.views isEqualToNumber:@56]);
         XCTAssertTrue([summary.visitors isEqualToNumber:@44]);
         XCTAssertTrue([summary.likes isEqualToNumber:@1]);
-        XCTAssertTrue([summary.reblogs isEqualToNumber:@2]);
         XCTAssertTrue([summary.comments isEqualToNumber:@3]);
         
         [expectation fulfill];
@@ -79,7 +78,6 @@
          XCTAssertTrue([firstSummary.views isEqualToNumber:@58]);
          XCTAssertTrue([firstSummary.visitors isEqualToNumber:@39]);
          XCTAssertTrue([firstSummary.likes isEqualToNumber:@1]);
-         XCTAssertTrue([firstSummary.reblogs isEqualToNumber:@2]);
          XCTAssertTrue([firstSummary.comments isEqualToNumber:@3]);
          
          [expectation fulfill];
@@ -116,7 +114,6 @@
          XCTAssertTrue([firstSummary.views isEqualToNumber:@7808]);
          XCTAssertTrue([firstSummary.visitors isEqualToNumber:@4331]);
          XCTAssertTrue([firstSummary.likes isEqualToNumber:@0]);
-         XCTAssertTrue([firstSummary.reblogs isEqualToNumber:@0]);
          XCTAssertTrue([firstSummary.comments isEqualToNumber:@0]);
          
          [expectation fulfill];
@@ -150,7 +147,7 @@
          StatsItem *item = items[0];
          XCTAssertTrue([item.itemID isEqualToNumber:@750]);
          XCTAssertTrue([item.label isEqualToString:@"Asynchronous unit testing Core Data with Xcode 6"]);
-         XCTAssertTrue([item.value isEqualToNumber:@7]);
+         XCTAssertTrue([item.value isEqualToString:@"7"]);
          XCTAssertEqual(1, item.actions.count);
          
          StatsItemAction *action = item.actions[0];
@@ -188,7 +185,7 @@
          StatsItem *item = items[0];
          XCTAssertTrue([item.itemID isEqualToNumber:@39806]);
          XCTAssertTrue([item.label isEqualToString:@"Home"]);
-         XCTAssertTrue([item.value isEqualToNumber:@2420]);
+         XCTAssertTrue([item.value isEqualToString:@"2420"]);
          XCTAssertEqual(1, item.actions.count);
          
          StatsItemAction *action = item.actions[0];
@@ -229,7 +226,7 @@
           */
          StatsItem *searchEnginesItem = items[0];
          XCTAssertNil(searchEnginesItem.itemID);
-         XCTAssertTrue([searchEnginesItem.value isEqualToNumber:@38]);
+         XCTAssertTrue([searchEnginesItem.value isEqualToString:@"38"]);
          XCTAssertTrue([searchEnginesItem.label isEqualToString:@"Search Engines"]);
          XCTAssertTrue([searchEnginesItem.iconURL.absoluteString isEqualToString:@"https://wordpress.com/i/stats/search-engine.png"]);
          XCTAssertEqual(0, searchEnginesItem.actions.count);
@@ -237,7 +234,7 @@
          
          StatsItem *googleSearchItem = searchEnginesItem.children.firstObject;
          XCTAssertNil(googleSearchItem.itemID);
-         XCTAssertTrue([googleSearchItem.value isEqualToNumber:@38]);
+         XCTAssertTrue([googleSearchItem.value isEqualToString:@"38"]);
          XCTAssertTrue([googleSearchItem.label isEqualToString:@"Google Search"]);
          XCTAssertTrue([googleSearchItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48"]);
          XCTAssertEqual(0, googleSearchItem.actions.count);
@@ -245,7 +242,7 @@
          
          StatsItem *googleDotComItem = googleSearchItem.children[0];
          XCTAssertNil(googleDotComItem.itemID);
-         XCTAssertTrue([googleDotComItem.value isEqualToNumber:@10]);
+         XCTAssertTrue([googleDotComItem.value isEqualToString:@"10"]);
          XCTAssertTrue([googleDotComItem.label isEqualToString:@"google.com"]);
          XCTAssertTrue([googleDotComItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48"]);
          XCTAssertEqual(1, googleDotComItem.actions.count);
@@ -262,7 +259,7 @@
           */
          StatsItem *flipBoardItem = items[3];
          XCTAssertNil(flipBoardItem.itemID);
-         XCTAssertTrue([flipBoardItem.value isEqualToNumber:@1]);
+         XCTAssertTrue([flipBoardItem.value isEqualToString:@"1"]);
          XCTAssertTrue([flipBoardItem.label isEqualToString:@"flipboard.com/redirect?url=http%3A%2F%2Fastralbodi.es%2F2014%2F08%2F06%2Fasynchronous-unit-testing-core-data-with-xcode-6%2F"]);
          XCTAssertNil(flipBoardItem.iconURL);
          XCTAssertEqual(1, flipBoardItem.actions.count);
@@ -309,7 +306,7 @@
           */
          StatsItem *searchEnginesItem = items[0];
          XCTAssertNil(searchEnginesItem.itemID);
-         XCTAssertTrue([searchEnginesItem.value isEqualToNumber:@480]);
+         XCTAssertTrue([searchEnginesItem.value isEqualToString:@"480"]);
          XCTAssertTrue([searchEnginesItem.label isEqualToString:@"Search Engines"]);
          XCTAssertTrue([searchEnginesItem.iconURL.absoluteString isEqualToString:@"https://wordpress.com/i/stats/search-engine.png"]);
          XCTAssertEqual(0, searchEnginesItem.actions.count);
@@ -317,7 +314,7 @@
          
          StatsItem *googleSearchItem = searchEnginesItem.children.firstObject;
          XCTAssertNil(googleSearchItem.itemID);
-         XCTAssertTrue([googleSearchItem.value isEqualToNumber:@461]);
+         XCTAssertTrue([googleSearchItem.value isEqualToString:@"461"]);
          XCTAssertTrue([googleSearchItem.label isEqualToString:@"Google Search"]);
          XCTAssertTrue([googleSearchItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48"]);
          XCTAssertEqual(0, googleSearchItem.actions.count);
@@ -325,7 +322,7 @@
          
          StatsItem *googleDotComItem = googleSearchItem.children[0];
          XCTAssertNil(googleDotComItem.itemID);
-         XCTAssertTrue([googleDotComItem.value isEqualToNumber:@176]);
+         XCTAssertTrue([googleDotComItem.value isEqualToString:@"176"]);
          XCTAssertTrue([googleDotComItem.label isEqualToString:@"google.com"]);
          XCTAssertTrue([googleDotComItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48"]);
          XCTAssertEqual(1, googleDotComItem.actions.count);
@@ -342,14 +339,14 @@
           */
          StatsItem *mattItem = items[6];
          XCTAssertNil(mattItem.itemID);
-         XCTAssertTrue([mattItem.value isEqualToNumber:@56]);
+         XCTAssertTrue([mattItem.value isEqualToString:@"56"]);
          XCTAssertTrue([mattItem.label isEqualToString:@"ma.tt"]);
          XCTAssertTrue([mattItem.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/733a27a6b983dd89d6dd64d0445a3e8e?s=48"]);
          XCTAssertEqual(0, mattItem.actions.count);
          XCTAssertEqual(11, mattItem.children.count);
          
          StatsItem *mattRootItem = mattItem.children[0];
-         XCTAssertTrue([mattRootItem.value isEqualToNumber:@34]);
+         XCTAssertTrue([mattRootItem.value isEqualToString:@"34"]);
          XCTAssertTrue([mattRootItem.label isEqualToString:@"ma.tt"]);
          XCTAssertNil(mattRootItem.iconURL);
          XCTAssertEqual(1, mattRootItem.actions.count);
@@ -394,7 +391,7 @@
          StatsItem *statsItem1 = items[0];
          XCTAssertTrue([statsItem1.label isEqualToString:@"astralbodies.net/blog/2013/10/31/paying-attention-at-automattic/"]);
          XCTAssertNil(statsItem1.iconURL);
-         XCTAssertTrue([@1 isEqualToNumber:statsItem1.value]);
+         XCTAssertTrue([@"1" isEqualToString:statsItem1.value]);
          XCTAssertEqual(1, statsItem1.actions.count);
          XCTAssertEqual(0, statsItem1.children.count);
          StatsItemAction *statsItemAction1 = statsItem1.actions[0];
@@ -406,7 +403,7 @@
          StatsItem *statsItem2 = items[1];
          XCTAssertTrue([statsItem2.label isEqualToString:@"devforums.apple.com/thread/86137"]);
          XCTAssertNil(statsItem2.iconURL);
-         XCTAssertTrue([@1 isEqualToNumber:statsItem2.value]);
+         XCTAssertTrue([@"1" isEqualToString:statsItem2.value]);
          XCTAssertEqual(1, statsItem2.actions.count);
          XCTAssertEqual(0, statsItem2.children.count);
          StatsItemAction *statsItemAction2 = statsItem2.actions[0];
@@ -447,7 +444,7 @@
          StatsItem *statsItem1 = items[0];
          XCTAssertTrue([statsItem1.label isEqualToString:@"wp.com"]);
          XCTAssertNil(statsItem1.iconURL);
-         XCTAssertTrue([@3 isEqualToNumber:statsItem1.value]);
+         XCTAssertTrue([@"3" isEqualToString:statsItem1.value]);
          XCTAssertEqual(1, statsItem1.actions.count);
          XCTAssertEqual(0, statsItem1.children.count);
          StatsItemAction *statsItemAction1 = statsItem1.actions[0];
@@ -459,14 +456,14 @@
          StatsItem *statsItem2 = items[1];
          XCTAssertTrue([statsItem2.label isEqualToString:@"blog.wordpress.tv"]);
          XCTAssertNil(statsItem2.iconURL);
-         XCTAssertTrue([@2 isEqualToNumber:statsItem2.value]);
+         XCTAssertTrue([@"2" isEqualToString:statsItem2.value]);
          XCTAssertEqual(0, statsItem2.actions.count);
          XCTAssertEqual(2, statsItem2.children.count);
          
          StatsItem *child1 = statsItem2.children[0];
          XCTAssertTrue([child1.label isEqualToString:@"blog.wordpress.tv/2014/10/03/build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/"]);
          XCTAssertNil(child1.iconURL);
-         XCTAssertTrue([@1 isEqualToNumber:child1.value]);
+         XCTAssertTrue([@"1" isEqualToString:child1.value]);
          XCTAssertEqual(1, child1.actions.count);
          XCTAssertEqual(0, child1.children.count);
          
@@ -507,7 +504,7 @@
          
          StatsItem *item = items[0];
          XCTAssertTrue([item.label isEqualToString:@"United States"]);
-         XCTAssertTrue([@23 isEqualToNumber:item.value]);
+         XCTAssertTrue([@"23" isEqualToString:item.value]);
          XCTAssertNil(item.itemID);
          XCTAssertTrue([item.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48"]);
          XCTAssertEqual(0, item.actions.count);

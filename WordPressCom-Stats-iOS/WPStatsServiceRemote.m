@@ -1,4 +1,4 @@
-#import "WPStatsServiceV2Remote.h"
+#import "WPStatsServiceRemote.h"
 #import "NSObject+SafeExpectations.h"
 #import "NSDictionary+SafeExpectations.h"
 #import <AFNetworking/AFNetworking.h>
@@ -8,7 +8,7 @@
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
-@interface WPStatsServiceV2Remote ()
+@interface WPStatsServiceRemote ()
 
 @property (nonatomic, copy)     NSString                        *oauth2Token;
 @property (nonatomic, strong)   NSNumber                        *siteId;
@@ -19,7 +19,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 @end
 
-@implementation WPStatsServiceV2Remote {
+@implementation WPStatsServiceRemote {
     
 }
 

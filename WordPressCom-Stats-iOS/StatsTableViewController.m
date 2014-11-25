@@ -1,6 +1,6 @@
 #import "StatsTableViewController.h"
 #import "WPStatsGraphViewController.h"
-#import "WPStatsServiceV2.h"
+#import "WPStatsService.h"
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsGroup+View.h"
@@ -29,7 +29,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 @property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
-@property (nonatomic, strong) WPStatsServiceV2 *statsService;
+@property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
 @property (nonatomic, assign) StatsSummaryType selectedSummaryType;
 @property (nonatomic, strong) NSDate *selectedDate;
@@ -68,7 +68,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     [super viewDidAppear:animated];
     
-    self.statsService = [[WPStatsServiceV2 alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
+    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
 
     [self.statsService retrieveAllStatsForDates:@[]
                                         andUnit:self.selectedPeriodUnit

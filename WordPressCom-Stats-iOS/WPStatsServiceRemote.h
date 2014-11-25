@@ -6,7 +6,7 @@ typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews);
 
-@interface WPStatsServiceV2Remote : NSObject
+@interface WPStatsServiceRemote : NSObject
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone;
 
