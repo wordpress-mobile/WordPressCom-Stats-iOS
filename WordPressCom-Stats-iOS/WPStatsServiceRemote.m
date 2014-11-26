@@ -99,7 +99,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             
         }
         if (tagsCategoriesCompletion) {
-            
+            [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion failureHandler:nil]];
         }
         if (followersCompletion) {
             
@@ -646,9 +646,57 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                         withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                                                failureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO :: Implement
-    return nil;
-}
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSArray *tagGroups = responseDict[@"tags"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *tagGroup in tagGroups) {
+            NSArray *tags = [tagGroup arrayForKey:@"tags"];
+            
+            if (tags.count == 1) {
+                NSDictionary *theTag = tags[0];
+                StatsItem *statsItem = [StatsItem new];
+                statsItem.label = [theTag stringForKey:@"name"];
+                statsItem.value = [tagGroup stringForKey:@"views"];
+                [items addObject:statsItem];
+            } else {
+                NSMutableString *tagLabel = [NSMutableString new];
+                
+                NSMutableArray *childStatsItems = [NSMutableArray new];
+                for (NSDictionary *subTag in tags) {
+                    
+                    StatsItem *childItem = [StatsItem new];
+                    childItem.label = [subTag stringForKey:@"name"];
+                    
+                    [tagLabel appendFormat:@"%@ ", childItem.label];
+                    
+                    [childStatsItems addObject:childItem];
+                }
+                
+                StatsItem *statsItem = [StatsItem new];
+                statsItem.label = tagLabel;
+                statsItem.value = [tagGroup stringForKey:@"views"];
+                statsItem.children = childStatsItems;
+                
+                [items addObject:statsItem];
+            }
+        }
+        
+        if (completionHandler) {
+            completionHandler(items, nil, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;}
 
 
 - (AFHTTPRequestOperation *)operationForFollowersForDate:(NSDate *)date
