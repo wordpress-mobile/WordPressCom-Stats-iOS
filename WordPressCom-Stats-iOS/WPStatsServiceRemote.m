@@ -645,7 +645,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
-        NSArray *tagGroups = [responseDict dictionaryForKey:@"tags"];
+        NSArray *tagGroups = [responseDict arrayForKey:@"tags"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *tagGroup in tagGroups) {
