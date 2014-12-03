@@ -17,8 +17,7 @@ typedef void (^StatsItemsCompletion)(StatsGroup *group);
 
 - (void)retrieveAllStatsForDates:(NSArray *)dates
                          andUnit:(StatsPeriodUnit)unit
-    withSummaryCompletionHandler:(StatsSummaryCompletion)summaryCompletion
-         visitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
+     withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
           postsCompletionHandler:(StatsItemsCompletion)postsCompletion
       referrersCompletionHandler:(StatsItemsCompletion)referrersCompletion
          clicksCompletionHandler:(StatsItemsCompletion)clicksCompletion

@@ -26,8 +26,7 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews,
  */
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
-   withSummaryCompletionHandler:(StatsRemoteSummaryCompletion)summaryCompletion
-        visitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion

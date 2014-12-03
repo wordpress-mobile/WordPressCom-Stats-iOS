@@ -54,8 +54,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
-   withSummaryCompletionHandler:(StatsRemoteSummaryCompletion)summaryCompletion
-        visitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
@@ -68,13 +67,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO - Implement videos, comments, tags, followers and publicize endpoints
+    // TODO - Implement comments, and followers endpoints
     
     NSMutableArray *mutableOperations = [NSMutableArray new];
-    
-    if (summaryCompletion) {
-        [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:summaryCompletion failureHandler:nil]];
-    }
     
     for (NSDate *date in dates) {
         if (visitsCompletion) {
@@ -110,7 +105,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
-        
+        DDLogVerbose(@"Finished remote operations %@ of %@", @(numberOfFinishedOperations), @(totalNumberOfOperations));
     } completionBlock:^(NSArray *operations) {
         if (completionHandler) {
             completionHandler();
@@ -262,7 +257,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
         StatsSummary *statsSummary = [StatsSummary new];
         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
-        statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"]];
+        statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
         statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
         statsSummary.views = statsSummaryDict[@"views"];
         statsSummary.visitors = statsSummaryDict[@"visitors"];
@@ -292,8 +287,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *statsVisitsDict = (NSDictionary *)responseObject;
         
         StatsVisits *statsVisits = [StatsVisits new];
-        statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"]];
-        //        statsVisits.unit = unit;
+        statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"] withPeriodUnit:unit];
         
         NSArray *fields = (NSArray *)statsVisitsDict[@"fields"];
         
@@ -307,7 +301,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSArray *period in statsVisitsDict[@"data"]) {
             StatsSummary *periodSummary = [StatsSummary new];
             periodSummary.periodUnit = unit;
-            periodSummary.date = [self deviceLocalDateForString:period[periodIndex]];
+            periodSummary.date = [self deviceLocalDateForString:period[periodIndex] withPeriodUnit:unit];
             periodSummary.label = [self nicePointNameForDate:periodSummary.date forStatsPeriodUnit:periodSummary.periodUnit];
             periodSummary.views = period[viewsIndex];
             periodSummary.visitors = period[visitorsIndex];
@@ -326,7 +320,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     // TODO :: Abstract this out to the local service
     NSNumber *quantity = IS_IPAD ? @12 : @7;
     NSDictionary *parameters = @{@"quantity" : quantity,
-                                 @"unit"     : [self stringForPeriodUnit:unit]};
+                                 @"unit"     : [self stringForPeriodUnit:unit],
+                                 @"date"     : [self siteLocalStringForDate:date]};
+
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
                                                                  parameters:parameters
                                                                     success:handler
@@ -343,8 +339,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
-        NSDictionary *days = statsPostsDict[@"days"];
-        NSDictionary *postViewsDict = [days allValues][0][@"postviews"];
+        NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
+        NSDictionary *postViewsDict = [[days allValues][0] dictionaryForKey:@"postviews"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
@@ -388,8 +384,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
-        NSDictionary *days = referrersDict[@"days"];
-        NSDictionary *groupsDict = [days allValues][0][@"groups"];
+        NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
+        NSDictionary *groupsDict = [[days allValues][0] dictionaryForKey:@"groups"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
@@ -481,8 +477,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
-        NSDictionary *days = referrersDict[@"days"];
-        NSDictionary *clicksDict = [days allValues][0][@"clicks"];
+        NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
+        NSDictionary *clicksDict = [[days allValues][0] dictionaryForKey:@"clicks"];
         NSNumber *totalClicks = [days allValues][0][@"total_clicks"];
         NSNumber *otherClicks = [days allValues][0][@"other_clicks"];
         NSMutableArray *items = [NSMutableArray new];
@@ -551,7 +547,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
-        NSDictionary *viewsDict = [days allValues][0][@"views"];
+        NSDictionary *viewsDict = [[days allValues][0] dictionaryForKey:@"views"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
@@ -592,7 +588,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *videosDict = (NSDictionary *)responseObject;
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
-        NSDictionary *playsDict = [days allValues][0][@"plays"];
+        NSDictionary *playsDict = [[days allValues][0] dictionaryForKey:@"plays"];
         NSNumber *totalPlays = [days allValues][0][@"total_plays"];
         NSNumber *otherPlays = [days allValues][0][@"other_plays"];
         NSMutableArray *items = [NSMutableArray new];
@@ -649,7 +645,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
-        NSArray *tagGroups = responseDict[@"tags"];
+        NSArray *tagGroups = [responseDict dictionaryForKey:@"tags"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *tagGroup in tagGroups) {
@@ -704,8 +700,39 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                    withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                                           failureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO :: Implement
-    return nil;
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *response = (NSDictionary *)responseObject;
+        
+        NSArray *subscribers = [response arrayForKey:@"subscribers"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.dateFormat = @"yyyy-mm-dd hh:mi:ss";
+        
+        for (NSDictionary *subscriber in subscribers) {
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.label = [subscriber stringForKey:@"label"];
+            statsItem.date = [self deviceLocalDateForString:[subscriber stringForKey:@"date_subscribed"] withPeriodUnit:unit];
+        }
+        
+        if (completionHandler) {
+            completionHandler(items, nil, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"type"   : @"wpcom",
+                                 @"max"    : @7};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    
+    return operation;
 }
 
 
@@ -875,8 +902,30 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 #pragma mark - Private convenience methods for data conversion
 
 
-- (NSDate *)deviceLocalDateForString:(NSString *)dateString
+- (NSDate *)deviceLocalDateForString:(NSString *)dateString withPeriodUnit:(StatsPeriodUnit)unit
 {
+    switch (unit) {
+        case StatsPeriodUnitDay:
+        {
+            self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
+            break;
+        }
+        case StatsPeriodUnitWeek:
+        {
+            // Assumes format: yyyyWxxWxx first xx is month, second xx is first day of that week
+            self.deviceDateFormatter.dateFormat = @"yyyy'W'MM'W'dd";
+            break;
+        }
+        case StatsPeriodUnitMonth:
+        {
+            self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
+            break;
+        }
+        case StatsPeriodUnitYear:
+            
+            break;
+    }
+    
     NSDate *localDate = [self.deviceDateFormatter dateFromString:dateString];
     
     return localDate;

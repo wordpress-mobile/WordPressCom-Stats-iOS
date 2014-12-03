@@ -37,8 +37,7 @@
 
 - (void)retrieveAllStatsForDates:(NSArray *)dates
                          andUnit:(StatsPeriodUnit)unit
-    withSummaryCompletionHandler:(StatsSummaryCompletion)summaryCompletion
-         visitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
+     withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
           postsCompletionHandler:(StatsItemsCompletion)postsCompletion
       referrersCompletionHandler:(StatsItemsCompletion)referrersCompletion
          clicksCompletionHandler:(StatsItemsCompletion)clicksCompletion
@@ -63,13 +62,6 @@
         }
     };
 
-    NSDate *today = [NSDate date];
-    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-    [dateComponents setDay:-1];
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDate *yesterday = [calendar dateByAddingComponents:dateComponents toDate:today options:0];
-
-    __block StatsSummary *summaryResult = nil;
     __block StatsVisits *visitsResult = nil;
     __block StatsGroup *postsResult = [StatsGroup new];
     __block StatsGroup *referrersResult = [StatsGroup new];
@@ -81,13 +73,9 @@
     __block StatsGroup *followersResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
-    [self.remote batchFetchStatsForDates:@[today]
-                                 andUnit:StatsPeriodUnitDay
-            withSummaryCompletionHandler:^(StatsSummary *summary)
-    {
-        summaryResult = summary;
-    }
-                 visitsCompletionHandler:^(StatsVisits *visits)
+    [self.remote batchFetchStatsForDates:dates
+                                 andUnit:unit
+             withVisitsCompletionHandler:^(StatsVisits *visits)
     {
         visitsResult = visits;
         
