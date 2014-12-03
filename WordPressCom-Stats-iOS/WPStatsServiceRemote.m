@@ -340,12 +340,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
-        NSDictionary *postViewsDict = [[days allValues][0] dictionaryForKey:@"postviews"];
+        NSArray *postViews = [[days allValues][0] arrayForKey:@"postviews"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *post in postViewsDict) {
+        for (NSDictionary *post in postViews) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
             statsItem.value = [post stringForKey:@"views"];
@@ -385,12 +385,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
-        NSDictionary *groupsDict = [[days allValues][0] dictionaryForKey:@"groups"];
+        NSArray *groups = [[days allValues][0] arrayForKey:@"groups"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *group in groupsDict) {
+        for (NSDictionary *group in groups) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [group stringForKey:@"name"];
             statsItem.value = [group stringForKey:@"total"];
@@ -478,12 +478,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
-        NSDictionary *clicksDict = [[days allValues][0] dictionaryForKey:@"clicks"];
+        NSArray *clicks = [[days allValues][0] arrayForKey:@"clicks"];
         NSNumber *totalClicks = [days allValues][0][@"total_clicks"];
         NSNumber *otherClicks = [days allValues][0][@"other_clicks"];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *click in clicksDict) {
+        for (NSDictionary *click in clicks) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [click stringForKey:@"name"];
             statsItem.value = [click stringForKey:@"views"];
@@ -547,12 +547,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
-        NSDictionary *viewsDict = [[days allValues][0] dictionaryForKey:@"views"];
+        NSArray *views = [[days allValues][0] arrayForKey:@"views"];
         NSNumber *totalViews = [days allValues][0][@"total_views"];
         NSNumber *otherViews = [days allValues][0][@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *view in viewsDict) {
+        for (NSDictionary *view in views) {
             NSString *key = [view stringForKey:@"country_code"];
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
