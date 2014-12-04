@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		824C73F5FB3142F9969C52C6 /* libPods-StatsDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05826AF01C0545FBBAB74708 /* libPods-StatsDemo.a */; };
-		932942F91A30AD5100E88016 /* StatsDemo-Internal.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 932942F81A30AD5100E88016 /* StatsDemo-Internal.entitlements */; };
 		932942FC1A30B1A500E88016 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		93B682D5194F95AD00EBF6DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B682D4194F95AD00EBF6DF /* Foundation.framework */; };
 		93B682D7194F95AD00EBF6DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B682D6194F95AD00EBF6DF /* CoreGraphics.framework */; };
@@ -26,11 +25,8 @@
 		05826AF01C0545FBBAB74708 /* libPods-StatsDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StatsDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A6AFB7A3C8C805CA1F7AE4E /* Pods-StatsDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StatsDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-StatsDemo/Pods-StatsDemo.release.xcconfig"; sourceTree = "<group>"; };
 		674037800AE73EFB6568F92A /* Pods-StatsDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StatsDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StatsDemo/Pods-StatsDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		932942F61A30A2B700E88016 /* StatsDemo-Internal-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "StatsDemo-Internal-Info.plist"; sourceTree = "<group>"; };
-		932942F81A30AD5100E88016 /* StatsDemo-Internal.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "StatsDemo-Internal.entitlements"; sourceTree = "<group>"; };
 		932942FA1A30B1A500E88016 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
-		932942FD1A30B6F800E88016 /* StatsDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StatsDemo.entitlements; sourceTree = "<group>"; };
 		93B682D1194F95AD00EBF6DF /* StatsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B682D4194F95AD00EBF6DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		93B682D6194F95AD00EBF6DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -97,7 +93,6 @@
 		93B682DA194F95AD00EBF6DF /* StatsDemo */ = {
 			isa = PBXGroup;
 			children = (
-				932942FD1A30B6F800E88016 /* StatsDemo.entitlements */,
 				93B682EF194F95AD00EBF6DF /* Images.xcassets */,
 				93B682E9194F95AD00EBF6DF /* Main_iPad.storyboard */,
 				93B682E6194F95AD00EBF6DF /* Main_iPhone.storyboard */,
@@ -116,9 +111,7 @@
 		93B682DB194F95AD00EBF6DF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				932942F81A30AD5100E88016 /* StatsDemo-Internal.entitlements */,
 				93B682DC194F95AD00EBF6DF /* StatsDemo-Info.plist */,
-				932942F61A30A2B700E88016 /* StatsDemo-Internal-Info.plist */,
 				93B682DD194F95AD00EBF6DF /* InfoPlist.strings */,
 				93B682E0194F95AD00EBF6DF /* main.m */,
 				93B682E2194F95AD00EBF6DF /* StatsDemo-Prefix.pch */,
@@ -175,13 +168,12 @@
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
 					93B682D0194F95AD00EBF6DF = {
-						DevelopmentTeam = 99KV9Z6BKV;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -214,7 +206,6 @@
 				93B682F0194F95AD00EBF6DF /* Images.xcassets in Resources */,
 				93B682E8194F95AD00EBF6DF /* Main_iPhone.storyboard in Resources */,
 				93B682DF194F95AD00EBF6DF /* InfoPlist.strings in Resources */,
-				932942F91A30AD5100E88016 /* StatsDemo-Internal.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
