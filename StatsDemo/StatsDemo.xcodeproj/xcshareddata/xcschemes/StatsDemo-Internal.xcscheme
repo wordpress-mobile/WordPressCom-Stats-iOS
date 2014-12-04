@@ -7,6 +7,20 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "93B682D0194F95AD00EBF6DF"
+               BuildableName = "StatsDemo.app"
+               BlueprintName = "StatsDemo"
+               ReferencedContainer = "container:StatsDemo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
@@ -14,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "93B682D0194F95AD00EBF6DF"
-               BuildableName = "StatsDemo.app"
-               BlueprintName = "StatsDemo"
+               BlueprintIdentifier = "932943151A30C15100E88016"
+               BuildableName = "StatsDemo-Internal.app"
+               BlueprintName = "StatsDemo-Internal"
                ReferencedContainer = "container:StatsDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +46,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "93B682D0194F95AD00EBF6DF"
-            BuildableName = "StatsDemo.app"
-            BlueprintName = "StatsDemo"
+            BlueprintIdentifier = "932943151A30C15100E88016"
+            BuildableName = "StatsDemo-Internal.app"
+            BlueprintName = "StatsDemo-Internal"
             ReferencedContainer = "container:StatsDemo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,9 +65,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "93B682D0194F95AD00EBF6DF"
-            BuildableName = "StatsDemo.app"
-            BlueprintName = "StatsDemo"
+            BlueprintIdentifier = "932943151A30C15100E88016"
+            BuildableName = "StatsDemo-Internal.app"
+            BlueprintName = "StatsDemo-Internal"
             ReferencedContainer = "container:StatsDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -69,9 +83,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "93B682D0194F95AD00EBF6DF"
-            BuildableName = "StatsDemo.app"
-            BlueprintName = "StatsDemo"
+            BlueprintIdentifier = "932943151A30C15100E88016"
+            BuildableName = "StatsDemo-Internal.app"
+            BlueprintName = "StatsDemo-Internal"
             ReferencedContainer = "container:StatsDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -80,7 +94,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
