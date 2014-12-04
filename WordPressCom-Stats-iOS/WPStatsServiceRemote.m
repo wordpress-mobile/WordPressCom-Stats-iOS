@@ -340,9 +340,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
-        NSArray *postViews = [[days allValues][0] arrayForKey:@"postviews"];
-        NSNumber *totalViews = [days allValues][0][@"total_views"];
-        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        id firstKey = [days allKeys][0];
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *postViews = [firstDay arrayForKey:@"postviews"];
+        NSNumber *totalViews = firstDay[@"total_views"];
+        NSNumber *otherViews = firstDay[@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *post in postViews) {
