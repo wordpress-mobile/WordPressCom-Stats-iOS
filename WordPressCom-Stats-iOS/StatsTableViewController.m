@@ -35,6 +35,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
 @property (nonatomic, assign) StatsSummaryType selectedSummaryType;
 @property (nonatomic, strong) NSDate *selectedDate;
 
+@property (assign, getter=isSyncing) BOOL syncing;
+
 @end
 
 @implementation StatsTableViewController
@@ -89,47 +91,51 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     StatsSection statsSection = (StatsSection)[self.sections[section] integerValue];
+    id data = self.sectionData[@(statsSection)];
+    
     switch (statsSection) {
         case StatsSectionPeriodSelector:
             return 1;
-        case StatsSectionGraph:
-            return 5;
+        case StatsSectionGraph: {
+            BOOL hasData = data != nil;
+            return hasData ? 5 : 1;
+        }
         case StatsSectionPosts: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionPosts)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         case StatsSectionReferrers: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionReferrers)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         case StatsSectionClicks: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionClicks)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         case StatsSectionCountry: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionCountry)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         case StatsSectionVideos: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionVideos)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         // TODO: Comments by Authors and Posts & Pages
         case StatsSectionComments: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionComments)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 3 + count;
         }
         case StatsSectionTagsCategories: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionTagsCategories)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         // TODO: Followers by WordPress.com and Email
         case StatsSectionFollowers: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionFollowers)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
         case StatsSectionPublicize: {
-            NSUInteger count = ((StatsGroup *)self.sectionData[@(StatsSectionPublicize)]).items.count;
+            NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
     }
@@ -244,6 +250,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
     
+    if (self.isSyncing) {
+        control.selectedSegmentIndex = self.selectedPeriodUnit;
+        return;
+    }
+    
     self.selectedPeriodUnit = unit;
     [self.sectionData removeAllObjects];
     [self.tableView reloadData];
@@ -253,6 +264,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
+    self.syncing = YES;
+    
     [self.statsService retrieveAllStatsForDates:@[self.selectedDate]
                                         andUnit:self.selectedPeriodUnit
                     withVisitsCompletionHandler:^(StatsVisits *visits)
@@ -385,11 +398,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
      }
                     andOverallCompletionHandler:^
      {
-         
+         self.syncing = NO;
      }
                           overallFailureHandler:^(NSError *error)
      {
-         
+         DDLogError(@"Error when syncing: %@", error);
      }];
 }
 
@@ -408,7 +421,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
         case StatsSectionGraph: {
             switch (indexPath.row) {
                 case 0:
-                    identifier = @"GraphRow";
+                    if (self.sectionData[@(statsSection)] != nil) {
+                        identifier = @"GraphRow";
+                    } else {
+                        identifier = @"NoResultsRow";
+                    }
                     break;
                     
                 default:
@@ -513,12 +530,16 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)configureSectionGraphCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
+    // Find the selected summary
+    StatsVisits *visits = self.sectionData[@(StatsSectionGraph)];
+    if (!visits) {
+        return;
+    }
+
     UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
     UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
     UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
 
-    // Find the selected summary
-    StatsVisits *visits = self.sectionData[@(StatsSectionGraph)];
     StatsSummary *summary;
     for (StatsSummary *s in visits.statsData) {
         if ([s.date isEqualToDate:self.selectedDate]) {
