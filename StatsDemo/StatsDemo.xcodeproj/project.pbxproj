@@ -41,6 +41,7 @@
 		932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		9329432A1A30C15100E88016 /* StatsDemo-Internal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StatsDemo-Internal.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9329432B1A30C15100E88016 /* StatsDemo-Internal-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "StatsDemo-Internal-Info.plist"; path = "/Users/aaron/src/WordPressCom-Stats-iOS/StatsDemo/StatsDemo-Internal-Info.plist"; sourceTree = "<absolute>"; };
+		9329432C1A30C23800E88016 /* StatsDemo-Internal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "StatsDemo-Internal.entitlements"; sourceTree = "<group>"; };
 		93B682D1194F95AD00EBF6DF /* StatsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B682D4194F95AD00EBF6DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		93B682D6194F95AD00EBF6DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -88,6 +89,7 @@
 		93B682C8194F95AD00EBF6DF = {
 			isa = PBXGroup;
 			children = (
+				9329432C1A30C23800E88016 /* StatsDemo-Internal.entitlements */,
 				93B682DA194F95AD00EBF6DF /* StatsDemo */,
 				93B682D3194F95AD00EBF6DF /* Frameworks */,
 				93B682D2194F95AD00EBF6DF /* Products */,
@@ -213,6 +215,17 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
+					932943151A30C15100E88016 = {
+						DevelopmentTeam = 99KV9Z6BKV;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
 					93B682D0194F95AD00EBF6DF = {
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -391,6 +404,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = "StatsDemo-Internal.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -408,6 +422,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = "StatsDemo-Internal.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
