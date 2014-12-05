@@ -10,8 +10,13 @@
 #import <DDLog.h>
 #import "DDTTYLogger.h"
 #import "DDASLLogger.h"
+#import <HockeySDK/HockeySDK.h>
 
 int ddLogLevel = LOG_LEVEL_VERBOSE;
+
+@interface WPSAppDelegate () <BITHockeyManagerDelegate>
+
+@end
 
 @implementation WPSAppDelegate
 
@@ -21,6 +26,13 @@ int ddLogLevel = LOG_LEVEL_VERBOSE;
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
 
+#ifndef DEBUG
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"070b75fd7cb3b4f5068c9d59d7052ec4"];
+    [[BITHockeyManager sharedHockeyManager].authenticator setIdentificationType:BITAuthenticatorIdentificationTypeDevice];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+#endif
+    
     return YES;
 }
 							
@@ -51,4 +63,16 @@ int ddLogLevel = LOG_LEVEL_VERBOSE;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    BOOL returnValue = NO;
+    
+    if ([[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
+                                                          sourceApplication:sourceApplication
+                                                                 annotation:annotation]) {
+        returnValue = YES;
+    }
+
+    return NO;
+}
 @end
