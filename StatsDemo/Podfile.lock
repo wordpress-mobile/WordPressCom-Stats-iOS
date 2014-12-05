@@ -36,7 +36,7 @@ PODS:
     - DTFoundation/Core
   - DTFoundation/UIKit (1.7.3):
     - DTFoundation/Core
-  - Fingertips (0.3.0)
+  - HockeySDK (3.6.2)
   - NSObject-SafeExpectations (0.0.2)
   - WordPress-iOS-Shared (0.1.4):
     - AFNetworking (~> 2.3.1)
@@ -51,7 +51,7 @@ PODS:
     - WordPressCom-Analytics-iOS
 
 DEPENDENCIES:
-  - Fingertips
+  - HockeySDK
   - WordPressCom-Stats-iOS (from `../`)
 
 EXTERNAL SOURCES:
@@ -63,7 +63,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   DTCoreText: 84eb8ba2e70448fdd9d837540e371f9f587b65ba
   DTFoundation: 360bc65ab44f588611f47324b8cfb0f18e04b263
-  Fingertips: 09d223a390349b317a51d4c941d778bdb661c4e1
+  HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
   NSObject-SafeExpectations: c31276ef7209016849fc4e5c8ed5ae5453e1e208
   WordPress-iOS-Shared: cb00b5b2530e5b581d34926ac6966b7ec476a93a
   WordPressCom-Analytics-iOS: 93ca6c432c7015f26f1361482ba1e2b839a8b222

@@ -174,6 +174,10 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+        if (self.isSyncing) {
+            return nil;
+        }
+        
         for (NSIndexPath *selectedIndexPath in [tableView indexPathsForSelectedRows]) {
             [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
         }

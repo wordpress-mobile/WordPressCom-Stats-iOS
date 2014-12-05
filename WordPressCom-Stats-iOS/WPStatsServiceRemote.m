@@ -340,11 +340,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
-        id firstKey = [days allKeys][0];
+        id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *postViews = [firstDay arrayForKey:@"postviews"];
-        NSNumber *totalViews = firstDay[@"total_views"];
-        NSNumber *otherViews = firstDay[@"other_views"];
+        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
+        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *post in postViews) {
@@ -387,9 +387,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
-        NSArray *groups = [[days allValues][0] arrayForKey:@"groups"];
-        NSNumber *totalViews = [days allValues][0][@"total_views"];
-        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *groups = [firstDay arrayForKey:@"groups"];
+        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
+        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *group in groups) {
@@ -480,9 +482,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *referrersDict = (NSDictionary *)responseObject;
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
-        NSArray *clicks = [[days allValues][0] arrayForKey:@"clicks"];
-        NSNumber *totalClicks = [days allValues][0][@"total_clicks"];
-        NSNumber *otherClicks = [days allValues][0][@"other_clicks"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *clicks = [firstDay arrayForKey:@"clicks"];
+        NSNumber *totalClicks = [firstDay numberForKey:@"total_clicks"];
+        NSNumber *otherClicks = [firstDay numberForKey:@"other_clicks"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *click in clicks) {
@@ -548,10 +552,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
-        NSArray *views = [[days allValues][0] arrayForKey:@"views"];
-        NSNumber *totalViews = [days allValues][0][@"total_views"];
-        NSNumber *otherViews = [days allValues][0][@"other_views"];
+        NSArray *views = [firstDay arrayForKey:@"views"];
+        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
+        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *view in views) {
@@ -590,9 +596,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     {
         NSDictionary *videosDict = (NSDictionary *)responseObject;
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
-        NSDictionary *playsDict = [[days allValues][0] dictionaryForKey:@"plays"];
-        NSNumber *totalPlays = [days allValues][0][@"total_plays"];
-        NSNumber *otherPlays = [days allValues][0][@"other_plays"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSDictionary *playsDict = [firstDay dictionaryForKey:@"plays"];
+        NSNumber *totalPlays = [firstDay numberForKey:@"total_plays"];
+        NSNumber *otherPlays = [firstDay numberForKey:@"other_plays"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *play in playsDict) {
