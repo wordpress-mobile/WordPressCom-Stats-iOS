@@ -165,8 +165,15 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fhY-TT-0EH" id="Dnr-8L-jIZ">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="300" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p4X-m5-Nld">
+                                            <rect key="frame" x="15" y="12" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="LE8-1h-7xY"/>
+                                                <constraint firstAttribute="width" constant="20" id="Or5-mw-k16"/>
+                                            </constraints>
+                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
-                                            <rect key="frame" x="15" y="11" width="516" height="21"/>
+                                            <rect key="frame" x="43" y="11" width="488" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -182,9 +189,17 @@
                                         <constraint firstAttribute="centerY" secondItem="GAp-0f-HXa" secondAttribute="centerY" id="ERR-TL-htO"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Rwp-nF-8c1" secondAttribute="trailing" constant="8" id="Gsf-dz-QkE"/>
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
+                                        <constraint firstAttribute="centerY" secondItem="p4X-m5-Nld" secondAttribute="centerY" id="XTA-mJ-ta4"/>
+                                        <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="7" id="XsQ-gt-qaQ"/>
+                                        <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="p4X-m5-Nld" secondAttribute="trailing" constant="8" id="jMx-Mh-VzX"/>
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="baseline" secondItem="GAp-0f-HXa" secondAttribute="baseline" id="mna-l6-qeG"/>
-                                        <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="7" id="ruy-hl-1yf"/>
+                                        <constraint firstItem="p4X-m5-Nld" firstAttribute="top" secondItem="Dnr-8L-jIZ" secondAttribute="topMargin" constant="-8" id="oGv-TS-QBX"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="oGv-TS-QBX"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GraphRow" rowHeight="175" id="SNT-we-G8r" userLabel="GraphRow">
@@ -226,10 +241,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Stats" id="nMk-Tg-nmQ"/>
+                    <nil key="simulatedTopBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7L-pU-m4M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2055" y="91"/>
+            <point key="canvasLocation" x="1920" y="102"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2Kt-k2-d36">

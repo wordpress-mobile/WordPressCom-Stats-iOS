@@ -7,6 +7,7 @@
 #import "StatsItem+View.h"
 #import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
+#import <WPImageSource.h>
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionPeriodSelector,
@@ -623,7 +624,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -643,7 +644,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -663,7 +664,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -683,7 +684,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -703,8 +704,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
-    }    
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
+    }
 }
 
 - (void)configureSectionCommentsCell:(UITableViewCell *)cell forRow:(NSInteger)row
@@ -722,7 +723,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -742,7 +743,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -764,7 +765,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Since", @"")];
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -784,7 +785,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // No data
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label andRightText:item.value];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
 }
@@ -804,13 +805,50 @@ static CGFloat const kNoResultsHeight = 100.0f;
     label2.text = rightText;
 }
 
-- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText andRightText:(NSString *)rightText
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+    
+    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
+    imageView.image = nil;
+    NSLayoutConstraint *widthConstraint;
+    NSLayoutConstraint *spaceConstraint;
+    
+    for (NSLayoutConstraint *constraint in imageView.constraints) {
+        if (constraint.firstAttribute == NSLayoutAttributeWidth) {
+            widthConstraint = constraint;
+            break;
+        }
+    }
+    
+    for (NSLayoutConstraint *constraint in cell.contentView.constraints) {
+        if (constraint.firstItem == label1 && constraint.secondItem == imageView && constraint.firstAttribute == NSLayoutAttributeLeading) {
+            spaceConstraint = constraint;
+            break;
+        }
+    }
+
+    // Hide the image if one isn't set
+    if (imageURL) {
+        widthConstraint.constant = 20.0f;
+        spaceConstraint.constant = 8.0f;
+        
+        [[WPImageSource sharedSource] downloadImageForURL:imageURL withSuccess:^(UIImage *image) {
+            imageView.image = image;
+            imageView.backgroundColor = [UIColor clearColor];
+        } failure:^(NSError *error) {
+            DDLogWarn(@"Unable to download icon %@", error);
+        }];
+    } else {
+        widthConstraint.constant = 0.0f;
+        spaceConstraint.constant = 0.0f;
+    }
+
+    [cell setNeedsLayout];
 }
 
 - (NSUInteger)numberOfRowsForStatsGroup:(StatsGroup *)group
