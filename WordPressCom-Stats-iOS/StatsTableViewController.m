@@ -49,6 +49,10 @@ static CGFloat const kNoResultsHeight = 100.0f;
     [WPFontManager openSansBoldFontOfSize:1.0f];
     [WPFontManager openSansRegularFontOfSize:1.0f];
 
+    UIRefreshControl *refreshControl = [UIRefreshControl new];
+    [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    
     self.sections = @[ @(StatsSectionPeriodSelector),
                        @(StatsSectionGraph),
                        @(StatsSectionPosts),
@@ -251,6 +255,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 #pragma mark - Stats retrieval methods
 
+- (IBAction)refreshCurrentStats:(id)sender
+{
+    [self retrieveStatsSkipGraph:NO];
+}
+
 - (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
 {
     StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
@@ -404,6 +413,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     andOverallCompletionHandler:^
      {
          self.syncing = NO;
+         [self.refreshControl endRefreshing];
      }
                           overallFailureHandler:^(NSError *error)
      {
