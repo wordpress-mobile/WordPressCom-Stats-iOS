@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.3.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.3.1)
+    - AFNetworking/NSURLSession (= 2.3.1)
+    - AFNetworking/Reachability (= 2.3.1)
+    - AFNetworking/Security (= 2.3.1)
+    - AFNetworking/Serialization (= 2.3.1)
+    - AFNetworking/UIKit (= 2.3.1)
   - AFNetworking/NSURLConnection (2.3.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -21,7 +21,7 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -43,7 +43,7 @@ PODS:
     - AFNetworking (~> 2.3.1)
     - CocoaLumberjack (~> 1.9)
     - DTCoreText (= 1.6.13)
-  - WordPressCom-Analytics-iOS (0.0.4)
+  - WordPressCom-Analytics-iOS (0.0.14)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.3.1)
@@ -63,6 +63,6 @@ SPEC CHECKSUMS:
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
   OHHTTPStubs: 58b42d245ad2416bac170ce18e1383913d17e315
   WordPress-iOS-Shared: cb00b5b2530e5b581d34926ac6966b7ec476a93a
-  WordPressCom-Analytics-iOS: a15aef24435a332b3b87cc61adb9a1a12d22658b
+  WordPressCom-Analytics-iOS: 93ca6c432c7015f26f1361482ba1e2b839a8b222
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0

@@ -4,7 +4,7 @@
 @implementation WPStyleGuide (Stats)
 
 + (UIFont *)axisLabelFont {
-    return [UIFont fontWithName:@"OpenSans" size:8.0f];
+    return [WPFontManager openSansRegularFontOfSize:8.0];
 }
 
 + (UIColor *)statsLighterOrange

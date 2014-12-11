@@ -49,6 +49,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "9396CFAE1921096A006A66D7"
+            BuildableName = "libWordPressCom-Stats-iOS.a"
+            BlueprintName = "WordPressCom-Stats-iOS"
+            ReferencedContainer = "container:WordPressCom-Stats-iOS.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

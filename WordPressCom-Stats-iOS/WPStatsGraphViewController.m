@@ -7,6 +7,9 @@
 #import "WPStyleGuide+Stats.h"
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
+{
+    NSUInteger _selectedBarIndex;
+}
 
 @property (nonatomic, weak) WPStatsCollectionViewFlowLayout *flowLayout;
 @property (nonatomic, assign) CGFloat maximumY;
@@ -31,6 +34,9 @@ static NSInteger const RecommendedYAxisTicks = 7;
         _flowLayout = layout;
         _numberOfYValues = 7;
         _maximumY = 0;
+        _allowDeselection = YES;
+        _currentUnit = StatsPeriodUnitDay;
+        _currentSummaryType = StatsSummaryTypeViews;
     }
     return self;
 }
@@ -49,7 +55,6 @@ static NSInteger const RecommendedYAxisTicks = 7;
     self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 40.0f, 0.0f, 15.0f);
     
     [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
-    [self.collectionView registerClass:[WPStatsGraphLegendView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LegendView];
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
     [self.collectionView registerClass:[WPStatsGraphBackgroundView class] forSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground withReuseIdentifier:GraphBackgroundView];
     
@@ -69,6 +74,11 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 #pragma mark - UICollectionViewDelegate methods
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.allowDeselection;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *selectedIndexPaths = [collectionView indexPathsForSelectedItems];
@@ -78,10 +88,9 @@ static NSInteger const RecommendedYAxisTicks = 7;
         }
     }];
     
-    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectData:withXLocation:)]) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        CGFloat x = cell.center.x + collectionView.contentInset.left;
-        [self.graphDelegate statsGraphViewController:self didSelectData:[self barDataForIndexPath:indexPath] withXLocation:x];
+    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectDate:)]) {
+        StatsSummary *summary = (StatsSummary *)self.visits.statsData[indexPath.row];
+        [self.graphDelegate statsGraphViewController:self didSelectDate:summary.date];
     }
 }
 
@@ -97,7 +106,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [[self.viewsVisitors viewsVisitorsForUnit:self.currentUnit][StatsViewsCategory] count];
+    return self.visits.statsData.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -109,8 +118,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
-    // TODO :: Name is the same for all points - should put this somewhere better
-    [cell setBarName:[self.viewsVisitors viewsVisitorsForUnit:self.currentUnit][StatsViewsCategory][indexPath.row][@"name"]];
+    cell.barName = [self.visits.statsData[indexPath.row] label];
     [cell finishedSettingProperties];
     
     return cell;
@@ -118,14 +126,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        WPStatsGraphLegendView *legend = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:LegendView forIndexPath:indexPath];
-        [legend addCategory:NSLocalizedString(@"Views", @"Views Category in Site Stats") withColor:[WPStyleGuide textFieldPlaceholderGrey]];
-        [legend addCategory:NSLocalizedString(@"Visitors", @"Visitors Category in Site Stats") withColor:[WPStyleGuide littleEddieGrey]];
-        [legend finishedAddingCategories];
-
-        return legend;
-    } else if ([kind isEqualToString:WPStatsCollectionElementKindGraphBackground]) {
+    if ([kind isEqualToString:WPStatsCollectionElementKindGraphBackground]) {
         WPStatsGraphBackgroundView *background = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:GraphBackgroundView forIndexPath:indexPath];
         background.maximumYValue = self.maximumY;
         background.numberOfXValues = self.numberOfXValues;
@@ -142,16 +143,11 @@ static NSInteger const RecommendedYAxisTicks = 7;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat width = 30.0f;
-    CGFloat height = CGRectGetHeight(collectionView.frame) - 24.0;
+    CGFloat height = CGRectGetHeight(collectionView.frame);
     
     CGSize size = CGSizeMake(width, height);
     
     return size;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
-{
-    return CGSizeMake(CGRectGetWidth(collectionView.frame), 25.0);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -161,15 +157,28 @@ static NSInteger const RecommendedYAxisTicks = 7;
     return spacing;
 }
 
+#pragma mark - Public class methods
+
+- (void)selectGraphBarWithDate:(NSDate *)selectedDate
+{
+    for (StatsSummary *summary in self.visits.statsData) {
+        if ([summary.date isEqualToDate:selectedDate]) {
+            NSUInteger index = [self.visits.statsData indexOfObject:summary];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+            [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        }
+    }
+}
+
 #pragma mark - Property methods
 
-- (void)setViewsVisitors:(WPStatsViewsVisitors *)viewsVisitors
+- (void)setVisits:(StatsVisits *)visits
 {
-    _viewsVisitors = viewsVisitors;
+    _visits = visits;
     [self calculateMaximumYValue];
 }
 
-- (void)setCurrentUnit:(WPStatsViewsVisitorsUnit)currentUnit
+- (void)setCurrentUnit:(StatsPeriodUnit)currentUnit
 {
     _currentUnit = currentUnit;
     [self calculateMaximumYValue];
@@ -179,22 +188,14 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (void)calculateMaximumYValue
 {
-    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     CGFloat maximumY = 0.0f;
-
-    for (NSDictionary *dict in categoryData[StatsViewsCategory]) {
-        NSNumber *number = dict[@"count"];
-        if (maximumY < [number floatValue]) {
-            maximumY = [number floatValue];
+    for (StatsSummary *summary in self.visits.statsData) {
+        NSNumber *value = [self valueForCurrentTypeFromSummary:summary];
+        if (maximumY < value.floatValue) {
+            maximumY = value.floatValue;
         }
     }
-    for (NSDictionary *dict in categoryData[StatsVisitorsCategory]) {
-        NSNumber *number = dict[@"count"];
-        if (maximumY < [number floatValue]) {
-            maximumY = [number floatValue];
-        }
-    }
-
+    
     // Y axis line markers and values
     // Round up and extend past max value to the next step
     NSUInteger yAxisTicks = RecommendedYAxisTicks;
@@ -212,26 +213,42 @@ static NSInteger const RecommendedYAxisTicks = 7;
         self.numberOfYValues = yAxisTicks;
     }
     
-    NSUInteger countViews = [categoryData[StatsViewsCategory] count];
-    NSUInteger countVisitors = [categoryData[StatsVisitorsCategory] count];
-    self.numberOfXValues = MAX(countViews, countVisitors);
+    self.numberOfXValues = self.visits.statsData.count;
 }
 
 - (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
+//    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
     
     return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
                 @"selectedColor" : [WPStyleGuide statsLighterOrange],
-                @"value" : categoryData[StatsViewsCategory][indexPath.row][StatsPointCountKey],
-                @"name" : StatsViewsCategory
+                @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
+                @"name" : @"views"
                 },
-             @{ @"color" : [WPStyleGuide littleEddieGrey],
-                @"selectedColor" : [WPStyleGuide jazzyOrange],
-                @"value" : categoryData[StatsVisitorsCategory][indexPath.row][StatsPointCountKey],
-                @"name" : StatsVisitorsCategory
-                }
              ];
+}
+
+- (NSNumber *)valueForCurrentTypeFromSummary:(StatsSummary *)summary
+{
+    NSNumber *value = @0.0f;
+    switch (self.currentSummaryType) {
+        case StatsSummaryTypeViews:
+            value = summary.views;
+            break;
+        case StatsSummaryTypeVisitors:
+            value = summary.visitors;
+            break;
+        case StatsSummaryTypeComments:
+            value = summary.comments;
+            break;
+        case StatsSummaryTypeLikes:
+            value = summary.likes;
+            break;
+        default:
+            break;
+    }
+
+    return value;
 }
 
 @end

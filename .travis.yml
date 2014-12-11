@@ -1,5 +1,6 @@
+osx_image: xcode61
 language: objective-c
 xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
 xcode_scheme: WordPressCom-Stats-iOS
-xcode_sdk: iphonesimulator7.1
+xcode_sdk: iphonesimulator8.1
 
