@@ -42,6 +42,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 @property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
 @property (nonatomic, assign) StatsSummaryType selectedSummaryType;
+@property (nonatomic, strong) NSMutableDictionary *selectedSubsections;
 @property (nonatomic, strong) NSDate *selectedDate;
 
 @property (assign, getter=isSyncing) BOOL syncing;
@@ -74,6 +75,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                            @(StatsSectionPublicize)];
     self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
                            @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
+    self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
+                                   @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
     self.sectionData = [NSMutableDictionary new];
     
@@ -291,7 +294,20 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     NSLog(@"Control: %@", control);
     StatsSection section = (StatsSection)control.superview.tag;
+    StatsSubSection subSection;
     
+    switch (section) {
+        case StatsSectionComments:
+            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionCommentsByAuthor : StatsSubSectionCommentsByPosts;
+            break;
+        case StatsSectionFollowers:
+            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
+            break;
+        default:
+            break;
+    }
+    
+    self.selectedSubsections[@(section)] = @(subSection);
 }
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
@@ -744,11 +760,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
     } else if (row == 1) {
-        // TODO :: Determine the right selected segment index, configure target
+        StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
+        NSInteger selectedIndex = selectedSubsection == StatsSubSectionCommentsByAuthor ? 0 : 1;
+
         [self configureSectionGroupSelectorCell:cell
                                      withTitles:@[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
                                                   NSLocalizedString(@"By Posts & Pages", @"Posts & Pages segmented control for stats")]
-                        andSelectedSegmentIndex:0
+                        andSelectedSegmentIndex:selectedIndex
                                      forSection:StatsSectionComments];
     } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
@@ -791,12 +809,14 @@ static CGFloat const kNoResultsHeight = 100.0f;
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
     } else if (row == 1) {
-        // TODO :: Determine the right selected segment index, configure target
+        StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
+        NSInteger selectedIndex = selectedSubsection == StatsSubSectionFollowersDotCom ? 0 : 1;
+        
         [self configureSectionGroupSelectorCell:cell
                                      withTitles:@[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
                                                   NSLocalizedString(@"Email", @"Email segmented control for stats")
                                                   ]
-                        andSelectedSegmentIndex:0
+                        andSelectedSegmentIndex:selectedIndex
                                      forSection:StatsSectionFollowers];
     } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
