@@ -40,10 +40,10 @@
         XCTAssertNotNil(summary, @"summary should not be nil.");
         XCTAssertNotNil(summary.date);
         XCTAssertTrue(summary.periodUnit == StatsPeriodUnitDay);
-        XCTAssertTrue([summary.views isEqualToNumber:@56]);
-        XCTAssertTrue([summary.visitors isEqualToNumber:@44]);
-        XCTAssertTrue([summary.likes isEqualToNumber:@1]);
-        XCTAssertTrue([summary.comments isEqualToNumber:@3]);
+        XCTAssertTrue([summary.views isEqualToString:@"56"]);
+        XCTAssertTrue([summary.visitors isEqualToString:@"44"]);
+        XCTAssertTrue([summary.likes isEqualToString:@"1"]);
+        XCTAssertTrue([summary.comments isEqualToString:@"3"]);
         
         [expectation fulfill];
     } failureHandler:^(NSError *error) {
@@ -75,10 +75,10 @@
          
          StatsSummary *firstSummary = visits.statsData[0];
          XCTAssertNotNil(firstSummary.date);
-         XCTAssertTrue([firstSummary.views isEqualToNumber:@58]);
-         XCTAssertTrue([firstSummary.visitors isEqualToNumber:@39]);
-         XCTAssertTrue([firstSummary.likes isEqualToNumber:@1]);
-         XCTAssertTrue([firstSummary.comments isEqualToNumber:@3]);
+         XCTAssertTrue([firstSummary.views isEqualToString:@"58"]);
+         XCTAssertTrue([firstSummary.visitors isEqualToString:@"39"]);
+         XCTAssertTrue([firstSummary.likes isEqualToString:@"1"]);
+         XCTAssertTrue([firstSummary.comments isEqualToString:@"3"]);
          
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
@@ -111,10 +111,10 @@
          
          StatsSummary *firstSummary = visits.statsData[0];
          XCTAssertNotNil(firstSummary.date);
-         XCTAssertTrue([firstSummary.views isEqualToNumber:@7808]);
-         XCTAssertTrue([firstSummary.visitors isEqualToNumber:@4331]);
-         XCTAssertTrue([firstSummary.likes isEqualToNumber:@0]);
-         XCTAssertTrue([firstSummary.comments isEqualToNumber:@0]);
+         XCTAssertTrue([firstSummary.views isEqualToString:@"7,808"]);
+         XCTAssertTrue([firstSummary.visitors isEqualToString:@"4,331"]);
+         XCTAssertTrue([firstSummary.likes isEqualToString:@"0"]);
+         XCTAssertTrue([firstSummary.comments isEqualToString:@"0"]);
          
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
@@ -137,7 +137,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -175,7 +175,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -185,7 +185,7 @@
          StatsItem *item = items[0];
          XCTAssertTrue([item.itemID isEqualToNumber:@39806]);
          XCTAssertTrue([item.label isEqualToString:@"Home"]);
-         XCTAssertTrue([item.value isEqualToString:@"2420"]);
+         XCTAssertTrue([item.value isEqualToString:@"2,420"]);
          XCTAssertEqual(1, item.actions.count);
          
          StatsItemAction *action = item.actions[0];
@@ -213,7 +213,7 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -293,11 +293,11 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
-         XCTAssertTrue([@2161 isEqualToNumber:totalViews]);
-         XCTAssertTrue([@938 isEqualToNumber:otherViews]);
+         XCTAssertTrue([@"2,161" isEqualToString:totalViews]);
+         XCTAssertTrue([@"938" isEqualToString:otherViews]);
          
          XCTAssertEqual(10, items.count);
          
@@ -380,7 +380,7 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, NSString *otherClicks)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalClicks, @"There should be a number provided.");
@@ -433,11 +433,11 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitMonth
-                    withCompletionHandler:^(NSArray *items, NSNumber *totalClicks, NSNumber *otherClicks)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, NSString *otherClicks)
      {
          XCTAssertNotNil(items);
-         XCTAssertTrue([@9 isEqualToNumber:totalClicks]);
-         XCTAssertTrue([@0 isEqualToNumber:otherClicks]);
+         XCTAssertTrue([@"9" isEqualToString:totalClicks]);
+         XCTAssertTrue([@"0" isEqualToString:otherClicks]);
          
          XCTAssertEqual(6, items.count);
          
@@ -494,7 +494,7 @@
     
     [self.subject fetchCountryStatsForDate:[NSDate date]
                                    andUnit:StatsPeriodUnitDay
-                     withCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                     withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
