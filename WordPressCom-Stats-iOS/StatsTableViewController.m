@@ -106,7 +106,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    StatsSection statsSection = (StatsSection)[self.sections[section] integerValue];
+    StatsSection statsSection = [self statsSectionForTableViewSection:section];
     id data = self.sectionData[@(statsSection)];
     
     switch (statsSection) {
@@ -438,7 +438,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     NSString *identifier = @"";
     
-    StatsSection statsSection = (StatsSection)[self.sections[indexPath.section] integerValue];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
@@ -516,7 +516,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    StatsSection statsSection = (StatsSection)[self.sections[indexPath.section] integerValue];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
@@ -872,6 +872,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
     [cell setNeedsLayout];
 }
 
+#pragma mark - Row and section calculation methods
+
 - (NSUInteger)numberOfRowsForStatsGroup:(StatsGroup *)group
 {
     return group.expanded == NO ? 0 : [self numberOfRowsForStatsItems:group.items];
@@ -890,6 +892,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
     
     return itemCount;
+}
+
+- (StatsSection)statsSectionForTableViewSection:(NSInteger)section
+{
+    return (StatsSection)[self.sections[section] integerValue];
 }
 
 
