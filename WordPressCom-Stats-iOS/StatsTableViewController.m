@@ -287,6 +287,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
     [self retrieveStatsSkipGraph:NO];
 }
 
+- (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
+{
+    NSLog(@"Control: %@", control);
+    StatsSection section = (StatsSection)control.superview.tag;
+    
+}
+
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
     self.syncing = YES;
@@ -737,7 +744,12 @@ static CGFloat const kNoResultsHeight = 100.0f;
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
     } else if (row == 1) {
-        
+        // TODO :: Determine the right selected segment index, configure target
+        [self configureSectionGroupSelectorCell:cell
+                                     withTitles:@[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
+                                                  NSLocalizedString(@"By Posts & Pages", @"Posts & Pages segmented control for stats")]
+                        andSelectedSegmentIndex:0
+                                     forSection:StatsSectionComments];
     } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Author", @"")
@@ -779,7 +791,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
     } else if (row == 1) {
-        
+        // TODO :: Determine the right selected segment index, configure target
+        [self configureSectionGroupSelectorCell:cell
+                                     withTitles:@[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
+                                                  NSLocalizedString(@"Email", @"Email segmented control for stats")
+                                                  ]
+                        andSelectedSegmentIndex:0
+                                     forSection:StatsSectionFollowers];
     } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Follower", @"")
@@ -826,6 +844,20 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+}
+
+- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withTitles:(NSArray *)titles andSelectedSegmentIndex:(NSInteger)index forSection:(StatsSection)statsSection
+{
+    UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
+    cell.contentView.tag = statsSection;
+    
+    [control removeAllSegments];
+    
+    for (NSString *title in [titles reverseObjectEnumerator]) {
+        [control insertSegmentWithTitle:title atIndex:0 animated:NO];
+    }
+    
+    control.selectedSegmentIndex = index;
 }
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL

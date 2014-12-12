@@ -81,6 +81,9 @@
                                                 <segment title="First"/>
                                                 <segment title="Second"/>
                                             </segments>
+                                            <connections>
+                                                <action selector="sectionGroupSelectorDidChange:" destination="Tay-X0-ceG" eventType="valueChanged" id="9Da-Rh-jsk"/>
+                                            </connections>
                                         </segmentedControl>
                                     </subviews>
                                     <constraints>
