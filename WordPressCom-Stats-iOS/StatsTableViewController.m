@@ -23,12 +23,20 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionPublicize
 };
 
+typedef NS_ENUM(NSInteger, StatsSubSection) {
+    StatsSubSectionCommentsByAuthor,
+    StatsSubSectionCommentsByPosts,
+    StatsSubSectionFollowersDotCom,
+    StatsSubSectionFollowersEmail
+};
+
 static CGFloat const kGraphHeight = 175.0f;
 static CGFloat const kNoResultsHeight = 100.0f;
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSDictionary *subSections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 @property (nonatomic, strong) WPStatsService *statsService;
@@ -53,17 +61,20 @@ static CGFloat const kNoResultsHeight = 100.0f;
     [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
     
-    self.sections = @[ @(StatsSectionPeriodSelector),
-                       @(StatsSectionGraph),
-                       @(StatsSectionPosts),
-                       @(StatsSectionReferrers),
-                       @(StatsSectionClicks),
-                       @(StatsSectionCountry),
-                       @(StatsSectionVideos),
-                       @(StatsSectionComments),
-                       @(StatsSectionTagsCategories),
-                       @(StatsSectionFollowers),
-                       @(StatsSectionPublicize)];
+    self.sections =     @[ @(StatsSectionPeriodSelector),
+                           @(StatsSectionGraph),
+                           @(StatsSectionPosts),
+                           @(StatsSectionReferrers),
+                           @(StatsSectionClicks),
+                           @(StatsSectionCountry),
+                           @(StatsSectionVideos),
+                           @(StatsSectionComments),
+                           @(StatsSectionTagsCategories),
+                           @(StatsSectionFollowers),
+                           @(StatsSectionPublicize)];
+    self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
+                           @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
+    
     self.sectionData = [NSMutableDictionary new];
     
     self.graphViewController = [WPStatsGraphViewController new];
