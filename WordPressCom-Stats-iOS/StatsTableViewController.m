@@ -139,7 +139,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // TODO: Comments by Authors and Posts & Pages
         case StatsSectionComments: {
             NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 3 + count;
+            return count == 0 ? 3 : 3 + count;
         }
         case StatsSectionTagsCategories: {
             NSUInteger count = ((StatsGroup *)data).items.count;
@@ -148,7 +148,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         // TODO: Followers by WordPress.com and Email
         case StatsSectionFollowers: {
             NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
+            return count == 0 ? 3 : 3 + count;
         }
         case StatsSectionPublicize: {
             NSUInteger count = ((StatsGroup *)data).items.count;
@@ -494,14 +494,14 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     identifier = @"GroupHeader";
                     break;
                 case 1:
+                    identifier = @"GroupSelector";
+                    break;
+                case 2:
                     if (((StatsGroup *)self.sectionData[@(statsSection)]).items.count > 0) {
-                        identifier = @"GroupSelector";
+                        identifier = @"TwoColumnHeader";
                     } else {
                         identifier = @"NoResultsRow";
                     }
-                    break;
-                case 2:
-                    identifier = @"TwoColumnHeader";
                     break;
                 default:
                     identifier = @"TwoColumnRow";
@@ -736,13 +736,15 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
-    } else if (row == 1 && dataExists) {
+    } else if (row == 1) {
+        
+    } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Author", @"")
                                      andRightText:NSLocalizedString(@"Comments", @"")];
-    } else if (row == 1 && !dataExists) {
+    } else if (row == 2 && !dataExists) {
         // No data
-    } else if (row > 1) {
+    } else if (row > 2) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
@@ -776,14 +778,14 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
-    } else if (row == 1 && dataExists) {
-        // Segmented control
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (row == 2) {
+    } else if (row == 1) {
+        
+    } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
                                      withLeftText:NSLocalizedString(@"Follower", @"")
                                      andRightText:NSLocalizedString(@"Since", @"")];
+    } else if (row == 2 && !dataExists) {
+        // No data
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
