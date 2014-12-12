@@ -586,7 +586,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Views", @"");
-            valueLabel.text = summary.views.stringValue;
+            valueLabel.text = summary.views;
             break;
         }
             
@@ -594,7 +594,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Visitors", @"");
-            valueLabel.text = summary.visitors.stringValue;
+            valueLabel.text = summary.visitors;
             break;
         }
             
@@ -602,7 +602,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Likes", @"");
-            valueLabel.text = summary.likes.stringValue;
+            valueLabel.text = summary.likes;
             break;
         }
             
@@ -610,7 +610,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         {
             iconLabel.text = @"";
             textLabel.text = NSLocalizedString(@"Comments", @"");
-            valueLabel.text = summary.comments.stringValue;
+            valueLabel.text = summary.comments;
             break;
         }
             

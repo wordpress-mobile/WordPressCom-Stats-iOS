@@ -15,6 +15,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 @property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
 @property (nonatomic, copy)     NSString                        *statsPathPrefix;
 @property (nonatomic, strong)   NSDateFormatter                 *deviceDateFormatter;
+@property (nonatomic, strong)   NSNumberFormatter               *deviceNumberFormatter;
 @property (nonatomic, strong)   AFHTTPRequestOperationManager   *manager;
 
 @end
@@ -35,9 +36,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         _siteId = siteId;
         _siteTimeZone = timeZone;
         _statsPathPrefix = [NSString stringWithFormat:@"%@/sites/%@/stats", WordPressComApiClientEndpointURL, _siteId];
+        
         _deviceDateFormatter = [NSDateFormatter new];
         _deviceDateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         _deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
+        
+        _deviceNumberFormatter = [NSNumberFormatter new];
         
         _manager = [AFHTTPRequestOperationManager manager];
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -259,10 +263,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
         statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
         statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
-        statsSummary.views = statsSummaryDict[@"views"];
-        statsSummary.visitors = statsSummaryDict[@"visitors"];
-        statsSummary.likes = statsSummaryDict[@"likes"];
-        statsSummary.comments = statsSummaryDict[@"comments"];
+        statsSummary.views = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"views"]];
+        statsSummary.visitors = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"visitors"]];
+        statsSummary.likes = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"likes"]];
+        statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
         
         if (completionHandler) {
             completionHandler(statsSummary);
@@ -303,10 +307,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             periodSummary.periodUnit = unit;
             periodSummary.date = [self deviceLocalDateForString:period[periodIndex] withPeriodUnit:unit];
             periodSummary.label = [self nicePointNameForDate:periodSummary.date forStatsPeriodUnit:periodSummary.periodUnit];
-            periodSummary.views = period[viewsIndex];
-            periodSummary.visitors = period[visitorsIndex];
-            periodSummary.likes = period[likesIndex];
-            periodSummary.comments = period[commentsIndex];
+            periodSummary.views = [self localizedStringForNumber:period[viewsIndex]];
+            periodSummary.visitors = [self localizedStringForNumber:period[visitorsIndex]];
+            periodSummary.likes = [self localizedStringForNumber:period[likesIndex]];
+            periodSummary.comments = [self localizedStringForNumber:period[commentsIndex]];
             [array addObject:periodSummary];
         }
         
@@ -343,14 +347,14 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *postViews = [firstDay arrayForKey:@"postviews"];
-        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
-        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
+        NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *post in postViews) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
-            statsItem.value = [post stringForKey:@"views"];
+            statsItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
             statsItem.label = [post stringForKey:@"title"];
             
             StatsItemAction *statsItemAction = [StatsItemAction new];
@@ -390,14 +394,14 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *groups = [firstDay arrayForKey:@"groups"];
-        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
-        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
+        NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *group in groups) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [group stringForKey:@"name"];
-            statsItem.value = [group stringForKey:@"total"];
+            statsItem.value = [self localizedStringForNumber:[group numberForKey:@"total"]];
             statsItem.iconURL = [NSURL URLWithString:[group stringForKey:@"icon"]];
             
             NSString *url = [group stringForKey:@"url"];
@@ -417,7 +421,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                     StatsItem *resultItem = [StatsItem new];
                     resultItem.label = [result stringForKey:@"name"];
                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
-                    resultItem.value = [result stringForKey:@"views"];
+                    resultItem.value = [self localizedStringForNumber:[result numberForKey:@"views"]];
                     
                     NSString *url = [result stringForKey:@"url"];
                     if (url) {
@@ -435,7 +439,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                         StatsItem *childItem = [StatsItem new];
                         childItem.label = [child stringForKey:@"name"];
                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                        childItem.value = [child stringForKey:@"views"];
+                        childItem.value = [self localizedStringForNumber:[child numberForKey:@"views"]];
                         
                         NSString *url = [child stringForKey:@"url"];
                         if (url) {
@@ -485,14 +489,14 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *clicks = [firstDay arrayForKey:@"clicks"];
-        NSNumber *totalClicks = [firstDay numberForKey:@"total_clicks"];
-        NSNumber *otherClicks = [firstDay numberForKey:@"other_clicks"];
+        NSString *totalClicks = [self localizedStringForNumber:[firstDay numberForKey:@"total_clicks"]];
+        NSString *otherClicks = [self localizedStringForNumber:[firstDay numberForKey:@"other_clicks"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *click in clicks) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [click stringForKey:@"name"];
-            statsItem.value = [click stringForKey:@"views"];
+            statsItem.value = [self localizedStringForNumber:[click numberForKey:@"views"]];
             statsItem.iconURL = [NSURL URLWithString:[click stringForKey:@"icon"]];
             
             NSString *url = [click stringForKey:@"url"];
@@ -509,7 +513,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 StatsItem *childItem = [StatsItem new];
                 childItem.label = [child stringForKey:@"name"];
                 childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
-                childItem.value = [child stringForKey:@"views"];
+                childItem.value = [self localizedStringForNumber:[child numberForKey:@"views"]];
                 
                 NSString *url = [child stringForKey:@"url"];
                 if (url) {
@@ -556,15 +560,15 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
         NSArray *views = [firstDay arrayForKey:@"views"];
-        NSNumber *totalViews = [firstDay numberForKey:@"total_views"];
-        NSNumber *otherViews = [firstDay numberForKey:@"other_views"];
+        NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *view in views) {
             NSString *key = [view stringForKey:@"country_code"];
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
-            statsItem.value = [view stringForKey:@"views"];
+            statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
             statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
             
             [items addObject:statsItem];
@@ -599,15 +603,15 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSDictionary *playsDict = [firstDay dictionaryForKey:@"plays"];
-        NSNumber *totalPlays = [firstDay numberForKey:@"total_plays"];
-        NSNumber *otherPlays = [firstDay numberForKey:@"other_plays"];
+        NSString *totalPlays = [self localizedStringForNumber:[firstDay numberForKey:@"total_plays"]];
+        NSString *otherPlays = [self localizedStringForNumber:[firstDay numberForKey:@"other_plays"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *play in playsDict) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
             statsItem.label = [play stringForKey:@"title"];
-            statsItem.value = [play stringForKey:@"plays"];
+            statsItem.value = [self localizedStringForNumber:[play numberForKey:@"plays"]];
 
             NSString *url = [play stringForKey:@"url"];
             if (url) {
@@ -665,7 +669,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 NSDictionary *theTag = tags[0];
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = [theTag stringForKey:@"name"];
-                statsItem.value = [tagGroup stringForKey:@"views"];
+                statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 [items addObject:statsItem];
             } else {
                 NSMutableString *tagLabel = [NSMutableString new];
@@ -683,7 +687,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = tagLabel;
-                statsItem.value = [tagGroup stringForKey:@"views"];
+                statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 statsItem.children = childStatsItems;
                 
                 [items addObject:statsItem];
@@ -785,7 +789,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             
             statsItem.label = serviceLabel;
             statsItem.iconURL = iconURL;
-            statsItem.value = [service stringForKey:@"followers"];
+            statsItem.value = [self localizedStringForNumber:[service numberForKey:@"followers"]];
             
             [items addObject:statsItem];
         }
@@ -1012,5 +1016,18 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return niceName;
 }
 
+- (NSString *)localizedStringForNumber:(NSNumber *)number
+{
+    if (!number) {
+        return nil;
+    }
+    
+    self.deviceNumberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    self.deviceNumberFormatter.maximumFractionDigits = 0;
+    
+    NSString *formattedNumber = [self.deviceNumberFormatter stringFromNumber:number];
+    
+    return formattedNumber;
+}
 
 @end

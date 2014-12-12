@@ -83,7 +83,7 @@
             visitsCompletion(visits);
         }
     }
-                  postsCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         postsResult.items = items;
         postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
@@ -92,7 +92,7 @@
             postsCompletion(postsResult);
         }
     }
-              referrersCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+              referrersCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         referrersResult.items = items;
         
@@ -100,7 +100,7 @@
             referrersCompletion(referrersResult);
         }
     }
-                 clicksCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                 clicksCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         clicksResult.items = items;
         
@@ -108,7 +108,7 @@
             clicksCompletion(clicksResult);
         }
     }
-                countryCompletionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                countryCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         countriesResult.items = items;
         
@@ -116,7 +116,7 @@
             countryCompletion(countriesResult);
         }
     }
-                  videosCompetionHandler:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                  videosCompetionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         videosResult.items = items;
         
@@ -124,7 +124,7 @@
             videosCompletion(videosResult);
         }
     }
-                      commentsCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                      commentsCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         commentsResult.items = items;
         
@@ -132,7 +132,7 @@
             commentsCompletion(commentsResult);
         }
     }
-                tagsCategoriesCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                tagsCategoriesCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         tagsCategoriesResult.items = items;
         
@@ -140,7 +140,7 @@
             tagsCategoriesCompletion(tagsCategoriesResult);
         }
     }
-                     followersCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                     followersCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         followersResult.items = items;
         
@@ -148,7 +148,7 @@
             followersCompletion(followersResult);
         }
     }
-                     publicizeCompletion:^(NSArray *items, NSNumber *totalViews, NSNumber *otherViews)
+                     publicizeCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         publicizeResult.items = items;
         

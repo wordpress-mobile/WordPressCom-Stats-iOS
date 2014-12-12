@@ -4,7 +4,7 @@
 
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
-typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSNumber *totalViews, NSNumber *otherViews);
+typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, NSString *otherViews);
 
 @interface WPStatsServiceRemote : NSObject
 
