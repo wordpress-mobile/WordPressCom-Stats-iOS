@@ -47,6 +47,7 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
     
     [self addChildViewController:navController];
     [self.view addSubview:[navController view]];
+    [navController didMoveToParentViewController:self];
 }
 
 @end
