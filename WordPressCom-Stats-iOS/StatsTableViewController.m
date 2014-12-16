@@ -297,7 +297,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
 {
-    NSLog(@"Control: %@", control);
     StatsSection section = (StatsSection)control.superview.tag;
     StatsSubSection subSection;
     
@@ -313,6 +312,14 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
     
     self.selectedSubsections[@(section)] = @(subSection);
+    
+    [self.tableView beginUpdates];
+    
+    NSUInteger sectionNumber = [self.sections indexOfObject:@(section)];
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [self.tableView endUpdates];
 }
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
