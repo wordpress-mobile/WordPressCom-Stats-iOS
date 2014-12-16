@@ -37,12 +37,12 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-         videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
-             commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
-       tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-      followersDotComCompletion:(StatsRemoteItemsCompletion)followersDotComCompletion
-       followersEmailCompletion:(StatsRemoteItemsCompletion)followersEmailCompletion
-            publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
+        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
+followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
+     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler;
 

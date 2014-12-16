@@ -79,7 +79,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                    @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
     self.sectionData = [NSMutableDictionary new];
-//    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
     self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
     
     self.graphViewController = [WPStatsGraphViewController new];
@@ -141,9 +141,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
             NSUInteger count = ((StatsGroup *)data).items.count;
             return count == 0 ? 2 : 2 + count;
         }
-        // TODO: Comments by Authors and Posts & Pages
         case StatsSectionComments: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
+            StatsGroup *group = self.sectionData[@(StatsSectionComments)][@(selectedSubsection)];
+            
+            NSUInteger count = group.items.count;
             return count == 0 ? 3 : 3 + count;
         }
         case StatsSectionTagsCategories: {
@@ -396,7 +398,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
          
          [self.tableView endUpdates];
      }
-                         videosCompetionHandler:^(StatsGroup *group)
+                        videosCompletionHandler:^(StatsGroup *group)
      {
          self.sectionData[@(StatsSectionVideos)] = group;
          
@@ -408,19 +410,35 @@ static CGFloat const kNoResultsHeight = 100.0f;
          
          [self.tableView endUpdates];
      }
-                             commentsCompletion:^(StatsGroup *group)
+                commentsAuthorCompletionHandler:^(StatsGroup *group)
      {
-         self.sectionData[@(StatsSectionComments)] = group;
+         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
          
-         [self.tableView beginUpdates];
-         
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
+         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
      }
-                       tagsCategoriesCompletion:^(StatsGroup *group)
+                commentsPostsCompletionHandler:^(StatsGroup *group)
+     {
+         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
+         
+         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                tagsCategoriesCompletionHandler:^(StatsGroup *group)
      {
          self.sectionData[@(StatsSectionTagsCategories)] = group;
          
@@ -432,7 +450,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
          
          [self.tableView endUpdates];
      }
-                      followersDotComCompletion:^(StatsGroup *group)
+               followersDotComCompletionHandler:^(StatsGroup *group)
      {
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
          
@@ -446,7 +464,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
              [self.tableView endUpdates];
          }
      }
-                       followersEmailCompletion:^(StatsGroup *group)
+                followersEmailCompletionHandler:^(StatsGroup *group)
      {
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
 
@@ -460,7 +478,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
              [self.tableView endUpdates];
          }
      }
-                            publicizeCompletion:^(StatsGroup *group)
+                     publicizeCompletionHandler:^(StatsGroup *group)
      {
          self.sectionData[@(StatsSectionPublicize)] = group;
          
@@ -787,13 +805,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)configureSectionCommentsCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionComments)];
+    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
+    StatsGroup *group = self.sectionData[@(StatsSectionComments)][@(selectedSubsection)];
     BOOL dataExists = group.items.count > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
     } else if (row == 1) {
-        StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
         NSInteger selectedIndex = selectedSubsection == StatsSubSectionCommentsByAuthor ? 0 : 1;
 
         [self configureSectionGroupSelectorCell:cell
@@ -803,12 +821,12 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      forSection:StatsSectionComments];
     } else if (row == 2 && dataExists) {
         [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Author", @"")
+                                     withLeftText:selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"")
                                      andRightText:NSLocalizedString(@"Comments", @"")];
     } else if (row == 2 && !dataExists) {
         // No data
     } else if (row > 2) {
-        StatsItem *item = group.items[row - 2];
+        StatsItem *item = group.items[row - 3];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
     
@@ -843,7 +861,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
     } else if (row == 1) {
-        StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
         NSInteger selectedIndex = selectedSubsection == StatsSubSectionFollowersDotCom ? 0 : 1;
         
         [self configureSectionGroupSelectorCell:cell
