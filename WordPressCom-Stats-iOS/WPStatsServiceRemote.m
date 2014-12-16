@@ -602,12 +602,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
-        NSDictionary *playsDict = [firstDay dictionaryForKey:@"plays"];
+        NSArray *playsArray = [firstDay arrayForKey:@"plays"];
         NSString *totalPlays = [self localizedStringForNumber:[firstDay numberForKey:@"total_plays"]];
         NSString *otherPlays = [self localizedStringForNumber:[firstDay numberForKey:@"other_plays"]];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *play in playsDict) {
+        for (NSDictionary *play in playsArray) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
             statsItem.label = [play stringForKey:@"title"];
