@@ -741,7 +741,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSDictionary *subscriber in subscribers) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [subscriber stringForKey:@"label"];
+            statsItem.iconURL = [NSURL URLWithString:[subscriber stringForKey:@"avatar"]];
             statsItem.date = [self.rfc3339DateFormatter dateFromString:[subscriber stringForKey:@"date_subscribed"]];
+            
+            
             [items addObject:statsItem];
         }
         
