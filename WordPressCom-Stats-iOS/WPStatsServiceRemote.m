@@ -733,6 +733,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         
         NSArray *subscribers = [response arrayForKey:@"subscribers"];
         NSMutableArray *items = [NSMutableArray new];
+        NSString *totalKey = followerType == StatsFollowerTypeDotCom ? @"total_wpcom" : @"total_email";
+        NSString *totalFollowers = [self localizedStringForNumber:[response numberForKey:totalKey]];
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
         dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
@@ -749,7 +751,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         }
         
         if (completionHandler) {
-            completionHandler(items, nil, nil);
+            completionHandler(items, totalFollowers, nil);
         }
     };
     
