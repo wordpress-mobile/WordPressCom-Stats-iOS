@@ -865,8 +865,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         
         [self configureSectionGroupSelectorCell:cell
                                      withTitles:@[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
-                                                  NSLocalizedString(@"Email", @"Email segmented control for stats")
-                                                  ]
+                                                  NSLocalizedString(@"Email", @"Email segmented control for stats")]
                         andSelectedSegmentIndex:selectedIndex
                                      forSection:StatsSectionFollowers];
     } else if (row == 2 && dataExists) {
