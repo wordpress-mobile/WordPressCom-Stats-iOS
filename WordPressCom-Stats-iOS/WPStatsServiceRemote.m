@@ -696,8 +696,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                     [childStatsItems addObject:childItem];
                 }
                 
+                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 StatsItem *statsItem = [StatsItem new];
-                statsItem.label = tagLabel;
+                statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 statsItem.children = childStatsItems;
                 

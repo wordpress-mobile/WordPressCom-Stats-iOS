@@ -574,7 +574,15 @@
          XCTAssertTrue([totalViews isEqualToString:@"0"]);
          XCTAssertTrue([otherViews isEqualToString:@"0"]);
          
-         XCTAssertEqual(0, items.count);
+         XCTAssertEqual(1, items.count);
+         
+         StatsItem *item = items.firstObject;
+         XCTAssertTrue([item.label isEqualToString:@"Test Video"]);
+         XCTAssertTrue([@"2" isEqualToString:item.value]);
+         XCTAssertEqual(1, item.actions.count);
+         
+         StatsItemAction *itemAction = item.actions.firstObject;
+         XCTAssertTrue([itemAction.url.absoluteString isEqualToString:@"http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144"]);
          
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
@@ -592,7 +600,43 @@
 
 - (void)testTagsCategoriesDay
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
     
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-tags-categories-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchTagsCategoriesStatsForDate:[NSDate date]
+                                          andUnit:StatsPeriodUnitDay
+                            withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertNil(totalViews);
+         XCTAssertNil(otherViews);
+         
+         XCTAssertEqual(10, items.count);
+         
+         StatsItem *item1 = items.firstObject;
+         XCTAssertTrue([@"Uncategorized" isEqualToString:item1.label]);
+         XCTAssertTrue([@"461" isEqualToString:item1.value]);
+         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(0, item1.children.count);
+         
+         StatsItem *item9 = items[8];
+         XCTAssertTrue([@"unit test XCTest asynchronous testing" isEqualToString:item9.label]);
+         XCTAssertTrue([@"43" isEqualToString:item9.value]);
+         XCTAssertEqual(0, item9.actions.count);
+         XCTAssertEqual(4, item9.children.count);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 - (void)testFollowersDotComDay
