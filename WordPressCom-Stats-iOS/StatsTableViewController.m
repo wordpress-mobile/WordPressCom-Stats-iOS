@@ -79,6 +79,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                    @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
     self.sectionData = [NSMutableDictionary new];
+//    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
     
     self.graphViewController = [WPStatsGraphViewController new];
     self.selectedDate = [NSDate date];
@@ -150,7 +152,10 @@ static CGFloat const kNoResultsHeight = 100.0f;
         }
         // TODO: Followers by WordPress.com and Email
         case StatsSectionFollowers: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
+            StatsGroup *group = self.sectionData[@(StatsSectionFollowers)][@(selectedSubsection)];
+            
+            NSUInteger count = group.items.count;
             return count == 0 ? 3 : 3 + count;
         }
         case StatsSectionPublicize: {
@@ -420,17 +425,33 @@ static CGFloat const kNoResultsHeight = 100.0f;
          
          [self.tableView endUpdates];
      }
-                            followersCompletion:^(StatsGroup *group)
+                      followersDotComCompletion:^(StatsGroup *group)
      {
-         self.sectionData[@(StatsSectionFollowers)] = group;
+         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
          
-         [self.tableView beginUpdates];
-         
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
+         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                       followersEmailCompletion:^(StatsGroup *group)
+     {
+         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
+
+         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
      }
                             publicizeCompletion:^(StatsGroup *group)
      {
@@ -520,12 +541,17 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     identifier = @"GroupSelector";
                     break;
                 case 2:
-                    if (((StatsGroup *)self.sectionData[@(statsSection)]).items.count > 0) {
+                {
+                    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+                    StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
+
+                    if (group.items.count > 0) {
                         identifier = @"TwoColumnHeader";
                     } else {
                         identifier = @"NoResultsRow";
                     }
                     break;
+                }
                 default:
                     identifier = @"TwoColumnRow";
                     break;
@@ -803,7 +829,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)configureSectionFollowersCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionFollowers)];
+    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
+    StatsGroup *group = self.sectionData[@(StatsSectionFollowers)][@(selectedSubsection)];
     BOOL dataExists = group.items.count > 0;
     
     if (row == 0) {

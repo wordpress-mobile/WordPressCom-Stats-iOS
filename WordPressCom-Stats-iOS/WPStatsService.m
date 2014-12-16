@@ -45,7 +45,8 @@
           videosCompetionHandler:(StatsItemsCompletion)videosCompletion
               commentsCompletion:(StatsItemsCompletion)commentsCompletion
         tagsCategoriesCompletion:(StatsItemsCompletion)tagsCategoriesCompletion
-             followersCompletion:(StatsItemsCompletion)followersCompletion
+       followersDotComCompletion:(StatsItemsCompletion)followersDotComCompletion
+        followersEmailCompletion:(StatsItemsCompletion)followersEmailCompletion
              publicizeCompletion:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler
            overallFailureHandler:(void (^)(NSError *error))failureHandler
@@ -70,7 +71,8 @@
     __block StatsGroup *videosResult = [StatsGroup new];
     __block StatsGroup *commentsResult = [StatsGroup new];
     __block StatsGroup *tagsCategoriesResult = [StatsGroup new];
-    __block StatsGroup *followersResult = [StatsGroup new];
+    __block StatsGroup *followersDotComResult = [StatsGroup new];
+    __block StatsGroup *followersEmailResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
     [self.remote batchFetchStatsForDates:dates
@@ -140,14 +142,32 @@
             tagsCategoriesCompletion(tagsCategoriesResult);
         }
     }
-                     followersCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
-    {
-        followersResult.items = items;
-        
-        if (followersCompletion) {
-            followersCompletion(followersResult);
-        }
-    }
+               followersDotComCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         followersDotComResult.items = items;
+         
+         for (StatsItem *item in items) {
+             NSString *age = [self dateAgeForDate:item.date];
+             item.value = age;
+         }
+         
+         if (followersDotComCompletion) {
+             followersDotComCompletion(followersDotComResult);
+         }
+     }
+               followersEmailCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         followersEmailResult.items = items;
+         
+         for (StatsItem *item in items) {
+             NSString *age = [self dateAgeForDate:item.date];
+             item.value = age;
+         }
+         
+         if (followersEmailCompletion) {
+             followersEmailCompletion(followersEmailResult);
+         }
+     }
                      publicizeCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         publicizeResult.items = items;
@@ -183,6 +203,41 @@
     }
 
     return _remote;
+}
+
+// TODO - Extract this into a separate class that's unit testable
+- (NSString *)dateAgeForDate:(NSDate *)date
+{
+    if (!date) {
+        return @"";
+    }
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *now = [NSDate date];
+    
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
+                                                   fromDate:date
+                                                     toDate:now
+                                                    options:0];
+    if (dateComponents.year == 1) {
+        return NSLocalizedString(@"a year", @"Age between dates equaling one year.");
+    } else if (dateComponents.year > 1) {
+        return [NSString stringWithFormat:NSLocalizedString(@"%d years", @"Age between dates over one year."), dateComponents.year];
+    } else if (dateComponents.month > 1) {
+        return [NSString stringWithFormat:NSLocalizedString(@"%d months", @"Age between dates over one month."), dateComponents.month];
+    } else if (dateComponents.month == 1) {
+        return NSLocalizedString(@"a month", @"Age between dates equaling one month.");
+    } else if (dateComponents.day > 1) {
+        return [NSString stringWithFormat:NSLocalizedString(@"%d days", @"Age between dates over one day."), dateComponents.day];
+    } else if (dateComponents.day == 1) {
+        return NSLocalizedString(@"a day", @"Age between dates equaling one day.");
+    } else if (dateComponents.hour > 1) {
+        return [NSString stringWithFormat:NSLocalizedString(@"%d hours", @"Age between dates over one hour."), dateComponents.hour];
+    } else if (dateComponents.hour == 1) {
+        return NSLocalizedString(@"an hour", @"Age between dates equaling one hour.");
+    } else {
+        return NSLocalizedString(@"<1 hour", @"Age between dates less than one hour.");
+    }
 }
 
 @end
