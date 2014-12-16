@@ -574,16 +574,8 @@
          XCTAssertTrue([totalViews isEqualToString:@"0"]);
          XCTAssertTrue([otherViews isEqualToString:@"0"]);
          
-         XCTAssertEqual(1, items.count);
-         
-         StatsItem *item = items.firstObject;
-         XCTAssertTrue([item.label isEqualToString:@"Test Video"]);
-         XCTAssertTrue([@"2" isEqualToString:item.value]);
-         XCTAssertEqual(1, item.actions.count);
-         
-         StatsItemAction *itemAction = item.actions.firstObject;
-         XCTAssertTrue([itemAction.url.absoluteString isEqualToString:@"http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144"]);
-         
+         XCTAssertEqual(0, items.count);
+
          [expectation fulfill];
      } failureHandler:^(NSError *error) {
          XCTFail(@"Failure handler should not be called here.");
