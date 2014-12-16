@@ -22,6 +22,8 @@
 		93274AE81A091E840017238F /* stats-v1.1-top-posts-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 93274AE71A091E840017238F /* stats-v1.1-top-posts-day.json */; };
 		93274AEA1A09B4FA0017238F /* stats-v1.1-referrers-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 93274AE91A09B4FA0017238F /* stats-v1.1-referrers-day.json */; };
 		93302C521A1BD78300B49CFC /* WPStatsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 93302C511A1BD78300B49CFC /* WPStatsService.m */; };
+		933FF21C1A406E0400336167 /* stats-v1.1-video-plays-day.json in Resources */ = {isa = PBXBuildFile; fileRef = 933FF21B1A406E0400336167 /* stats-v1.1-video-plays-day.json */; };
+		933FF21E1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 933FF21D1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json */; };
 		9358D15B19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */; };
 		93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */ = {isa = PBXBuildFile; fileRef = 93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */; };
 		936B22481958C3840058C828 /* WPStatsGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 936B22471958C3840058C828 /* WPStatsGraphViewController.m */; };
@@ -95,6 +97,8 @@
 		93274AE91A09B4FA0017238F /* stats-v1.1-referrers-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-referrers-day.json"; sourceTree = "<group>"; };
 		93302C501A1BD77900B49CFC /* WPStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsService.h; sourceTree = "<group>"; };
 		93302C511A1BD78300B49CFC /* WPStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsService.m; sourceTree = "<group>"; };
+		933FF21B1A406E0400336167 /* stats-v1.1-video-plays-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-video-plays-day.json"; sourceTree = "<group>"; };
+		933FF21D1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-video-plays-day-no-data.json"; sourceTree = "<group>"; };
 		9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceRemoteTests.m; sourceTree = "<group>"; };
 		93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-summary.json"; sourceTree = "<group>"; };
 		936B22461958C3840058C828 /* WPStatsGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphViewController.h; sourceTree = "<group>"; };
@@ -329,6 +333,8 @@
 				931193E71A0BAA660005BED2 /* stats-v1.1-clicks-day.json */,
 				931193F11A0C18C70005BED2 /* stats-v1.1-clicks-month-large.json */,
 				931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */,
+				933FF21B1A406E0400336167 /* stats-v1.1-video-plays-day.json */,
+				933FF21D1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json */,
 			);
 			name = "Test Data";
 			sourceTree = "<group>";
@@ -418,6 +424,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				933FF21C1A406E0400336167 /* stats-v1.1-video-plays-day.json in Resources */,
 				931193E81A0BAA660005BED2 /* stats-v1.1-clicks-day.json in Resources */,
 				931193F21A0C18C70005BED2 /* stats-v1.1-clicks-month-large.json in Resources */,
 				93274AE81A091E840017238F /* stats-v1.1-top-posts-day.json in Resources */,
@@ -426,6 +433,7 @@
 				93E3679D1922B751000FB32A /* stats-batch.json in Resources */,
 				931193EC1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json in Resources */,
 				9396CFCD1921096B006A66D7 /* InfoPlist.strings in Resources */,
+				933FF21E1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json in Resources */,
 				931193F01A0C12170005BED2 /* stats-v1.1-referrers-day-large.json in Resources */,
 				93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */,
 				931193EA1A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json in Resources */,

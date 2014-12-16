@@ -3,16 +3,9 @@
     "period": "day",
     "days": {
         "2014-12-16": {
-            "plays": [
-                      {
-                      "post_id": 144,
-                      "url": "http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144",
-                      "title": "Test Video",
-                      "plays": "2"
-                      }
-                      ],
+            "plays": [],
             "other_plays": 0,
-            "total_plays": 2
+            "total_plays": 0
         }
     }
 }
