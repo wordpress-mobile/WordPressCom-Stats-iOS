@@ -655,7 +655,7 @@
                                withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items);
-         XCTAssertNil(totalViews);
+         XCTAssertTrue([@"7,925,800" isEqualToString:totalViews]);
          XCTAssertNil(otherViews);
          
          XCTAssertEqual(7, items.count);
@@ -693,7 +693,7 @@
                                withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          XCTAssertNotNil(items);
-         XCTAssertNil(totalViews);
+         XCTAssertTrue([@"2,931" isEqualToString:totalViews]);
          XCTAssertNil(otherViews);
          
          XCTAssertEqual(7, items.count);
