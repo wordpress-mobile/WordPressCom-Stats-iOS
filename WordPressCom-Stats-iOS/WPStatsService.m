@@ -42,12 +42,13 @@
       referrersCompletionHandler:(StatsItemsCompletion)referrersCompletion
          clicksCompletionHandler:(StatsItemsCompletion)clicksCompletion
         countryCompletionHandler:(StatsItemsCompletion)countryCompletion
-          videosCompetionHandler:(StatsItemsCompletion)videosCompletion
-              commentsCompletion:(StatsItemsCompletion)commentsCompletion
-        tagsCategoriesCompletion:(StatsItemsCompletion)tagsCategoriesCompletion
-       followersDotComCompletion:(StatsItemsCompletion)followersDotComCompletion
-        followersEmailCompletion:(StatsItemsCompletion)followersEmailCompletion
-             publicizeCompletion:(StatsItemsCompletion)publicizeCompletion
+         videosCompletionHandler:(StatsItemsCompletion)videosCompletion
+ commentsAuthorCompletionHandler:(StatsItemsCompletion)commentsAuthorsCompletion
+  commentsPostsCompletionHandler:(StatsItemsCompletion)commentsPostsCompletion
+ tagsCategoriesCompletionHandler:(StatsItemsCompletion)tagsCategoriesCompletion
+followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
+ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
+      publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler
            overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
@@ -69,7 +70,8 @@
     __block StatsGroup *clicksResult = [StatsGroup new];
     __block StatsGroup *countriesResult = [StatsGroup new];
     __block StatsGroup *videosResult = [StatsGroup new];
-    __block StatsGroup *commentsResult = [StatsGroup new];
+    __block StatsGroup *commentsAuthorsResult = [StatsGroup new];
+    __block StatsGroup *commentsPostsResult = [StatsGroup new];
     __block StatsGroup *tagsCategoriesResult = [StatsGroup new];
     __block StatsGroup *followersDotComResult = [StatsGroup new];
     __block StatsGroup *followersEmailResult = [StatsGroup new];
@@ -118,7 +120,7 @@
             countryCompletion(countriesResult);
         }
     }
-                  videosCompetionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                 videosCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         videosResult.items = items;
         
@@ -126,15 +128,20 @@
             videosCompletion(videosResult);
         }
     }
-                      commentsCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+               commentsCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
-        commentsResult.items = items;
+        commentsAuthorsResult.items = items.firstObject;
+        commentsPostsResult.items = items.lastObject;
         
-        if (commentsCompletion) {
-            commentsCompletion(commentsResult);
+        if (commentsAuthorsCompletion) {
+            commentsAuthorsCompletion(commentsAuthorsResult);
+        }
+        
+        if (commentsPostsResult) {
+            commentsPostsCompletion(commentsPostsResult);
         }
     }
-                tagsCategoriesCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+         tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         tagsCategoriesResult.items = items;
         
@@ -142,7 +149,7 @@
             tagsCategoriesCompletion(tagsCategoriesResult);
         }
     }
-               followersDotComCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+        followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          followersDotComResult.items = items;
          
@@ -155,7 +162,7 @@
              followersDotComCompletion(followersDotComResult);
          }
      }
-               followersEmailCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
      {
          followersEmailResult.items = items;
          
@@ -168,7 +175,7 @@
              followersEmailCompletion(followersEmailResult);
          }
      }
-                     publicizeCompletion:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
     {
         publicizeResult.items = items;
         

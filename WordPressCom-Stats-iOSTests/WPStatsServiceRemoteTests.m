@@ -587,12 +587,55 @@
 
 - (void)testCommentsDay
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchCommentsStatsForDate completion"];
     
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/comments"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-comments-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchCommentsStatsForDate:[NSDate date]
+                                    andUnit:StatsPeriodUnitDay
+                      withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertNil(totalViews);
+         XCTAssertNil(otherViews);
+         
+         XCTAssertEqual(2, items.count);
+         NSArray *authorItems = items.firstObject;
+         NSArray *postItems = items.lastObject;
+         
+         StatsItem *author1 = authorItems.firstObject;
+         XCTAssertTrue([@"Aaron Douglas" isEqualToString:author1.label]);
+         XCTAssertTrue([@"20" isEqualToString:author1.value]);
+         XCTAssertTrue([author1.iconURL.absoluteString isEqualToString:@"https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?s=64&amp;d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"]);
+         XCTAssertEqual(0, author1.actions.count);
+         XCTAssertEqual(0, author1.children.count);
+         
+         StatsItem *post1 = postItems.firstObject;
+         XCTAssertTrue([@"Mac Screen Sharing (VNC) & White Screen" isEqualToString:post1.label]);
+         XCTAssertTrue([@"29" isEqualToString:post1.value]);
+         XCTAssertEqual(67, post1.itemID.integerValue);
+         XCTAssertEqual(1, post1.actions.count);
+         XCTAssertEqual(0, post1.children.count);
+         StatsItemAction *post1Action = post1.actions.firstObject;
+         XCTAssertTrue([post1Action.url.absoluteString isEqualToString:@"http://astralbodi.es/2010/05/02/mac-screen-sharing-vnc-white-screen/"]);
+         XCTAssertTrue(post1Action.defaultAction);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 - (void)testTagsCategoriesDay
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchTagsCategoriesStatsForDate completion"];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags"];

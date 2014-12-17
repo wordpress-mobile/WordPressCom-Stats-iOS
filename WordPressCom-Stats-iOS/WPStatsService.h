@@ -22,12 +22,13 @@ typedef void (^StatsItemsCompletion)(StatsGroup *group);
       referrersCompletionHandler:(StatsItemsCompletion)referrersCompletion
          clicksCompletionHandler:(StatsItemsCompletion)clicksCompletion
         countryCompletionHandler:(StatsItemsCompletion)countryCompletion
-          videosCompetionHandler:(StatsItemsCompletion)videosCompletion
-              commentsCompletion:(StatsItemsCompletion)commentsCompletion
-        tagsCategoriesCompletion:(StatsItemsCompletion)tagsCategoriesCompletion
-       followersDotComCompletion:(StatsItemsCompletion)followersDotComCompletion
-        followersEmailCompletion:(StatsItemsCompletion)followersEmailCompletion
-             publicizeCompletion:(StatsItemsCompletion)publicizeCompletion
+         videosCompletionHandler:(StatsItemsCompletion)videosCompletion
+ commentsAuthorCompletionHandler:(StatsItemsCompletion)commentsAuthorsCompletion
+  commentsPostsCompletionHandler:(StatsItemsCompletion)commentsPostsCompletion
+ tagsCategoriesCompletionHandler:(StatsItemsCompletion)tagsCategoriesCompletion
+followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
+ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
+      publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler
            overallFailureHandler:(void (^)(NSError *error))failureHandler;
 

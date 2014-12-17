@@ -69,12 +69,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
        countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-         videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
-             commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
-       tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-      followersDotComCompletion:(StatsRemoteItemsCompletion)followersDotComCompletion
-       followersEmailCompletion:(StatsRemoteItemsCompletion)followersEmailCompletion
-            publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
+        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
+followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
+     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
@@ -102,7 +102,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion failureHandler:nil]];
         }
         if (commentsCompletion) {
-            
+            [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion failureHandler:nil]];
         }
         if (tagsCategoriesCompletion) {
             [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion failureHandler:nil]];
@@ -657,8 +657,55 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                                          failureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO :: Implement
-    return nil;
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSMutableArray *authorItems = [NSMutableArray new];
+        NSMutableArray *postsItems = [NSMutableArray new];
+        
+        NSArray *authors = [responseObject arrayForKey:@"authors"];
+        NSArray *posts = [responseObject arrayForKey:@"posts"];
+        
+        for (NSDictionary *author in authors) {
+            StatsItem *item = [StatsItem new];
+            item.label = [author stringForKey:@"name"];
+            item.iconURL = [NSURL URLWithString:[author stringForKey:@"gravatar"]];
+            item.value = [self localizedStringForNumber:[author numberForKey:@"comments"]];
+            // TODO follow data
+            
+            [authorItems addObject:item];
+        }
+        
+        for (NSDictionary *post in posts) {
+            StatsItem *item = [StatsItem new];
+            item.label = [post stringForKey:@"name"];
+            item.itemID = [post numberForKey:@"id"];
+            item.value = [self localizedStringForNumber:[post numberForKey:@"comments"]];
+            
+            NSString *linkURL = [post stringForKey:@"link"];
+            if (linkURL.length > 0) {
+                StatsItemAction *itemAction = [StatsItemAction new];
+                itemAction.url = [NSURL URLWithString:linkURL];
+                itemAction.defaultAction = YES;
+                item.actions = @[itemAction];
+            }
+            
+            [postsItems addObject:item];
+        }
+        
+        if (completionHandler) {
+            completionHandler(@[authorItems, postsItems], nil, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self siteLocalStringForDate:date]};
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+    
+    return operation;
 }
 
 
