@@ -27,6 +27,12 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
  @param referrersCompletion
  @param clicksCompletion
  @param countryCompletion
+ @param videosCompletion
+ @param commentsCompletion items is an array of arrays = position 0 = authors, position 1 = posts (hacky)
+ @param tagsCategoriesCompletion
+ @param followersDotComCompletion
+ @param followersEmailCompletion
+ @param publicizeCompletion
  @param failureHandler
  
  */
