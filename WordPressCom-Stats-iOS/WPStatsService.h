@@ -25,7 +25,8 @@ typedef void (^StatsItemsCompletion)(StatsGroup *group);
           videosCompetionHandler:(StatsItemsCompletion)videosCompletion
               commentsCompletion:(StatsItemsCompletion)commentsCompletion
         tagsCategoriesCompletion:(StatsItemsCompletion)tagsCategoriesCompletion
-             followersCompletion:(StatsItemsCompletion)followersCompletion
+       followersDotComCompletion:(StatsItemsCompletion)followersDotComCompletion
+        followersEmailCompletion:(StatsItemsCompletion)followersEmailCompletion
              publicizeCompletion:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler
            overallFailureHandler:(void (^)(NSError *error))failureHandler;

@@ -6,6 +6,12 @@ typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, NSString *otherViews);
 
+typedef NS_ENUM(NSUInteger, StatsFollowerType) {
+    StatsFollowerTypeDotCom,
+    StatsFollowerTypeEmail
+};
+
+
 @interface WPStatsServiceRemote : NSObject
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone;
@@ -34,7 +40,8 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews,
          videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
              commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
        tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-            followersCompletion:(StatsRemoteItemsCompletion)followersCompletion
+      followersDotComCompletion:(StatsRemoteItemsCompletion)followersDotComCompletion
+       followersEmailCompletion:(StatsRemoteItemsCompletion)followersEmailCompletion
             publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler;
@@ -83,10 +90,11 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews,
                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
                          failureHandler:(void (^)(NSError *error))failureHandler;
 
-- (void)fetchFollowersStatsForDate:(NSDate *)date
-                           andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler;
+- (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
+                                      date:(NSDate *)date
+                                   andUnit:(StatsPeriodUnit)unit
+                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                            failureHandler:(void (^)(NSError *error))failureHandler;
 
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit

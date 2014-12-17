@@ -15,6 +15,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 @property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
 @property (nonatomic, copy)     NSString                        *statsPathPrefix;
 @property (nonatomic, strong)   NSDateFormatter                 *deviceDateFormatter;
+@property (nonatomic, strong)   NSDateFormatter                 *rfc3339DateFormatter;
 @property (nonatomic, strong)   NSNumberFormatter               *deviceNumberFormatter;
 @property (nonatomic, strong)   AFHTTPRequestOperationManager   *manager;
 
@@ -43,6 +44,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         
         _deviceNumberFormatter = [NSNumberFormatter new];
         
+        _rfc3339DateFormatter = [[NSDateFormatter alloc] init];
+        _rfc3339DateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        _rfc3339DateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ssZ";
+        _rfc3339DateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+
         _manager = [AFHTTPRequestOperationManager manager];
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
         [_manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", _oauth2Token]
@@ -66,7 +72,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
          videosCompetionHandler:(StatsRemoteItemsCompletion)videosCompletion
              commentsCompletion:(StatsRemoteItemsCompletion)commentsCompletion
        tagsCategoriesCompletion:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-            followersCompletion:(StatsRemoteItemsCompletion)followersCompletion
+      followersDotComCompletion:(StatsRemoteItemsCompletion)followersDotComCompletion
+       followersEmailCompletion:(StatsRemoteItemsCompletion)followersEmailCompletion
             publicizeCompletion:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler
@@ -100,8 +107,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         if (tagsCategoriesCompletion) {
             [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion failureHandler:nil]];
         }
-        if (followersCompletion) {
-            
+        if (followersDotComCompletion) {
+            [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion failureHandler:nil]];
+        }
+        if (followersEmailCompletion) {
+            [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion failureHandler:nil]];
         }
         if (publicizeCompletion) {
             [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion failureHandler:nil]];
@@ -223,14 +233,15 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
-- (void)fetchFollowersStatsForDate:(NSDate *)date
-                           andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler
+- (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
+                                      date:(NSDate *)date
+                                   andUnit:(StatsPeriodUnit)unit
+                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                            failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForFollowersForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -602,12 +613,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
-        NSDictionary *playsDict = [firstDay dictionaryForKey:@"plays"];
+        NSArray *playsArray = [firstDay arrayForKey:@"plays"];
         NSString *totalPlays = [self localizedStringForNumber:[firstDay numberForKey:@"total_plays"]];
         NSString *otherPlays = [self localizedStringForNumber:[firstDay numberForKey:@"other_plays"]];
         NSMutableArray *items = [NSMutableArray new];
         
-        for (NSDictionary *play in playsDict) {
+        for (NSDictionary *play in playsArray) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
             statsItem.label = [play stringForKey:@"title"];
@@ -685,8 +696,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                     [childStatsItems addObject:childItem];
                 }
                 
+                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 StatsItem *statsItem = [StatsItem new];
-                statsItem.label = tagLabel;
+                statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 statsItem.children = childStatsItems;
                 
@@ -709,10 +721,11 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     return operation;}
 
 
-- (AFHTTPRequestOperation *)operationForFollowersForDate:(NSDate *)date
-                                                 andUnit:(StatsPeriodUnit)unit
-                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                          failureHandler:(void (^)(NSError *error))failureHandler
+- (AFHTTPRequestOperation *)operationForFollowersOfType:(StatsFollowerType)followerType
+                                                forDate:(NSDate *)date
+                                                andUnit:(StatsPeriodUnit)unit
+                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                         failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -720,6 +733,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         
         NSArray *subscribers = [response arrayForKey:@"subscribers"];
         NSMutableArray *items = [NSMutableArray new];
+        NSString *totalKey = followerType == StatsFollowerTypeDotCom ? @"total_wpcom" : @"total_email";
+        NSString *totalFollowers = [self localizedStringForNumber:[response numberForKey:totalKey]];
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
         dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
@@ -728,20 +743,24 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         for (NSDictionary *subscriber in subscribers) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [subscriber stringForKey:@"label"];
-            statsItem.date = [self deviceLocalDateForString:[subscriber stringForKey:@"date_subscribed"] withPeriodUnit:unit];
+            statsItem.iconURL = [NSURL URLWithString:[subscriber stringForKey:@"avatar"]];
+            statsItem.date = [self.rfc3339DateFormatter dateFromString:[subscriber stringForKey:@"date_subscribed"]];
+            
+            
+            [items addObject:statsItem];
         }
         
         if (completionHandler) {
-            completionHandler(items, nil, nil);
+            completionHandler(items, totalFollowers, nil);
         }
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
                                  @"date"   : [self siteLocalStringForDate:date],
-                                 @"type"   : @"wpcom",
-                                 @"max"    : @7};
+                                 @"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
+                                 @"max"    : @7}; // TODO - Change this to a non-fixed value?
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];

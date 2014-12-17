@@ -519,4 +519,198 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testVideosDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-video-plays-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchVideosStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertTrue([totalViews isEqualToString:@"2"]);
+         XCTAssertTrue([otherViews isEqualToString:@"0"]);
+         
+         XCTAssertEqual(1, items.count);
+         
+         StatsItem *item = items.firstObject;
+         XCTAssertTrue([item.label isEqualToString:@"Test Video"]);
+         XCTAssertTrue([@"2" isEqualToString:item.value]);
+         XCTAssertEqual(1, item.actions.count);
+         
+         StatsItemAction *itemAction = item.actions.firstObject;
+         XCTAssertTrue([itemAction.url.absoluteString isEqualToString:@"http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144"]);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testVideosDayNoData
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-video-plays-day-no-data.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchVideosStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertTrue([totalViews isEqualToString:@"0"]);
+         XCTAssertTrue([otherViews isEqualToString:@"0"]);
+         
+         XCTAssertEqual(0, items.count);
+
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testCommentsDay
+{
+    
+}
+
+- (void)testTagsCategoriesDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-tags-categories-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchTagsCategoriesStatsForDate:[NSDate date]
+                                          andUnit:StatsPeriodUnitDay
+                            withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertNil(totalViews);
+         XCTAssertNil(otherViews);
+         
+         XCTAssertEqual(10, items.count);
+         
+         StatsItem *item1 = items.firstObject;
+         XCTAssertTrue([@"Uncategorized" isEqualToString:item1.label]);
+         XCTAssertTrue([@"461" isEqualToString:item1.value]);
+         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(0, item1.children.count);
+         
+         StatsItem *item9 = items[8];
+         XCTAssertTrue([@"unit test XCTest asynchronous testing" isEqualToString:item9.label]);
+         XCTAssertTrue([@"43" isEqualToString:item9.value]);
+         XCTAssertEqual(0, item9.actions.count);
+         XCTAssertEqual(4, item9.children.count);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testFollowersDotComDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-followers-wpcom-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeDotCom
+                                                date:[NSDate date]
+                                             andUnit:StatsPeriodUnitDay
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertTrue([@"7,925,800" isEqualToString:totalViews]);
+         XCTAssertNil(otherViews);
+         
+         XCTAssertEqual(7, items.count);
+         
+         StatsItem *item1 = items.firstObject;
+         XCTAssertTrue([@"ritu929" isEqualToString:item1.label]);
+         XCTAssertNil(item1.value);
+         XCTAssertNotNil(item1.date);
+         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://0.gravatar.com/avatar/624b89cb0c8b9136f9629dd7bcab0517?s=64&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G"]);
+         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(0, item1.children.count);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testFollowersEmailDay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-followers-email-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeEmail
+                                                date:[NSDate date]
+                                             andUnit:StatsPeriodUnitDay
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+     {
+         XCTAssertNotNil(items);
+         XCTAssertTrue([@"2,931" isEqualToString:totalViews]);
+         XCTAssertNil(otherViews);
+         
+         XCTAssertEqual(7, items.count);
+         
+         StatsItem *item1 = items.firstObject;
+         XCTAssertTrue([@"user1@example.com" isEqualToString:item1.label]);
+         XCTAssertNil(item1.value);
+         XCTAssertNotNil(item1.date);
+         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://2.gravatar.com/avatar/e82142697283897ad7444810e5975895?s=64&amp;d=https%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G"]);
+         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(0, item1.children.count);
+         
+         [expectation fulfill];
+     } failureHandler:^(NSError *error) {
+         XCTFail(@"Failure handler should not be called here.");
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+
+- (void)testPublicizeDay
+{
+    
+}
+
 @end
