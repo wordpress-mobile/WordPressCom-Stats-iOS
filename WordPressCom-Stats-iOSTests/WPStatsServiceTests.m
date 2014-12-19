@@ -131,7 +131,27 @@
                                  periodUnit:StatsPeriodUnitWeek
                                expectedYear:2014
                                       month:12
-                                        day:6];
+                                        day:7];
+}
+
+
+- (void)testDateSanitizationAlreadySunday
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 12;
+    dateComponents.day = 28;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2014
+                                      month:12
+                                        day:28];
 }
 
 
@@ -151,7 +171,7 @@
                                  periodUnit:StatsPeriodUnitWeek
                                expectedYear:2015
                                       month:1
-                                        day:3];
+                                        day:4];
 }
 
 

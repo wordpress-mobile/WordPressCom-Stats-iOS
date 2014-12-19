@@ -272,9 +272,15 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         
         return date;
     } else if (unit == StatsPeriodUnitWeek) {
+        // Weeks are Monday - Sunday
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYearForWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitWeekOfYear fromDate:date];
-        dateComponents.weekday = 7;
-        date = [calendar dateFromComponents:dateComponents];
+        NSInteger weekDay = dateComponents.weekday;
+        
+        if (weekDay > 1) {
+            dateComponents = [NSDateComponents new];
+            dateComponents.weekday = 8 - weekDay;
+            date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        }
         
         return date;
     } else if (unit == StatsPeriodUnitYear) {
