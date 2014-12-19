@@ -64,10 +64,10 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         }
     };
     
-    NSMutableArray *fixedDates = [NSMutableArray new];
+    NSMutableArray *endDates = [NSMutableArray new];
     for (NSDate *date in dates) {
-        NSDate *fixedDate = [self fixDate:date forPeriodUnit:unit];
-        [fixedDates addObject:fixedDate];
+        NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+        [endDates addObject:endDate];
     }
 
     __block StatsVisits *visitsResult = nil;
@@ -83,7 +83,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     __block StatsGroup *followersEmailResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
-    [self.remote batchFetchStatsForDates:fixedDates
+    [self.remote batchFetchStatsForDates:endDates
                                  andUnit:unit
              withVisitsCompletionHandler:^(StatsVisits *visits)
     {
@@ -253,7 +253,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
 }
 
-- (NSDate *)fixDate:(NSDate *)date forPeriodUnit:(StatsPeriodUnit)unit
+- (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date
 {
     NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
 
