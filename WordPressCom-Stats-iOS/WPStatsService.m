@@ -255,11 +255,13 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
 
 - (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-
     if (unit == StatsPeriodUnitDay) {
         return date;
-    } else if (unit == StatsPeriodUnitMonth) {
+    }
+    
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+
+    if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:date];
         date = [calendar dateFromComponents:dateComponents];
         
