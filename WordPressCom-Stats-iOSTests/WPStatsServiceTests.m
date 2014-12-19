@@ -95,7 +95,7 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
-- (void)testDateSanitization
+- (void)testDateSanitizationDay
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
@@ -106,35 +106,90 @@
     dateComponents.minute = 0;
     dateComponents.second = 0;
     NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                               periodUnit:StatsPeriodUnitDay
+                             expectedYear:2014
+                                    month:12
+                                      day:1];
+}
 
+
+- (void)testDateSanitizationWeek
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 12;
+    dateComponents.day = 1;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2014
+                                      month:12
+                                        day:6];
+}
+
+
+- (void)testDateSanitizationWeekCrossesYear
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 12;
+    dateComponents.day = 30;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2015
+                                      month:1
+                                        day:3];
+}
+
+
+#pragma mark - Private test helper methods
+
+- (void)verifyDateSantizationWithBaseDate:(NSDate *)baseDate periodUnit:(StatsPeriodUnit)unit expectedYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
+{
     WPStatsServiceRemote *remote = OCMClassMock([WPStatsServiceRemote class]);
     
-    OCMExpect([remote batchFetchStatsForDates:[OCMArg checkWithBlock:^BOOL(id obj) {
+    id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj[0];
         NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:date];
-        BOOL isOkay = dateComponents.year == 2014 && dateComponents.month == 12 && dateComponents.day == 1;
+        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+        BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         
         return isOkay;
-    }]
-                                    andUnit:StatsPeriodUnitDay
-                withVisitsCompletionHandler:[OCMArg any]
-                     postsCompletionHandler:[OCMArg any]
-                 referrersCompletionHandler:[OCMArg any]
-                    clicksCompletionHandler:[OCMArg any]
-                   countryCompletionHandler:[OCMArg any]
-                    videosCompletionHandler:[OCMArg any]
-                  commentsCompletionHandler:[OCMArg any]
-            tagsCategoriesCompletionHandler:[OCMArg any]
-           followersDotComCompletionHandler:[OCMArg any]
-            followersEmailCompletionHandler:[OCMArg any]
-                 publicizeCompletionHandler:[OCMArg any]
-                andOverallCompletionHandler:[OCMArg any]
-                      overallFailureHandler:[OCMArg any]]);
+    }];
+    
+    OCMExpect([remote batchFetchStatsForDates:dateCheckBlock
+                                      andUnit:unit
+                  withVisitsCompletionHandler:[OCMArg any]
+                       postsCompletionHandler:[OCMArg any]
+                   referrersCompletionHandler:[OCMArg any]
+                      clicksCompletionHandler:[OCMArg any]
+                     countryCompletionHandler:[OCMArg any]
+                      videosCompletionHandler:[OCMArg any]
+                    commentsCompletionHandler:[OCMArg any]
+              tagsCategoriesCompletionHandler:[OCMArg any]
+             followersDotComCompletionHandler:[OCMArg any]
+              followersEmailCompletionHandler:[OCMArg any]
+                   publicizeCompletionHandler:[OCMArg any]
+                  andOverallCompletionHandler:[OCMArg any]
+                        overallFailureHandler:[OCMArg any]]);
+    
     self.subject.remote = remote;
     
-    [self.subject retrieveAllStatsForDates:@[date]
-                                   andUnit:StatsPeriodUnitDay
+    [self.subject retrieveAllStatsForDates:@[baseDate]
+                                   andUnit:unit
                withVisitsCompletionHandler:nil
                     postsCompletionHandler:nil
                 referrersCompletionHandler:nil

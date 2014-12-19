@@ -225,7 +225,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         return @"";
     }
     
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDate *now = [NSDate date];
     
     NSDateComponents *dateComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
@@ -255,10 +255,11 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
 
 - (NSDate *)fixDate:(NSDate *)date ForPeriodUnit:(StatsPeriodUnit)unit
 {
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+
     if (unit == StatsPeriodUnitDay) {
         return date;
     } else if (unit == StatsPeriodUnitMonth) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:date];
         dateComponents.day = -1;
         dateComponents.month = +1;
@@ -266,9 +267,12 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         
         return date;
     } else if (unit == StatsPeriodUnitWeek) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYearForWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitWeekOfYear fromDate:date];
+        dateComponents.weekday = 7;
+        date = [calendar dateFromComponents:dateComponents];
+        
         return date;
     } else if (unit == StatsPeriodUnitYear) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit fromDate:date];
         dateComponents.day = -1;
         dateComponents.year = +1;
