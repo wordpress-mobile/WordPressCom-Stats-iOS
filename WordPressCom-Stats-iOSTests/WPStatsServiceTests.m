@@ -97,7 +97,7 @@
 
 - (void)testDateSanitizationDay
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -117,7 +117,7 @@
 
 - (void)testDateSanitizationWeek
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -137,7 +137,7 @@
 
 - (void)testDateSanitizationWeekCrossesYear
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -155,6 +155,106 @@
 }
 
 
+- (void)testDateSanitizationMonth
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 12;
+    dateComponents.day = 1;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitMonth
+                               expectedYear:2014
+                                      month:12
+                                        day:31];
+}
+
+
+- (void)testDateSanitizationMonthLeapYear
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2016;
+    dateComponents.month = 2;
+    dateComponents.day = 13;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitMonth
+                               expectedYear:2016
+                                      month:2
+                                        day:29];
+}
+
+
+- (void)testDateSanitizationYear
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 2;
+    dateComponents.day = 13;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitYear
+                               expectedYear:2014
+                                      month:12
+                                        day:31];
+}
+
+
+- (void)testDateSanitizationYearFirstOfYear
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 1;
+    dateComponents.day = 1;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitYear
+                               expectedYear:2014
+                                      month:12
+                                        day:31];
+}
+
+
+- (void)testDateSanitizationYearLastOfYear
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2014;
+    dateComponents.month = 12;
+    dateComponents.day = 31;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitYear
+                               expectedYear:2014
+                                      month:12
+                                        day:31];
+}
+
+
 #pragma mark - Private test helper methods
 
 - (void)verifyDateSantizationWithBaseDate:(NSDate *)baseDate periodUnit:(StatsPeriodUnit)unit expectedYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
@@ -163,7 +263,7 @@
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj[0];
-        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         

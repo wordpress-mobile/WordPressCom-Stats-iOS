@@ -261,6 +261,9 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         return date;
     } else if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
         dateComponents.day = -1;
         dateComponents.month = +1;
         date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
@@ -274,6 +277,9 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         return date;
     } else if (unit == StatsPeriodUnitYear) {
         NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
         dateComponents.day = -1;
         dateComponents.year = +1;
         date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
