@@ -262,7 +262,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
 
     if (unit == StatsPeriodUnitMonth) {
-        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:date];
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
         date = [calendar dateFromComponents:dateComponents];
         
         dateComponents = [NSDateComponents new];
@@ -278,7 +278,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         
         return date;
     } else if (unit == StatsPeriodUnitYear) {
-        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit fromDate:date];
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
         date = [calendar dateFromComponents:dateComponents];
         
         dateComponents = [NSDateComponents new];

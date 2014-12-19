@@ -264,7 +264,7 @@
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj[0];
         NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         
         return isOkay;
