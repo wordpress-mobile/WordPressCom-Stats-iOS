@@ -174,7 +174,7 @@
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
 					93B682D0194F95AD00EBF6DF = {
-						DevelopmentTeam = 99KV9Z6BKV;
+						DevelopmentTeam = PZYM8XX95Q;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -370,11 +370,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = StatsDemo/StatsDemo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b76530d2-bee7-4692-bb74-60622302c1c9";
+				PROVISIONING_PROFILE = "8dfe8c6d-c08d-4a6a-9ab3-3c6231b2dc37";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -386,11 +387,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = StatsDemo/StatsDemo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9812ccb5-a220-4075-b143-1aeef9678bb5";
+				PROVISIONING_PROFILE = "811b8c55-bad6-4b7d-a9a6-e24c8299be32";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
