@@ -66,7 +66,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     
     NSMutableArray *fixedDates = [NSMutableArray new];
     for (NSDate *date in dates) {
-        NSDate *fixedDate = [self fixDate:date ForPeriodUnit:unit];
+        NSDate *fixedDate = [self fixDate:date forPeriodUnit:unit];
         [fixedDates addObject:fixedDate];
     }
 
@@ -253,7 +253,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
 }
 
-- (NSDate *)fixDate:(NSDate *)date ForPeriodUnit:(StatsPeriodUnit)unit
+- (NSDate *)fixDate:(NSDate *)date forPeriodUnit:(StatsPeriodUnit)unit
 {
     NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
 
