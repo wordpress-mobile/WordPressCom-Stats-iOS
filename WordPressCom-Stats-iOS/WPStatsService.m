@@ -63,6 +63,12 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             failureHandler(error);
         }
     };
+    
+    NSMutableArray *endDates = [NSMutableArray new];
+    for (NSDate *date in dates) {
+        NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+        [endDates addObject:endDate];
+    }
 
     __block StatsVisits *visitsResult = nil;
     __block StatsGroup *postsResult = [StatsGroup new];
@@ -77,7 +83,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     __block StatsGroup *followersEmailResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
-    [self.remote batchFetchStatsForDates:dates
+    [self.remote batchFetchStatsForDates:endDates
                                  andUnit:unit
              withVisitsCompletionHandler:^(StatsVisits *visits)
     {
@@ -219,7 +225,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         return @"";
     }
     
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDate *now = [NSDate date];
     
     NSDateComponents *dateComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
@@ -245,6 +251,51 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     } else {
         return NSLocalizedString(@"<1 hour", @"Age between dates less than one hour.");
     }
+}
+
+- (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date
+{
+    if (unit == StatsPeriodUnitDay) {
+        return date;
+    }
+    
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+
+    if (unit == StatsPeriodUnitMonth) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = -1;
+        dateComponents.month = +1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitWeek) {
+        // Weeks are Monday - Sunday
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYearForWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitWeekOfYear fromDate:date];
+        NSInteger weekDay = dateComponents.weekday;
+        
+        if (weekDay > 1) {
+            dateComponents = [NSDateComponents new];
+            dateComponents.weekday = 8 - weekDay;
+            date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        }
+        
+        return date;
+    } else if (unit == StatsPeriodUnitYear) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = -1;
+        dateComponents.year = +1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    }
+    
+    return nil;
 }
 
 @end
