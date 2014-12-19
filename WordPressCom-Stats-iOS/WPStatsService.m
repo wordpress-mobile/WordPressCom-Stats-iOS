@@ -63,6 +63,12 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             failureHandler(error);
         }
     };
+    
+    NSMutableArray *fixedDates = [NSMutableArray new];
+    for (NSDate *date in dates) {
+        NSDate *fixedDate = [self fixDate:date ForPeriodUnit:unit];
+        [fixedDates addObject:fixedDate];
+    }
 
     __block StatsVisits *visitsResult = nil;
     __block StatsGroup *postsResult = [StatsGroup new];
@@ -77,7 +83,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     __block StatsGroup *followersEmailResult = [StatsGroup new];
     __block StatsGroup *publicizeResult = [StatsGroup new];
     
-    [self.remote batchFetchStatsForDates:dates
+    [self.remote batchFetchStatsForDates:fixedDates
                                  andUnit:unit
              withVisitsCompletionHandler:^(StatsVisits *visits)
     {
@@ -245,6 +251,33 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     } else {
         return NSLocalizedString(@"<1 hour", @"Age between dates less than one hour.");
     }
+}
+
+- (NSDate *)fixDate:(NSDate *)date ForPeriodUnit:(StatsPeriodUnit)unit
+{
+    if (unit == StatsPeriodUnitDay) {
+        return date;
+    } else if (unit == StatsPeriodUnitMonth) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:date];
+        dateComponents.day = -1;
+        dateComponents.month = +1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitWeek) {
+        return date;
+    } else if (unit == StatsPeriodUnitYear) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit fromDate:date];
+        dateComponents.day = -1;
+        dateComponents.year = +1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    }
+    
+    return nil;
 }
 
 @end
