@@ -93,48 +93,53 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             visitsCompletion(visits);
         }
     }
-                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         postsResult.items = items;
         postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
+        postsResult.moreItemsExist = moreViewsAvailable;
         
         if (postsCompletion) {
             postsCompletion(postsResult);
         }
     }
-              referrersCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+              referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         referrersResult.items = items;
+        referrersResult.moreItemsExist = moreViewsAvailable;
         
         if (referrersCompletion) {
             referrersCompletion(referrersResult);
         }
     }
-                 clicksCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                 clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         clicksResult.items = items;
+        clicksResult.moreItemsExist = moreViewsAvailable;
         
         if (clicksCompletion) {
             clicksCompletion(clicksResult);
         }
     }
-                countryCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         countriesResult.items = items;
+        countriesResult.moreItemsExist = moreViewsAvailable;
         
         if (countryCompletion) {
             countryCompletion(countriesResult);
         }
     }
-                 videosCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                 videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         videosResult.items = items;
+        videosResult.moreItemsExist = moreViewsAvailable;
         
         if (videosCompletion) {
             videosCompletion(videosResult);
         }
     }
-               commentsCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+               commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         commentsAuthorsResult.items = items.firstObject;
         commentsPostsResult.items = items.lastObject;
@@ -147,17 +152,19 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             commentsPostsCompletion(commentsPostsResult);
         }
     }
-         tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+         tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         tagsCategoriesResult.items = items;
+        tagsCategoriesResult.moreItemsExist = moreViewsAvailable;
         
         if (tagsCategoriesCompletion) {
             tagsCategoriesCompletion(tagsCategoriesResult);
         }
     }
-        followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+        followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          followersDotComResult.items = items;
+         followersDotComResult.moreItemsExist = moreViewsAvailable;
          
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
@@ -168,9 +175,10 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
              followersDotComCompletion(followersDotComResult);
          }
      }
-         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          followersEmailResult.items = items;
+         followersEmailResult.moreItemsExist = moreViewsAvailable;
          
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
@@ -181,9 +189,10 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
              followersEmailCompletion(followersEmailResult);
          }
      }
-              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
         publicizeResult.items = items;
+        publicizeResult.moreItemsExist = moreViewsAvailable;
         
         if (publicizeCompletion) {
             publicizeCompletion(publicizeResult);

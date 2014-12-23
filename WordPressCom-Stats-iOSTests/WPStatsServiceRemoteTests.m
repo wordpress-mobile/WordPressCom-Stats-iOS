@@ -137,7 +137,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -175,7 +175,7 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
@@ -213,11 +213,11 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
-         XCTAssertNotNil(otherViews, @"There should be a number provided.");
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(4, items.count);
          
@@ -293,11 +293,11 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertTrue([@"2,161" isEqualToString:totalViews]);
-         XCTAssertTrue([@"938" isEqualToString:otherViews]);
+         XCTAssertTrue(moreViewsAvailable);
          
          XCTAssertEqual(10, items.count);
          
@@ -380,11 +380,11 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, NSString *otherClicks)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalClicks, @"There should be a number provided.");
-         XCTAssertNotNil(otherClicks, @"There should be a number provided.");
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(2, items.count);
          
@@ -433,11 +433,11 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitMonth
-                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, NSString *otherClicks)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"9" isEqualToString:totalClicks]);
-         XCTAssertTrue([@"0" isEqualToString:otherClicks]);
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(6, items.count);
          
@@ -494,11 +494,11 @@
     
     [self.subject fetchCountryStatsForDate:[NSDate date]
                                    andUnit:StatsPeriodUnitDay
-                     withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                     withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
-         XCTAssertNotNil(otherViews, @"There should be a number provided.");
+         XCTAssertTrue(moreViewsAvailable);
          
          XCTAssertEqual(12, items.count);
          
@@ -531,11 +531,11 @@
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([totalViews isEqualToString:@"2"]);
-         XCTAssertTrue([otherViews isEqualToString:@"0"]);
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(1, items.count);
          
@@ -568,11 +568,11 @@
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([totalViews isEqualToString:@"0"]);
-         XCTAssertTrue([otherViews isEqualToString:@"0"]);
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(0, items.count);
 
@@ -597,11 +597,11 @@
     
     [self.subject fetchCommentsStatsForDate:[NSDate date]
                                     andUnit:StatsPeriodUnitDay
-                      withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                      withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
-         XCTAssertNil(otherViews);
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(2, items.count);
          NSArray *authorItems = items.firstObject;
@@ -645,11 +645,11 @@
     
     [self.subject fetchTagsCategoriesStatsForDate:[NSDate date]
                                           andUnit:StatsPeriodUnitDay
-                            withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                            withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
-         XCTAssertNil(otherViews);
+         XCTAssertFalse(moreViewsAvailable);
          
          XCTAssertEqual(10, items.count);
          
@@ -687,11 +687,11 @@
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeDotCom
                                                 date:[NSDate date]
                                              andUnit:StatsPeriodUnitDay
-                               withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"7,925,800" isEqualToString:totalViews]);
-         XCTAssertNil(otherViews);
+         XCTAssertTrue(moreViewsAvailable);
          
          XCTAssertEqual(7, items.count);
          
@@ -725,11 +725,11 @@
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeEmail
                                                 date:[NSDate date]
                                              andUnit:StatsPeriodUnitDay
-                               withCompletionHandler:^(NSArray *items, NSString *totalViews, NSString *otherViews)
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"2,931" isEqualToString:totalViews]);
-         XCTAssertNil(otherViews);
+         XCTAssertTrue(moreViewsAvailable);
          
          XCTAssertEqual(7, items.count);
          
