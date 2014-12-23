@@ -299,10 +299,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
 {
-    StatsSection section = (StatsSection)control.superview.tag;
+    StatsSection statsSection = (StatsSection)control.superview.tag;
+    NSInteger section = [self.sections indexOfObject:@(statsSection)];
+    
+    NSInteger oldSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
     StatsSubSection subSection;
     
-    switch (section) {
+    switch (statsSection) {
         case StatsSectionComments:
             subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionCommentsByAuthor : StatsSubSectionCommentsByPosts;
             break;
@@ -314,13 +317,23 @@ static CGFloat const kNoResultsHeight = 100.0f;
     }
     
     self.selectedSubsections[@(section)] = @(subSection);
+    NSInteger newSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
+    
+    NSUInteger sectionNumber = [self.sections indexOfObject:@(statsSection)];
+    NSMutableArray *oldIndexPaths = [NSMutableArray new];
+    NSMutableArray *newIndexPaths = [NSMutableArray new];
+    
+    for (int x = 3; x < oldSectionCount; ++x) {
+        [oldIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
+    }
+    for (int x = 3; x < newSectionCount; ++x) {
+        [newIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
+    }
     
     [self.tableView beginUpdates];
-    
-    NSUInteger sectionNumber = [self.sections indexOfObject:@(section)];
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-    
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:section]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView deleteRowsAtIndexPaths:oldIndexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationMiddle];
     [self.tableView endUpdates];
 }
 
