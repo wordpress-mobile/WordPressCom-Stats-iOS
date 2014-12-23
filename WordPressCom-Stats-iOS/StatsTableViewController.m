@@ -601,6 +601,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([cellIdentifier isEqualToString:@"MoreRow"]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        return;
+    }
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
