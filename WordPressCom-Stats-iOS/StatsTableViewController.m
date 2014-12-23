@@ -121,48 +121,37 @@ static CGFloat const kNoResultsHeight = 100.0f;
             BOOL hasData = data != nil;
             return hasData ? 5 : 1;
         }
-        case StatsSectionPosts: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
+        case StatsSectionPosts:
+        case StatsSectionReferrers:
+        case StatsSectionClicks:
+        case StatsSectionCountry:
+        case StatsSectionVideos:
+        case StatsSectionPublicize:
+        case StatsSectionTagsCategories:
+        {
+            StatsGroup *statsGroup = (StatsGroup *)data;
+            NSUInteger count = statsGroup.items.count + 2;
+            
+            if (statsGroup.moreItemsExist) {
+                count++;
+            }
+            
+            return count;
         }
-        case StatsSectionReferrers: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
-        }
-        case StatsSectionClicks: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
-        }
-        case StatsSectionCountry: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
-        }
-        case StatsSectionVideos: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
-        }
-        case StatsSectionComments: {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
-            StatsGroup *group = self.sectionData[@(StatsSectionComments)][@(selectedSubsection)];
+        case StatsSectionComments:
+        case StatsSectionFollowers:
+        {
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             
             NSUInteger count = group.items.count;
-            return count == 0 ? 3 : 3 + count;
-        }
-        case StatsSectionTagsCategories: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
-        }
-        // TODO: Followers by WordPress.com and Email
-        case StatsSectionFollowers: {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
-            StatsGroup *group = self.sectionData[@(StatsSectionFollowers)][@(selectedSubsection)];
+            count = count + 3;
             
-            NSUInteger count = group.items.count;
-            return count == 0 ? 3 : 3 + count;
-        }
-        case StatsSectionPublicize: {
-            NSUInteger count = ((StatsGroup *)data).items.count;
-            return count == 0 ? 2 : 2 + count;
+            if (group.moreItemsExist) {
+                count++;
+            }
+            
+            return count;
         }
     }
     
@@ -199,7 +188,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    
+    if (statsSection == StatsSectionGraph && indexPath.row > 0) {
         if (self.isSyncing) {
             return nil;
         }
@@ -209,6 +200,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
         }
         
         return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:@"MoreRow"]) {
+        return indexPath;
     }
     
     return nil;
@@ -216,7 +209,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+    if ([self statsSectionForTableViewSection:indexPath.section] == StatsSectionGraph && indexPath.row > 0) {
         return nil;
     }
     
@@ -225,13 +218,17 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.sections[indexPath.section] isEqualToNumber:@(StatsSectionGraph)] && indexPath.row > 0) {
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    if (statsSection == StatsSectionGraph && indexPath.row > 0) {
         self.selectedSummaryType = (StatsSummaryType)(indexPath.row - 1);
         
         NSIndexPath *graphIndexPath = [NSIndexPath indexPathForItem:0 inSection:indexPath.section];
         [tableView beginUpdates];
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:@"MoreRow"]) {
+        // Placeholder for full screen details
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
@@ -247,10 +244,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
                             [NSIndexPath indexPathForItem:2 inSection:section],
                             [NSIndexPath indexPathForItem:3 inSection:section],
                             [NSIndexPath indexPathForItem:4 inSection:section]];
+
     [self.tableView beginUpdates];
-
     [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-
     [self.tableView endUpdates];
     
     // Reset the data (except the graph) and refresh
@@ -550,20 +546,17 @@ static CGFloat const kNoResultsHeight = 100.0f;
         case StatsSectionTagsCategories:
         case StatsSectionPublicize:
         {
-            switch (indexPath.row) {
-                case 0:
-                    identifier = @"GroupHeader";
-                    break;
-                case 1:
-                    if (((StatsGroup *)self.sectionData[@(statsSection)]).items.count > 0) {
-                        identifier = @"TwoColumnHeader";
-                    } else {
-                        identifier = @"NoResultsRow";
-                    }
-                    break;
-                default:
-                    identifier = @"TwoColumnRow";
-                    break;
+            StatsGroup *group = (StatsGroup *)self.sectionData[@(statsSection)];
+            if (indexPath.row == 0) {
+                identifier = @"GroupHeader";
+            } else if (indexPath.row == 1 && group.items.count > 0) {
+                identifier = @"TwoColumnHeader";
+            } else if (indexPath.row == 1) {
+                identifier = @"NoResultsRow";
+            } else if (group.moreItemsExist && indexPath.row == (group.items.count + 2)) {
+                identifier = @"MoreRow";
+            } else {
+                identifier = @"TwoColumnRow";
             }
             break;
         }
@@ -571,6 +564,9 @@ static CGFloat const kNoResultsHeight = 100.0f;
         case StatsSectionComments:
         case StatsSectionFollowers:
         {
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
+
             switch (indexPath.row) {
                 case 0:
                     identifier = @"GroupHeader";
@@ -580,9 +576,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     break;
                 case 2:
                 {
-                    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
-                    StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
-
                     if (group.items.count > 0) {
                         identifier = @"TwoColumnHeader";
                     } else {
@@ -591,7 +584,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     break;
                 }
                 default:
-                    identifier = @"TwoColumnRow";
+                    if (group.moreItemsExist && indexPath.row == (group.items.count + 3)) {
+                        identifier = @"MoreRow";
+                    } else {
+                        identifier = @"TwoColumnRow";
+                    }
                     break;
             }
             break;
@@ -604,6 +601,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([cellIdentifier isEqualToString:@"MoreRow"]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        return;
+    }
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
@@ -730,6 +734,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -750,6 +756,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -770,6 +778,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Clicks", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -790,6 +800,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -810,6 +822,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -838,6 +852,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Comments", @"")];
     } else if (row == 2 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 3) {
+        // More
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -858,6 +874,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -887,6 +905,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Since", @"")];
     } else if (row == 2 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 3) {
+        // More
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
@@ -907,6 +927,8 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Followers", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
+    } else if (group.moreItemsExist && row == group.items.count + 2) {
+        // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
