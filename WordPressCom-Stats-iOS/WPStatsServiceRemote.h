@@ -4,7 +4,7 @@
 
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
-typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable);
+typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, NSString *otherViews);
 
 typedef NS_ENUM(NSUInteger, StatsFollowerType) {
     StatsFollowerTypeDotCom,

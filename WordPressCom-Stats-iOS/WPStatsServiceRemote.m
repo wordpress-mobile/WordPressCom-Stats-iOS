@@ -359,7 +359,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *postViews = [firstDay arrayForKey:@"postviews"];
         NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
-        BOOL moreViewsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *post in postViews) {
@@ -379,7 +379,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, otherViews);
         }
     };
     
@@ -406,7 +406,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *groups = [firstDay arrayForKey:@"groups"];
         NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
-        BOOL moreViewsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *group in groups) {
@@ -422,6 +422,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 action.defaultAction = YES;
                 statsItem.actions = @[action];
             }
+            // TODO :: group[@"group"] - where does this go
+            // TODO :: group[@"total"]
             
             NSArray *results = [group arrayForKey:@"results"];
             NSMutableArray *resultsItems = [NSMutableArray new];
@@ -470,7 +472,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, otherViews);
         }
     };
     
@@ -499,7 +501,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *clicks = [firstDay arrayForKey:@"clicks"];
         NSString *totalClicks = [self localizedStringForNumber:[firstDay numberForKey:@"total_clicks"]];
-        BOOL moreClicksAvailable = [firstDay numberForKey:@"other_clicks"].integerValue > 0;
+        NSString *otherClicks = [self localizedStringForNumber:[firstDay numberForKey:@"other_clicks"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *click in clicks) {
@@ -541,7 +543,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalClicks, moreClicksAvailable);
+            completionHandler(items, totalClicks, otherClicks);
         }
     };
     
@@ -570,7 +572,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *countryInfoDict = [countryViewsDict dictionaryForKey:@"country-info"];
         NSArray *views = [firstDay arrayForKey:@"views"];
         NSString *totalViews = [self localizedStringForNumber:[firstDay numberForKey:@"total_views"]];
-        BOOL moreViewsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
+        NSString *otherViews = [self localizedStringForNumber:[firstDay numberForKey:@"other_views"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *view in views) {
@@ -584,7 +586,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, otherViews);
         }
     };
     
@@ -613,7 +615,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
         NSArray *playsArray = [firstDay arrayForKey:@"plays"];
         NSString *totalPlays = [self localizedStringForNumber:[firstDay numberForKey:@"total_plays"]];
-        BOOL morePlaysAvailable = [firstDay numberForKey:@"other_plays"].integerValue > 0;
+        NSString *otherPlays = [self localizedStringForNumber:[firstDay numberForKey:@"other_plays"]];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *play in playsArray) {
@@ -634,7 +636,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalPlays, morePlaysAvailable);
+            completionHandler(items, totalPlays, otherPlays);
         }
     };
     
@@ -691,8 +693,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            // More not available with comments
-            completionHandler(@[authorItems, postsItems], nil, false);
+            completionHandler(@[authorItems, postsItems], nil, nil);
         }
     };
     
@@ -753,8 +754,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            // More not available with tags
-            completionHandler(items, nil, false);
+            completionHandler(items, nil, nil);
         }
     };
     
@@ -777,11 +777,11 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *response = (NSDictionary *)responseObject;
+        
         NSArray *subscribers = [response arrayForKey:@"subscribers"];
         NSMutableArray *items = [NSMutableArray new];
         NSString *totalKey = followerType == StatsFollowerTypeDotCom ? @"total_wpcom" : @"total_email";
         NSString *totalFollowers = [self localizedStringForNumber:[response numberForKey:totalKey]];
-        BOOL moreFollowersAvailable = [response numberForKey:@"pages"].integerValue > 1;
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
         dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
@@ -798,7 +798,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalFollowers, moreFollowersAvailable);
+            completionHandler(items, totalFollowers, nil);
         }
     };
     
@@ -861,8 +861,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            // More not available with publicize
-            completionHandler(items, nil, false);
+            completionHandler(items, nil, nil);
         }
     };
     
