@@ -8,6 +8,10 @@
 @property (nonatomic, copy)     NSString *label;
 @property (nonatomic, strong)   NSURL *iconURL;
 @property (nonatomic, strong)   NSArray *actions;   // @[StatsItemAction]
-@property (nonatomic, strong)   NSArray *children;  // @[StatsItem]
+
+@property (nonatomic, weak)     StatsItem *parent;
+@property (nonatomic, readonly) NSMutableArray *children;  // @[StatsItem]
+
+- (void)addChildStatsItem:(StatsItem *)statsItem;
 
 @end

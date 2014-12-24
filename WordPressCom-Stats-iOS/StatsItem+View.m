@@ -11,11 +11,13 @@
     objc_setAssociatedObject(self, @selector(isExpanded), number, OBJC_ASSOCIATION_RETAIN);
 }
 
+
 - (BOOL)isExpanded
 {
     NSNumber *number = objc_getAssociatedObject(self, @selector(isExpanded));
     return [number boolValue];
 }
+
 
 - (NSUInteger)numberOfRows
 {
@@ -31,5 +33,16 @@
     
     return itemCount;
 }
+
+
+- (NSUInteger)depth
+{
+    if (self.parent) {
+        return self.parent.depth + 1;
+    }
+    
+    return 1;
+}
+
 
 @end

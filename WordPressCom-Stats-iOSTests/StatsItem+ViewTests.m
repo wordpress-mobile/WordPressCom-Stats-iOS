@@ -39,7 +39,7 @@
 - (void)testOneChildCollapsed {
     StatsItem *item = [StatsItem new];
     item.expanded = NO;
-    item.children = @[[StatsItem new]];
+    [item addChildStatsItem:[StatsItem new]];
     
     XCTAssertEqual(1, item.numberOfRows);
 }
@@ -47,11 +47,27 @@
 - (void)testOneChildExpanded {
     StatsItem *item = [StatsItem new];
     item.expanded = YES;
-    item.children = @[[StatsItem new]];
+    [item addChildStatsItem:[StatsItem new]];
     
     XCTAssertEqual(2, item.numberOfRows);
 }
 
+- (void)testDepthOneItem
+{
+    StatsItem *item = [StatsItem new];
+    XCTAssertEqual(1, item.depth);
+}
+
+- (void)testDepthOneChildItem
+{
+    StatsItem *item = [StatsItem new];
+    StatsItem *itemChild = [StatsItem new];
+    
+    [item addChildStatsItem:itemChild];
+    
+    XCTAssertEqual(1, item.depth);
+    XCTAssertEqual(2, itemChild.depth);
+}
 
 
 @end

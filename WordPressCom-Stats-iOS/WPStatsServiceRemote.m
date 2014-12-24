@@ -424,7 +424,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             }
             
             NSArray *results = [group arrayForKey:@"results"];
-            NSMutableArray *resultsItems = [NSMutableArray new];
             for (id result in results) {
                 if ([result isKindOfClass:[NSDictionary class]]) {
                     StatsItem *resultItem = [StatsItem new];
@@ -440,10 +439,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                         resultItem.actions = @[action];
                     }
                     
-                    [resultsItems addObject:resultItem];
+                    [statsItem addChildStatsItem:resultItem];
                     
                     NSArray *children = [result arrayForKey:@"children"];
-                    NSMutableArray *childItems = [NSMutableArray new];
                     for (NSDictionary *child in children) {
                         StatsItem *childItem = [StatsItem new];
                         childItem.label = [child stringForKey:@"name"];
@@ -458,12 +456,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                             childItem.actions = @[action];
                         }
                         
-                        [childItems addObject:childItem];
+                        [resultItem addChildStatsItem:childItem];
                     }
-                    resultItem.children = childItems;
                 }
             }
-            statsItem.children = resultsItems;
             
             [items addObject:statsItem];
         }
@@ -517,7 +513,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             }
             
             NSArray *children = [click arrayForKey:@"children"];
-            NSMutableArray *childItems = [NSMutableArray new];
             for (NSDictionary *child in children) {
                 StatsItem *childItem = [StatsItem new];
                 childItem.label = [child stringForKey:@"name"];
@@ -532,9 +527,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     childItem.actions = @[action];
                 }
                 
-                [childItems addObject:childItem];
+                [statsItem addChildStatsItem:childItem];
             }
-            statsItem.children = childItems;
             
             [items addObject:statsItem];
         }
@@ -731,7 +725,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             } else {
                 NSMutableString *tagLabel = [NSMutableString new];
                 
-                NSMutableArray *childStatsItems = [NSMutableArray new];
+                StatsItem *statsItem = [StatsItem new];
                 for (NSDictionary *subTag in tags) {
                     
                     StatsItem *childItem = [StatsItem new];
@@ -739,14 +733,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     
                     [tagLabel appendFormat:@"%@ ", childItem.label];
                     
-                    [childStatsItems addObject:childItem];
+                    [statsItem addChildStatsItem:childItem];
                 }
                 
                 NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                StatsItem *statsItem = [StatsItem new];
                 statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
-                statsItem.children = childStatsItems;
                 
                 [items addObject:statsItem];
             }
