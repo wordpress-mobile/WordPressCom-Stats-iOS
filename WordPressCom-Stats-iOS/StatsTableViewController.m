@@ -153,7 +153,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionComments:
         case StatsSectionFollowers:
         {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
             StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             
             NSUInteger count = group.numberOfRows + kRowDataOffsetWithGroupSelector;
@@ -578,7 +578,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionComments:
         case StatsSectionFollowers:
         {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
             StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
 
             switch (indexPath.row) {
@@ -734,7 +734,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         NSInteger rowOffset;
         
         if (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
             group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             rowOffset = kRowDataOffsetWithGroupSelector;
         } else {
@@ -800,7 +800,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
             break;
         case StatsSectionComments:
         {
-            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
 
             leftText = selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"");
             rightText = NSLocalizedString(@"Comments", @"");
@@ -851,7 +851,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 {
     NSArray *titles;
     NSInteger selectedIndex;
-    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+    StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
 
     switch (statsSection) {
         case StatsSectionComments:
@@ -934,5 +934,10 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
     return (StatsSection)[self.sections[section] integerValue];
 }
 
+
+- (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
+{
+    return (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+}
 
 @end
