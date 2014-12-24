@@ -881,20 +881,6 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withTitles:(NSArray *)titles andSelectedSegmentIndex:(NSInteger)index forSection:(StatsSection)statsSection
-{
-    UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
-    cell.contentView.tag = statsSection;
-    
-    [control removeAllSegments];
-    
-    for (NSString *title in [titles reverseObjectEnumerator]) {
-        [control insertSegmentWithTitle:title atIndex:0 animated:NO];
-    }
-    
-    control.selectedSegmentIndex = index;
-}
-
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
