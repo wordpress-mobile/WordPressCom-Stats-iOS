@@ -130,7 +130,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         case StatsSectionTagsCategories:
         {
             StatsGroup *statsGroup = (StatsGroup *)data;
-            NSUInteger count = statsGroup.items.count + 2;
+            NSUInteger count = statsGroup.numberOfRows + 2;
             
             if (statsGroup.moreItemsExist) {
                 count++;
@@ -144,8 +144,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
             StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
             StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             
-            NSUInteger count = group.items.count;
-            count = count + 3;
+            NSUInteger count = group.numberOfRows + 3;
             
             if (group.moreItemsExist) {
                 count++;
@@ -549,11 +548,11 @@ static CGFloat const kNoResultsHeight = 100.0f;
             StatsGroup *group = (StatsGroup *)self.sectionData[@(statsSection)];
             if (indexPath.row == 0) {
                 identifier = @"GroupHeader";
-            } else if (indexPath.row == 1 && group.items.count > 0) {
+            } else if (indexPath.row == 1 && group.numberOfRows > 0) {
                 identifier = @"TwoColumnHeader";
             } else if (indexPath.row == 1) {
                 identifier = @"NoResultsRow";
-            } else if (group.moreItemsExist && indexPath.row == (group.items.count + 2)) {
+            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 2)) {
                 identifier = @"MoreRow";
             } else {
                 identifier = @"TwoColumnRow";
@@ -576,7 +575,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     break;
                 case 2:
                 {
-                    if (group.items.count > 0) {
+                    if (group.numberOfRows > 0) {
                         identifier = @"TwoColumnHeader";
                     } else {
                         identifier = @"NoResultsRow";
@@ -584,7 +583,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                     break;
                 }
                 default:
-                    if (group.moreItemsExist && indexPath.row == (group.items.count + 3)) {
+                    if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 3)) {
                         identifier = @"MoreRow";
                     } else {
                         identifier = @"TwoColumnRow";
@@ -724,7 +723,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionPostsCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPosts)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
 
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages")];
@@ -734,7 +733,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -746,7 +745,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionReferrersCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionReferrers)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Referrers", @"Title for stats section for Referrers")];
@@ -756,7 +755,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -768,7 +767,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionClicksCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionClicks)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Clicks", @"Title for stats section for Clicks")];
@@ -778,7 +777,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Clicks", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -790,7 +789,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionCountryCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionCountry)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Countries", @"Title for stats section for Countries")];
@@ -800,7 +799,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -812,7 +811,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionVideosCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionVideos)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Videos", @"Title for stats section for Videos")];
@@ -822,7 +821,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -834,7 +833,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
     StatsGroup *group = self.sectionData[@(StatsSectionComments)][@(selectedSubsection)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
@@ -852,7 +851,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Comments", @"")];
     } else if (row == 2 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 3) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 3) {
         // More
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
@@ -864,7 +863,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionTagsCategoriesCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionTagsCategories)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories")];
@@ -874,7 +873,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Views", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -887,7 +886,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
     StatsGroup *group = self.sectionData[@(StatsSectionFollowers)][@(selectedSubsection)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
@@ -905,7 +904,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Since", @"")];
     } else if (row == 2 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 3) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 3) {
         // More
     } else if (row > 2) {
         StatsItem *item = group.items[row - 3];
@@ -917,7 +916,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
 - (void)configureSectionPublicizeCell:(UITableViewCell *)cell forRow:(NSInteger)row
 {
     StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPublicize)];
-    BOOL dataExists = group.items.count > 0;
+    BOOL dataExists = group.numberOfRows > 0;
     
     if (row == 0) {
         [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Publicize", @"Title for stats section for Publicize")];
@@ -927,7 +926,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
                                      andRightText:NSLocalizedString(@"Followers", @"")];
     } else if (row == 1 && !dataExists) {
         // No data
-    } else if (group.moreItemsExist && row == group.items.count + 2) {
+    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
         // More
     } else if (row > 1) {
         StatsItem *item = group.items[row - 2];
@@ -1012,26 +1011,6 @@ static CGFloat const kNoResultsHeight = 100.0f;
 }
 
 #pragma mark - Row and section calculation methods
-
-- (NSUInteger)numberOfRowsForStatsGroup:(StatsGroup *)group
-{
-    return group.expanded == NO ? 0 : [self numberOfRowsForStatsItems:group.items];
-}
-
-- (NSUInteger)numberOfRowsForStatsItems:(NSArray *)items
-{
-    if (items.count == 0) {
-        return 0;
-    }
-    
-    NSUInteger itemCount = items.count;
-    
-    for (StatsItem *item in items) {
-        itemCount += [self numberOfRowsForStatsItems:item.children];
-    }
-    
-    return itemCount;
-}
 
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
