@@ -32,6 +32,16 @@ typedef NS_ENUM(NSInteger, StatsSubSection) {
 
 static CGFloat const kGraphHeight = 175.0f;
 static CGFloat const kNoResultsHeight = 100.0f;
+static NSString *const kPeriodSelectorCellIdentifier = @"PeriodSelector";
+static NSString *const kGroupHeaderCellIdentifier = @"GroupHeader";
+static NSString *const kGroupSelectorCellIdentifier = @"GroupSelector";
+static NSString *const kTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
+static NSString *const kTwoColumnCellIdentifier = @"TwoColumnRow";
+static NSString *const kGraphSelectableCellIdentifier = @"SelectableRow";
+static NSString *const kViewAllCellIdentifier = @"MoreRow";
+static NSString *const kGraphCellIdentifier = @"GraphRow";
+static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
+
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
@@ -174,16 +184,17 @@ static CGFloat const kNoResultsHeight = 100.0f;
 {
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
 
-    if ([cellIdentifier isEqualToString:@"GraphRow"]) {
+    if ([cellIdentifier isEqualToString:kGraphCellIdentifier]) {
         return kGraphHeight;
-    } else if ([cellIdentifier isEqualToString:@"NoResultsRow"]) {
+    } else if ([cellIdentifier isEqualToString:kNoResultsCellIdentifier]) {
         return kNoResultsHeight;
-    } else if ([cellIdentifier isEqualToString:@"SelectableRow"]) {
+    } else if ([cellIdentifier isEqualToString:kGraphSelectableCellIdentifier]) {
         return 35.0f;
     }
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
+
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -199,12 +210,13 @@ static CGFloat const kNoResultsHeight = 100.0f;
         }
         
         return indexPath;
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:@"MoreRow"]) {
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kViewAllCellIdentifier]) {
         return indexPath;
     }
     
     return nil;
 }
+
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -214,6 +226,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     return indexPath;
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -225,7 +238,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
         [tableView beginUpdates];
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:@"MoreRow"]) {
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kViewAllCellIdentifier]) {
         // Placeholder for full screen details
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -519,20 +532,20 @@ static CGFloat const kNoResultsHeight = 100.0f;
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
-            identifier = @"PeriodSelector";
+            identifier = kPeriodSelectorCellIdentifier;
             break;
         case StatsSectionGraph: {
             switch (indexPath.row) {
                 case 0:
                     if (self.sectionData[@(statsSection)] != nil) {
-                        identifier = @"GraphRow";
+                        identifier = kGraphCellIdentifier;
                     } else {
-                        identifier = @"NoResultsRow";
+                        identifier = kNoResultsCellIdentifier;
                     }
                     break;
                     
                 default:
-                    identifier = @"SelectableRow";
+                    identifier = kGraphSelectableCellIdentifier;
                     break;
             }
             break;
@@ -547,15 +560,15 @@ static CGFloat const kNoResultsHeight = 100.0f;
         {
             StatsGroup *group = (StatsGroup *)self.sectionData[@(statsSection)];
             if (indexPath.row == 0) {
-                identifier = @"GroupHeader";
+                identifier = kGroupHeaderCellIdentifier;
             } else if (indexPath.row == 1 && group.numberOfRows > 0) {
-                identifier = @"TwoColumnHeader";
+                identifier = kTwoColumnHeaderCellIdentifier;
             } else if (indexPath.row == 1) {
-                identifier = @"NoResultsRow";
+                identifier = kNoResultsCellIdentifier;
             } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 2)) {
-                identifier = @"MoreRow";
+                identifier = kViewAllCellIdentifier;
             } else {
-                identifier = @"TwoColumnRow";
+                identifier = kTwoColumnCellIdentifier;
             }
             break;
         }
@@ -568,25 +581,25 @@ static CGFloat const kNoResultsHeight = 100.0f;
 
             switch (indexPath.row) {
                 case 0:
-                    identifier = @"GroupHeader";
+                    identifier = kGroupHeaderCellIdentifier;
                     break;
                 case 1:
-                    identifier = @"GroupSelector";
+                    identifier = kGroupSelectorCellIdentifier;
                     break;
                 case 2:
                 {
                     if (group.numberOfRows > 0) {
-                        identifier = @"TwoColumnHeader";
+                        identifier = kTwoColumnHeaderCellIdentifier;
                     } else {
-                        identifier = @"NoResultsRow";
+                        identifier = kNoResultsCellIdentifier;
                     }
                     break;
                 }
                 default:
                     if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 3)) {
-                        identifier = @"MoreRow";
+                        identifier = kViewAllCellIdentifier;
                     } else {
-                        identifier = @"TwoColumnRow";
+                        identifier = kTwoColumnCellIdentifier;
                     }
                     break;
             }
@@ -602,7 +615,7 @@ static CGFloat const kNoResultsHeight = 100.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if ([cellIdentifier isEqualToString:@"MoreRow"]) {
+    if ([cellIdentifier isEqualToString:kViewAllCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
         return;
