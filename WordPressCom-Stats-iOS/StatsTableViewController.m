@@ -32,6 +32,8 @@ typedef NS_ENUM(NSInteger, StatsSubSection) {
 
 static CGFloat const kGraphHeight = 175.0f;
 static CGFloat const kNoResultsHeight = 100.0f;
+static NSInteger const kRowDataOffsetStandard = 2;
+static NSInteger const kRowDataOffsetWithGroupSelector = 3;
 static NSString *const kPeriodSelectorCellIdentifier = @"PeriodSelector";
 static NSString *const kGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const kGroupSelectorCellIdentifier = @"GroupSelector";
@@ -140,7 +142,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionTagsCategories:
         {
             StatsGroup *statsGroup = (StatsGroup *)data;
-            NSUInteger count = statsGroup.numberOfRows + 2;
+            NSUInteger count = statsGroup.numberOfRows + kRowDataOffsetStandard;
             
             if (statsGroup.moreItemsExist) {
                 count++;
@@ -154,7 +156,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
             StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
             StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             
-            NSUInteger count = group.numberOfRows + 3;
+            NSUInteger count = group.numberOfRows + kRowDataOffsetWithGroupSelector;
             
             if (group.moreItemsExist) {
                 count++;
@@ -565,7 +567,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
                 identifier = kTwoColumnHeaderCellIdentifier;
             } else if (indexPath.row == 1) {
                 identifier = kNoResultsCellIdentifier;
-            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 2)) {
+            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + kRowDataOffsetStandard)) {
                 identifier = kViewAllCellIdentifier;
             } else {
                 identifier = kTwoColumnCellIdentifier;
@@ -596,7 +598,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
                     break;
                 }
                 default:
-                    if (group.moreItemsExist && indexPath.row == (group.numberOfRows + 3)) {
+                    if (group.moreItemsExist && indexPath.row == (group.numberOfRows + kRowDataOffsetWithGroupSelector)) {
                         identifier = kViewAllCellIdentifier;
                     } else {
                         identifier = kTwoColumnCellIdentifier;
@@ -734,10 +736,10 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         if (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
             StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
             group = self.sectionData[@(statsSection)][@(selectedSubsection)];
-            rowOffset = 3;
+            rowOffset = kRowDataOffsetWithGroupSelector;
         } else {
             group = (StatsGroup *)self.sectionData[@(statsSection)];
-            rowOffset = 2;
+            rowOffset = kRowDataOffsetStandard;
         }
         StatsItem *item = group.items[indexPath.row - rowOffset];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
