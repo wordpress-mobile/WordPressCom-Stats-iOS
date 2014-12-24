@@ -613,13 +613,6 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
-    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
-    
-    if ([cellIdentifier isEqualToString:kViewAllCellIdentifier]) {
-        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
-        return;
-    }
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
@@ -628,31 +621,15 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
             [self configureSectionGraphCell:cell forRow:indexPath.row];
             break;
         case StatsSectionPosts:
-            [self configureSectionPostsCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionReferrers:
-            [self configureSectionReferrersCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionClicks:
-            [self configureSectionClicksCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionCountry:
-            [self configureSectionCountryCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionVideos:
-            [self configureSectionVideosCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionComments:
-            [self configureSectionCommentsCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionTagsCategories:
-            [self configureSectionTagsCategoriesCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionFollowers:
-            [self configureSectionFollowersCell:cell forRow:indexPath.row];
-            break;
         case StatsSectionPublicize:
-            [self configureSectionPublicizeCell:cell forRow:indexPath.row];
+            [self configureCell:cell forStatsSection:statsSection andIndexPath:indexPath];
             break;
     }
 }
@@ -733,235 +710,174 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
     }
 }
 
-- (void)configureSectionPostsCell:(UITableViewCell *)cell forRow:(NSInteger)row
+- (void)configureCell:(UITableViewCell *)cell forStatsSection:(StatsSection)statsSection andIndexPath:(NSIndexPath *)indexPath
 {
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPosts)];
-    BOOL dataExists = group.numberOfRows > 0;
+    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
 
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages")];
-    } else if (row == 1 && dataExists) {
+    if ([cellIdentifier isEqualToString:kGroupHeaderCellIdentifier]) {
+        [self configureSectionGroupHeaderCell:cell
+                             withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:kGroupSelectorCellIdentifier]) {
+        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:kTwoColumnHeaderCellIdentifier]) {
         [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Title", @"")
-                                     andRightText:NSLocalizedString(@"Views", @"")];
-    } else if (row == 1 && !dataExists) {
+                                 withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:kNoResultsCellIdentifier]) {
         // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionReferrersCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionReferrers)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Referrers", @"Title for stats section for Referrers")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Referrer", @"")
-                                     andRightText:NSLocalizedString(@"Views", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionClicksCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionClicks)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Clicks", @"Title for stats section for Clicks")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Link", @"")
-                                     andRightText:NSLocalizedString(@"Clicks", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionCountryCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionCountry)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Countries", @"Title for stats section for Countries")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Country", @"")
-                                     andRightText:NSLocalizedString(@"Views", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionVideosCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionVideos)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Videos", @"Title for stats section for Videos")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Video", @"")
-                                     andRightText:NSLocalizedString(@"Views", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-}
-
-- (void)configureSectionCommentsCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionComments)] integerValue];
-    StatsGroup *group = self.sectionData[@(StatsSectionComments)][@(selectedSubsection)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Comments", @"Title for stats section for Comments")];
-    } else if (row == 1) {
-        NSInteger selectedIndex = selectedSubsection == StatsSubSectionCommentsByAuthor ? 0 : 1;
-
-        [self configureSectionGroupSelectorCell:cell
-                                     withTitles:@[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
-                                                  NSLocalizedString(@"By Posts & Pages", @"Posts & Pages segmented control for stats")]
-                        andSelectedSegmentIndex:selectedIndex
-                                     forSection:StatsSectionComments];
-    } else if (row == 2 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"")
-                                     andRightText:NSLocalizedString(@"Comments", @"")];
-    } else if (row == 2 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 3) {
-        // More
-    } else if (row > 2) {
-        StatsItem *item = group.items[row - 3];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionTagsCategoriesCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionTagsCategories)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Topic", @"")
-                                     andRightText:NSLocalizedString(@"Views", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
-    }
-    
-}
-
-- (void)configureSectionFollowersCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(StatsSectionFollowers)] integerValue];
-    StatsGroup *group = self.sectionData[@(StatsSectionFollowers)][@(selectedSubsection)];
-    BOOL dataExists = group.numberOfRows > 0;
-    
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Followers", @"Title for stats section for Followers")];
-    } else if (row == 1) {
-        NSInteger selectedIndex = selectedSubsection == StatsSubSectionFollowersDotCom ? 0 : 1;
+    } else if ([cellIdentifier isEqualToString:kViewAllCellIdentifier]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+    } else if ([cellIdentifier isEqualToString:kTwoColumnCellIdentifier]) {
+        StatsGroup *group;
+        NSInteger rowOffset;
         
-        [self configureSectionGroupSelectorCell:cell
-                                     withTitles:@[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
-                                                  NSLocalizedString(@"Email", @"Email segmented control for stats")]
-                        andSelectedSegmentIndex:selectedIndex
-                                     forSection:StatsSectionFollowers];
-    } else if (row == 2 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Follower", @"")
-                                     andRightText:NSLocalizedString(@"Since", @"")];
-    } else if (row == 2 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 3) {
-        // More
-    } else if (row > 2) {
-        StatsItem *item = group.items[row - 3];
+        if (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+            group = self.sectionData[@(statsSection)][@(selectedSubsection)];
+            rowOffset = 3;
+        } else {
+            group = (StatsGroup *)self.sectionData[@(statsSection)];
+            rowOffset = 2;
+        }
+        StatsItem *item = group.items[indexPath.row - rowOffset];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
-    
 }
 
-- (void)configureSectionPublicizeCell:(UITableViewCell *)cell forRow:(NSInteger)row
+
+- (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
-    StatsGroup *group = (StatsGroup *)self.sectionData[@(StatsSectionPublicize)];
-    BOOL dataExists = group.numberOfRows > 0;
+    NSString *headerText;
     
-    if (row == 0) {
-        [self configureSectionGroupHeaderCell:cell withText:NSLocalizedString(@"Publicize", @"Title for stats section for Publicize")];
-    } else if (row == 1 && dataExists) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                     withLeftText:NSLocalizedString(@"Service", @"")
-                                     andRightText:NSLocalizedString(@"Followers", @"")];
-    } else if (row == 1 && !dataExists) {
-        // No data
-    } else if (group.moreItemsExist && row == group.numberOfRows + 2) {
-        // More
-    } else if (row > 1) {
-        StatsItem *item = group.items[row - 2];
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
+    switch (statsSection) {
+        case StatsSectionClicks:
+            headerText = NSLocalizedString(@"Clicks", @"Title for stats section for Clicks");
+            break;
+        case StatsSectionComments:
+            headerText = NSLocalizedString(@"Comments", @"Title for stats section for Comments");
+            break;
+        case StatsSectionCountry:
+            headerText = NSLocalizedString(@"Countries", @"Title for stats section for Countries");
+            break;
+        case StatsSectionFollowers:
+            headerText = NSLocalizedString(@"Followers", @"Title for stats section for Followers");
+            break;
+        case StatsSectionPosts:
+            headerText = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
+            break;
+        case StatsSectionPublicize:
+            headerText = NSLocalizedString(@"Publicize", @"Title for stats section for Publicize");
+            break;
+        case StatsSectionReferrers:
+            headerText = NSLocalizedString(@"Referrers", @"Title for stats section for Referrers");
+            break;
+        case StatsSectionTagsCategories:
+            headerText = NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories");
+            break;
+        case StatsSectionVideos:
+            headerText = NSLocalizedString(@"Videos", @"Title for stats section for Videos");
+            break;
+            
+        default:
+            break;
     }
-    
-}
-
-- (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell withText:(NSString *)headerText
-{
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
 }
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText andRightText:(NSString *)rightText
+
+- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
+    NSString *leftText;
+    NSString *rightText;
+    
+    switch (statsSection) {
+        case StatsSectionClicks:
+            leftText = NSLocalizedString(@"Link", @"");
+            rightText = NSLocalizedString(@"Clicks", @"");
+            break;
+        case StatsSectionComments:
+        {
+            StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+
+            leftText = selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"");
+            rightText = NSLocalizedString(@"Comments", @"");
+            break;
+        }
+        case StatsSectionCountry:
+            leftText = NSLocalizedString(@"Country", @"");
+            rightText = NSLocalizedString(@"Views", @"");
+            break;
+        case StatsSectionFollowers:
+            leftText = NSLocalizedString(@"Follower", @"");
+            rightText = NSLocalizedString(@"Since", @"");
+            break;
+        case StatsSectionPosts:
+            leftText = NSLocalizedString(@"Title", @"");
+            rightText = NSLocalizedString(@"Views", @"");
+            break;
+        case StatsSectionPublicize:
+            leftText = NSLocalizedString(@"Service", @"");
+            rightText = NSLocalizedString(@"Followers", @"");
+            break;
+        case StatsSectionReferrers:
+            leftText = NSLocalizedString(@"Referrer", @"");
+            rightText = NSLocalizedString(@"Views", @"");
+            break;
+        case StatsSectionTagsCategories:
+            leftText = NSLocalizedString(@"Topic", @"");
+            rightText = NSLocalizedString(@"Views", @"");
+            break;
+        case StatsSectionVideos:
+            leftText = NSLocalizedString(@"Video", @"");
+            rightText = NSLocalizedString(@"Views", @"");
+            break;
+            
+        default:
+            break;
+    }
+    
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
 }
+
+
+- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+{
+    NSArray *titles;
+    NSInteger selectedIndex;
+    StatsSubSection selectedSubsection = (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+
+    switch (statsSection) {
+        case StatsSectionComments:
+            titles = @[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
+                       NSLocalizedString(@"By Posts & Pages", @"Posts & Pages segmented control for stats")];
+            selectedIndex = selectedSubsection == StatsSubSectionCommentsByAuthor ? 0 : 1;
+            break;
+        case StatsSectionFollowers:
+            titles = @[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
+                       NSLocalizedString(@"Email", @"Email segmented control for stats")];
+            selectedIndex = selectedSubsection == StatsSubSectionFollowersDotCom ? 0 : 1;
+            break;
+        default:
+            break;
+    }
+    
+    UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
+    cell.contentView.tag = statsSection;
+    
+    [control removeAllSegments];
+    
+    for (NSString *title in [titles reverseObjectEnumerator]) {
+        [control insertSegmentWithTitle:title atIndex:0 animated:NO];
+    }
+    
+    control.selectedSegmentIndex = selectedIndex;
+}
+
 
 - (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withTitles:(NSArray *)titles andSelectedSegmentIndex:(NSInteger)index forSection:(StatsSection)statsSection
 {
