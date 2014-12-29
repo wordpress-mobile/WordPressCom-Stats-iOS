@@ -124,7 +124,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
-    id data = self.sectionData[@(statsSection)];
+    id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
         case StatsSectionPeriodSelector:
@@ -140,23 +140,11 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionVideos:
         case StatsSectionPublicize:
         case StatsSectionTagsCategories:
-        {
-            StatsGroup *statsGroup = (StatsGroup *)data;
-            NSUInteger count = statsGroup.numberOfRows + kRowDataOffsetStandard;
-            
-            if (statsGroup.moreItemsExist) {
-                count++;
-            }
-            
-            return count;
-        }
         case StatsSectionComments:
         case StatsSectionFollowers:
         {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-            StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
-            
-            NSUInteger count = group.numberOfRows + kRowDataOffsetWithGroupSelector;
+            StatsGroup *group = (StatsGroup *)data;
+            NSUInteger count = group.numberOfRows + kRowDataOffsetStandard;
             
             if (group.moreItemsExist) {
                 count++;
@@ -243,6 +231,8 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kViewAllCellIdentifier]) {
         // Placeholder for full screen details
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kTwoColumnCellIdentifier]) {
+        
     }
 }
 
@@ -539,7 +529,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionGraph: {
             switch (indexPath.row) {
                 case 0:
-                    if (self.sectionData[@(statsSection)] != nil) {
+                    if ([self statsDataForStatsSection:statsSection] != nil) {
                         identifier = kGraphCellIdentifier;
                     } else {
                         identifier = kNoResultsCellIdentifier;
@@ -560,7 +550,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionTagsCategories:
         case StatsSectionPublicize:
         {
-            StatsGroup *group = (StatsGroup *)self.sectionData[@(statsSection)];
+            StatsGroup *group = (StatsGroup *)[self statsDataForStatsSection:statsSection];
             if (indexPath.row == 0) {
                 identifier = kGroupHeaderCellIdentifier;
             } else if (indexPath.row == 1 && group.numberOfRows > 0) {
@@ -578,8 +568,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionComments:
         case StatsSectionFollowers:
         {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-            StatsGroup *group = self.sectionData[@(statsSection)][@(selectedSubsection)];
+            StatsGroup *group = [self statsDataForStatsSection:statsSection];
 
             switch (indexPath.row) {
                 case 0:
@@ -730,17 +719,15 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
     } else if ([cellIdentifier isEqualToString:kTwoColumnCellIdentifier]) {
-        StatsGroup *group;
         NSInteger rowOffset;
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
         
         if (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-            group = self.sectionData[@(statsSection)][@(selectedSubsection)];
             rowOffset = kRowDataOffsetWithGroupSelector;
         } else {
-            group = (StatsGroup *)self.sectionData[@(statsSection)];
             rowOffset = kRowDataOffsetStandard;
         }
+        
         StatsItem *item = group.items[indexPath.row - rowOffset];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
@@ -938,6 +925,37 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 - (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
 {
     return (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+}
+
+- (id)statsDataForStatsSection:(StatsSection)statsSection
+{
+    id data;
+    
+    switch (statsSection) {
+        case StatsSectionGraph:
+        case StatsSectionPosts:
+        case StatsSectionReferrers:
+        case StatsSectionClicks:
+        case StatsSectionCountry:
+        case StatsSectionVideos:
+        case StatsSectionTagsCategories:
+        case StatsSectionPublicize:
+            data = self.sectionData[@(statsSection)];
+            break;
+            
+        case StatsSectionComments:
+        case StatsSectionFollowers:
+        {
+            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
+            data = self.sectionData[@(statsSection)][@(selectedSubsection)];
+        }
+            
+        default:
+            break;
+            
+    }
+    
+    return data;
 }
 
 @end
