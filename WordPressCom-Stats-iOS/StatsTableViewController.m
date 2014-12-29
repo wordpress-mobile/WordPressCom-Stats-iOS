@@ -763,7 +763,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL isNestedRow:item.depth > 1];
     }
 }
 
@@ -902,13 +902,19 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL  isNestedRow:(BOOL)isNestedRow
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+    
+    if (isNestedRow) {
+        cell.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    } else {
+        cell.backgroundColor = [UIColor whiteColor];
+    }
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
     imageView.image = nil;
