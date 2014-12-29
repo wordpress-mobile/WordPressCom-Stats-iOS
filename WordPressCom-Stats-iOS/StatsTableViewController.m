@@ -202,6 +202,13 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kViewAllCellIdentifier]) {
         return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kTwoColumnCellIdentifier]) {
+        // Disable taps on rows without children
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
+        
+        BOOL hasChildItems = item.children.count;
+        return hasChildItems ? indexPath : nil;
     }
     
     return nil;
@@ -232,7 +239,18 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         // Placeholder for full screen details
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:kTwoColumnCellIdentifier]) {
+        // Placeholder for full screen details
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        statsItem.expanded = YES;
+        
+        [self.tableView beginUpdates];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:indexPath.section];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
     }
 }
 
@@ -365,6 +383,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                          postsCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionPosts)] = group;
          
          [self.tableView beginUpdates];
@@ -377,6 +396,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                      referrersCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionReferrers)] = group;
          
          [self.tableView beginUpdates];
@@ -389,6 +409,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                         clicksCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionClicks)] = group;
          
          [self.tableView beginUpdates];
@@ -401,6 +422,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                        countryCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionCountry)] = group;
          
          [self.tableView beginUpdates];
@@ -413,6 +435,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                         videosCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionVideos)] = group;
          
          [self.tableView beginUpdates];
@@ -425,6 +448,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                 commentsAuthorCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
          
          if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
@@ -439,6 +463,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                 commentsPostsCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
          
          if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
@@ -453,6 +478,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                 tagsCategoriesCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionTagsCategories)] = group;
          
          [self.tableView beginUpdates];
@@ -465,6 +491,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                followersDotComCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
          
          if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
@@ -479,6 +506,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                 followersEmailCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
 
          if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
@@ -493,6 +521,7 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
      }
                      publicizeCompletionHandler:^(StatsGroup *group)
      {
+         group.offsetRows = kRowDataOffsetStandard;
          self.sectionData[@(StatsSectionPublicize)] = group;
          
          [self.tableView beginUpdates];
@@ -719,16 +748,9 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
     } else if ([cellIdentifier isEqualToString:kTwoColumnCellIdentifier]) {
-        NSInteger rowOffset;
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
-        if (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
-            rowOffset = kRowDataOffsetWithGroupSelector;
-        } else {
-            rowOffset = kRowDataOffsetStandard;
-        }
-        
-        StatsItem *item = group.items[indexPath.row - rowOffset];
         [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL];
     }
 }
