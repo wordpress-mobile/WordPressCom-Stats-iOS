@@ -21,7 +21,7 @@
 
 - (NSUInteger)numberOfRows
 {
-    NSUInteger itemCount = self.children.count;
+    NSUInteger itemCount = 1;
 
     if (itemCount == 0 || self.isExpanded == NO) {
         return 1;

@@ -245,11 +245,23 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
-        statsItem.expanded = YES;
+        NSInteger oldRowCount = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
+        statsItem.expanded = !statsItem.isExpanded;
+        NSInteger newRowCount = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
+        
+        NSMutableArray *oldIndexPaths = [NSMutableArray new];
+        NSMutableArray *newIndexPaths = [NSMutableArray new];
+        
+        for (NSInteger x = indexPath.row + 1; x < oldRowCount; ++x) {
+            [oldIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:indexPath.section]];
+        }
+        for (NSInteger x = indexPath.row + 1; x < newRowCount; ++x) {
+            [newIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:indexPath.section]];
+        }
         
         [self.tableView beginUpdates];
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:indexPath.section];
-        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView deleteRowsAtIndexPaths:oldIndexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
     }
 }
@@ -341,10 +353,10 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
     NSMutableArray *oldIndexPaths = [NSMutableArray new];
     NSMutableArray *newIndexPaths = [NSMutableArray new];
     
-    for (int x = 3; x < oldSectionCount; ++x) {
+    for (NSInteger x = 3; x < oldSectionCount; ++x) {
         [oldIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
     }
-    for (int x = 3; x < newSectionCount; ++x) {
+    for (NSInteger x = 3; x < newSectionCount; ++x) {
         [newIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
     }
     

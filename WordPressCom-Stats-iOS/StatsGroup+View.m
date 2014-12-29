@@ -47,10 +47,30 @@
 
 - (StatsItem *)statsItemForTableViewRow:(NSInteger)row
 {
-    // TODO - This doesn't account for nesting
     NSInteger index = row - self.offsetRows;
     
-    return self.items[index];
+    NSInteger currentIndex = 0;
+
+    // TODO - This doesn't account for nesting beyond one level
+    for (StatsItem *item in self.items) {
+        if (currentIndex == index) {
+            return item;
+        }
+        
+        if (item.isExpanded == YES) {
+            for (StatsItem *subItem in item.children) {
+                currentIndex++;
+                
+                if (currentIndex == index) {
+                    return subItem;
+                }
+            }
+        }
+        
+        currentIndex++;
+    }
+    
+    return nil;
 }
 
 @end
