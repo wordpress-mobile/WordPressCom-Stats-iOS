@@ -244,7 +244,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
-        BOOL insert = !statsItem.expanded;
+        BOOL insert = !statsItem.isExpanded;
         NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
         statsItem.expanded = !statsItem.isExpanded;
         NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
