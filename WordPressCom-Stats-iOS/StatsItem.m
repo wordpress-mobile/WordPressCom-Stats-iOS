@@ -1,5 +1,11 @@
 #import "StatsItem.h"
 
+@interface StatsItem ()
+
+@property (nonatomic, readwrite, weak) StatsItem *parent;
+
+@end
+
 @implementation StatsItem
 
 - (instancetype)init
