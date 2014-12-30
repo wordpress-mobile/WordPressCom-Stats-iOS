@@ -286,6 +286,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     id graphData = self.sectionData[@(StatsSectionGraph)];
     [self.sectionData removeAllObjects];
     self.sectionData[@(StatsSectionGraph)] = graphData;
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
 
     [self.tableView beginUpdates];
 
@@ -321,6 +323,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     self.selectedPeriodUnit = unit;
     [self.sectionData removeAllObjects];
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
     [self.tableView reloadData];
     
     [self retrieveStatsSkipGraph:NO];
