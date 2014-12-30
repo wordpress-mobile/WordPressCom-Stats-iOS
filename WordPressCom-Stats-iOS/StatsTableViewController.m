@@ -351,11 +351,11 @@ static NSString *const kNoResultsCellIdentifier = @"NoResultsRow";
     NSMutableArray *oldIndexPaths = [NSMutableArray new];
     NSMutableArray *newIndexPaths = [NSMutableArray new];
     
-    for (NSInteger x = 3; x < oldSectionCount; ++x) {
-        [oldIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
+    for (NSInteger row = kRowDataOffsetWithGroupSelector; row < oldSectionCount; ++row) {
+        [oldIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
     }
-    for (NSInteger x = 3; x < newSectionCount; ++x) {
-        [newIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:sectionNumber]];
+    for (NSInteger row = kRowDataOffsetWithGroupSelector; row < newSectionCount; ++row) {
+        [newIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
     }
     
     [self.tableView beginUpdates];
