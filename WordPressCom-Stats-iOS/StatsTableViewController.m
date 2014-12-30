@@ -645,23 +645,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
-    switch (statsSection) {
-        case StatsSectionPeriodSelector:
-            break;
-        case StatsSectionGraph:
-            [self configureSectionGraphCell:cell forRow:indexPath.row];
-            break;
-        case StatsSectionPosts:
-        case StatsSectionReferrers:
-        case StatsSectionClicks:
-        case StatsSectionCountry:
-        case StatsSectionVideos:
-        case StatsSectionComments:
-        case StatsSectionTagsCategories:
-        case StatsSectionFollowers:
-        case StatsSectionPublicize:
-            [self configureCell:cell forStatsSection:statsSection andIndexPath:indexPath];
-            break;
+    if (statsSection == StatsSectionGraph) {
+        [self configureSectionGraphCell:cell forRow:indexPath.row];
+    } else if (statsSection != StatsSectionPeriodSelector) {
+        [self configureCell:cell forStatsSection:statsSection andIndexPath:indexPath];
     }
 }
 
