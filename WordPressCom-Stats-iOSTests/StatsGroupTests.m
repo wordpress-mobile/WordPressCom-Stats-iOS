@@ -52,7 +52,7 @@
     XCTAssertEqual(item2, [group statsItemForTableViewRow:1]);
 }
 
-- (void)test
+- (void)testThreeLevelsOfItems
 {
     StatsItem *item1 = [StatsItem new];
     StatsItem *subItem1 = [StatsItem new];
