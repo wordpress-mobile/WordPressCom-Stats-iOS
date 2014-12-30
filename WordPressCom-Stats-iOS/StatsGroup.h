@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "StatsItem.h"
 
 @interface StatsGroup : NSObject
 
@@ -7,5 +8,11 @@
 @property (nonatomic, copy)     NSString *titlePrimary;
 @property (nonatomic, copy)     NSString *titleSecondary;
 @property (nonatomic, strong)   NSURL *iconUrl;
+
+@property (nonatomic, assign, getter=isExpanded) BOOL expanded;
+@property (nonatomic, readonly) NSUInteger numberOfRows;
+@property (nonatomic, assign) NSUInteger offsetRows;
+
+- (StatsItem *)statsItemForTableViewRow:(NSInteger)row;
 
 @end

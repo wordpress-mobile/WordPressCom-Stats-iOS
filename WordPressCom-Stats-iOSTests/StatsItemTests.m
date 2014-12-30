@@ -1,12 +1,12 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "StatsItem+View.h"
+#import "StatsItem.h"
 
-@interface StatsItem_ViewTests : XCTestCase
+@interface StatsItemTests : XCTestCase
 
 @end
 
-@implementation StatsItem_ViewTests
+@implementation StatsItemTests
 
 - (void)setUp {
     [super setUp];

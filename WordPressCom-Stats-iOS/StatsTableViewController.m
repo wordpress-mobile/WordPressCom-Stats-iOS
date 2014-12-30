@@ -3,8 +3,6 @@
 #import "WPStatsService.h"
 #import "StatsGroup.h"
 #import "StatsItem.h"
-#import "StatsGroup+View.h"
-#import "StatsItem+View.h"
 #import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>

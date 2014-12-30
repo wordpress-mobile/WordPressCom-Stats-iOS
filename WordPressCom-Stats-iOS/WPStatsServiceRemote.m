@@ -78,8 +78,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     andOverallCompletionHandler:(void (^)())completionHandler
           overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
-    // TODO - Implement comments, and followers endpoints
-    
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     for (NSDate *date in dates) {

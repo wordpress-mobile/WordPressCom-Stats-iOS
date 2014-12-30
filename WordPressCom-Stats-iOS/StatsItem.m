@@ -24,4 +24,30 @@
     [self.children addObject:statsItem];
 }
 
+- (NSUInteger)numberOfRows
+{
+    NSUInteger itemCount = 1;
+    
+    if (itemCount == 0 || self.isExpanded == NO) {
+        return 1;
+    }
+    
+    for (StatsItem *item in self.children) {
+        itemCount += [item numberOfRows];
+    }
+    
+    return itemCount;
+}
+
+
+- (NSUInteger)depth
+{
+    if (self.parent) {
+        return self.parent.depth + 1;
+    }
+    
+    return 1;
+}
+
+
 @end

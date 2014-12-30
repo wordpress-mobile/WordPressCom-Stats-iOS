@@ -12,6 +12,10 @@
 @property (nonatomic, weak)     StatsItem *parent;
 @property (nonatomic, readonly) NSMutableArray *children;  // @[StatsItem]
 
+@property (nonatomic, assign, getter=isExpanded) BOOL expanded;
+@property (nonatomic, readonly) NSUInteger numberOfRows;
+@property (nonatomic, readonly) NSUInteger depth;
+
 - (void)addChildStatsItem:(StatsItem *)statsItem;
 
 @end
