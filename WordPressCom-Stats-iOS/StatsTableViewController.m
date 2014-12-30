@@ -957,28 +957,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 {
     id data;
     
-    switch (statsSection) {
-        case StatsSectionGraph:
-        case StatsSectionPosts:
-        case StatsSectionReferrers:
-        case StatsSectionClicks:
-        case StatsSectionCountry:
-        case StatsSectionVideos:
-        case StatsSectionTagsCategories:
-        case StatsSectionPublicize:
-            data = self.sectionData[@(statsSection)];
-            break;
-            
-        case StatsSectionComments:
-        case StatsSectionFollowers:
-        {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-            data = self.sectionData[@(statsSection)][@(selectedSubsection)];
-        }
-            
-        default:
-            break;
-            
+    if ( statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
+        StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
+        data = self.sectionData[@(statsSection)][@(selectedSubsection)];
+    } else if (statsSection != StatsSectionPeriodSelector) {
+        data = self.sectionData[@(statsSection)];
     }
     
     return data;
