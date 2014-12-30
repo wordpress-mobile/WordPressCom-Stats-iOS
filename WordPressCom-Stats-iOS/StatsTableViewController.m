@@ -244,23 +244,26 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
-        NSInteger oldRowCount = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
+        BOOL insert = !statsItem.expanded;
+        NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
         statsItem.expanded = !statsItem.isExpanded;
-        NSInteger newRowCount = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
-        
-        NSMutableArray *oldIndexPaths = [NSMutableArray new];
-        NSMutableArray *newIndexPaths = [NSMutableArray new];
-        
-        for (NSInteger x = indexPath.row + 1; x < oldRowCount; ++x) {
-            [oldIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:indexPath.section]];
-        }
-        for (NSInteger x = indexPath.row + 1; x < newRowCount; ++x) {
-            [newIndexPaths addObject:[NSIndexPath indexPathForRow:x inSection:indexPath.section]];
+        NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+
+        NSMutableArray *indexPaths = [NSMutableArray new];
+
+        NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
+        for (NSInteger row = 1; row <= numberOfRows; ++row) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
         }
         
         [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:oldIndexPaths withRowAnimation:UITableViewRowAnimationTop];
-        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+        
+        if (insert) {
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+        } else {
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        }
+        
         [self.tableView endUpdates];
     }
 }
