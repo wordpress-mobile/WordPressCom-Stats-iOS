@@ -230,7 +230,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (NSNumber *)valueForCurrentTypeFromSummary:(StatsSummary *)summary
 {
-    NSNumber *value = @0.0f;
+    NSNumber *value = nil;
     switch (self.currentSummaryType) {
         case StatsSummaryTypeViews:
             value = @([summary.views integerValue]);
@@ -243,8 +243,6 @@ static NSInteger const RecommendedYAxisTicks = 7;
             break;
         case StatsSummaryTypeLikes:
             value = @([summary.likes integerValue]);
-            break;
-        default:
             break;
     }
 
