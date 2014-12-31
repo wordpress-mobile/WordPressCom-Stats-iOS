@@ -144,7 +144,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
 {
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
     CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
-    CGFloat height = CGRectGetHeight(collectionView.frame);
+    CGFloat height = CGRectGetHeight(rect);
     
     CGSize size = CGSizeMake(width, height);
     
