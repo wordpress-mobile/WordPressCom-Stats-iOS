@@ -311,6 +311,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSUInteger commentsIndex = [fields indexOfObject:@"comments"];
         
         NSMutableArray *array = [NSMutableArray new];
+        NSMutableDictionary *dictionary = [NSMutableDictionary new];
         for (NSArray *period in statsVisitsDict[@"data"]) {
             StatsSummary *periodSummary = [StatsSummary new];
             periodSummary.periodUnit = unit;
@@ -321,9 +322,11 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             periodSummary.likes = [self localizedStringForNumber:period[likesIndex]];
             periodSummary.comments = [self localizedStringForNumber:period[commentsIndex]];
             [array addObject:periodSummary];
+            dictionary[periodSummary.date] = periodSummary;
         }
         
         statsVisits.statsData = array;
+        statsVisits.statsDataByDate = dictionary;
         
         if (completionHandler) {
             completionHandler(statsVisits);

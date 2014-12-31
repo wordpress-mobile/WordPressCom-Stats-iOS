@@ -674,55 +674,68 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if (statsSection == StatsSectionGraph) {
-        [self configureSectionGraphCell:cell forRow:indexPath.row];
-    } else if (statsSection != StatsSectionPeriodSelector) {
-        [self configureCell:cell forStatsSection:statsSection andIndexPath:indexPath];
+    if ([cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
+        [self configureSectionGraphCell:cell];
+    } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
+        [self configureSectionGraphSelectableCell:cell forRow:indexPath.row];
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+        [self configureSectionGroupHeaderCell:cell
+                             withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
+        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
+        [self configureSectionTwoColumnHeaderCell:cell
+                                 withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        [self configureSectionGroupTotalCell:cell withStatsSection:statsSection andTotal:group.totalCount];
+    } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
+        // No data
+    } else if ([cellIdentifier isEqualToString:StatsTableViewAllCellIdentifier]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+    } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
+        
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL isNestedRow:item.depth > 1];
     }
 }
 
-- (void)configureSectionGraphCell:(UITableViewCell *)cell forRow:(NSInteger)row
-{
-    // Find the selected summary
-    StatsVisits *visits = self.sectionData[@(StatsSectionGraph)];
-    if (!visits) {
-        return;
-    }
 
+- (void)configureSectionGraphCell:(UITableViewCell *)cell
+{
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
+
+    if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
+        UIView *graphView = self.graphViewController.view;
+        graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
+        graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [cell.contentView addSubview:graphView];
+        [self addChildViewController:self.graphViewController];
+        [self.graphViewController didMoveToParentViewController:self];
+    }
+    
+    self.graphViewController.currentUnit = self.selectedPeriodUnit;
+    self.graphViewController.currentSummaryType = self.selectedSummaryType;
+    self.graphViewController.visits = visits;
+    [self.graphViewController.collectionView reloadData];
+    [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+}
+
+
+- (void)configureSectionGraphSelectableCell:(UITableViewCell *)cell forRow:(NSInteger)row
+{
     UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
     UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
     UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
 
-    StatsSummary *summary;
-    for (StatsSummary *s in visits.statsData) {
-        if ([s.date isEqualToDate:self.selectedDate]) {
-            summary = s;
-            break;
-        }
-    }
-    
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
+    StatsSummary *summary = visits.statsDataByDate[self.selectedDate];
+
     switch (row) {
-        case 0: // Graph Row
-        {
-            if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
-                UIView *graphView = self.graphViewController.view;
-                graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
-                graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-                [cell.contentView addSubview:graphView];
-                [self addChildViewController:self.graphViewController];
-                [self.graphViewController didMoveToParentViewController:self];
-            }
-            
-            self.graphViewController.currentUnit = self.selectedPeriodUnit;
-            self.graphViewController.currentSummaryType = self.selectedSummaryType;
-            self.graphViewController.visits = visits;
-            [self.graphViewController.collectionView reloadData];
-            [self.graphViewController selectGraphBarWithDate:summary.date];
-            
-            break;
-        }
-            
         case 1: // Views
         {
             iconLabel.text = @"";
@@ -757,34 +770,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             
         default:
             break;
-    }
-}
-
-- (void)configureCell:(UITableViewCell *)cell forStatsSection:(StatsSection)statsSection andIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
-
-    if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
-        [self configureSectionGroupHeaderCell:cell
-                             withStatsSection:statsSection];
-    } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
-        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
-    } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell
-                                 withStatsSection:statsSection];
-    } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
-        StatsGroup *group = [self statsDataForStatsSection:statsSection];
-        [self configureSectionGroupTotalCell:cell withStatsSection:statsSection andTotal:group.totalCount];
-    } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
-        // No data
-    } else if ([cellIdentifier isEqualToString:StatsTableViewAllCellIdentifier]) {
-        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-        label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
-    } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        StatsGroup *group = [self statsDataForStatsSection:statsSection];
-        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
-        
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL isNestedRow:item.depth > 1];
     }
 }
 
