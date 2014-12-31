@@ -8,6 +8,7 @@
 @property (nonatomic, copy)     NSString *titlePrimary;
 @property (nonatomic, copy)     NSString *titleSecondary;
 @property (nonatomic, strong)   NSURL *iconUrl;
+@property (nonatomic, copy)     NSString *totalCount;
 
 @property (nonatomic, assign, getter=isExpanded) BOOL expanded;
 @property (nonatomic, readonly) NSUInteger numberOfRows;

@@ -33,9 +33,11 @@ static CGFloat const StatsTableNoResultsHeight = 100.0f;
 static CGFloat const StatsTableSelectableCellHeight = 35.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
+static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
 static NSString *const StatsTablePeriodSelectorCellIdentifier = @"PeriodSelector";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
+static NSString *const StatsTableGroupTotalsCellIdentifier = @"GroupTotalsRow";
 static NSString *const StatsTableTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
 static NSString *const StatsTableTwoColumnCellIdentifier = @"TwoColumnRow";
 static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow";
@@ -132,18 +134,19 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             BOOL hasData = data != nil;
             return hasData ? 5 : 1;
         }
-        case StatsSectionPosts:
-        case StatsSectionReferrers:
-        case StatsSectionClicks:
-        case StatsSectionCountry:
-        case StatsSectionVideos:
-        case StatsSectionPublicize:
-        case StatsSectionTagsCategories:
-        case StatsSectionComments:
-        case StatsSectionFollowers:
+            
+        default:
         {
             StatsGroup *group = (StatsGroup *)data;
-            NSUInteger count = group.numberOfRows + StatsTableRowDataOffsetStandard;
+            NSUInteger count = group.numberOfRows;
+            
+            if (statsSection == StatsSectionComments) {
+                count += StatsTableRowDataOffsetWithGroupSelector;
+            } else if (statsSection == StatsSectionFollowers) {
+                count += StatsTableRowDataOffsetWithGroupSelectorAndTotal;
+            } else {
+                count += StatsTableRowDataOffsetStandard;
+            }
             
             if (group.moreItemsExist) {
                 count++;
@@ -509,7 +512,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
      }
                followersDotComCompletionHandler:^(StatsGroup *group)
      {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
          
          if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
@@ -524,7 +527,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
      }
                 followersEmailCompletionHandler:^(StatsGroup *group)
      {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
 
          if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
@@ -612,35 +615,55 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             break;
         }
             
-        case StatsSectionComments:
         case StatsSectionFollowers:
         {
             StatsGroup *group = [self statsDataForStatsSection:statsSection];
-
-            switch (indexPath.row) {
-                case 0:
-                    identifier = StatsTableGroupHeaderCellIdentifier;
-                    break;
-                case 1:
-                    identifier = StatsTableGroupSelectorCellIdentifier;
-                    break;
-                case 2:
-                {
-                    if (group.numberOfRows > 0) {
-                        identifier = StatsTableTwoColumnHeaderCellIdentifier;
-                    } else {
-                        identifier = StatsTableNoResultsCellIdentifier;
-                    }
-                    break;
+            
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = StatsTableGroupSelectorCellIdentifier;
+            } else if (indexPath.row == 2) {
+                if (group.numberOfRows > 0) {
+                    identifier = StatsTableGroupTotalsCellIdentifier;
+                } else {
+                    identifier = StatsTableNoResultsCellIdentifier;
                 }
-                default:
-                    if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithGroupSelector)) {
-                        identifier = StatsTableViewAllCellIdentifier;
-                    } else {
-                        identifier = StatsTableTwoColumnCellIdentifier;
-                    }
-                    break;
+            } else if (indexPath.row == 3) {
+                identifier = StatsTableTwoColumnHeaderCellIdentifier;
+            } else {
+                if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithGroupSelectorAndTotal)) {
+                    identifier = StatsTableViewAllCellIdentifier;
+                } else {
+                    identifier = StatsTableTwoColumnCellIdentifier;
+                }
             }
+            
+            break;
+        }
+
+        case StatsSectionComments:
+        {
+            StatsGroup *group = [self statsDataForStatsSection:statsSection];
+
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = StatsTableGroupSelectorCellIdentifier;
+            } else if (indexPath.row == 2) {
+                if (group.numberOfRows > 0) {
+                    identifier = StatsTableTwoColumnHeaderCellIdentifier;
+                } else {
+                    identifier = StatsTableNoResultsCellIdentifier;
+                }
+            } else {
+                if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithGroupSelector)) {
+                    identifier = StatsTableViewAllCellIdentifier;
+                } else {
+                    identifier = StatsTableTwoColumnCellIdentifier;
+                }
+            }
+            
             break;
         }
     }
@@ -747,6 +770,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
         [self configureSectionTwoColumnHeaderCell:cell
                                  withStatsSection:statsSection];
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        [self configureSectionGroupTotalCell:cell withStatsSection:statsSection andTotal:group.totalCount];
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         // No data
     } else if ([cellIdentifier isEqualToString:StatsTableViewAllCellIdentifier]) {
@@ -861,12 +887,33 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
+- (void)configureSectionGroupTotalCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection andTotal:(NSString *)total
+{
+    NSString *title;
+    StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
+    
+    switch (selectedSubsection) {
+        case StatsSubSectionFollowersDotCom:
+            title = [NSString stringWithFormat:NSLocalizedString(@"Total WordPress.com Followers: %@", @"Label of Total count of WordPress.com followers with value"), total];
+            break;
+        case StatsSubSectionFollowersEmail:
+            title = [NSString stringWithFormat:NSLocalizedString(@"Total Email Followers: %@", @"Label of Total count of email followers with value"), total];
+            break;
+        default:
+            break;
+    }
+
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+    label.text = title;
+}
+
+
 - (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     NSArray *titles;
     NSInteger selectedIndex;
     StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-
+    
     switch (statsSection) {
         case StatsSectionComments:
             titles = @[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
