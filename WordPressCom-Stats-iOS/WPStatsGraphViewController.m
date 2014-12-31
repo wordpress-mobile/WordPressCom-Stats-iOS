@@ -218,10 +218,8 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
 {
-//    NSDictionary *categoryData = [self.viewsVisitors viewsVisitorsForUnit:self.currentUnit];
-    
     return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
-                @"selectedColor" : [WPStyleGuide statsLighterOrange],
+                @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
                 @"name" : @"views"
                 },

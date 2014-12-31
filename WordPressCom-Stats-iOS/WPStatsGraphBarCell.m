@@ -10,6 +10,18 @@
 
 @implementation WPStatsGraphBarCell
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        UIView *selectedBGView = [[UIView alloc] initWithFrame:self.bounds];
+        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrange];
+        self.selectedBackgroundView = selectedBGView;
+    }
+    
+    return self;
+}
+
 - (void)prepareForReuse
 {
     [super prepareForReuse];
@@ -39,7 +51,7 @@
     self.barsWithColors = [NSMutableArray new];
 
     // For each subsequent category, inset the bar a set amount
-    __block CGFloat inset = 0.0;
+    __block CGFloat inset = 5.0;
     
     __block NSMutableString *accessibilityValue = [NSMutableString new];
     
@@ -87,7 +99,7 @@
     label.text = text;
     label.font = [WPStyleGuide axisLabelFont];
     label.textColor = [WPStyleGuide littleEddieGrey];
-    label.backgroundColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor clearColor];
     label.opaque = YES;
     [label sizeToFit];
     return label;
