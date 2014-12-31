@@ -165,6 +165,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      {
          followersDotComResult.items = items;
          followersDotComResult.moreItemsExist = moreViewsAvailable;
+         followersDotComResult.totalCount = totalViews;
          
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
@@ -179,7 +180,8 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      {
          followersEmailResult.items = items;
          followersEmailResult.moreItemsExist = moreViewsAvailable;
-         
+         followersEmailResult.totalCount = totalViews;
+
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
              item.value = age;
