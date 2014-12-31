@@ -16,7 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         UIView *selectedBGView = [[UIView alloc] initWithFrame:self.bounds];
-        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrange];
+        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
         self.selectedBackgroundView = selectedBGView;
     }
     
