@@ -8,5 +8,6 @@
 
 // NSArray of StatsSummary objects
 @property (nonatomic, strong) NSArray *statsData;
+@property (nonatomic, strong) NSDictionary *statsDataByDate;
 
 @end
