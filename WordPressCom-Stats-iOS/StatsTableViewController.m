@@ -687,6 +687,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                 graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
                 graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                 [cell.contentView addSubview:graphView];
+                [self addChildViewController:self.graphViewController];
+                [self.graphViewController didMoveToParentViewController:self];
             }
             
             self.graphViewController.currentUnit = self.selectedPeriodUnit;
