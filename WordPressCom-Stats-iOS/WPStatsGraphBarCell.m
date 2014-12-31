@@ -5,6 +5,7 @@
 @interface WPStatsGraphBarCell ()
 
 @property (nonatomic, strong) NSMutableArray *barsWithColors;
+@property (nonatomic, strong) UILabel *label;
 
 @end
 
@@ -15,7 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         UIView *selectedBGView = [[UIView alloc] initWithFrame:self.bounds];
-        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrange];
+        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
         self.selectedBackgroundView = selectedBGView;
     }
     
@@ -75,6 +76,7 @@
         
         UIView *view = [[UIView alloc] initWithFrame:rect];
         view.backgroundColor = self.isSelected ? selectedColor : color;
+        view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         [self.contentView addSubview:view];
 
@@ -88,10 +90,18 @@
     UILabel *axisLabel = [self axisLabelWithText:self.barName];
     axisLabel.center = CGPointMake(self.contentView.center.x, CGRectGetHeight(self.contentView.bounds) - 10.0);
     [self.contentView addSubview:axisLabel];
+    self.label = axisLabel;
 
     self.isAccessibilityElement = YES;
     self.accessibilityLabel = self.barName;
     self.accessibilityValue = accessibilityValue;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.label.center = CGPointMake(self.contentView.center.x, CGRectGetHeight(self.contentView.bounds) - 10.0);
 }
 
 - (UILabel *)axisLabelWithText:(NSString *)text {

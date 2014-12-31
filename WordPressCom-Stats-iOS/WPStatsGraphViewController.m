@@ -142,7 +142,8 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = 30.0f;
+    CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
+    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
     CGFloat height = CGRectGetHeight(collectionView.frame);
     
     CGSize size = CGSizeMake(width, height);
@@ -152,8 +153,11 @@ static NSInteger const RecommendedYAxisTicks = 7;
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
-    CGFloat spacing = floorf((CGRectGetWidth(collectionView.frame) - 55 - (30.0 * self.numberOfXValues)) / self.numberOfXValues);
-    
+    CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
+    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
+
+    CGFloat spacing = floorf((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
+
     return spacing;
 }
 

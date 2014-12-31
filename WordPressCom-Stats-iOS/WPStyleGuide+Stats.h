@@ -4,6 +4,7 @@
 
 + (UIFont *)axisLabelFont;
 
++ (UIColor *)statsLighterOrangeTransparent;
 + (UIColor *)statsLighterOrange;
 + (UIColor *)statsDarkerOrange;
 
