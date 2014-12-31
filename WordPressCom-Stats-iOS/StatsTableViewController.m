@@ -676,26 +676,34 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if ([cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
+    if (       [cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
         [self configureSectionGraphCell:cell];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
         [self configureSectionGraphSelectableCell:cell forRow:indexPath.row];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         [self configureSectionGroupHeaderCell:cell
                              withStatsSection:statsSection];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
         [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
         [self configureSectionTwoColumnHeaderCell:cell
                                  withStatsSection:statsSection];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         [self configureSectionGroupTotalCell:cell withStatsSection:statsSection andTotal:group.totalCount];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
-        // No data
+        [self configureNoResultsCell:cell withStatsSection:statsSection];
+        
     } else if ([cellIdentifier isEqualToString:StatsTableViewAllCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
@@ -926,6 +934,41 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     }
     
     control.selectedSegmentIndex = selectedIndex;
+}
+
+
+- (void)configureNoResultsCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+{
+    NSString *text;
+    id data = [self statsDataForStatsSection:statsSection];
+    
+    if (!data) {
+        text = NSLocalizedString(@"Waiting for data...", @"");
+    } else {
+        switch (statsSection) {
+            case StatsSectionReferrers:
+                text = NSLocalizedString(@"No referrers recorded", @"");
+                break;
+            case StatsSectionClicks:
+                text = NSLocalizedString(@"No clicks recorded", @"");
+                break;
+            case StatsSectionVideos:
+                text = NSLocalizedString(@"No videos played", @"");
+                break;
+            case StatsSectionTagsCategories:
+                text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
+                break;
+            case StatsSectionPublicize:
+                text = NSLocalizedString(@"No publicize followers recorded", @"");
+                break;
+            default:
+                text = NSLocalizedString(@"No posts or pages viewed", @"");
+                break;
+        }
+    }
+    
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+    label.text = text;
 }
 
 
