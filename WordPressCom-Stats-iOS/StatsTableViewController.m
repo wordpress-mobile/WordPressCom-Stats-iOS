@@ -328,6 +328,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     }
     
     self.selectedPeriodUnit = unit;
+    self.selectedDate = [NSDate date];
     [self.sectionData removeAllObjects];
     self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
     self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
