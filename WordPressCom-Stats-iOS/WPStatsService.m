@@ -86,7 +86,6 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      {
          StatsGroup *eventsResult = [StatsGroup new];
          eventsResult.items = items;
-         eventsResult.titlePrimary = NSLocalizedString(@"Published", @"Title for Published events stats section");
          eventsResult.moreItemsExist = moreViewsAvailable;
          
          if (eventsCompletion) {

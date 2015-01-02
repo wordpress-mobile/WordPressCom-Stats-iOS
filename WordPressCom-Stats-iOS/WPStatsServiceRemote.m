@@ -5,6 +5,7 @@
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 #import <NSObject+SafeExpectations.h>
+#import <NSString+XMLExtensions.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
@@ -372,17 +373,31 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        // TODO :: Implement
+        NSDictionary *rootDict = (NSDictionary *)responseObject;
+        NSArray *posts = [rootDict arrayForKey:@"posts"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *post in posts) {
+            StatsItem *item = [StatsItem new];
+            item.itemID = [post numberForKey:@"ID"];
+            item.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+            
+            StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
+            item.actions = @[itemAction];
+            
+            [items addObject:item];
+        }
         
         if (completionHandler) {
-//            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, nil, NO);
         }
     };
     
-    // TODO : Calculate date range with period
-    NSDictionary *parameters = @{@"after"   : [self siteLocalStringForDate:date],
+    NSDictionary *parameters = @{@"after"   : [self siteLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
                                  @"before"  : [self siteLocalStringForDate:date],
-                                 @"number"  : @10};
+                                 @"number"  : @10,
+                                 @"fields"  : @"ID, title, URL"};
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
@@ -1054,6 +1069,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return localDate;
 }
 
+
 - (NSString *)siteLocalStringForDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1065,6 +1081,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
     return todayString;
 }
+
 
 - (StatsPeriodUnit)periodUnitForString:(NSString *)unitString
 {
@@ -1081,6 +1098,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return StatsPeriodUnitDay;
 }
 
+
 - (NSString *)stringForPeriodUnit:(StatsPeriodUnit)unit
 {
     switch (unit) {
@@ -1096,6 +1114,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     return @"";
 }
+
 
 - (NSString *)nicePointNameForDate:(NSDate *)date forStatsPeriodUnit:(StatsPeriodUnit)unit {
     if (!date) {
@@ -1125,6 +1144,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return niceName;
 }
 
+
 - (NSString *)localizedStringForNumber:(NSNumber *)number
 {
     if (!number) {
@@ -1138,5 +1158,50 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     return formattedNumber;
 }
+
+
+- (NSDate *)calculateStartDateForPeriodUnit:(StatsPeriodUnit)unit withEndDate:(NSDate *)date
+{
+    if (unit == StatsPeriodUnitDay) {
+        return date;
+    }
+    
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    
+    if (unit == StatsPeriodUnitMonth) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = +1;
+        dateComponents.month = -1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitWeek) {
+        // Weeks are Monday - Sunday
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = -6;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitYear) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = +1;
+        dateComponents.year = -1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    }
+    
+    return nil;
+}
+
 
 @end
