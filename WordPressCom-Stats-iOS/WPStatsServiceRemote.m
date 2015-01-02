@@ -14,6 +14,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 @property (nonatomic, strong)   NSNumber                        *siteId;
 @property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
 @property (nonatomic, copy)     NSString                        *statsPathPrefix;
+@property (nonatomic, copy)     NSString                        *sitesPathPrefix;
 @property (nonatomic, strong)   NSDateFormatter                 *deviceDateFormatter;
 @property (nonatomic, strong)   NSDateFormatter                 *rfc3339DateFormatter;
 @property (nonatomic, strong)   NSNumberFormatter               *deviceNumberFormatter;
@@ -36,6 +37,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         _oauth2Token = oauth2Token;
         _siteId = siteId;
         _siteTimeZone = timeZone;
+        _sitesPathPrefix = [NSString stringWithFormat:@"%@/sites/%@", WordPressComApiClientEndpointURL, _siteId];
         _statsPathPrefix = [NSString stringWithFormat:@"%@/sites/%@/stats", WordPressComApiClientEndpointURL, _siteId];
         
         _deviceDateFormatter = [NSDateFormatter new];
@@ -65,6 +67,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
     withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
@@ -83,6 +86,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     for (NSDate *date in dates) {
         if (visitsCompletion) {
             [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion failureHandler:nil]];
+        }
+        if (eventsCompletion) {
+            [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion failureHandler:nil]];
         }
         if (postsCompletion) {
             [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion failureHandler:nil]];
@@ -143,6 +149,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     
     AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchEventsForDate:(NSDate *)date
+                   andUnit:(StatsPeriodUnit)unit
+     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+            failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -292,7 +310,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
-                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+                                withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -338,8 +356,34 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self siteLocalStringForDate:date]};
-
+    
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
+                                                                 parameters:parameters
+                                                                    success:handler
+                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForEventsForDate:(NSDate *)date
+                                              andUnit:(StatsPeriodUnit)unit
+                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                       failureHandler:(void (^)(NSError *error))failureHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        // TODO :: Implement
+        
+        if (completionHandler) {
+//            completionHandler(items, totalViews, moreViewsAvailable);
+        }
+    };
+    
+    // TODO : Calculate date range with period
+    NSDictionary *parameters = @{@"after"   : [self siteLocalStringForDate:date],
+                                 @"before"  : [self siteLocalStringForDate:date],
+                                 @"number"  : @10};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
                                                                     failure:[self failureForFailureCompletionHandler:failureHandler]];
@@ -937,11 +981,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (NSString *)urlForPosts
+{
+    return [NSString stringWithFormat:@"%@/posts/", self.sitesPathPrefix];
+}
+
+
 - (NSString *)urlForTopPosts
 {
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
-
 
 - (NSString *)urlForVideos
 {

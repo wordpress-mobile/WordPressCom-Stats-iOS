@@ -34,6 +34,7 @@
     self.subject.remote = remoteMock;
 
     XCTestExpectation *visitsExpectation = [self expectationWithDescription:@"visitsExpectation"];
+    XCTestExpectation *eventsExpectation = [self expectationWithDescription:@"eventsExpectation"];
     XCTestExpectation *postsExpectation = [self expectationWithDescription:@"postsExpectation"];
     XCTestExpectation *referrersExpectation = [self expectationWithDescription:@"referrersExpectation"];
     XCTestExpectation *clicksExpectation = [self expectationWithDescription:@"clicksExpectation"];
@@ -52,6 +53,9 @@
                withVisitsCompletionHandler:^(StatsVisits *visits) {
                    [visitsExpectation fulfill];
                }
+                   eventsCompletionHandler:^(StatsGroup *group) {
+                        [eventsExpectation fulfill];
+                    }
                     postsCompletionHandler:^(StatsGroup *group) {
                         [postsExpectation fulfill];
                     }
@@ -293,6 +297,7 @@
     OCMExpect([remote batchFetchStatsForDates:dateCheckBlock
                                       andUnit:unit
                   withVisitsCompletionHandler:[OCMArg any]
+                      eventsCompletionHandler:[OCMArg any]
                        postsCompletionHandler:[OCMArg any]
                    referrersCompletionHandler:[OCMArg any]
                       clicksCompletionHandler:[OCMArg any]
@@ -311,6 +316,7 @@
     [self.subject retrieveAllStatsForDates:@[baseDate]
                                    andUnit:unit
                withVisitsCompletionHandler:nil
+                   eventsCompletionHandler:nil
                     postsCompletionHandler:nil
                 referrersCompletionHandler:nil
                    clicksCompletionHandler:nil
@@ -338,6 +344,7 @@
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
     withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
@@ -356,35 +363,38 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         if (visitsCompletion) {
             visitsCompletion([StatsVisits new]);
         }
+        if (eventsCompletion) {
+            eventsCompletion(@[[StatsItem new]], nil, false);
+        }
         if (postsCompletion) {
-            postsCompletion(@[[StatsItem new]], nil, nil);
+            postsCompletion(@[[StatsItem new]], nil, false);
         }
         if (referrersCompletion) {
-            referrersCompletion(@[[StatsItem new]], nil, nil);
+            referrersCompletion(@[[StatsItem new]], nil, false);
         }
         if (clicksCompletion) {
-            clicksCompletion(@[[StatsItem new]], nil, nil);
+            clicksCompletion(@[[StatsItem new]], nil, false);
         }
         if (countryCompletion) {
-            countryCompletion(@[[StatsItem new]], nil, nil);
+            countryCompletion(@[[StatsItem new]], nil, false);
         }
         if (videosCompletion) {
-            videosCompletion(@[[StatsItem new]], nil, nil);
+            videosCompletion(@[[StatsItem new]], nil, false);
         }
         if (commentsCompletion) {
-            commentsCompletion(@[[StatsItem new]], nil, nil);
+            commentsCompletion(@[[StatsItem new]], nil, false);
         }
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(@[[StatsItem new]], nil, nil);
+            tagsCategoriesCompletion(@[[StatsItem new]], nil, false);
         }
         if (followersDotComCompletion) {
-            followersDotComCompletion(@[[StatsItem new]], nil, nil);
+            followersDotComCompletion(@[[StatsItem new]], nil, false);
         }
         if (followersEmailCompletion) {
-            followersEmailCompletion(@[[StatsItem new]], nil, nil);
+            followersEmailCompletion(@[[StatsItem new]], nil, false);
         }
         if (publicizeCompletion) {
-            publicizeCompletion(@[[StatsItem new]], nil, nil);
+            publicizeCompletion(@[[StatsItem new]], nil, false);
         }
     }
     

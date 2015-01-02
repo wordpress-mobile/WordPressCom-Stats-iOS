@@ -403,6 +403,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
+                        eventsCompletionHandler:^(StatsGroup *group)
+     {
+         // TODO : Implement
+     }
                          postsCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;

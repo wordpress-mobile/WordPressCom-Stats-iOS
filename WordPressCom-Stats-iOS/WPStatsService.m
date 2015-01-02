@@ -38,6 +38,7 @@
 - (void)retrieveAllStatsForDates:(NSArray *)dates
                          andUnit:(StatsPeriodUnit)unit
      withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
+         eventsCompletionHandler:(StatsItemsCompletion)eventsCompletion
           postsCompletionHandler:(StatsItemsCompletion)postsCompletion
       referrersCompletionHandler:(StatsItemsCompletion)referrersCompletion
          clicksCompletionHandler:(StatsItemsCompletion)clicksCompletion
@@ -71,18 +72,6 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
 
     __block StatsVisits *visitsResult = nil;
-    __block StatsGroup *postsResult = [StatsGroup new];
-    __block StatsGroup *referrersResult = [StatsGroup new];
-    __block StatsGroup *clicksResult = [StatsGroup new];
-    __block StatsGroup *countriesResult = [StatsGroup new];
-    __block StatsGroup *videosResult = [StatsGroup new];
-    __block StatsGroup *commentsAuthorsResult = [StatsGroup new];
-    __block StatsGroup *commentsPostsResult = [StatsGroup new];
-    __block StatsGroup *tagsCategoriesResult = [StatsGroup new];
-    __block StatsGroup *followersDotComResult = [StatsGroup new];
-    __block StatsGroup *followersEmailResult = [StatsGroup new];
-    __block StatsGroup *publicizeResult = [StatsGroup new];
-    
     [self.remote batchFetchStatsForDates:endDates
                                  andUnit:unit
              withVisitsCompletionHandler:^(StatsVisits *visits)
@@ -93,18 +82,31 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             visitsCompletion(visits);
         }
     }
+                 eventsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+     {
+         StatsGroup *eventsResult = [StatsGroup new];
+         eventsResult.items = items;
+         eventsResult.titlePrimary = NSLocalizedString(@"Published", @"Title for Published events stats section");
+         eventsResult.moreItemsExist = moreViewsAvailable;
+         
+         if (eventsCompletion) {
+             eventsCompletion(eventsResult);
+         }
+     }
                   postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
-    {
-        postsResult.items = items;
-        postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
-        postsResult.moreItemsExist = moreViewsAvailable;
-        
-        if (postsCompletion) {
-            postsCompletion(postsResult);
-        }
-    }
+     {
+         StatsGroup *postsResult = [StatsGroup new];
+         postsResult.items = items;
+         postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
+         postsResult.moreItemsExist = moreViewsAvailable;
+         
+         if (postsCompletion) {
+             postsCompletion(postsResult);
+         }
+     }
               referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *referrersResult = [StatsGroup new];
         referrersResult.items = items;
         referrersResult.moreItemsExist = moreViewsAvailable;
         
@@ -114,6 +116,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
                  clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *clicksResult = [StatsGroup new];
         clicksResult.items = items;
         clicksResult.moreItemsExist = moreViewsAvailable;
         
@@ -123,6 +126,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
                 countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *countriesResult = [StatsGroup new];
         countriesResult.items = items;
         countriesResult.moreItemsExist = moreViewsAvailable;
         
@@ -132,6 +136,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
                  videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *videosResult = [StatsGroup new];
         videosResult.items = items;
         videosResult.moreItemsExist = moreViewsAvailable;
         
@@ -141,7 +146,9 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
                commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *commentsAuthorsResult = [StatsGroup new];
         commentsAuthorsResult.items = items.firstObject;
+        StatsGroup *commentsPostsResult = [StatsGroup new];
         commentsPostsResult.items = items.lastObject;
         
         if (commentsAuthorsCompletion) {
@@ -154,6 +161,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
          tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *tagsCategoriesResult = [StatsGroup new];
         tagsCategoriesResult.items = items;
         tagsCategoriesResult.moreItemsExist = moreViewsAvailable;
         
@@ -163,6 +171,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
         followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
+         StatsGroup *followersDotComResult = [StatsGroup new];
          followersDotComResult.items = items;
          followersDotComResult.moreItemsExist = moreViewsAvailable;
          followersDotComResult.totalCount = totalViews;
@@ -178,6 +187,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      }
          followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
      {
+         StatsGroup *followersEmailResult = [StatsGroup new];
          followersEmailResult.items = items;
          followersEmailResult.moreItemsExist = moreViewsAvailable;
          followersEmailResult.totalCount = totalViews;
@@ -193,6 +203,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      }
               publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
     {
+        StatsGroup *publicizeResult = [StatsGroup new];
         publicizeResult.items = items;
         publicizeResult.moreItemsExist = moreViewsAvailable;
         

@@ -39,6 +39,7 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
     withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
