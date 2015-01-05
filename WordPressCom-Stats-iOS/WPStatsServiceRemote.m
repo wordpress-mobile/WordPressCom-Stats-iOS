@@ -5,6 +5,7 @@
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 #import <NSObject+SafeExpectations.h>
+#import <NSString+XMLExtensions.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
@@ -14,6 +15,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 @property (nonatomic, strong)   NSNumber                        *siteId;
 @property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
 @property (nonatomic, copy)     NSString                        *statsPathPrefix;
+@property (nonatomic, copy)     NSString                        *sitesPathPrefix;
 @property (nonatomic, strong)   NSDateFormatter                 *deviceDateFormatter;
 @property (nonatomic, strong)   NSDateFormatter                 *rfc3339DateFormatter;
 @property (nonatomic, strong)   NSNumberFormatter               *deviceNumberFormatter;
@@ -36,6 +38,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         _oauth2Token = oauth2Token;
         _siteId = siteId;
         _siteTimeZone = timeZone;
+        _sitesPathPrefix = [NSString stringWithFormat:@"%@/sites/%@", WordPressComApiClientEndpointURL, _siteId];
         _statsPathPrefix = [NSString stringWithFormat:@"%@/sites/%@/stats", WordPressComApiClientEndpointURL, _siteId];
         
         _deviceDateFormatter = [NSDateFormatter new];
@@ -65,6 +68,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 - (void)batchFetchStatsForDates:(NSArray *)dates
                         andUnit:(StatsPeriodUnit)unit
     withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
          postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
      referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
         clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
@@ -83,6 +87,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     for (NSDate *date in dates) {
         if (visitsCompletion) {
             [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion failureHandler:nil]];
+        }
+        if (eventsCompletion) {
+            [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion failureHandler:nil]];
         }
         if (postsCompletion) {
             [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion failureHandler:nil]];
@@ -143,6 +150,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     
     AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    [operation start];
+}
+
+
+- (void)fetchEventsForDate:(NSDate *)date
+                   andUnit:(StatsPeriodUnit)unit
+     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+            failureHandler:(void (^)(NSError *error))failureHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
     [operation start];
 }
 
@@ -292,7 +311,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
-                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
+                                withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -338,8 +357,48 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self siteLocalStringForDate:date]};
-
+    
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
+                                                                 parameters:parameters
+                                                                    success:handler
+                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForEventsForDate:(NSDate *)date
+                                              andUnit:(StatsPeriodUnit)unit
+                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                       failureHandler:(void (^)(NSError *error))failureHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *rootDict = (NSDictionary *)responseObject;
+        NSArray *posts = [rootDict arrayForKey:@"posts"];
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *post in posts) {
+            StatsItem *item = [StatsItem new];
+            item.itemID = [post numberForKey:@"ID"];
+            item.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+            
+            StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
+            item.actions = @[itemAction];
+            
+            [items addObject:item];
+        }
+        
+        if (completionHandler) {
+            completionHandler(items, nil, NO);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"after"   : [self siteLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
+                                 @"before"  : [self siteLocalStringForDate:date],
+                                 @"number"  : @10,
+                                 @"fields"  : @"ID, title, URL"};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
                                                                     failure:[self failureForFailureCompletionHandler:failureHandler]];
@@ -937,11 +996,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (NSString *)urlForPosts
+{
+    return [NSString stringWithFormat:@"%@/posts/", self.sitesPathPrefix];
+}
+
+
 - (NSString *)urlForTopPosts
 {
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
-
 
 - (NSString *)urlForVideos
 {
@@ -1005,6 +1069,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return localDate;
 }
 
+
 - (NSString *)siteLocalStringForDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1016,6 +1081,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
     return todayString;
 }
+
 
 - (StatsPeriodUnit)periodUnitForString:(NSString *)unitString
 {
@@ -1032,6 +1098,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return StatsPeriodUnitDay;
 }
 
+
 - (NSString *)stringForPeriodUnit:(StatsPeriodUnit)unit
 {
     switch (unit) {
@@ -1047,6 +1114,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     return @"";
 }
+
 
 - (NSString *)nicePointNameForDate:(NSDate *)date forStatsPeriodUnit:(StatsPeriodUnit)unit {
     if (!date) {
@@ -1076,6 +1144,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return niceName;
 }
 
+
 - (NSString *)localizedStringForNumber:(NSNumber *)number
 {
     if (!number) {
@@ -1089,5 +1158,50 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     return formattedNumber;
 }
+
+
+- (NSDate *)calculateStartDateForPeriodUnit:(StatsPeriodUnit)unit withEndDate:(NSDate *)date
+{
+    if (unit == StatsPeriodUnitDay) {
+        return date;
+    }
+    
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    
+    if (unit == StatsPeriodUnitMonth) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = +1;
+        dateComponents.month = -1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitWeek) {
+        // Weeks are Monday - Sunday
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = -6;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitYear) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        dateComponents = [NSDateComponents new];
+        dateComponents.day = +1;
+        dateComponents.year = -1;
+        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+        
+        return date;
+    }
+    
+    return nil;
+}
+
 
 @end

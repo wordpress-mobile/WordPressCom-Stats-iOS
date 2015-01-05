@@ -10,6 +10,7 @@
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionPeriodSelector,
     StatsSectionGraph,
+    StatsSectionEvents,
     StatsSectionPosts,
     StatsSectionReferrers,
     StatsSectionClicks,
@@ -32,6 +33,7 @@ static CGFloat const StatsTableGraphHeight = 175.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
 static CGFloat const StatsTableSelectableCellHeight = 35.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;
+static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
 static NSString *const StatsTablePeriodSelectorCellIdentifier = @"PeriodSelector";
@@ -77,6 +79,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     self.sections =     @[ @(StatsSectionPeriodSelector),
                            @(StatsSectionGraph),
+                           @(StatsSectionEvents),
                            @(StatsSectionPosts),
                            @(StatsSectionReferrers),
                            @(StatsSectionClicks),
@@ -135,6 +138,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             return hasData ? 5 : 1;
         }
             
+        // TODO :: Pull offset from StatsGroup
         default:
         {
             StatsGroup *group = (StatsGroup *)data;
@@ -144,6 +148,12 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                 count += StatsTableRowDataOffsetWithGroupSelector;
             } else if (statsSection == StatsSectionFollowers) {
                 count += StatsTableRowDataOffsetWithGroupSelectorAndTotal;
+            } else if (statsSection == StatsSectionEvents) {
+                if (count == 0) {
+                    count = StatsTableRowDataOffsetStandard;
+                } else {
+                    count += StatsTableRowDataOffsetWithoutGroupHeader;
+                }
             } else {
                 count += StatsTableRowDataOffsetStandard;
             }
@@ -210,7 +220,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
         BOOL hasChildItems = item.children.count;
-        return hasChildItems ? indexPath : nil;
+        NSIndexPath *newIndexPath = hasChildItems ? indexPath : nil;
+        
+        return newIndexPath;
     }
     
     return nil;
@@ -403,6 +415,19 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
+                        eventsCompletionHandler:^(StatsGroup *group)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
+         self.sectionData[@(StatsSectionEvents)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
                          postsCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
@@ -593,6 +618,21 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             }
             break;
         }
+        case StatsSectionEvents:
+        {
+            StatsGroup *group = (StatsGroup *)[self statsDataForStatsSection:statsSection];
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1 && group.numberOfRows == 0) {
+                identifier = StatsTableNoResultsCellIdentifier;
+            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithoutGroupHeader)) {
+                identifier = StatsTableViewAllCellIdentifier;
+            } else {
+                identifier = StatsTableTwoColumnCellIdentifier;
+            }
+            break;
+        }
+
         case StatsSectionPosts:
         case StatsSectionReferrers:
         case StatsSectionClicks:
@@ -797,6 +837,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionCountry:
             headerText = NSLocalizedString(@"Countries", @"Title for stats section for Countries");
             break;
+        case StatsSectionEvents:
+            headerText = NSLocalizedString(@"Published", @"Title for stats section for Events");
+            break;
         case StatsSectionFollowers:
             headerText = NSLocalizedString(@"Followers", @"Title for stats section for Followers");
             break;
@@ -947,20 +990,23 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         text = NSLocalizedString(@"Waiting for data...", @"");
     } else {
         switch (statsSection) {
-            case StatsSectionReferrers:
-                text = NSLocalizedString(@"No referrers recorded", @"");
-                break;
             case StatsSectionClicks:
                 text = NSLocalizedString(@"No clicks recorded", @"");
                 break;
-            case StatsSectionVideos:
-                text = NSLocalizedString(@"No videos played", @"");
+            case StatsSectionEvents:
+                text = NSLocalizedString(@"No items published during this timeframe", @"");
+                break;
+            case StatsSectionPublicize:
+                text = NSLocalizedString(@"No publicize followers recorded", @"");
+                break;
+            case StatsSectionReferrers:
+                text = NSLocalizedString(@"No referrers recorded", @"");
                 break;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
                 break;
-            case StatsSectionPublicize:
-                text = NSLocalizedString(@"No publicize followers recorded", @"");
+            case StatsSectionVideos:
+                text = NSLocalizedString(@"No videos played", @"");
                 break;
             default:
                 text = NSLocalizedString(@"No posts or pages viewed", @"");
