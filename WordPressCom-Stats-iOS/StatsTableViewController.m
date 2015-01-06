@@ -393,8 +393,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 {
     self.syncing = YES;
     
-    [self.statsService retrieveAllStatsForDates:@[self.selectedDate]
-                                        andUnit:self.selectedPeriodUnit
+    [self.statsService retrieveAllStatsForDate:self.selectedDate
+                                       andUnit:self.selectedPeriodUnit
                     withVisitsCompletionHandler:^(StatsVisits *visits)
      {
          if (skipGraph) {

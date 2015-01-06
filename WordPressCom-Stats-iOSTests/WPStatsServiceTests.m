@@ -48,53 +48,53 @@
     XCTestExpectation *publicizeExpectation = [self expectationWithDescription:@"publicizeExpectation"];
     XCTestExpectation *overallExpectation = [self expectationWithDescription:@"overallExpectation"];
     
-    [self.subject retrieveAllStatsForDates:@[[NSDate date]]
-                                   andUnit:StatsPeriodUnitDay
-               withVisitsCompletionHandler:^(StatsVisits *visits) {
-                   [visitsExpectation fulfill];
+    [self.subject retrieveAllStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+              withVisitsCompletionHandler:^(StatsVisits *visits) {
+                  [visitsExpectation fulfill];
+              }
+                  eventsCompletionHandler:^(StatsGroup *group) {
+                      [eventsExpectation fulfill];
+                  }
+                   postsCompletionHandler:^(StatsGroup *group) {
+                       [postsExpectation fulfill];
+                   }
+               referrersCompletionHandler:^(StatsGroup *group) {
+                   [referrersExpectation fulfill];
                }
-                   eventsCompletionHandler:^(StatsGroup *group) {
-                        [eventsExpectation fulfill];
-                    }
-                    postsCompletionHandler:^(StatsGroup *group) {
-                        [postsExpectation fulfill];
-                    }
-                referrersCompletionHandler:^(StatsGroup *group) {
-                    [referrersExpectation fulfill];
-                }
-                   clicksCompletionHandler:^(StatsGroup *group) {
-                       [clicksExpectation fulfill];
-                }
-                  countryCompletionHandler:^(StatsGroup *group) {
-                      [countryExpectation fulfill];
-                }
-                   videosCompletionHandler:^(StatsGroup *group) {
-                       [videosExpectation fulfill];
-                }
-           commentsAuthorCompletionHandler:^(StatsGroup *group) {
-               [commentsAuthorExpectation fulfill];
-           }
-            commentsPostsCompletionHandler:^(StatsGroup *group) {
-                [commentsPostsExpectation fulfill];
-            }
-           tagsCategoriesCompletionHandler:^(StatsGroup *group) {
-               [tagsExpectation fulfill];
-           }
-          followersDotComCompletionHandler:^(StatsGroup *group) {
-              [followersDotComExpectation fulfill];
+                  clicksCompletionHandler:^(StatsGroup *group) {
+                      [clicksExpectation fulfill];
+                  }
+                 countryCompletionHandler:^(StatsGroup *group) {
+                     [countryExpectation fulfill];
+                 }
+                  videosCompletionHandler:^(StatsGroup *group) {
+                      [videosExpectation fulfill];
+                  }
+          commentsAuthorCompletionHandler:^(StatsGroup *group) {
+              [commentsAuthorExpectation fulfill];
           }
-           followersEmailCompletionHandler:^(StatsGroup *group) {
-               [followersEmailExpectation fulfill];
+           commentsPostsCompletionHandler:^(StatsGroup *group) {
+               [commentsPostsExpectation fulfill];
            }
-                publicizeCompletionHandler:^(StatsGroup *group) {
-                    [publicizeExpectation fulfill];
-                }
-               andOverallCompletionHandler:^{
-                   [overallExpectation fulfill];
+          tagsCategoriesCompletionHandler:^(StatsGroup *group) {
+              [tagsExpectation fulfill];
+          }
+         followersDotComCompletionHandler:^(StatsGroup *group) {
+             [followersDotComExpectation fulfill];
+         }
+          followersEmailCompletionHandler:^(StatsGroup *group) {
+              [followersEmailExpectation fulfill];
+          }
+               publicizeCompletionHandler:^(StatsGroup *group) {
+                   [publicizeExpectation fulfill];
                }
-                     overallFailureHandler:^(NSError *error) {
-                         XCTFail(@"Failure is not an option.");
-                     }];
+              andOverallCompletionHandler:^{
+                  [overallExpectation fulfill];
+              }
+                    overallFailureHandler:^(NSError *error) {
+                        XCTFail(@"Failure is not an option.");
+                    }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -136,6 +136,46 @@
                                expectedYear:2014
                                       month:12
                                         day:7];
+}
+
+
+- (void)testDateSanitizationWeek2
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2015;
+    dateComponents.month = 1;
+    dateComponents.day = 5;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2015
+                                      month:1
+                                        day:11];
+}
+
+
+- (void)testDateSanitizationWeek3
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2015;
+    dateComponents.month = 1;
+    dateComponents.day = 6;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2015
+                                      month:1
+                                        day:11];
 }
 
 
@@ -286,7 +326,7 @@
     WPStatsServiceRemote *remote = OCMClassMock([WPStatsServiceRemote class]);
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
-        NSDate *date = obj[0];
+        NSDate *date = obj;
         NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
@@ -294,8 +334,8 @@
         return isOkay;
     }];
     
-    OCMExpect([remote batchFetchStatsForDates:dateCheckBlock
-                                      andUnit:unit
+    OCMExpect([remote batchFetchStatsForDate:dateCheckBlock
+                                     andUnit:unit
                   withVisitsCompletionHandler:[OCMArg any]
                       eventsCompletionHandler:[OCMArg any]
                        postsCompletionHandler:[OCMArg any]
@@ -313,25 +353,25 @@
     
     self.subject.remote = remote;
     
-    [self.subject retrieveAllStatsForDates:@[baseDate]
-                                   andUnit:unit
-               withVisitsCompletionHandler:nil
-                   eventsCompletionHandler:nil
-                    postsCompletionHandler:nil
-                referrersCompletionHandler:nil
-                   clicksCompletionHandler:nil
-                  countryCompletionHandler:nil
-                   videosCompletionHandler:nil
-           commentsAuthorCompletionHandler:nil
-            commentsPostsCompletionHandler:nil
-           tagsCategoriesCompletionHandler:nil
-          followersDotComCompletionHandler:nil
-           followersEmailCompletionHandler:nil
-                publicizeCompletionHandler:nil
-               andOverallCompletionHandler:^{
-                   // Don't do anything
-               }
-                     overallFailureHandler:nil];
+    [self.subject retrieveAllStatsForDate:baseDate
+                                  andUnit:unit
+              withVisitsCompletionHandler:nil
+                  eventsCompletionHandler:nil
+                   postsCompletionHandler:nil
+               referrersCompletionHandler:nil
+                  clicksCompletionHandler:nil
+                 countryCompletionHandler:nil
+                  videosCompletionHandler:nil
+          commentsAuthorCompletionHandler:nil
+           commentsPostsCompletionHandler:nil
+          tagsCategoriesCompletionHandler:nil
+         followersDotComCompletionHandler:nil
+          followersEmailCompletionHandler:nil
+               publicizeCompletionHandler:nil
+              andOverallCompletionHandler:^{
+                  // Don't do anything
+              }
+                    overallFailureHandler:nil];
     
     OCMVerifyAll((id)remote);
 }
