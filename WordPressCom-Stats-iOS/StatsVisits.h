@@ -10,4 +10,6 @@
 @property (nonatomic, strong) NSArray *statsData;
 @property (nonatomic, strong) NSDictionary *statsDataByDate;
 
+@property (nonatomic, assign) BOOL errorWhileRetrieving;
+
 @end
