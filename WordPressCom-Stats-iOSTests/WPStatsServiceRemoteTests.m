@@ -36,18 +36,16 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-summary.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary) {
+    [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary, NSError *error) {
         XCTAssertNotNil(summary, @"summary should not be nil.");
         XCTAssertNotNil(summary.date);
+        XCTAssertNil(error);
         XCTAssertTrue(summary.periodUnit == StatsPeriodUnitDay);
         XCTAssertTrue([summary.views isEqualToString:@"56"]);
         XCTAssertTrue([summary.visitors isEqualToString:@"44"]);
         XCTAssertTrue([summary.likes isEqualToString:@"1"]);
         XCTAssertTrue([summary.comments isEqualToString:@"3"]);
         
-        [expectation fulfill];
-    } failureHandler:^(NSError *error) {
-        XCTFail(@"Failure handler should not be called here.");
         [expectation fulfill];
     }];
     
@@ -66,12 +64,14 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(StatsVisits *visits)
+                    withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
          XCTAssertNotNil(visits.date);
          XCTAssertEqual(30, visits.statsData.count);
          XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
+         XCTAssertFalse(visits.errorWhileRetrieving);
+         XCTAssertNil(error);
          
          StatsSummary *firstSummary = visits.statsData[0];
          XCTAssertNotNil(firstSummary.date);
@@ -80,9 +80,6 @@
          XCTAssertTrue([firstSummary.likes isEqualToString:@"1"]);
          XCTAssertTrue([firstSummary.comments isEqualToString:@"3"]);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -102,13 +99,15 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(StatsVisits *visits)
+                    withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
          XCTAssertNotNil(visits.date);
          XCTAssertEqual(30, visits.statsData.count);
          XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
-         
+         XCTAssertFalse(visits.errorWhileRetrieving);
+         XCTAssertNil(error);
+
          StatsSummary *firstSummary = visits.statsData[0];
          XCTAssertNotNil(firstSummary.date);
          XCTAssertTrue([firstSummary.views isEqualToString:@"7,808"]);
@@ -116,9 +115,6 @@
          XCTAssertTrue([firstSummary.likes isEqualToString:@"0"]);
          XCTAssertTrue([firstSummary.comments isEqualToString:@"0"]);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -137,10 +133,11 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
+         XCTAssertNil(error);
          
          XCTAssertEqual(10, items.count);
          
@@ -154,9 +151,6 @@
          XCTAssertTrue(action.defaultAction);
          XCTAssertTrue([action.url.absoluteString isEqualToString:@"http://astralbodi.es/2014/08/06/asynchronous-unit-testing-core-data-with-xcode-6/"]);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -175,11 +169,12 @@
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
                                  andUnit:StatsPeriodUnitDay
-                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(10, items.count);
          
          StatsItem *item = items[0];
@@ -192,9 +187,6 @@
          XCTAssertTrue(action.defaultAction);
          XCTAssertTrue([action.url.absoluteString isEqualToString:@"http://automattic.com/home/"]);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -213,11 +205,12 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
          XCTAssertFalse(moreViewsAvailable);
+         XCTAssertNil(error);
          
          XCTAssertEqual(4, items.count);
          
@@ -272,9 +265,6 @@
          XCTAssertTrue(flipBoardItemAction.defaultAction);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -293,11 +283,12 @@
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
                                      andUnit:StatsPeriodUnitDay
-                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                       withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertTrue([@"2,161" isEqualToString:totalViews]);
          XCTAssertTrue(moreViewsAvailable);
+         XCTAssertNil(error);
          
          XCTAssertEqual(10, items.count);
          
@@ -359,9 +350,6 @@
          XCTAssertTrue(mattRootItemAction.defaultAction);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -380,12 +368,13 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalClicks, @"There should be a number provided.");
          XCTAssertFalse(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+        
          XCTAssertEqual(2, items.count);
          
          StatsItem *statsItem1 = items[0];
@@ -413,9 +402,6 @@
          XCTAssertNil(statsItemAction2.iconURL);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -433,11 +419,12 @@
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitMonth
-                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable)
+                    withCompletionHandler:^(NSArray *items, NSString *totalClicks, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"9" isEqualToString:totalClicks]);
          XCTAssertFalse(moreViewsAvailable);
+         XCTAssertNil(error);
          
          XCTAssertEqual(6, items.count);
          
@@ -474,9 +461,6 @@
          XCTAssertNil(statsItemAction2.iconURL);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -494,11 +478,12 @@
     
     [self.subject fetchCountryStatsForDate:[NSDate date]
                                    andUnit:StatsPeriodUnitDay
-                     withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                     withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items, @"Posts should not be nil.");
          XCTAssertNotNil(totalViews, @"There should be a number provided.");
          XCTAssertTrue(moreViewsAvailable);
+         XCTAssertNil(error);
          
          XCTAssertEqual(12, items.count);
          
@@ -510,9 +495,6 @@
          XCTAssertEqual(0, item.actions.count);
          XCTAssertEqual(0, item.children.count);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -531,12 +513,13 @@
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([totalViews isEqualToString:@"2"]);
          XCTAssertFalse(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(1, items.count);
          
          StatsItem *item = items.firstObject;
@@ -547,9 +530,6 @@
          StatsItemAction *itemAction = item.actions.firstObject;
          XCTAssertTrue([itemAction.url.absoluteString isEqualToString:@"http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144"]);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -568,17 +548,15 @@
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                    withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([totalViews isEqualToString:@"0"]);
          XCTAssertFalse(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(0, items.count);
 
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -597,12 +575,13 @@
     
     [self.subject fetchCommentsStatsForDate:[NSDate date]
                                     andUnit:StatsPeriodUnitDay
-                      withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                      withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
          XCTAssertFalse(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(2, items.count);
          NSArray *authorItems = items.firstObject;
          NSArray *postItems = items.lastObject;
@@ -625,9 +604,6 @@
          XCTAssertTrue(post1Action.defaultAction);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -645,12 +621,13 @@
     
     [self.subject fetchTagsCategoriesStatsForDate:[NSDate date]
                                           andUnit:StatsPeriodUnitDay
-                            withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                            withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
          XCTAssertFalse(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(10, items.count);
          
          StatsItem *item1 = items.firstObject;
@@ -665,9 +642,6 @@
          XCTAssertEqual(0, item9.actions.count);
          XCTAssertEqual(4, item9.children.count);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -687,12 +661,13 @@
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeDotCom
                                                 date:[NSDate date]
                                              andUnit:StatsPeriodUnitDay
-                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"7,925,800" isEqualToString:totalViews]);
          XCTAssertTrue(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(7, items.count);
          
          StatsItem *item1 = items.firstObject;
@@ -703,9 +678,6 @@
          XCTAssertEqual(0, item1.actions.count);
          XCTAssertEqual(0, item1.children.count);
          
-         [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
          [expectation fulfill];
      }];
     
@@ -725,12 +697,13 @@
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeEmail
                                                 date:[NSDate date]
                                              andUnit:StatsPeriodUnitDay
-                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertTrue([@"2,931" isEqualToString:totalViews]);
          XCTAssertTrue(moreViewsAvailable);
-         
+         XCTAssertNil(error);
+
          XCTAssertEqual(7, items.count);
          
          StatsItem *item1 = items.firstObject;
@@ -742,9 +715,6 @@
          XCTAssertEqual(0, item1.children.count);
          
          [expectation fulfill];
-     } failureHandler:^(NSError *error) {
-         XCTFail(@"Failure handler should not be called here.");
-         [expectation fulfill];
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -753,7 +723,7 @@
 
 - (void)testPublicizeDay
 {
-    
+    // TODO
 }
 
 @end

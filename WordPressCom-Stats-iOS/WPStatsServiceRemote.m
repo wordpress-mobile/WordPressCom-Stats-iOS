@@ -7,7 +7,7 @@
 #import <NSObject+SafeExpectations.h>
 #import <NSString+XMLExtensions.h>
 
-static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.2";
+static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
 @interface WPStatsServiceRemote ()
 
@@ -352,7 +352,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                                     success:handler
                                                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                                         if (completionHandler) {
-                                                                            completionHandler(nil, error);
+                                                                            StatsVisits *visits = [StatsVisits new];
+                                                                            visits.errorWhileRetrieving = YES;
+                                                                            
+                                                                            completionHandler(visits, error);
                                                                         }
                                                                     }];
     return operation;
@@ -393,7 +396,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForCompletionHandler:handler]];
+                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -439,7 +442,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForCompletionHandler:handler]];
+                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -526,7 +529,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -594,7 +597,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -636,7 +639,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
 
     return operation;
 }
@@ -685,7 +688,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -742,7 +745,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -801,7 +804,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     return operation;}
 
 
@@ -846,7 +849,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -907,7 +910,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForCompletionHandler:handler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
