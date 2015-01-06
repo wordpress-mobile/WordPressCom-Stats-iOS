@@ -395,7 +395,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     [self.statsService retrieveAllStatsForDates:@[self.selectedDate]
                                         andUnit:self.selectedPeriodUnit
-                    withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
+                    withVisitsCompletionHandler:^(StatsVisits *visits)
      {
          if (skipGraph) {
              return;
@@ -415,7 +415,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
-                        eventsCompletionHandler:^(StatsGroup *group, NSError *error)
+                        eventsCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
          self.sectionData[@(StatsSectionEvents)] = group;
@@ -428,7 +428,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                         postsCompletionHandler:^(StatsGroup *group, NSError *error)
+                         postsCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionPosts)] = group;
@@ -441,7 +441,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                     referrersCompletionHandler:^(StatsGroup *group, NSError *error)
+                     referrersCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionReferrers)] = group;
@@ -454,7 +454,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                        clicksCompletionHandler:^(StatsGroup *group, NSError *error)
+                        clicksCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionClicks)] = group;
@@ -467,7 +467,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                       countryCompletionHandler:^(StatsGroup *group, NSError *error)
+                       countryCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionCountry)] = group;
@@ -480,7 +480,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                        videosCompletionHandler:^(StatsGroup *group, NSError *error)
+                        videosCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionVideos)] = group;
@@ -493,7 +493,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-                commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
+                commentsAuthorCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
@@ -508,7 +508,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
              [self.tableView endUpdates];
          }
      }
-                commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error)
+                commentsPostsCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
@@ -523,7 +523,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
              [self.tableView endUpdates];
          }
      }
-                tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error)
+                tagsCategoriesCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionTagsCategories)] = group;
@@ -536,7 +536,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
          
          [self.tableView endUpdates];
      }
-               followersDotComCompletionHandler:^(StatsGroup *group, NSError *error)
+               followersDotComCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
@@ -551,7 +551,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
              [self.tableView endUpdates];
          }
      }
-                followersEmailCompletionHandler:^(StatsGroup *group, NSError *error)
+                followersEmailCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
          self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
@@ -566,7 +566,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
              [self.tableView endUpdates];
          }
      }
-                     publicizeCompletionHandler:^(StatsGroup *group, NSError *error)
+                     publicizeCompletionHandler:^(StatsGroup *group)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
          self.sectionData[@(StatsSectionPublicize)] = group;
@@ -583,6 +583,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
      {
          self.syncing = NO;
          [self.refreshControl endRefreshing];
+     }
+                          overallFailureHandler:^(NSError *error)
+     {
+         DDLogError(@"Error when syncing: %@", error);
      }];
 }
 
