@@ -3,9 +3,9 @@
 #import "StatsVisits.h"
 #import "StatsGroup.h"
 
-typedef void (^StatsSummaryCompletion)(StatsSummary *summary, NSError *error);
-typedef void (^StatsVisitsCompletion)(StatsVisits *visits, NSError *error);
-typedef void (^StatsItemsCompletion)(StatsGroup *group, NSError *error);
+typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
+typedef void (^StatsVisitsCompletion)(StatsVisits *visits);
+typedef void (^StatsItemsCompletion)(StatsGroup *group);
 
 @class WPStatsServiceRemote;
 
@@ -30,7 +30,8 @@ typedef void (^StatsItemsCompletion)(StatsGroup *group, NSError *error);
 followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
       publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
-     andOverallCompletionHandler:(void (^)())completionHandler;
+     andOverallCompletionHandler:(void (^)())completionHandler
+           overallFailureHandler:(void (^)(NSError *error))failureHandler;
 
 - (void)retrieveTodayStatsWithCompletionHandler:(void (^)(StatsSummaryCompletion *))completion failureHandler:(void (^)(NSError *))failureHandler;
 
