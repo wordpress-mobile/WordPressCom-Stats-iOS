@@ -754,7 +754,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL isNestedRow:item.depth > 1];
+        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL indentLevel:item.depth];
     }
 }
 
@@ -1026,7 +1026,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL  isNestedRow:(BOOL)isNestedRow
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL indentLevel:(NSUInteger)indentLevel
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1034,16 +1034,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
     
-    if (isNestedRow) {
-        cell.backgroundColor = [WPStyleGuide itsEverywhereGrey];
-    } else {
-        cell.backgroundColor = [UIColor whiteColor];
-    }
-    
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
     imageView.image = nil;
     NSLayoutConstraint *widthConstraint;
     NSLayoutConstraint *spaceConstraint;
+    NSLayoutConstraint *leadingEdgeConstraint;
     
     for (NSLayoutConstraint *constraint in imageView.constraints) {
         if (constraint.firstAttribute == NSLayoutAttributeWidth) {
@@ -1053,9 +1048,18 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     }
     
     for (NSLayoutConstraint *constraint in cell.contentView.constraints) {
-        if (constraint.firstItem == label1 && constraint.secondItem == imageView && constraint.firstAttribute == NSLayoutAttributeLeading) {
+        // Space between image view and label
+        if (constraint.firstItem == label1 && constraint.firstAttribute == NSLayoutAttributeLeading
+            && constraint.secondItem == imageView && constraint.secondAttribute == NSLayoutAttributeTrailing) {
             spaceConstraint = constraint;
-            break;
+            continue;
+        }
+        
+        // Space between cell left side and image view
+        if (constraint.firstItem == imageView && constraint.firstAttribute == NSLayoutAttributeLeading
+            && constraint.secondItem == cell.contentView && constraint.secondAttribute == NSLayoutAttributeLeadingMargin) {
+            leadingEdgeConstraint = constraint;
+            continue;
         }
     }
 
@@ -1074,6 +1078,16 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         widthConstraint.constant = 0.0f;
         spaceConstraint.constant = 0.0f;
     }
+    
+    BOOL isNestedRow = indentLevel > 1;
+    if (isNestedRow) {
+        cell.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    } else {
+        cell.backgroundColor = [UIColor whiteColor];
+    }
+    
+    CGFloat indentWidth = indentLevel * 7.0f;
+    leadingEdgeConstraint.constant = indentWidth;
 
     [cell setNeedsLayout];
 }
