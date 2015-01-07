@@ -65,16 +65,16 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 #pragma mark - Public methods
 
 
-- (void)batchFetchStatsForDates:(NSArray *)dates
-                        andUnit:(StatsPeriodUnit)unit
-    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
-        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
-         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
-     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
-        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
-       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
-      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+- (void)batchFetchStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+   withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+       eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
+        postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+    referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+       clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+      countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
@@ -83,43 +83,41 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
-    for (NSDate *date in dates) {
-        if (visitsCompletion) {
-            [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion]];
-        }
-        if (eventsCompletion) {
-            [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
-        }
-        if (postsCompletion) {
-            [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion]];
-        }
-        if (referrersCompletion) {
-            [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion]];
-        }
-        if (clicksCompletion) {
-            [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion]];
-        }
-        if (countryCompletion) {
-            [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion]];
-        }
-        if (videosCompletion) {
-            [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion]];
-        }
-        if (commentsCompletion) {
-            [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
-        }
-        if (tagsCategoriesCompletion) {
-            [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion]];
-        }
-        if (followersDotComCompletion) {
-            [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion]];
-        }
-        if (followersEmailCompletion) {
-            [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion]];
-        }
-        if (publicizeCompletion) {
-            [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
-        }
+    if (visitsCompletion) {
+        [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion]];
+    }
+    if (eventsCompletion) {
+        [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
+    }
+    if (postsCompletion) {
+        [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion]];
+    }
+    if (referrersCompletion) {
+        [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion]];
+    }
+    if (clicksCompletion) {
+        [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion]];
+    }
+    if (countryCompletion) {
+        [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion]];
+    }
+    if (videosCompletion) {
+        [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion]];
+    }
+    if (commentsCompletion) {
+        [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
+    }
+    if (tagsCategoriesCompletion) {
+        [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion]];
+    }
+    if (followersDotComCompletion) {
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion]];
+    }
+    if (followersEmailCompletion) {
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion]];
+    }
+    if (publicizeCompletion) {
+        [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {

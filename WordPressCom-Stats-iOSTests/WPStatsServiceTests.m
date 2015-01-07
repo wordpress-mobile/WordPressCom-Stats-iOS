@@ -20,7 +20,7 @@
 - (void)setUp {
     [super setUp];
     
-    self.subject = [[WPStatsService alloc] initWithSiteId:@123456 siteTimeZone:[NSTimeZone systemTimeZone] andOAuth2Token:@"token"];
+    self.subject = [[WPStatsService alloc] initWithSiteId:@123456 siteTimeZone:[NSTimeZone systemTimeZone] oauth2Token:@"token" andCacheExpirationInterval:50 * 6];
 }
 
 - (void)tearDown {
@@ -48,50 +48,50 @@
     XCTestExpectation *publicizeExpectation = [self expectationWithDescription:@"publicizeExpectation"];
     XCTestExpectation *overallExpectation = [self expectationWithDescription:@"overallExpectation"];
     
-    [self.subject retrieveAllStatsForDates:@[[NSDate date]]
-                                   andUnit:StatsPeriodUnitDay
-               withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error) {
-                   [visitsExpectation fulfill];
+    [self.subject retrieveAllStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+              withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error) {
+                  [visitsExpectation fulfill];
+              }
+                  eventsCompletionHandler:^(StatsGroup *group, NSError *error) {
+                      [eventsExpectation fulfill];
+                  }
+                   postsCompletionHandler:^(StatsGroup *group, NSError *error) {
+                       [postsExpectation fulfill];
+                   }
+               referrersCompletionHandler:^(StatsGroup *group, NSError *error) {
+                   [referrersExpectation fulfill];
                }
-                   eventsCompletionHandler:^(StatsGroup *group, NSError *error) {
-                        [eventsExpectation fulfill];
-                    }
-                    postsCompletionHandler:^(StatsGroup *group, NSError *error) {
-                        [postsExpectation fulfill];
-                    }
-                referrersCompletionHandler:^(StatsGroup *group, NSError *error) {
-                    [referrersExpectation fulfill];
-                }
-                   clicksCompletionHandler:^(StatsGroup *group, NSError *error) {
-                       [clicksExpectation fulfill];
-                }
-                  countryCompletionHandler:^(StatsGroup *group, NSError *error) {
-                      [countryExpectation fulfill];
-                }
-                   videosCompletionHandler:^(StatsGroup *group, NSError *error) {
-                       [videosExpectation fulfill];
-                }
-           commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
-               [commentsAuthorExpectation fulfill];
-           }
-            commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error) {
-                [commentsPostsExpectation fulfill];
-            }
-           tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error) {
-               [tagsExpectation fulfill];
-           }
-          followersDotComCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [followersDotComExpectation fulfill];
+                  clicksCompletionHandler:^(StatsGroup *group, NSError *error) {
+                      [clicksExpectation fulfill];
+                  }
+                 countryCompletionHandler:^(StatsGroup *group, NSError *error) {
+                     [countryExpectation fulfill];
+                 }
+                  videosCompletionHandler:^(StatsGroup *group, NSError *error) {
+                      [videosExpectation fulfill];
+                  }
+          commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
+              [commentsAuthorExpectation fulfill];
           }
-           followersEmailCompletionHandler:^(StatsGroup *group, NSError *error) {
-               [followersEmailExpectation fulfill];
+           commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error) {
+               [commentsPostsExpectation fulfill];
            }
-                publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
-                    [publicizeExpectation fulfill];
-                }
-               andOverallCompletionHandler:^{
-                   [overallExpectation fulfill];
-               }];
+          tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error) {
+              [tagsExpectation fulfill];
+          }
+         followersDotComCompletionHandler:^(StatsGroup *group, NSError *error) {
+             [followersDotComExpectation fulfill];
+         }
+          followersEmailCompletionHandler:^(StatsGroup *group, NSError *error) {
+              [followersEmailExpectation fulfill];
+          }
+               publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
+                   [publicizeExpectation fulfill];
+               }
+              andOverallCompletionHandler:^{
+                  [overallExpectation fulfill];
+              }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -133,6 +133,46 @@
                                expectedYear:2014
                                       month:12
                                         day:7];
+}
+
+
+- (void)testDateSanitizationWeek2
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2015;
+    dateComponents.month = 1;
+    dateComponents.day = 5;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2015
+                                      month:1
+                                        day:11];
+}
+
+
+- (void)testDateSanitizationWeek3
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = 2015;
+    dateComponents.month = 1;
+    dateComponents.day = 6;
+    dateComponents.hour = 0;
+    dateComponents.minute = 0;
+    dateComponents.second = 0;
+    NSDate *date = [calendar dateFromComponents:dateComponents];
+    
+    [self verifyDateSantizationWithBaseDate:date
+                                 periodUnit:StatsPeriodUnitWeek
+                               expectedYear:2015
+                                      month:1
+                                        day:11];
 }
 
 
@@ -283,7 +323,7 @@
     WPStatsServiceRemote *remote = OCMClassMock([WPStatsServiceRemote class]);
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
-        NSDate *date = obj[0];
+        NSDate *date = obj;
         NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
@@ -291,8 +331,8 @@
         return isOkay;
     }];
     
-    OCMExpect([remote batchFetchStatsForDates:dateCheckBlock
-                                      andUnit:unit
+    OCMExpect([remote batchFetchStatsForDate:dateCheckBlock
+                                     andUnit:unit
                   withVisitsCompletionHandler:[OCMArg any]
                       eventsCompletionHandler:[OCMArg any]
                        postsCompletionHandler:[OCMArg any]
@@ -309,21 +349,21 @@
     
     self.subject.remote = remote;
     
-    [self.subject retrieveAllStatsForDates:@[baseDate]
-                                   andUnit:unit
-               withVisitsCompletionHandler:nil
-                   eventsCompletionHandler:nil
-                    postsCompletionHandler:nil
-                referrersCompletionHandler:nil
-                   clicksCompletionHandler:nil
-                  countryCompletionHandler:nil
-                   videosCompletionHandler:nil
-           commentsAuthorCompletionHandler:nil
-            commentsPostsCompletionHandler:nil
-           tagsCategoriesCompletionHandler:nil
-          followersDotComCompletionHandler:nil
-           followersEmailCompletionHandler:nil
-                publicizeCompletionHandler:nil
+    [self.subject retrieveAllStatsForDate:baseDate
+                                  andUnit:unit
+              withVisitsCompletionHandler:nil
+                  eventsCompletionHandler:nil
+                   postsCompletionHandler:nil
+               referrersCompletionHandler:nil
+                  clicksCompletionHandler:nil
+                 countryCompletionHandler:nil
+                  videosCompletionHandler:nil
+          commentsAuthorCompletionHandler:nil
+           commentsPostsCompletionHandler:nil
+          tagsCategoriesCompletionHandler:nil
+         followersDotComCompletionHandler:nil
+          followersEmailCompletionHandler:nil
+               publicizeCompletionHandler:nil
                andOverallCompletionHandler:^{
                    // Don't do anything
                }];
@@ -336,60 +376,57 @@
 
 @implementation WPStatsServiceRemoteMock
 
-- (void)batchFetchStatsForDates:(NSArray *)dates
-                        andUnit:(StatsPeriodUnit)unit
-    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
-        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
-         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
-     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
-        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
-       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
-      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+- (void)batchFetchStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+   withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+       eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
+        postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+    referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+       clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+      countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
-    andOverallCompletionHandler:(void (^)())completionHandler
+    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+   andOverallCompletionHandler:(void (^)())completionHandler
 {
-    NSInteger count = dates.count;
-    for (NSInteger x = 0; x < count; ++x) {
-        if (visitsCompletion) {
-            visitsCompletion([StatsVisits new], nil);
-        }
-        if (eventsCompletion) {
-            eventsCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (postsCompletion) {
-            postsCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (referrersCompletion) {
-            referrersCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (clicksCompletion) {
-            clicksCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (countryCompletion) {
-            countryCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (videosCompletion) {
-            videosCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (commentsCompletion) {
-            commentsCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (followersDotComCompletion) {
-            followersDotComCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (followersEmailCompletion) {
-            followersEmailCompletion(@[[StatsItem new]], nil, false, nil);
-        }
-        if (publicizeCompletion) {
-            publicizeCompletion(@[[StatsItem new]], nil, false, nil);
-        }
+    if (visitsCompletion) {
+        visitsCompletion([StatsVisits new], nil);
+    }
+    if (eventsCompletion) {
+        eventsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (postsCompletion) {
+        postsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (referrersCompletion) {
+        referrersCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (clicksCompletion) {
+        clicksCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (countryCompletion) {
+        countryCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (videosCompletion) {
+        videosCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (commentsCompletion) {
+        commentsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (tagsCategoriesCompletion) {
+        tagsCategoriesCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (followersDotComCompletion) {
+        followersDotComCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (followersEmailCompletion) {
+        followersEmailCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (publicizeCompletion) {
+        publicizeCompletion(@[[StatsItem new]], nil, false, nil);
     }
     
     if (completionHandler) {

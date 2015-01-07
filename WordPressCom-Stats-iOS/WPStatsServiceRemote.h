@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 /**
  Batches all remote calls locally to retrieve stats for a particular set of dates and period.  Completion handlers are called
  
- @param dates An array with at least one date.  Completion handlers may be called more than once if multiple dates are given.
+ @param date End date of period to fetch stats for
  @param unit Period unit to run stats for
  @param summaryCompletion
  @param visitsCompletion
@@ -36,16 +36,16 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
  @param failureHandler
  
  */
-- (void)batchFetchStatsForDates:(NSArray *)dates
-                        andUnit:(StatsPeriodUnit)unit
-    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
-        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
-         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
-     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
-        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
-       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
-      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+- (void)batchFetchStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+   withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+       eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
+        postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+    referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+       clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+      countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
