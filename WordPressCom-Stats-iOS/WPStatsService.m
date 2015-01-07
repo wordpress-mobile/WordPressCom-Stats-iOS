@@ -5,6 +5,7 @@
 #import "StatsGroup.h"
 #import "StatsVisits.h"
 #import "StatsSummary.h"
+#import "StatsEphemory.h"
 
 typedef NS_ENUM(NSInteger, StatsCache) {
     StatsCacheVisits,
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSInteger, StatsCache) {
 @property (nonatomic, strong) NSNumber *siteId;
 @property (nonatomic, strong) NSString *oauth2Token;
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
-@property (nonatomic, strong) NSCache *cache;
+@property (nonatomic, strong) StatsEphemory *ephemory;
 
 @end
 
@@ -47,7 +48,7 @@ typedef NS_ENUM(NSInteger, StatsCache) {
         _siteId = siteId;
         _oauth2Token = oauth2Token;
         _siteTimeZone = timeZone ?: [NSTimeZone systemTimeZone];
-        _cache = [NSCache new];
+        _ephemory = [StatsEphemory new];
     }
 
     return self;
@@ -84,7 +85,7 @@ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
     };
     
     NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
-    NSMutableDictionary *cacheDictionary = [self.cache objectForKey:@[@(unit), endDate]];
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@(unit), endDate]];
     if (cacheDictionary) {
         if (visitsCompletion) {
             visitsCompletion(cacheDictionary[@(StatsCacheVisits)]);
@@ -143,7 +144,7 @@ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
         return;
     } else {
         cacheDictionary = [NSMutableDictionary new];
-        [self.cache setObject:cacheDictionary forKey:@[@(unit), endDate]];
+        [self.ephemory setObject:cacheDictionary forKey:@[@(unit), endDate]];
     }
 
     [self.remote batchFetchStatsForDate:endDate
