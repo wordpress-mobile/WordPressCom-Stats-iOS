@@ -105,7 +105,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.graphViewController.allowDeselection = NO;
     self.graphViewController.graphDelegate = self;
     
-    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone andOAuth2Token:self.oauth2Token];
+    NSTimeInterval fiveMinutes = 60 * 5;
+    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -330,8 +331,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 #pragma mark - Stats retrieval methods
 
-- (IBAction)refreshCurrentStats:(id)sender
+- (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
+    self.selectedDate = [NSDate date];
+    [self.statsService expireAllItemsInCache];
     [self retrieveStatsSkipGraph:NO];
 }
 

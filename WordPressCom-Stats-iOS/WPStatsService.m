@@ -47,17 +47,18 @@ typedef NS_ENUM(NSInteger, StatsCache) {
     return self;
 }
 
-- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token
+- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone oauth2Token:(NSString *)oauth2Token andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval
 {
     NSAssert(oauth2Token.length > 0, @"OAuth2 token must not be empty.");
     NSAssert(siteId != nil, @"Site ID must not be nil.");
     NSAssert(timeZone != nil, @"Timezone must not be nil.");
 
-    self = [self init];
+    self = [super init];
     if (self) {
         _siteId = siteId;
         _oauth2Token = oauth2Token;
         _siteTimeZone = timeZone ?: [NSTimeZone systemTimeZone];
+        _ephemory = [[StatsEphemory alloc] initWithExpiryInterval:cacheExpirationInterval];
     }
 
     return self;
@@ -340,6 +341,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     
 }
 
+
 - (WPStatsServiceRemote *)remote
 {
     if (!_remote) {
@@ -348,6 +350,13 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
 
     return _remote;
 }
+
+
+- (void)expireAllItemsInCache
+{
+    [self.ephemory removeAllObjects];
+}
+
 
 // TODO - Extract this into a separate class that's unit testable
 - (NSString *)dateAgeForDate:(NSDate *)date

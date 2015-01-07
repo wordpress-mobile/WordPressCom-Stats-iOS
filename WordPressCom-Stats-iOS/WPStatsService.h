@@ -13,7 +13,7 @@ typedef void (^StatsItemsCompletion)(StatsGroup *group, NSError *error);
 
 @property (nonatomic, strong) WPStatsServiceRemote *remote;
 
-- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone andOAuth2Token:(NSString *)oauth2Token;
+- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone oauth2Token:(NSString *)oauth2Token andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval;
 
 - (void)retrieveAllStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
@@ -33,5 +33,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
      andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)retrieveTodayStatsWithCompletionHandler:(void (^)(StatsSummaryCompletion *))completion failureHandler:(void (^)(NSError *))failureHandler;
+
+- (void)expireAllItemsInCache;
 
 @end
