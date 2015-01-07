@@ -153,6 +153,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
             withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          cacheDictionary[@(StatsCacheVisits)] = visits;
+         visits.errorWhileRetrieving = error != nil;
          
          if (visitsCompletion) {
              visitsCompletion(visits, error);
