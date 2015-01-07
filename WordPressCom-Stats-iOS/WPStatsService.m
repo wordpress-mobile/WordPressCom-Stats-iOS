@@ -67,76 +67,67 @@ commentsAuthorCompletionHandler:(StatsItemsCompletion)commentsAuthorsCompletion
  commentsPostsCompletionHandler:(StatsItemsCompletion)commentsPostsCompletion
 tagsCategoriesCompletionHandler:(StatsItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
-followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
-    andOverallCompletionHandler:(void (^)())completionHandler
-          overallFailureHandler:(void (^)(NSError *error))failureHandler
+ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
+      publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
+     andOverallCompletionHandler:(void (^)())completionHandler
 {
     if (!completionHandler) {
         return;
     }
     
-    void (^failure)(NSError *error) = ^void (NSError *error) {
-        DDLogError(@"Error while retrieving stats: %@", error);
-
-        if (failureHandler) {
-            failureHandler(error);
-        }
-    };
-    
     NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@(unit), endDate]];
     if (cacheDictionary) {
         if (visitsCompletion) {
-            visitsCompletion(cacheDictionary[@(StatsCacheVisits)]);
+            visitsCompletion(cacheDictionary[@(StatsCacheVisits)], nil);
         }
 
         if (eventsCompletion) {
-            eventsCompletion(cacheDictionary[@(StatsCacheEvents)]);
+            eventsCompletion(cacheDictionary[@(StatsCacheEvents)], nil);
         }
 
         if (postsCompletion) {
-            postsCompletion(cacheDictionary[@(StatsCachePosts)]);
+            postsCompletion(cacheDictionary[@(StatsCachePosts)], nil);
         }
     
         if (referrersCompletion) {
-            referrersCompletion(cacheDictionary[@(StatsCacheReferrers)]);
+            referrersCompletion(cacheDictionary[@(StatsCacheReferrers)], nil);
         }
     
         if (clicksCompletion) {
-            clicksCompletion(cacheDictionary[@(StatsCacheClicks)]);
+            clicksCompletion(cacheDictionary[@(StatsCacheClicks)], nil);
         }
     
         if (countryCompletion) {
-            countryCompletion(cacheDictionary[@(StatsCacheCountry)]);
+            countryCompletion(cacheDictionary[@(StatsCacheCountry)], nil);
         }
     
         if (videosCompletion) {
-            videosCompletion(cacheDictionary[@(StatsCacheVideos)]);
+            videosCompletion(cacheDictionary[@(StatsCacheVideos)], nil);
         }
     
         if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(cacheDictionary[@(StatsCacheCommentsAuthors)]);
+            commentsAuthorsCompletion(cacheDictionary[@(StatsCacheCommentsAuthors)], nil);
         }
         
         if (commentsPostsCompletion) {
-            commentsPostsCompletion(cacheDictionary[@(StatsCacheCommentsPosts)]);
+            commentsPostsCompletion(cacheDictionary[@(StatsCacheCommentsPosts)], nil);
         }
     
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(cacheDictionary[@(StatsCacheTagsCategories)]);
+            tagsCategoriesCompletion(cacheDictionary[@(StatsCacheTagsCategories)], nil);
         }
     
         if (followersDotComCompletion) {
-            followersDotComCompletion(cacheDictionary[@(StatsCacheFollowersDotCom)]);
+            followersDotComCompletion(cacheDictionary[@(StatsCacheFollowersDotCom)], nil);
         }
     
         if (followersEmailCompletion) {
-            followersEmailCompletion(cacheDictionary[@(StatsCacheFollowersEmail)]);
+            followersEmailCompletion(cacheDictionary[@(StatsCacheFollowersEmail)], nil);
         }
     
         if (publicizeCompletion) {
-            publicizeCompletion(cacheDictionary[@(StatsCachePublicize)]);
+            publicizeCompletion(cacheDictionary[@(StatsCachePublicize)], nil);
         }
         
         completionHandler();
@@ -149,115 +140,134 @@ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
 
     [self.remote batchFetchStatsForDate:endDate
                                 andUnit:unit
-            withVisitsCompletionHandler:^(StatsVisits *visits)
+            withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          cacheDictionary[@(StatsCacheVisits)] = visits;
          
          if (visitsCompletion) {
-             visitsCompletion(visits);
+             visitsCompletion(visits, error);
          }
      }
-                eventsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                 eventsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *eventsResult = [StatsGroup new];
          eventsResult.items = items;
          eventsResult.moreItemsExist = moreViewsAvailable;
-         cacheDictionary[@(StatsCacheEvents)] = eventsResult;
+         eventsResult.errorWhileRetrieving = error != nil;
 
+         cacheDictionary[@(StatsCacheEvents)] = eventsResult;
+         
          if (eventsCompletion) {
-             eventsCompletion(eventsResult);
+             eventsCompletion(eventsResult, error);
          }
      }
-                 postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *postsResult = [StatsGroup new];
          postsResult.items = items;
          postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
          postsResult.moreItemsExist = moreViewsAvailable;
+         postsResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCachePosts)] = postsResult;
 
          if (postsCompletion) {
-             postsCompletion(postsResult);
+             postsCompletion(postsResult, error);
          }
      }
-             referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+             referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *referrersResult = [StatsGroup new];
          referrersResult.items = items;
          referrersResult.moreItemsExist = moreViewsAvailable;
+		 referrersResult.errorWhileRetrieving = error != nil;
+		 
          cacheDictionary[@(StatsCacheReferrers)] = referrersResult;
 
          if (referrersCompletion) {
-             referrersCompletion(referrersResult);
+             referrersCompletion(referrersResult, error);
          }
      }
-                clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *clicksResult = [StatsGroup new];
          clicksResult.items = items;
          clicksResult.moreItemsExist = moreViewsAvailable;
+         clicksResult.errorWhileRetrieving = error != nil;
+		 
          cacheDictionary[@(StatsCacheClicks)] = clicksResult;
          
          if (clicksCompletion) {
-             clicksCompletion(clicksResult);
+             clicksCompletion(clicksResult, error);
          }
      }
-               countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+               countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *countriesResult = [StatsGroup new];
          countriesResult.items = items;
          countriesResult.moreItemsExist = moreViewsAvailable;
+         countriesResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCacheCountry)] = countriesResult;
          
          if (countryCompletion) {
-             countryCompletion(countriesResult);
+             countryCompletion(countriesResult, error);
          }
      }
-                videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *videosResult = [StatsGroup new];
          videosResult.items = items;
          videosResult.moreItemsExist = moreViewsAvailable;
+         videosResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCacheVideos)] = videosResult;
 
          if (videosCompletion) {
-             videosCompletion(videosResult);
+             videosCompletion(videosResult, error);
          }
      }
-              commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+              commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *commentsAuthorsResult = [StatsGroup new];
          commentsAuthorsResult.items = items.firstObject;
+         commentsAuthorsResult.errorWhileRetrieving = error != nil;
          cacheDictionary[@(StatsCacheCommentsAuthors)] = commentsAuthorsResult;
+
          StatsGroup *commentsPostsResult = [StatsGroup new];
          commentsPostsResult.items = items.lastObject;
+         commentsPostsResult.errorWhileRetrieving = error != nil;
          cacheDictionary[@(StatsCacheCommentsPosts)] = commentsPostsResult;
          
          if (commentsAuthorsCompletion) {
-             commentsAuthorsCompletion(commentsAuthorsResult);
+             commentsAuthorsCompletion(commentsAuthorsResult, error);
          }
          
          if (commentsPostsCompletion) {
-             commentsPostsCompletion(commentsPostsResult);
+             commentsPostsCompletion(commentsPostsResult, error);
          }
      }
-        tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+        tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *tagsCategoriesResult = [StatsGroup new];
          tagsCategoriesResult.items = items;
          tagsCategoriesResult.moreItemsExist = moreViewsAvailable;
+         tagsCategoriesResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCacheTagsCategories)] = tagsCategoriesResult;
 
          if (tagsCategoriesCompletion) {
-             tagsCategoriesCompletion(tagsCategoriesResult);
+             tagsCategoriesCompletion(tagsCategoriesResult, error);
          }
      }
-       followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+       followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *followersDotComResult = [StatsGroup new];
          followersDotComResult.items = items;
          followersDotComResult.moreItemsExist = moreViewsAvailable;
          followersDotComResult.totalCount = totalViews;
+         followersDotComResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCacheFollowersDotCom)] = followersDotComResult;
 
          for (StatsItem *item in items) {
@@ -266,42 +276,46 @@ followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
          }
          
          if (followersDotComCompletion) {
-             followersDotComCompletion(followersDotComResult);
+             followersDotComCompletion(followersDotComResult, error);
          }
      }
-        followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *followersEmailResult = [StatsGroup new];
          followersEmailResult.items = items;
          followersEmailResult.moreItemsExist = moreViewsAvailable;
          followersEmailResult.totalCount = totalViews;
+         followersEmailResult.errorWhileRetrieving = error != nil;
+
          cacheDictionary[@(StatsCacheFollowersEmail)] = followersEmailResult;
-         
+
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
              item.value = age;
          }
          
          if (followersEmailCompletion) {
-             followersEmailCompletion(followersEmailResult);
+             followersEmailCompletion(followersEmailResult, error);
          }
      }
-             publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
-     {
-         StatsGroup *publicizeResult = [StatsGroup new];
-         publicizeResult.items = items;
-         publicizeResult.moreItemsExist = moreViewsAvailable;
-         cacheDictionary[@(StatsCachePublicize)] = publicizeResult;
 
-         if (publicizeCompletion) {
-             publicizeCompletion(publicizeResult);
-         }
-     }
-            andOverallCompletionHandler:^
-     {
-         completionHandler();
-     }
-                  overallFailureHandler:failure];
+              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
+    {
+        StatsGroup *publicizeResult = [StatsGroup new];
+        publicizeResult.items = items;
+        publicizeResult.moreItemsExist = moreViewsAvailable;
+        publicizeResult.errorWhileRetrieving = error != nil;
+
+        cacheDictionary[@(StatsCachePublicize)] = publicizeResult;
+
+        if (publicizeCompletion) {
+            publicizeCompletion(publicizeResult, nil);
+        }
+    }
+             andOverallCompletionHandler:^
+    {
+        completionHandler();
+    }];
 }
 
 

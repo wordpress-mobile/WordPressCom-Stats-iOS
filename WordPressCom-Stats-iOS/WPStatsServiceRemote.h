@@ -2,9 +2,9 @@
 #import "StatsSummary.h"
 #import "StatsVisits.h"
 
-typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary);
-typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits);
-typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable);
+typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *error);
+typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
+typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
 
 typedef NS_ENUM(NSUInteger, StatsFollowerType) {
     StatsFollowerTypeDotCom,
@@ -49,62 +49,50 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
-   andOverallCompletionHandler:(void (^)())completionHandler
-         overallFailureHandler:(void (^)(NSError *error))failureHandler;
+     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+    andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
-           withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
-                  failureHandler:(void (^)(NSError *error))failureHandler;
+           withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler;
 
 - (void)fetchVisitsStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
-          withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler;
+          withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler;
 
 - (void)fetchPostsStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit
-         withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                failureHandler:(void (^)(NSError *error))failureHandler;
+         withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchReferrersStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler;
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchClicksStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
-          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler;
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchCountryStatsForDate:(NSDate *)date
                          andUnit:(StatsPeriodUnit)unit
-           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                  failureHandler:(void (^)(NSError *error))failureHandler;
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchVideosStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
-          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler;
+          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchCommentsStatsForDate:(NSDate *)date
                           andUnit:(StatsPeriodUnit)unit
-            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                   failureHandler:(void (^)(NSError *error))failureHandler;
+            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
                                 andUnit:(StatsPeriodUnit)unit
-                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                         failureHandler:(void (^)(NSError *error))failureHandler;
+                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
                                       date:(NSDate *)date
                                    andUnit:(StatsPeriodUnit)unit
-                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                            failureHandler:(void (^)(NSError *error))failureHandler;
+                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler;
+             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 @end

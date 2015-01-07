@@ -50,51 +50,48 @@
     
     [self.subject retrieveAllStatsForDate:[NSDate date]
                                   andUnit:StatsPeriodUnitDay
-              withVisitsCompletionHandler:^(StatsVisits *visits) {
+              withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error) {
                   [visitsExpectation fulfill];
               }
-                  eventsCompletionHandler:^(StatsGroup *group) {
+                  eventsCompletionHandler:^(StatsGroup *group, NSError *error) {
                       [eventsExpectation fulfill];
                   }
-                   postsCompletionHandler:^(StatsGroup *group) {
+                   postsCompletionHandler:^(StatsGroup *group, NSError *error) {
                        [postsExpectation fulfill];
                    }
-               referrersCompletionHandler:^(StatsGroup *group) {
+               referrersCompletionHandler:^(StatsGroup *group, NSError *error) {
                    [referrersExpectation fulfill];
                }
-                  clicksCompletionHandler:^(StatsGroup *group) {
+                  clicksCompletionHandler:^(StatsGroup *group, NSError *error) {
                       [clicksExpectation fulfill];
                   }
-                 countryCompletionHandler:^(StatsGroup *group) {
+                 countryCompletionHandler:^(StatsGroup *group, NSError *error) {
                      [countryExpectation fulfill];
                  }
-                  videosCompletionHandler:^(StatsGroup *group) {
+                  videosCompletionHandler:^(StatsGroup *group, NSError *error) {
                       [videosExpectation fulfill];
                   }
-          commentsAuthorCompletionHandler:^(StatsGroup *group) {
+          commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
               [commentsAuthorExpectation fulfill];
           }
-           commentsPostsCompletionHandler:^(StatsGroup *group) {
+           commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error) {
                [commentsPostsExpectation fulfill];
            }
-          tagsCategoriesCompletionHandler:^(StatsGroup *group) {
+          tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error) {
               [tagsExpectation fulfill];
           }
-         followersDotComCompletionHandler:^(StatsGroup *group) {
+         followersDotComCompletionHandler:^(StatsGroup *group, NSError *error) {
              [followersDotComExpectation fulfill];
          }
-          followersEmailCompletionHandler:^(StatsGroup *group) {
+          followersEmailCompletionHandler:^(StatsGroup *group, NSError *error) {
               [followersEmailExpectation fulfill];
           }
-               publicizeCompletionHandler:^(StatsGroup *group) {
+               publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
                    [publicizeExpectation fulfill];
                }
               andOverallCompletionHandler:^{
                   [overallExpectation fulfill];
-              }
-                    overallFailureHandler:^(NSError *error) {
-                        XCTFail(@"Failure is not an option.");
-                    }];
+              }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -348,8 +345,7 @@
              followersDotComCompletionHandler:[OCMArg any]
               followersEmailCompletionHandler:[OCMArg any]
                    publicizeCompletionHandler:[OCMArg any]
-                  andOverallCompletionHandler:[OCMArg any]
-                        overallFailureHandler:[OCMArg any]]);
+                  andOverallCompletionHandler:[OCMArg any]]);
     
     self.subject.remote = remote;
     
@@ -368,10 +364,9 @@
          followersDotComCompletionHandler:nil
           followersEmailCompletionHandler:nil
                publicizeCompletionHandler:nil
-              andOverallCompletionHandler:^{
-                  // Don't do anything
-              }
-                    overallFailureHandler:nil];
+               andOverallCompletionHandler:^{
+                   // Don't do anything
+               }];
     
     OCMVerifyAll((id)remote);
 }
@@ -381,61 +376,57 @@
 
 @implementation WPStatsServiceRemoteMock
 
-- (void)batchFetchStatsForDates:(NSArray *)dates
-                        andUnit:(StatsPeriodUnit)unit
-    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
-        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
-         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
-     referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
-        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
-       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
-        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
-      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+- (void)batchFetchStatsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+   withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
+       eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
+        postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
+    referrersCompletionHandler:(StatsRemoteItemsCompletion)referrersCompletion
+       clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
+      countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
+       videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
-    andOverallCompletionHandler:(void (^)())completionHandler
-          overallFailureHandler:(void (^)(NSError *))failureHandler
+    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+   andOverallCompletionHandler:(void (^)())completionHandler
 {
-    NSInteger count = dates.count;
-    for (NSInteger x = 0; x < count; ++x) {
-        if (visitsCompletion) {
-            visitsCompletion([StatsVisits new]);
-        }
-        if (eventsCompletion) {
-            eventsCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (postsCompletion) {
-            postsCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (referrersCompletion) {
-            referrersCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (clicksCompletion) {
-            clicksCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (countryCompletion) {
-            countryCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (videosCompletion) {
-            videosCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (commentsCompletion) {
-            commentsCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (followersDotComCompletion) {
-            followersDotComCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (followersEmailCompletion) {
-            followersEmailCompletion(@[[StatsItem new]], nil, false);
-        }
-        if (publicizeCompletion) {
-            publicizeCompletion(@[[StatsItem new]], nil, false);
-        }
+    if (visitsCompletion) {
+        visitsCompletion([StatsVisits new], nil);
+    }
+    if (eventsCompletion) {
+        eventsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (postsCompletion) {
+        postsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (referrersCompletion) {
+        referrersCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (clicksCompletion) {
+        clicksCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (countryCompletion) {
+        countryCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (videosCompletion) {
+        videosCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (commentsCompletion) {
+        commentsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (tagsCategoriesCompletion) {
+        tagsCategoriesCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (followersDotComCompletion) {
+        followersDotComCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (followersEmailCompletion) {
+        followersEmailCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (publicizeCompletion) {
+        publicizeCompletion(@[[StatsItem new]], nil, false, nil);
     }
     
     if (completionHandler) {

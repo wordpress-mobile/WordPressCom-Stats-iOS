@@ -11,6 +11,7 @@
 @property (nonatomic, copy)     NSString *totalCount;
 
 @property (nonatomic, assign, getter=isExpanded) BOOL expanded;
+@property (nonatomic, assign) BOOL errorWhileRetrieving;
 @property (nonatomic, readonly) NSUInteger numberOfRows;
 @property (nonatomic, assign) NSUInteger offsetRows;
 

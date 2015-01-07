@@ -78,47 +78,46 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
-   andOverallCompletionHandler:(void (^)())completionHandler
-         overallFailureHandler:(void (^)(NSError *error))failureHandler
+     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+    andOverallCompletionHandler:(void (^)())completionHandler
 {
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     if (visitsCompletion) {
-        [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion]];
     }
     if (eventsCompletion) {
-        [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
     }
     if (postsCompletion) {
-        [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion]];
     }
     if (referrersCompletion) {
-        [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion]];
     }
     if (clicksCompletion) {
-        [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion]];
     }
     if (countryCompletion) {
-        [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion]];
     }
     if (videosCompletion) {
-        [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion]];
     }
     if (commentsCompletion) {
-        [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
     }
     if (tagsCategoriesCompletion) {
-        [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion]];
     }
     if (followersDotComCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion]];
     }
     if (followersEmailCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion]];
     }
     if (publicizeCompletion) {
-        [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion failureHandler:nil]];
+        [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
@@ -134,9 +133,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
            withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
-                  failureHandler:(void (^)(NSError *error))failureHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:date andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:date andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -144,10 +142,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchVisitsStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -155,11 +152,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchEventsForDate:(NSDate *)date
                    andUnit:(StatsPeriodUnit)unit
      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-            failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -167,11 +163,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPostsStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit
          withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -179,11 +174,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchReferrersStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -191,11 +185,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchClicksStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -203,11 +196,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchCountryStatsForDate:(NSDate *)date
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                  failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -215,11 +207,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchVideosStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -227,11 +218,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchCommentsStatsForDate:(NSDate *)date
                           andUnit:(StatsPeriodUnit)unit
             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                   failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForCommentsForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForCommentsForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -239,11 +229,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
                                 andUnit:(StatsPeriodUnit)unit
                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                         failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -252,11 +241,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                       date:(NSDate *)date
                                    andUnit:(StatsPeriodUnit)unit
                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                            failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -264,11 +252,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                    failureHandler:(void (^)(NSError *error))failureHandler
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:completionHandler failureHandler:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -279,7 +266,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForSummaryForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
                                  withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
-                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
     
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -295,14 +281,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
         
         if (completionHandler) {
-            completionHandler(statsSummary);
+            completionHandler(statsSummary, nil);
         }
     };
     
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
                                                                  parameters:nil
                                                                     success:handler
-                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                        if (completionHandler) {
+                                                                            completionHandler(nil, error);
+                                                                        }
+                                                                    }];
     return operation;
 }
 
@@ -310,7 +300,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
-                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -346,7 +335,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         statsVisits.statsDataByDate = dictionary;
         
         if (completionHandler) {
-            completionHandler(statsVisits);
+            completionHandler(statsVisits, nil);
         }
     };
     
@@ -359,7 +348,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                        if (completionHandler) {
+                                                                            StatsVisits *visits = [StatsVisits new];
+                                                                            visits.errorWhileRetrieving = YES;
+                                                                            
+                                                                            completionHandler(visits, error);
+                                                                        }
+                                                                    }];
     return operation;
 }
 
@@ -367,7 +363,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForEventsForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -388,7 +383,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, nil, NO);
+            completionHandler(items, nil, NO, nil);
         }
     };
     
@@ -399,7 +394,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -407,7 +402,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForPostsForDate:(NSDate *)date
                                              andUnit:(StatsPeriodUnit)unit
                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                      failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -437,7 +431,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, moreViewsAvailable, nil);
         }
     };
     
@@ -446,7 +440,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -454,7 +448,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForReferrersForDate:(NSDate *)date
                                                  andUnit:(StatsPeriodUnit)unit
                                    withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                          failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -524,7 +517,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, moreViewsAvailable, nil);
         }
     };
     
@@ -534,7 +527,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -543,7 +536,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForClicksForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -593,7 +585,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         
         if (completionHandler) {
-            completionHandler(items, totalClicks, moreClicksAvailable);
+            completionHandler(items, totalClicks, moreClicksAvailable, nil);
         }
     };
     
@@ -603,7 +595,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     return operation;
 }
 
@@ -611,7 +603,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForCountryForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                        failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -636,7 +627,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalViews, moreViewsAvailable);
+            completionHandler(items, totalViews, moreViewsAvailable, nil);
         }
     };
     
@@ -646,7 +637,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
 
     return operation;
 }
@@ -655,7 +646,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForVideosForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                       failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -686,7 +676,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalPlays, morePlaysAvailable);
+            completionHandler(items, totalPlays, morePlaysAvailable, nil);
         }
     };
     
@@ -696,7 +686,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -705,7 +695,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                         failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -744,7 +733,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         if (completionHandler) {
             // More not available with comments
-            completionHandler(@[authorItems, postsItems], nil, false);
+            completionHandler(@[authorItems, postsItems], nil, false, nil);
         }
     };
     
@@ -754,7 +743,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -763,7 +752,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForTagsCategoriesForDate:(NSDate *)date
                                                       andUnit:(StatsPeriodUnit)unit
                                         withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                               failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -804,7 +792,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         if (completionHandler) {
             // More not available with tags
-            completionHandler(items, nil, false);
+            completionHandler(items, nil, false, nil);
         }
     };
     
@@ -814,7 +802,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     return operation;}
 
 
@@ -822,7 +810,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                 forDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                         failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -848,7 +835,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
         
         if (completionHandler) {
-            completionHandler(items, totalFollowers, moreFollowersAvailable);
+            completionHandler(items, totalFollowers, moreFollowersAvailable, nil);
         }
     };
     
@@ -860,7 +847,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -869,7 +856,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForPublicizeForDate:(NSDate *)date
                                                  andUnit:(StatsPeriodUnit)unit
                                    withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
-                                          failureHandler:(void (^)(NSError *error))failureHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -912,7 +898,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         if (completionHandler) {
             // More not available with publicize
-            completionHandler(items, nil, false);
+            completionHandler(items, nil, false, nil);
         }
     };
     
@@ -922,7 +908,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
                                                                 parameters:parameters
                                                                    success:handler
-                                                                   failure:[self failureForFailureCompletionHandler:failureHandler]];
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
     
     return operation;
 }
@@ -947,14 +933,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, NSError *error))failureForFailureCompletionHandler:(void (^)(NSError *error))failureHandler
+- (void(^)(AFHTTPRequestOperation *operation, NSError *error))failureForCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     return ^(AFHTTPRequestOperation *operation, NSError *error)
     {
-        DDLogError(@"Error with today summary stats: %@", error);
-        
-        if (failureHandler) {
-            failureHandler(error);
+        if (completionHandler) {
+            completionHandler(nil, nil, false, error);
         }
     };
 }
