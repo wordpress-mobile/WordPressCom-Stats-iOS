@@ -3,7 +3,7 @@
 #import "StatsVisits.h"
 #import "StatsGroup.h"
 
-typedef void (^StatsSummaryCompletion)(StatsSummary *summary, NSError *error);
+typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsItemsCompletion)(StatsGroup *group, NSError *error);
 
@@ -32,7 +32,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
       publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler;
 
-- (void)retrieveTodayStatsWithCompletionHandler:(void (^)(StatsSummaryCompletion *))completion failureHandler:(void (^)(NSError *))failureHandler;
+- (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler;
 
 - (void)expireAllItemsInCache;
 

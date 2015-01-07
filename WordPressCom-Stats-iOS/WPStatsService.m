@@ -329,7 +329,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
 }
 
 
-- (void)retrieveTodayStatsWithCompletionHandler:(void (^)(StatsSummaryCompletion *))completion failureHandler:(void (^)(NSError *))failureHandler
+- (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler
 {
     void (^failure)(NSError *error) = ^void (NSError *error) {
         DDLogError(@"Error while retrieving stats: %@", error);
@@ -339,6 +339,26 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         }
     };
     
+    if (!completion) {
+        return;
+    }
+    
+    StatsSummary *summary = [self.ephemory objectForKey:@"TodayStats"];
+    if (summary) {
+        completion(summary);
+    }
+    
+    [self.remote fetchSummaryStatsForDate:[NSDate date]
+                    withCompletionHandler:^(StatsSummary *summary, NSError *error) {
+                        if (error) {
+                            failure(error);
+                            return;
+                        }
+
+                        [self.ephemory setObject:summary forKey:@"TodayStats"];
+
+                        completion(summary);
+                    }];
 }
 
 
