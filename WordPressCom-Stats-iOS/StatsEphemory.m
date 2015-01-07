@@ -43,9 +43,16 @@
 
 - (id)objectForKey:(id)key
 {
+    NSParameterAssert(key != nil);
+
     EphemoryContainer *container = [self.cache objectForKey:key];
     
-    return container.data;
+    // Only return data when the expiration hasn't passed
+    if (fabs([container.date timeIntervalSinceNow]) <= self.expiryInterval) {
+        return container.data;
+    }
+
+    return nil;
 }
 
 

@@ -955,7 +955,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     NSArray *titles;
-    NSInteger selectedIndex;
+    NSInteger selectedIndex = 0;
     StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
     
     switch (statsSection) {
