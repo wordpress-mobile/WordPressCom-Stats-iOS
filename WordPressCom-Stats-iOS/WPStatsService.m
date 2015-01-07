@@ -51,19 +51,10 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsItemsCompletion)followersEmailCompletion
       publicizeCompletionHandler:(StatsItemsCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler
-           overallFailureHandler:(void (^)(NSError *error))failureHandler
 {
     if (!completionHandler) {
         return;
     }
-    
-    void (^failure)(NSError *error) = ^void (NSError *error) {
-        DDLogError(@"Error while retrieving stats: %@", error);
-
-        if (failureHandler) {
-            failureHandler(error);
-        }
-    };
     
     NSMutableArray *endDates = [NSMutableArray new];
     for (NSDate *date in dates) {
@@ -71,125 +62,133 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         [endDates addObject:endDate];
     }
 
-    __block StatsVisits *visitsResult = nil;
     [self.remote batchFetchStatsForDates:endDates
                                  andUnit:unit
-             withVisitsCompletionHandler:^(StatsVisits *visits)
+             withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
     {
-        visitsResult = visits;
-        
         if (visitsCompletion) {
-            visitsCompletion(visits);
+            visitsCompletion(visits, error);
         }
     }
-                 eventsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                 eventsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *eventsResult = [StatsGroup new];
          eventsResult.items = items;
          eventsResult.moreItemsExist = moreViewsAvailable;
+         eventsResult.errorWhileRetrieving = error != nil;
          
          if (eventsCompletion) {
-             eventsCompletion(eventsResult);
+             eventsCompletion(eventsResult, error);
          }
      }
-                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                  postsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *postsResult = [StatsGroup new];
          postsResult.items = items;
          postsResult.titlePrimary = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
          postsResult.moreItemsExist = moreViewsAvailable;
+         postsResult.errorWhileRetrieving = error != nil;
          
          if (postsCompletion) {
-             postsCompletion(postsResult);
+             postsCompletion(postsResult, error);
          }
      }
-              referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+              referrersCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *referrersResult = [StatsGroup new];
         referrersResult.items = items;
         referrersResult.moreItemsExist = moreViewsAvailable;
+        referrersResult.errorWhileRetrieving = error != nil;
         
         if (referrersCompletion) {
-            referrersCompletion(referrersResult);
+            referrersCompletion(referrersResult, error);
         }
     }
-                 clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                 clicksCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *clicksResult = [StatsGroup new];
         clicksResult.items = items;
         clicksResult.moreItemsExist = moreViewsAvailable;
+        clicksResult.errorWhileRetrieving = error != nil;
         
         if (clicksCompletion) {
-            clicksCompletion(clicksResult);
+            clicksCompletion(clicksResult, error);
         }
     }
-                countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                countryCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *countriesResult = [StatsGroup new];
         countriesResult.items = items;
         countriesResult.moreItemsExist = moreViewsAvailable;
-        
+        countriesResult.errorWhileRetrieving = error != nil;
+
         if (countryCompletion) {
-            countryCompletion(countriesResult);
+            countryCompletion(countriesResult, error);
         }
     }
-                 videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+                 videosCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *videosResult = [StatsGroup new];
         videosResult.items = items;
         videosResult.moreItemsExist = moreViewsAvailable;
-        
+        videosResult.errorWhileRetrieving = error != nil;
+
         if (videosCompletion) {
-            videosCompletion(videosResult);
+            videosCompletion(videosResult, error);
         }
     }
-               commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+               commentsCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *commentsAuthorsResult = [StatsGroup new];
         commentsAuthorsResult.items = items.firstObject;
+        commentsAuthorsResult.errorWhileRetrieving = error != nil;
         StatsGroup *commentsPostsResult = [StatsGroup new];
         commentsPostsResult.items = items.lastObject;
+        commentsPostsResult.errorWhileRetrieving = error != nil;
         
         if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(commentsAuthorsResult);
+            commentsAuthorsCompletion(commentsAuthorsResult, error);
         }
         
         if (commentsPostsResult) {
-            commentsPostsCompletion(commentsPostsResult);
+            commentsPostsCompletion(commentsPostsResult, error);
         }
     }
-         tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+         tagsCategoriesCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *tagsCategoriesResult = [StatsGroup new];
         tagsCategoriesResult.items = items;
         tagsCategoriesResult.moreItemsExist = moreViewsAvailable;
-        
+        tagsCategoriesResult.errorWhileRetrieving = error != nil;
+
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(tagsCategoriesResult);
+            tagsCategoriesCompletion(tagsCategoriesResult, error);
         }
     }
-        followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+        followersDotComCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *followersDotComResult = [StatsGroup new];
          followersDotComResult.items = items;
          followersDotComResult.moreItemsExist = moreViewsAvailable;
          followersDotComResult.totalCount = totalViews;
-         
+         followersDotComResult.errorWhileRetrieving = error != nil;
+
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
              item.value = age;
          }
          
          if (followersDotComCompletion) {
-             followersDotComCompletion(followersDotComResult);
+             followersDotComCompletion(followersDotComResult, error);
          }
      }
-         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+         followersEmailCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          StatsGroup *followersEmailResult = [StatsGroup new];
          followersEmailResult.items = items;
          followersEmailResult.moreItemsExist = moreViewsAvailable;
          followersEmailResult.totalCount = totalViews;
+         followersEmailResult.errorWhileRetrieving = error != nil;
 
          for (StatsItem *item in items) {
              NSString *age = [self dateAgeForDate:item.date];
@@ -197,24 +196,24 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
          }
          
          if (followersEmailCompletion) {
-             followersEmailCompletion(followersEmailResult);
+             followersEmailCompletion(followersEmailResult, error);
          }
      }
-              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable)
+              publicizeCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
         StatsGroup *publicizeResult = [StatsGroup new];
         publicizeResult.items = items;
         publicizeResult.moreItemsExist = moreViewsAvailable;
-        
+        publicizeResult.errorWhileRetrieving = error != nil;
+
         if (publicizeCompletion) {
-            publicizeCompletion(publicizeResult);
+            publicizeCompletion(publicizeResult, nil);
         }
     }
              andOverallCompletionHandler:^
     {
         completionHandler();
-    }
-                   overallFailureHandler:failure];
+    }];
 }
 
 
