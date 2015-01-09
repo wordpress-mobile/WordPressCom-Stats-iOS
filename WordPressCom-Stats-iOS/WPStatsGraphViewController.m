@@ -79,6 +79,16 @@ static NSInteger const RecommendedYAxisTicks = 7;
     return self.allowDeselection;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:shouldSelectDate:)]) {
+        StatsSummary *summary = (StatsSummary *)self.visits.statsData[indexPath.row];
+        return [self.graphDelegate statsGraphViewController:self shouldSelectDate:summary.date];
+    }
+    
+    return YES;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *selectedIndexPaths = [collectionView indexPathsForSelectedItems];

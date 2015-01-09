@@ -38,7 +38,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <segmentedControl opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wxx-2G-3HH">
-                                            <rect key="frame" x="15" y="8" width="570" height="29"/>
+                                            <rect key="frame" x="16" y="8" width="569" height="29"/>
                                             <segments>
                                                 <segment title="Days"/>
                                                 <segment title="Weeks"/>
@@ -51,9 +51,9 @@
                                         </segmentedControl>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Wxx-2G-3HH" firstAttribute="leading" secondItem="xOE-3o-GEM" secondAttribute="leadingMargin" constant="7" id="GbI-5r-G8O"/>
+                                        <constraint firstItem="Wxx-2G-3HH" firstAttribute="leading" secondItem="xOE-3o-GEM" secondAttribute="leadingMargin" priority="750" constant="7" id="8V0-Xe-lc4"/>
                                         <constraint firstAttribute="centerX" secondItem="Wxx-2G-3HH" secondAttribute="centerX" id="SLE-lT-8WB"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Wxx-2G-3HH" secondAttribute="trailing" constant="7" id="YEJ-mp-7Cl"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Wxx-2G-3HH" secondAttribute="trailing" priority="750" constant="7" id="Y13-84-qHL"/>
                                         <constraint firstAttribute="centerY" secondItem="Wxx-2G-3HH" secondAttribute="centerY" id="hnS-Rv-3Ln"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -64,7 +64,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Group Header Text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UHc-xu-haN">
-                                            <rect key="frame" x="15" y="11" width="159" height="24"/>
+                                            <rect key="frame" x="15" y="11" width="570" height="24"/>
                                             <fontDescription key="fontDescription" name="OpenSans-Bold" family="Open Sans" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -116,8 +116,8 @@
                                         <constraint firstItem="Gf0-YI-zAr" firstAttribute="baseline" secondItem="G4l-GA-6pv" secondAttribute="baseline" id="1zj-ku-Urv"/>
                                         <constraint firstItem="G4l-GA-6pv" firstAttribute="leading" secondItem="Gf0-YI-zAr" secondAttribute="trailing" constant="10" id="4uN-KB-8Tj"/>
                                         <constraint firstAttribute="centerY" secondItem="Gf0-YI-zAr" secondAttribute="centerY" id="BBV-dU-zgj"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="G4l-GA-6pv" secondAttribute="trailing" constant="8" id="EhP-Gt-kch"/>
-                                        <constraint firstItem="Gf0-YI-zAr" firstAttribute="leading" secondItem="OP0-Uc-wLW" secondAttribute="leadingMargin" constant="7" id="jKx-ja-3XV"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="G4l-GA-6pv" secondAttribute="trailing" priority="750" constant="8" id="EhP-Gt-kch"/>
+                                        <constraint firstItem="Gf0-YI-zAr" firstAttribute="leading" secondItem="OP0-Uc-wLW" secondAttribute="leadingMargin" priority="750" constant="7" id="jKx-ja-3XV"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -148,21 +148,11 @@
                                     <constraints>
                                         <constraint firstAttribute="trailingMargin" secondItem="xSH-fQ-AtQ" secondAttribute="trailing" constant="8" id="0bK-zh-FLZ"/>
                                         <constraint firstAttribute="centerY" secondItem="xSH-fQ-AtQ" secondAttribute="centerY" id="VuV-oq-yHv"/>
-                                        <constraint firstItem="9u9-zI-9kF" firstAttribute="baseline" secondItem="xSH-fQ-AtQ" secondAttribute="baseline" id="Xhi-m2-aeL"/>
                                         <constraint firstAttribute="centerY" secondItem="Mzc-DL-teM" secondAttribute="centerY" id="bb3-1l-H26"/>
-                                        <constraint firstItem="9u9-zI-9kF" firstAttribute="top" secondItem="eBL-g2-naI" secondAttribute="topMargin" constant="-10" id="bo8-0j-rkK"/>
                                         <constraint firstAttribute="centerY" secondItem="9u9-zI-9kF" secondAttribute="centerY" constant="-3" id="fmG-7n-obz"/>
                                         <constraint firstItem="9u9-zI-9kF" firstAttribute="leading" secondItem="eBL-g2-naI" secondAttribute="leadingMargin" constant="7" id="hQO-YO-eDt"/>
-                                        <constraint firstItem="9u9-zI-9kF" firstAttribute="baseline" secondItem="Mzc-DL-teM" secondAttribute="baseline" id="qPy-LI-p68"/>
                                         <constraint firstItem="Mzc-DL-teM" firstAttribute="leading" secondItem="9u9-zI-9kF" secondAttribute="trailing" constant="8" id="sOz-9D-iHH"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="Xhi-m2-aeL"/>
-                                            <exclude reference="bo8-0j-rkK"/>
-                                            <exclude reference="qPy-LI-p68"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="fhY-TT-0EH" userLabel="TwoColumnRow">
@@ -178,7 +168,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
-                                            <rect key="frame" x="43" y="11" width="488" height="21"/>
+                                            <rect key="frame" x="43" y="11" width="179" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -193,18 +183,12 @@
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="GAp-0f-HXa" secondAttribute="centerY" id="ERR-TL-htO"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Rwp-nF-8c1" secondAttribute="trailing" constant="8" id="Gsf-dz-QkE"/>
-                                        <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
+                                        <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
                                         <constraint firstAttribute="centerY" secondItem="p4X-m5-Nld" secondAttribute="centerY" id="XTA-mJ-ta4"/>
                                         <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="7" id="XsQ-gt-qaQ"/>
                                         <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="p4X-m5-Nld" secondAttribute="trailing" constant="8" id="jMx-Mh-VzX"/>
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="baseline" secondItem="GAp-0f-HXa" secondAttribute="baseline" id="mna-l6-qeG"/>
-                                        <constraint firstItem="p4X-m5-Nld" firstAttribute="top" secondItem="Dnr-8L-jIZ" secondAttribute="topMargin" constant="-8" id="oGv-TS-QBX"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="oGv-TS-QBX"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="xct-fr-svw" userLabel="MoreRow">
@@ -239,9 +223,9 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="HmG-gY-rM9" firstAttribute="leading" secondItem="vYe-7i-oUA" secondAttribute="leadingMargin" constant="7" id="KjH-vZ-SLf"/>
+                                        <constraint firstItem="HmG-gY-rM9" firstAttribute="leading" secondItem="vYe-7i-oUA" secondAttribute="leadingMargin" priority="750" constant="7" id="KjH-vZ-SLf"/>
                                         <constraint firstAttribute="centerY" secondItem="HmG-gY-rM9" secondAttribute="centerY" id="Upi-Im-2C4"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="HmG-gY-rM9" secondAttribute="trailing" constant="7" id="fAp-db-GbW"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="HmG-gY-rM9" secondAttribute="trailing" priority="750" constant="7" id="fAp-db-GbW"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -267,14 +251,8 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" constant="7" id="6uY-Ac-ucE"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Kg0-Ed-1Km" secondAttribute="trailing" constant="7" id="CTF-PN-wBx"/>
                                         <constraint firstItem="Kg0-Ed-1Km" firstAttribute="top" secondItem="0Bj-bw-PZy" secondAttribute="topMargin" constant="7" id="cHY-4n-7mg"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" constant="31" id="iH9-GS-iSc"/>
                                         <constraint firstItem="Kg0-Ed-1Km" firstAttribute="leading" secondItem="0Bj-bw-PZy" secondAttribute="leadingMargin" constant="7" id="vxP-2u-x6G"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="iH9-GS-iSc"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -288,7 +266,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7L-pU-m4M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1920" y="102"/>
+            <point key="canvasLocation" x="1920" y="98"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2Kt-k2-d36">
