@@ -1,5 +1,4 @@
 #import "WPSViewController.h"
-#import <StatsTableViewController.h>
 #import "SFHFKeychainUtils.h"
 
 @interface WPSViewController ()
@@ -80,16 +79,26 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
         [self.statsViewController removeFromParentViewController];
     }
     
-    UINavigationController *navController = [[UIStoryboard storyboardWithName:@"SiteStats" bundle:nil] instantiateInitialViewController];
-    StatsTableViewController *statsViewController = (StatsTableViewController *)[navController topViewController];
+    WPStatsViewController *statsViewController = [[UIStoryboard storyboardWithName:@"SiteStats" bundle:nil] instantiateInitialViewController];
     statsViewController.siteID = self.siteID;
     statsViewController.siteTimeZone = self.timeZone;
     statsViewController.oauth2Token = self.oauth2Token;
+    statsViewController.statsDelegate = self;
     
-    [self addChildViewController:navController];
-    [self.view addSubview:[navController view]];
-    [navController didMoveToParentViewController:self];
+    [self addChildViewController:statsViewController];
+    [self.view addSubview:[statsViewController view]];
+    [statsViewController didMoveToParentViewController:self];
     
-    self.statsViewController = navController;
+    self.statsViewController = statsViewController;
 }
+
+#pragma mark - WPStatsViewControllerDelegate methods
+
+- (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url
+{
+    NSLog(@"Opening URL from StatsDemo WPSViewController: %@", url);
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+
 @end

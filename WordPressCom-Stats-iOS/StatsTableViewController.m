@@ -3,6 +3,7 @@
 #import "WPStatsService.h"
 #import "StatsGroup.h"
 #import "StatsItem.h"
+#import "StatsItemAction.h"
 #import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
@@ -242,8 +243,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
-        BOOL hasChildItems = item.children.count;
-        NSIndexPath *newIndexPath = hasChildItems ? indexPath : nil;
+        BOOL hasChildItems = item.children.count > 0;
+        // TODO :: Look for default action boolean
+        BOOL hasDefaultAction = item.actions.count > 0;
+        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
         
         return newIndexPath;
     }
@@ -282,27 +285,41 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
-        BOOL insert = !statsItem.isExpanded;
-        NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
-        statsItem.expanded = !statsItem.isExpanded;
-        NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
-
-        NSMutableArray *indexPaths = [NSMutableArray new];
-
-        NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
-        for (NSInteger row = 1; row <= numberOfRows; ++row) {
-            [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
+        if (statsItem.children.count > 0) {
+            BOOL insert = !statsItem.isExpanded;
+            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            statsItem.expanded = !statsItem.isExpanded;
+            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            
+            NSMutableArray *indexPaths = [NSMutableArray new];
+            
+            NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
+            for (NSInteger row = 1; row <= numberOfRows; ++row) {
+                [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
+            }
+            
+            [self.tableView beginUpdates];
+            
+            if (insert) {
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+            } else {
+                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+            }
+            
+            [self.tableView endUpdates];
+        } else if (statsItem.actions.count > 0) {
+            for (StatsItemAction *action in statsItem.actions) {
+                if (action.defaultAction) {
+                    if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+                        [self.statsDelegate statsViewController:self openURL:action.url];
+                    } else {
+                        [[UIApplication sharedApplication] openURL:action.url];
+                    }
+                    break;
+                }
+            }
         }
         
-        [self.tableView beginUpdates];
-        
-        if (insert) {
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
-        } else {
-            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-        }
-        
-        [self.tableView endUpdates];
     }
 }
 
@@ -763,7 +780,12 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         
-        [self configureTwoColumnRowCell:cell withLeftText:item.label rightText:item.value andImageURL:item.iconURL indentLevel:item.depth];
+        [self configureTwoColumnRowCell:cell
+                           withLeftText:item.label
+                              rightText:item.value
+                            andImageURL:item.iconURL
+                            indentLevel:item.depth
+                             selectable:item.actions.count > 0 || item.children.count > 0];
     }
 }
 
@@ -1034,13 +1056,24 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureTwoColumnRowCell:(UITableViewCell *)cell withLeftText:(NSString *)leftText rightText:(NSString *)rightText andImageURL:(NSURL *)imageURL indentLevel:(NSUInteger)indentLevel
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell
+                     withLeftText:(NSString *)leftText
+                        rightText:(NSString *)rightText
+                      andImageURL:(NSURL *)imageURL
+                      indentLevel:(NSUInteger)indentLevel
+                       selectable:(BOOL)selectable
 {
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+    
+    if (selectable) {
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    } else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
     imageView.image = nil;

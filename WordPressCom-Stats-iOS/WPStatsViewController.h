@@ -1,7 +1,16 @@
 #import <UIKit/UIKit.h>
-#import "WPStatsViewController.h"
 
-@interface StatsTableViewController : UITableViewController
+@class WPStatsViewController;
+
+@protocol WPStatsViewControllerDelegate <NSObject>
+
+@optional
+
+- (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
+
+@end
+
+@interface WPStatsViewController : UINavigationController
 
 @property (nonatomic, strong) NSNumber *siteID;
 @property (nonatomic, copy)   NSString *oauth2Token;
