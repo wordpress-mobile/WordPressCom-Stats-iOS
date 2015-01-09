@@ -20,6 +20,7 @@
 
 @optional
 
+- (BOOL)statsGraphViewController:(WPStatsGraphViewController *)controller shouldSelectDate:(NSDate *)date;
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date;
 - (void)statsGraphViewControllerDidDeselectAllBars:(WPStatsGraphViewController *)controller;
 

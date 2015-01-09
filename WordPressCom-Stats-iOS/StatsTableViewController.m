@@ -104,9 +104,14 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.selectedSummaryType = StatsSummaryTypeViews;
     self.graphViewController.allowDeselection = NO;
     self.graphViewController.graphDelegate = self;
+    [self addChildViewController:self.graphViewController];
+    [self.graphViewController didMoveToParentViewController:self];
     
     NSTimeInterval fiveMinutes = 60 * 5;
     self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -120,6 +125,13 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self retrieveStatsSkipGraph:NO];
+}
+
 
 #pragma mark - UITableViewDataSource methods
 
@@ -135,9 +147,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionPeriodSelector:
             return 1;
         case StatsSectionGraph: {
-            StatsVisits *visits = (StatsVisits *)data;
-            BOOL hasData = data != nil && visits.errorWhileRetrieving == NO;
-            return hasData ? 5 : 1;
+            return 5;
         }
             
         // TODO :: Pull offset from StatsGroup
@@ -292,19 +302,17 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 #pragma mark - WPStatsGraphViewControllerDelegate methods
 
+- (BOOL)statsGraphViewController:(WPStatsGraphViewController *)controller shouldSelectDate:(NSDate *)date
+{
+    // Don't allow selection if syncing
+    return !self.isSyncing;
+}
+
+
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
     self.selectedDate = date;
     
-    NSUInteger section = [self.sections indexOfObject:@(StatsSectionGraph)];
-    NSArray *indexPaths = @[[NSIndexPath indexPathForItem:1 inSection:section],
-                            [NSIndexPath indexPathForItem:2 inSection:section],
-                            [NSIndexPath indexPathForItem:3 inSection:section],
-                            [NSIndexPath indexPathForItem:4 inSection:section]];
-
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
     
     // Reset the data (except the graph) and refresh
     id graphData = self.sectionData[@(StatsSectionGraph)];
@@ -313,17 +321,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
     self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
 
-    [self.tableView beginUpdates];
-
-    NSRange range = NSMakeRange([self.sections indexOfObject:@(StatsSectionGraph)] + 1, self.sections.count - 2);
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
-
-    [self.tableView endUpdates];
+    [self.tableView reloadData];
     
+    NSUInteger section = [self.sections indexOfObject:@(StatsSectionGraph)];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:section];
     [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    
     
     [self retrieveStatsSkipGraph:YES];
 }
@@ -399,7 +401,13 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
+    if (self.syncing) {
+        DDLogWarn(@"Already syncing! Skipped retrieveStatsSkipGraph message.");
+        return;
+    }
+    
     self.syncing = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
                                        andUnit:self.selectedPeriodUnit
@@ -415,14 +423,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
              self.selectedDate = ((StatsSummary *)visits.statsData.lastObject).date;
          }
          
-         [self.tableView beginUpdates];
+         [self.tableView reloadData];
          
          NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionGraph)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
-         
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
@@ -593,6 +596,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                     andOverallCompletionHandler:^
      {
          self.syncing = NO;
+         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
          [self.refreshControl endRefreshing];
      }];
 }
@@ -610,14 +614,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             identifier = StatsTablePeriodSelectorCellIdentifier;
             break;
         case StatsSectionGraph: {
-            StatsVisits *visits = [self statsDataForStatsSection:statsSection];
             switch (indexPath.row) {
                 case 0:
-                    if (visits != nil && visits.errorWhileRetrieving == NO) {
-                        identifier = StatsTableGraphCellIdentifier;
-                    } else {
-                        identifier = StatsTableNoResultsCellIdentifier;
-                    }
+                    identifier = StatsTableGraphCellIdentifier;
                     break;
                     
                 default:
@@ -768,16 +767,15 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
+        [graphView removeFromSuperview];
         graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
-        [self addChildViewController:self.graphViewController];
-        [self.graphViewController didMoveToParentViewController:self];
     }
     
-    self.graphViewController.currentUnit = self.selectedPeriodUnit;
     self.graphViewController.currentSummaryType = self.selectedSummaryType;
     self.graphViewController.visits = visits;
+    self.graphViewController.currentUnit = self.selectedPeriodUnit;
     [self.graphViewController.collectionView reloadData];
     [self.graphViewController selectGraphBarWithDate:self.selectedDate];
 }
