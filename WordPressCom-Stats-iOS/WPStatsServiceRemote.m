@@ -1148,7 +1148,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         return date;
     }
     
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
     if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
