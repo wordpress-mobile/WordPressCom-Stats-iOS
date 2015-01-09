@@ -168,7 +168,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
-                                            <rect key="frame" x="43" y="11" width="488" height="21"/>
+                                            <rect key="frame" x="43" y="11" width="179" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -183,7 +183,7 @@
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="GAp-0f-HXa" secondAttribute="centerY" id="ERR-TL-htO"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Rwp-nF-8c1" secondAttribute="trailing" constant="8" id="Gsf-dz-QkE"/>
-                                        <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
+                                        <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
                                         <constraint firstAttribute="centerY" secondItem="p4X-m5-Nld" secondAttribute="centerY" id="XTA-mJ-ta4"/>
                                         <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="7" id="XsQ-gt-qaQ"/>
                                         <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="p4X-m5-Nld" secondAttribute="trailing" constant="8" id="jMx-Mh-VzX"/>
@@ -248,10 +248,10 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" priority="750" constant="7" id="6uY-Ac-ucE"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Kg0-Ed-1Km" secondAttribute="trailing" priority="750" constant="7" id="CTF-PN-wBx"/>
-                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="top" secondItem="0Bj-bw-PZy" secondAttribute="topMargin" priority="750" constant="7" id="cHY-4n-7mg"/>
-                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="leading" secondItem="0Bj-bw-PZy" secondAttribute="leadingMargin" priority="750" constant="7" id="vxP-2u-x6G"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" constant="7" id="6uY-Ac-ucE"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Kg0-Ed-1Km" secondAttribute="trailing" constant="7" id="CTF-PN-wBx"/>
+                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="top" secondItem="0Bj-bw-PZy" secondAttribute="topMargin" constant="7" id="cHY-4n-7mg"/>
+                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="leading" secondItem="0Bj-bw-PZy" secondAttribute="leadingMargin" constant="7" id="vxP-2u-x6G"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
