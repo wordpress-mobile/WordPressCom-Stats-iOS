@@ -311,7 +311,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             for (StatsItemAction *action in statsItem.actions) {
                 if (action.defaultAction) {
                     if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
-                        [self.statsDelegate statsViewController:self openURL:action.url];
+                        WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+                        [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
                         [[UIApplication sharedApplication] openURL:action.url];
                     }
