@@ -87,7 +87,9 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     
     NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@(unit), endDate]];
-    if (cacheDictionary) {
+    DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
+    
+    if (cacheDictionary && cacheDictionary.count == 13) {
         if (visitsCompletion) {
             visitsCompletion(cacheDictionary[@(StatsCacheVisits)], nil);
         }
@@ -148,6 +150,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         [self.ephemory setObject:cacheDictionary forKey:@[@(unit), endDate]];
     }
 
+    [self.remote cancelAllRemoteOperations];
     [self.remote batchFetchStatsForDate:endDate
                                 andUnit:unit
             withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)

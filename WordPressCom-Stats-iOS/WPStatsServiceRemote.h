@@ -95,4 +95,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)cancelAllRemoteOperations;
+
 @end
