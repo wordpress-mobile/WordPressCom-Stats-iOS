@@ -348,7 +348,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
+    NSNumber *quantity = IS_IPAD ? @12 : @5;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self siteLocalStringForDate:date]};
