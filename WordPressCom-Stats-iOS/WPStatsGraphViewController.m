@@ -183,17 +183,8 @@ static NSInteger const RecommendedYAxisTicks = 7;
     }
 }
 
-#pragma mark - Property methods
-
-- (void)setVisits:(StatsVisits *)visits
+- (void)doneSettingProperties
 {
-    _visits = visits;
-    [self calculateMaximumYValue];
-}
-
-- (void)setCurrentUnit:(StatsPeriodUnit)currentUnit
-{
-    _currentUnit = currentUnit;
     [self calculateMaximumYValue];
 }
 

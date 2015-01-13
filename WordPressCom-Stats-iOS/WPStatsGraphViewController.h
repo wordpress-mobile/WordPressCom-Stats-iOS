@@ -12,6 +12,7 @@
 @property (nonatomic, assign) BOOL allowDeselection; // defaults to YES
 
 - (void)selectGraphBarWithDate:(NSDate *)selectedDate;
+- (void)doneSettingProperties;
 
 @end
 
