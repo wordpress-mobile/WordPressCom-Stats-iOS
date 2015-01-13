@@ -398,8 +398,6 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
                                                          toDate:now
                                                         options:0];
     
-    NSLog(@"Date: %@ Components: %@", date, dateComponents);
-    
     if (dateComponents.day >= 548) {
         return [NSString stringWithFormat:NSLocalizedString(@"%d years", @"Age between dates over one year."), niceDateComponents.year];
     } else if (dateComponents.day >= 345) {
