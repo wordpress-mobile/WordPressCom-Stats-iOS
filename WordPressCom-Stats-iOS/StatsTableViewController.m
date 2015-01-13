@@ -805,7 +805,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     self.graphViewController.currentSummaryType = self.selectedSummaryType;
     self.graphViewController.visits = visits;
-    self.graphViewController.currentUnit = self.selectedPeriodUnit;
     [self.graphViewController.collectionView reloadData];
     [self.graphViewController selectGraphBarWithDate:self.selectedDate];
 }

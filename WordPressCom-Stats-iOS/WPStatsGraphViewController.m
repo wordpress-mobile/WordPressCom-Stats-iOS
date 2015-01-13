@@ -35,7 +35,6 @@ static NSInteger const RecommendedYAxisTicks = 7;
         _numberOfYValues = 7;
         _maximumY = 0;
         _allowDeselection = YES;
-        _currentUnit = StatsPeriodUnitDay;
         _currentSummaryType = StatsSummaryTypeViews;
     }
     return self;
