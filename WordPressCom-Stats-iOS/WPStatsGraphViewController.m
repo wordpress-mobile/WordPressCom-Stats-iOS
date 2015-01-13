@@ -244,16 +244,16 @@ static NSInteger const RecommendedYAxisTicks = 7;
     NSNumber *value = nil;
     switch (self.currentSummaryType) {
         case StatsSummaryTypeViews:
-            value = @([summary.views integerValue]);
+            value = @([summary.viewsValue integerValue]);
             break;
         case StatsSummaryTypeVisitors:
-            value = @([summary.visitors integerValue]);
+            value = @([summary.visitorsValue integerValue]);
             break;
         case StatsSummaryTypeComments:
-            value = @([summary.comments integerValue]);
+            value = @([summary.commentsValue integerValue]);
             break;
         case StatsSummaryTypeLikes:
-            value = @([summary.likes integerValue]);
+            value = @([summary.likesValue integerValue]);
             break;
     }
 
