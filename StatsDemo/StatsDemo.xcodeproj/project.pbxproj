@@ -174,7 +174,7 @@
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
 					93B682D0194F95AD00EBF6DF = {
-						DevelopmentTeam = PZYM8XX95Q;
+						DevelopmentTeam = 99KV9Z6BKV;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -375,7 +375,7 @@
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8ca65172-dee4-4364-b45d-021d477411de";
+				PROVISIONING_PROFILE = "2361fd60-d77d-49b1-a831-6246e8d2d404";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
