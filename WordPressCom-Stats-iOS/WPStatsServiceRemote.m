@@ -123,12 +123,17 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
         DDLogVerbose(@"Finished remote operations %@ of %@", @(numberOfFinishedOperations), @(totalNumberOfOperations));
     } completionBlock:^(NSArray *operations) {
-        if (completionHandler) {
+        BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+        if (!zeroOperationsCancelled) {
+            DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
+        }
+        
+        if (completionHandler && zeroOperationsCancelled) {
             completionHandler();
         }
     }];
     
-    [[NSOperationQueue mainQueue] addOperations:operations waitUntilFinished:NO];
+    [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
 }
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
@@ -1191,6 +1196,17 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     
     return nil;
+}
+
+
+- (void)cancelAllRemoteOperations
+{
+    if (self.manager.operationQueue.operationCount == 0) {
+        return;
+    }
+    
+    DDLogVerbose(@"Canceling %@ operations...", @(self.manager.operationQueue.operationCount));
+    [self.manager.operationQueue cancelAllOperations];
 }
 
 

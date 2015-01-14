@@ -61,8 +61,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 @property (nonatomic, strong) NSMutableDictionary *selectedSubsections;
 @property (nonatomic, strong) NSDate *selectedDate;
 
-@property (assign, getter=isSyncing) BOOL syncing;
-
 @end
 
 @implementation StatsTableViewController
@@ -227,10 +225,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     if (statsSection == StatsSectionGraph && indexPath.row > 0) {
-        if (self.isSyncing) {
-            return nil;
-        }
-        
         for (NSIndexPath *selectedIndexPath in [tableView indexPathsForSelectedRows]) {
             [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
         }
@@ -327,12 +321,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 #pragma mark - WPStatsGraphViewControllerDelegate methods
 
-- (BOOL)statsGraphViewController:(WPStatsGraphViewController *)controller shouldSelectDate:(NSDate *)date
-{
-    // Don't allow selection if syncing
-    return !self.isSyncing;
-}
-
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
@@ -358,6 +346,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 #pragma mark - Stats retrieval methods
 
+
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
     self.selectedDate = [NSDate date];
@@ -365,15 +354,10 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self retrieveStatsSkipGraph:NO];
 }
 
+
 - (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
 {
     StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
-    
-    if (self.isSyncing) {
-        control.selectedSegmentIndex = self.selectedPeriodUnit;
-        return;
-    }
-    
     self.selectedPeriodUnit = unit;
     self.selectedDate = [NSDate date];
     [self.sectionData removeAllObjects];
@@ -426,12 +410,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
-    if (self.syncing) {
-        DDLogWarn(@"Already syncing! Skipped retrieveStatsSkipGraph message.");
-        return;
-    }
-    
-    self.syncing = YES;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
@@ -620,7 +598,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
      }
                     andOverallCompletionHandler:^
      {
-         self.syncing = NO;
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
          [self.refreshControl endRefreshing];
      }];
