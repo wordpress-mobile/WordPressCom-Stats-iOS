@@ -276,9 +276,13 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
         statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
         statsSummary.views = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"views"]];
+        statsSummary.viewsValue = [statsSummaryDict numberForKey:@"views"];
         statsSummary.visitors = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"visitors"]];
+        statsSummary.visitorsValue = [statsSummaryDict numberForKey:@"visitors"];
         statsSummary.likes = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"likes"]];
+        statsSummary.likesValue = [statsSummaryDict numberForKey:@"likes"];
         statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
+        statsSummary.commentsValue = [statsSummaryDict numberForKey:@"comments"];
         
         if (completionHandler) {
             completionHandler(statsSummary, nil);
@@ -324,9 +328,13 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             periodSummary.date = [self deviceLocalDateForString:period[periodIndex] withPeriodUnit:unit];
             periodSummary.label = [self nicePointNameForDate:periodSummary.date forStatsPeriodUnit:periodSummary.periodUnit];
             periodSummary.views = [self localizedStringForNumber:period[viewsIndex]];
+            periodSummary.viewsValue = period[viewsIndex];
             periodSummary.visitors = [self localizedStringForNumber:period[visitorsIndex]];
+            periodSummary.visitorsValue = period[visitorsIndex];
             periodSummary.likes = [self localizedStringForNumber:period[likesIndex]];
+            periodSummary.likesValue = period[likesIndex];
             periodSummary.comments = [self localizedStringForNumber:period[commentsIndex]];
+            periodSummary.commentsValue = period[commentsIndex];
             [array addObject:periodSummary];
             dictionary[periodSummary.date] = periodSummary;
         }
@@ -340,7 +348,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
+    NSNumber *quantity = IS_IPAD ? @12 : @5;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self siteLocalStringForDate:date]};

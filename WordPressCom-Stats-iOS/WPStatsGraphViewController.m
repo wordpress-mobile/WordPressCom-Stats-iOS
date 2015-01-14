@@ -35,7 +35,6 @@ static NSInteger const RecommendedYAxisTicks = 7;
         _numberOfYValues = 7;
         _maximumY = 0;
         _allowDeselection = YES;
-        _currentUnit = StatsPeriodUnitDay;
         _currentSummaryType = StatsSummaryTypeViews;
     }
     return self;
@@ -184,17 +183,8 @@ static NSInteger const RecommendedYAxisTicks = 7;
     }
 }
 
-#pragma mark - Property methods
-
-- (void)setVisits:(StatsVisits *)visits
+- (void)doneSettingProperties
 {
-    _visits = visits;
-    [self calculateMaximumYValue];
-}
-
-- (void)setCurrentUnit:(StatsPeriodUnit)currentUnit
-{
-    _currentUnit = currentUnit;
     [self calculateMaximumYValue];
 }
 
@@ -245,16 +235,16 @@ static NSInteger const RecommendedYAxisTicks = 7;
     NSNumber *value = nil;
     switch (self.currentSummaryType) {
         case StatsSummaryTypeViews:
-            value = @([summary.views integerValue]);
+            value = @([summary.viewsValue integerValue]);
             break;
         case StatsSummaryTypeVisitors:
-            value = @([summary.visitors integerValue]);
+            value = @([summary.visitorsValue integerValue]);
             break;
         case StatsSummaryTypeComments:
-            value = @([summary.comments integerValue]);
+            value = @([summary.commentsValue integerValue]);
             break;
         case StatsSummaryTypeLikes:
-            value = @([summary.likes integerValue]);
+            value = @([summary.likesValue integerValue]);
             break;
     }
 
