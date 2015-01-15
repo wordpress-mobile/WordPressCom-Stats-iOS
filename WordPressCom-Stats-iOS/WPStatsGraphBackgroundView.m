@@ -34,10 +34,10 @@ static CGFloat const AxisPadding = 18.0f;
     CGFloat xAxisStepWidth = 0;
     NSUInteger maxXAxisPointCount = 0; // # points along the x axis
     
-    CGFloat xAxisStartPoint = AxisPadding * 2;
-    CGFloat xAxisWidth = rect.size.width - 10.0;
-    CGFloat yAxisStartPoint = 0.0f;
-    CGFloat yAxisHeight = rect.size.height - AxisPadding - yAxisStartPoint;
+    CGFloat xAxisStartPoint = 0;
+    CGFloat xAxisWidth = CGRectGetWidth(rect) - 10.0;
+    CGFloat yAxisStartPoint = 20.0f;
+    CGFloat yAxisHeight = CGRectGetHeight(rect) - AxisPadding - yAxisStartPoint;
 
     xAxisStepWidth = (CGRectGetWidth(self.frame) - 3 * AxisPadding) / self.numberOfXValues;
 
@@ -66,14 +66,14 @@ static CGFloat const AxisPadding = 18.0f;
     }
     CGFloat yAxisStepSize = yAxisHeight/yAxisTicks;
     
-    for (NSUInteger tick = 0; tick < yAxisTicks; tick++) {
-        CGFloat linePosition = yAxisStartPoint+yAxisHeight-(yAxisStepSize*tick)-0.5f;
+    for (NSUInteger tick = 0; tick <= yAxisTicks; tick++) {
+        CGFloat linePosition = yAxisStartPoint + yAxisHeight - (yAxisStepSize * tick) - 2.0f;
         CGContextMoveToPoint(context, xAxisStartPoint, linePosition);
-        CGContextAddLineToPoint(context, xAxisStartPoint+xAxisWidth-2*AxisPadding, linePosition);
+        CGContextAddLineToPoint(context, xAxisStartPoint + xAxisWidth - AxisPadding, linePosition);
         CGContextStrokePath(context);
         
-        UILabel *yIncrement = [self axisLabelWithText:[@(stepValue*tick) stringValue]];
-        yIncrement.center = CGPointMake(xAxisStartPoint-CGRectGetMidX(yIncrement.frame)-6.0f, linePosition);
+        UILabel *yIncrement = [self axisLabelWithText:[NSString stringWithFormat:@" %@", @(stepValue*tick)]];
+        yIncrement.center = CGPointMake(CGRectGetWidth(rect) - CGRectGetMidX(yIncrement.frame) - 6.0f, linePosition);
         [self addSubview:yIncrement];
     }
 }

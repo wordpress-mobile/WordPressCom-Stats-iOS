@@ -22,7 +22,7 @@ static NSString *const CategoryBarCell = @"CategoryBarCell";
 static NSString *const LegendView = @"LegendView";
 static NSString *const FooterView = @"FooterView";
 static NSString *const GraphBackgroundView = @"GraphBackgroundView";
-static NSInteger const RecommendedYAxisTicks = 7;
+static NSInteger const RecommendedYAxisTicks = 2;
 
 @implementation WPStatsGraphViewController
 
@@ -32,7 +32,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
         _flowLayout = layout;
-        _numberOfYValues = 7;
+        _numberOfYValues = 2;
         _maximumY = 0;
         _allowDeselection = YES;
         _currentSummaryType = StatsSummaryTypeViews;
@@ -51,7 +51,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;
-    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 40.0f, 0.0f, 15.0f);
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 15.0f, 0.0f, 40.0f);
     
     [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
@@ -212,7 +212,7 @@ static NSInteger const RecommendedYAxisTicks = 7;
         stepValue = ceil(s / div) * div;
 
         // Adjust yAxisTicks to accomodate ticks and maximum without too much padding
-        yAxisTicks = ceil( maximumY / stepValue ) + 1;
+        yAxisTicks = ceil( maximumY / stepValue );
         self.maximumY = stepValue * yAxisTicks;
         self.numberOfYValues = yAxisTicks;
     }
