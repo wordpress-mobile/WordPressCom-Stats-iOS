@@ -1121,10 +1121,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     switch (unit) {
         case StatsPeriodUnitDay:
-            dateFormatter.dateFormat = @"LLL dd";
+            dateFormatter.dateFormat = @"LLL d";
             break;
         case StatsPeriodUnitWeek:
-            dateFormatter.dateFormat = @"LLL dd";
+            dateFormatter.dateFormat = @"LLL d";
             break;
         case StatsPeriodUnitMonth:
             dateFormatter.dateFormat = @"LLL";
