@@ -47,6 +47,7 @@
 		9396CFC41921096B006A66D7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFC31921096B006A66D7 /* UIKit.framework */; };
 		9396CFC71921096B006A66D7 /* libWordPressCom-Stats-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFAF1921096A006A66D7 /* libWordPressCom-Stats-iOS.a */; };
 		9396CFCD1921096B006A66D7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9396CFCB1921096B006A66D7 /* InfoPlist.strings */; };
+		939A830A1A6703E00041B68A /* WPStatsContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 939A83091A6703E00041B68A /* WPStatsContainerViewController.m */; };
 		93A379DE19FEA9E400415023 /* StatsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379DD19FEA9E400415023 /* StatsItem.m */; };
 		93A379E119FEAB1C00415023 /* StatsItemAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E019FEAB1C00415023 /* StatsItemAction.m */; };
 		93A379E419FEAB8100415023 /* StatsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A379E319FEAB8100415023 /* StatsGroup.m */; };
@@ -139,6 +140,8 @@
 		9396CFC31921096B006A66D7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		9396CFCA1921096B006A66D7 /* WordPressCom-Stats-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WordPressCom-Stats-iOSTests-Info.plist"; sourceTree = "<group>"; };
 		9396CFCC1921096B006A66D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		939A83081A6703E00041B68A /* WPStatsContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsContainerViewController.h; sourceTree = "<group>"; };
+		939A83091A6703E00041B68A /* WPStatsContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsContainerViewController.m; sourceTree = "<group>"; };
 		93A379DC19FEA9E400415023 /* StatsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItem.h; sourceTree = "<group>"; };
 		93A379DD19FEA9E400415023 /* StatsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItem.m; sourceTree = "<group>"; };
 		93A379DF19FEAB1C00415023 /* StatsItemAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItemAction.h; sourceTree = "<group>"; };
@@ -322,6 +325,8 @@
 				9326EC001A60765B00FA4DAB /* WPStatsViewController.m */,
 				936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */,
 				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
+				939A83081A6703E00041B68A /* WPStatsContainerViewController.h */,
+				939A83091A6703E00041B68A /* WPStatsContainerViewController.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -544,6 +549,7 @@
 				9309B530192BF02F00B69F69 /* WordPressStats.m in Sources */,
 				936B2254195CB2FE0058C828 /* WPStyleGuide+Stats.m in Sources */,
 				936B224E195AFD380058C828 /* WPStatsGraphLegendView.m in Sources */,
+				939A830A1A6703E00041B68A /* WPStatsContainerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
