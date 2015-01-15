@@ -10,6 +10,16 @@
 
 @implementation WPStatsContainerViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.periodSegmentControl setTitle:NSLocalizedString(@"Days", @"") forSegmentAtIndex:0];
+    [self.periodSegmentControl setTitle:NSLocalizedString(@"Weeks", @"") forSegmentAtIndex:1];
+    [self.periodSegmentControl setTitle:NSLocalizedString(@"Months", @"") forSegmentAtIndex:2];
+    [self.periodSegmentControl setTitle:NSLocalizedString(@"Years", @"") forSegmentAtIndex:3];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     [super prepareForSegue:segue sender:sender];
