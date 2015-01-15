@@ -11,6 +11,10 @@
 #import "DDTTYLogger.h"
 #import "DDASLLogger.h"
 #import <HockeySDK/HockeySDK.h>
+#import <WPStyleGuide.h>
+#import <WPFontManager.h>
+#import <UIImage+Util.h>
+#import <UIColor+Helpers.h>
 
 int ddLogLevel = LOG_LEVEL_VERBOSE;
 
@@ -19,6 +23,39 @@ int ddLogLevel = LOG_LEVEL_VERBOSE;
 @end
 
 @implementation WPSAppDelegate
+
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    // Copied the WPiOS styling setup
+    self.window.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    self.window.tintColor = [WPStyleGuide wordPressBlue];
+    
+    [[UINavigationBar appearance] setBarTintColor:[WPStyleGuide wordPressBlue]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    [[UITabBar appearance] setShadowImage:[UIImage imageWithColor:[UIColor colorWithRed:210.0/255.0 green:222.0/255.0 blue:230.0/255.0 alpha:1.0]]];
+    [[UITabBar appearance] setTintColor:[WPStyleGuide newKidOnTheBlockBlue]];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor], NSFontAttributeName: [WPFontManager openSansBoldFontOfSize:16.0]} ];
+    
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageWithColor:[WPStyleGuide wordPressBlue]] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setShadowImage:[UIImage imageWithColor:[UIColor UIColorFromHex:0x007eb1]]];
+    
+    [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName: [WPStyleGuide regularTextFont], NSForegroundColorAttributeName: [UIColor whiteColor]} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName: [WPStyleGuide regularTextFont], NSForegroundColorAttributeName: [UIColor colorWithWhite:1.0 alpha:0.25]} forState:UIControlStateDisabled];
+    
+    [[UIToolbar appearance] setBarTintColor:[WPStyleGuide wordPressBlue]];
+    [[UISwitch appearance] setOnTintColor:[WPStyleGuide wordPressBlue]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName: [WPFontManager openSansRegularFontOfSize:10.0]} forState:UIControlStateNormal];
+    
+    [[UINavigationBar appearanceWhenContainedIn:[UIReferenceLibraryViewController class], nil] setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearanceWhenContainedIn:[UIReferenceLibraryViewController class], nil] setBarTintColor:[WPStyleGuide wordPressBlue]];
+    [[UIToolbar appearanceWhenContainedIn:[UIReferenceLibraryViewController class], nil] setBarTintColor:[UIColor darkGrayColor]];
+    
+    return YES;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
