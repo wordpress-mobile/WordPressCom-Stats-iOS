@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, StatsSubSection) {
     StatsSubSectionFollowersEmail
 };
 
-static CGFloat const StatsTableGraphHeight = 175.0f;
+static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
 static CGFloat const StatsTableSelectableCellHeight = 35.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;

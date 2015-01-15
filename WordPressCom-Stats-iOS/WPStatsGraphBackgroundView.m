@@ -37,7 +37,7 @@ static CGFloat const AxisPadding = 18.0f;
     CGFloat xAxisStartPoint = 0;
     CGFloat xAxisWidth = CGRectGetWidth(rect) - 10.0;
     CGFloat yAxisStartPoint = 20.0f;
-    CGFloat yAxisHeight = CGRectGetHeight(rect) - AxisPadding - yAxisStartPoint;
+    CGFloat yAxisHeight = CGRectGetHeight(rect) - AxisPadding - yAxisStartPoint - 10.0;
 
     xAxisStepWidth = (CGRectGetWidth(self.frame) - 3 * AxisPadding) / self.numberOfXValues;
 
