@@ -68,6 +68,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
+    
     // Force load fonts from bundle
     [WPFontManager openSansBoldFontOfSize:1.0f];
     [WPFontManager openSansRegularFontOfSize:1.0f];
@@ -76,8 +78,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
     
-    self.sections =     @[ @(StatsSectionPeriodSelector),
-                           @(StatsSectionGraph),
+    self.sections =     @[ @(StatsSectionGraph),
                            @(StatsSectionEvents),
                            @(StatsSectionPosts),
                            @(StatsSectionReferrers),

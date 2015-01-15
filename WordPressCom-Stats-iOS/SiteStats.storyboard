@@ -23,12 +23,12 @@
         </mutableArray>
     </customFonts>
     <scenes>
-        <!--Stats View Controller-->
+        <!--Stats TableView Controller-->
         <scene sceneID="1Ph-TU-kpl">
             <objects>
-                <tableViewController storyboardIdentifier="StatsTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Tay-X0-ceG" userLabel="Stats View Controller" customClass="StatsTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="StatsTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Tay-X0-ceG" userLabel="Stats TableView Controller" customClass="StatsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UJ3-1G-p8v">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="492"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
@@ -284,11 +284,65 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Stats" id="nMk-Tg-nmQ"/>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7L-pU-m4M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1920" y="102"/>
+            <point key="canvasLocation" x="2468" y="103"/>
+        </scene>
+        <!--Stats Container View Controller-->
+        <scene sceneID="VEy-zh-BAL">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="qzH-Vg-Gi3" customClass="WPStatsContainerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="IUN-av-KWH"/>
+                        <viewControllerLayoutGuide type="bottom" id="eay-2f-Ldo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yO0-Lr-iKb">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ENG-tq-nCx">
+                                <rect key="frame" x="0.0" y="108" width="600" height="492"/>
+                                <connections>
+                                    <segue destination="Tay-X0-ceG" kind="embed" id="n4F-Fg-DNs"/>
+                                </connections>
+                            </containerView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ysq-ij-dbS">
+                                <rect key="frame" x="16" y="72" width="568" height="29"/>
+                                <segments>
+                                    <segment title="Days"/>
+                                    <segment title="Weeks"/>
+                                    <segment title="Months"/>
+                                    <segment title="Years"/>
+                                </segments>
+                                <connections>
+                                    <action selector="periodUnitControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="hOE-hN-hw1"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ENG-tq-nCx" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="9Zh-6H-jIN"/>
+                            <constraint firstItem="ysq-ij-dbS" firstAttribute="top" secondItem="IUN-av-KWH" secondAttribute="bottom" constant="8" id="Baf-6r-wmp"/>
+                            <constraint firstItem="ysq-ij-dbS" firstAttribute="trailing" secondItem="yO0-Lr-iKb" secondAttribute="trailingMargin" id="IqO-Bi-pb0"/>
+                            <constraint firstAttribute="trailing" secondItem="ENG-tq-nCx" secondAttribute="trailing" id="RNR-wQ-XR1"/>
+                            <constraint firstAttribute="centerX" secondItem="ysq-ij-dbS" secondAttribute="centerX" id="ZcA-XO-INA"/>
+                            <constraint firstItem="ENG-tq-nCx" firstAttribute="top" secondItem="ysq-ij-dbS" secondAttribute="bottom" constant="8" id="cJs-j1-1ro"/>
+                            <constraint firstItem="ysq-ij-dbS" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leadingMargin" id="elG-AZ-S2o"/>
+                            <constraint firstItem="eay-2f-Ldo" firstAttribute="top" secondItem="ENG-tq-nCx" secondAttribute="bottom" id="ofD-Eh-mwY"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="DF4-gA-Ade"/>
+                    <connections>
+                        <outlet property="periodSegmentControl" destination="ysq-ij-dbS" id="1DH-gj-zgx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fb0-xY-90L" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1669" y="98"/>
         </scene>
         <!--Stats View Controller-->
         <scene sceneID="2Kt-k2-d36">
@@ -299,7 +353,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="Tay-X0-ceG" kind="relationship" relationship="rootViewController" id="Swx-6I-gbM"/>
+                        <segue destination="qzH-Vg-Gi3" kind="relationship" relationship="rootViewController" id="5eg-83-thV"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n9b-NU-cCU" userLabel="First Responder" sceneMemberID="firstResponder"/>
