@@ -222,7 +222,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
 {
-    return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
+    return @[@{ @"color" : [WPStyleGuide wordPressBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
                 @"name" : @"views"
