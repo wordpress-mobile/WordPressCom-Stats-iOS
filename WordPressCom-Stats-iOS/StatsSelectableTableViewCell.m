@@ -38,7 +38,7 @@
     if (selected) {
         self.valueLabel.textColor = [WPStyleGuide jazzyOrange];
     } else {
-        self.valueLabel.textColor = [UIColor blackColor];
+        self.valueLabel.textColor = [WPStyleGuide littleEddieGrey];
     }
 }
 
