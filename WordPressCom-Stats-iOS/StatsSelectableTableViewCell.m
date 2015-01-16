@@ -1,6 +1,7 @@
 #import "StatsSelectableTableViewCell.h"
 #import <UIImage+Util.h>
 #import <WPStyleGuide.h>
+#import "WPStyleGuide+Stats.h"
 
 @implementation StatsSelectableTableViewCell
 
@@ -11,7 +12,7 @@
     self.selectedBackgroundView = selectedBackgroundView;
     
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-    backgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    backgroundView.backgroundColor = [WPStyleGuide statsUltraLightGray];
     self.backgroundView = backgroundView;
     
     // Remove seperator inset

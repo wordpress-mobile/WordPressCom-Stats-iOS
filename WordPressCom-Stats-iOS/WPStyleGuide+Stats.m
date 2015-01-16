@@ -22,6 +22,11 @@
     return [self jazzyOrange];
 }
 
++ (UIColor *)statsUltraLightGray
+{
+    return [UIColor colorWithRed:0.957 green:0.973 blue:0.98 alpha:1]; /*#f4f8fa*/
+}
+
 + (UIFont *)subtitleFontBoldItalic
 {
     return [WPFontManager openSansBoldItalicFontOfSize:12.0];

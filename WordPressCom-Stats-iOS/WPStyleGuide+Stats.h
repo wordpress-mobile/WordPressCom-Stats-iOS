@@ -7,6 +7,7 @@
 + (UIColor *)statsLighterOrangeTransparent;
 + (UIColor *)statsLighterOrange;
 + (UIColor *)statsDarkerOrange;
++ (UIColor *)statsUltraLightGray;
 
 + (UIFont *)subtitleFontBoldItalic;
 
