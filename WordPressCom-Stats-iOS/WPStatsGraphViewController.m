@@ -51,7 +51,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;
-    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 15.0f, 0.0f, 40.0f);
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 15.0f, 10.0f, 40.0f);
     
     [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
@@ -222,7 +222,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
 {
-    return @[@{ @"color" : [WPStyleGuide textFieldPlaceholderGrey],
+    return @[@{ @"color" : [WPStyleGuide wordPressBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
                 @"name" : @"views"

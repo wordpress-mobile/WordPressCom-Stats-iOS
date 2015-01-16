@@ -353,7 +353,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @5;
+    NSNumber *quantity = IS_IPAD ? @9 : @5;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self siteLocalStringForDate:date]};
@@ -1121,10 +1121,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     switch (unit) {
         case StatsPeriodUnitDay:
-            dateFormatter.dateFormat = @"LLL dd";
+            dateFormatter.dateFormat = @"LLL d";
             break;
         case StatsPeriodUnitWeek:
-            dateFormatter.dateFormat = @"LLL dd";
+            dateFormatter.dateFormat = @"LLL d";
             break;
         case StatsPeriodUnitMonth:
             dateFormatter.dateFormat = @"LLL";

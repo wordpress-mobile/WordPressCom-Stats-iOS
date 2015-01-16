@@ -108,7 +108,7 @@
     UILabel *label = [[UILabel alloc] init];
     label.text = text;
     label.font = [WPStyleGuide axisLabelFont];
-    label.textColor = [WPStyleGuide littleEddieGrey];
+    label.textColor = [WPStyleGuide wordPressBlue];
     label.backgroundColor = [UIColor clearColor];
     label.opaque = YES;
     [label sizeToFit];
