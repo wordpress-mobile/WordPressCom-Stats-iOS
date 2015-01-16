@@ -802,7 +802,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 1: // Views
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Views", @"");
+            textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.views;
             break;
         }
@@ -810,7 +810,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 2: // Visitors
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Visitors", @"");
+            textLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.visitors;
             break;
         }
@@ -818,7 +818,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 3: // Likes
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Likes", @"");
+            textLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.likes;
             break;
         }
@@ -826,7 +826,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 4: // Comments
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Comments", @"");
+            textLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.comments;
             break;
         }
