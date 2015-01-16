@@ -34,7 +34,11 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
+    if (selected) {
+        self.valueLabel.textColor = [WPStyleGuide jazzyOrange];
+    } else {
+        self.valueLabel.textColor = [UIColor blackColor];
+    }
 }
 
 @end
