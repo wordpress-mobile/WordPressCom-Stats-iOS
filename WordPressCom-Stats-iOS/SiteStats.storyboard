@@ -27,39 +27,14 @@
         <scene sceneID="1Ph-TU-kpl">
             <objects>
                 <tableViewController storyboardIdentifier="StatsTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Tay-X0-ceG" userLabel="Stats TableView Controller" customClass="StatsTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UJ3-1G-p8v">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UJ3-1G-p8v">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="492"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90980392156862744" green="0.94117647058823528" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" red="0.90980392156862744" green="0.94117647058823528" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodSelector" id="y6t-fT-X57" userLabel="PeriodSelector">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="y6t-fT-X57" id="xOE-3o-GEM">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <segmentedControl opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wxx-2G-3HH">
-                                            <rect key="frame" x="15" y="8" width="570" height="29"/>
-                                            <segments>
-                                                <segment title="Days"/>
-                                                <segment title="Weeks"/>
-                                                <segment title="Months"/>
-                                                <segment title="Years"/>
-                                            </segments>
-                                            <connections>
-                                                <action selector="periodUnitControlDidChange:" destination="Tay-X0-ceG" eventType="valueChanged" id="o13-S3-E1c"/>
-                                            </connections>
-                                        </segmentedControl>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="Wxx-2G-3HH" firstAttribute="leading" secondItem="xOE-3o-GEM" secondAttribute="leadingMargin" constant="7" id="GbI-5r-G8O"/>
-                                        <constraint firstAttribute="centerX" secondItem="Wxx-2G-3HH" secondAttribute="centerX" id="SLE-lT-8WB"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Wxx-2G-3HH" secondAttribute="trailing" constant="7" id="YEJ-mp-7Cl"/>
-                                        <constraint firstAttribute="centerY" secondItem="Wxx-2G-3HH" secondAttribute="centerY" id="hnS-Rv-3Ln"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" id="Ex4-nH-VUK">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" id="Ex4-nH-VUK" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ex4-nH-VUK" id="aL3-p0-bNa">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -73,7 +48,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="vr8-L0-G3G" userLabel="GroupSelector">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="vr8-L0-G3G" userLabel="GroupSelector" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vr8-L0-G3G" id="0qW-oh-xTV">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -95,7 +70,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TwoColumnHeader" id="zkK-fE-70Y">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TwoColumnHeader" id="zkK-fE-70Y" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zkK-fE-70Y" id="OP0-Uc-wLW">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -169,7 +144,7 @@
                                     <outlet property="valueLabel" destination="xSH-fQ-AtQ" id="VCq-qK-HKI"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="fhY-TT-0EH" userLabel="TwoColumnRow">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="fhY-TT-0EH" userLabel="TwoColumnRow" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fhY-TT-0EH" id="Dnr-8L-jIZ">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -211,7 +186,7 @@
                                     </variation>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="xct-fr-svw" userLabel="MoreRow">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="xct-fr-svw" userLabel="MoreRow" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xct-fr-svw" id="9ex-YE-WVE">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -230,7 +205,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="NuU-bX-mTY" userLabel="GroupTotalsRow">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="NuU-bX-mTY" userLabel="GroupTotalsRow" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NuU-bX-mTY" id="vYe-7i-oUA">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -249,19 +224,19 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GraphRow" rowHeight="185" id="SNT-we-G8r" userLabel="GraphRow" customClass="StatsSelectableTableViewCell">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GraphRow" rowHeight="185" id="SNT-we-G8r" userLabel="GraphRow" customClass="StatsSelectableTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SNT-we-G8r" id="8Ri-ji-AJb">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="DDa-Lh-zDs" userLabel="NoResultsRow">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="DDa-Lh-zDs" userLabel="NoResultsRow" customClass="WPTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DDa-Lh-zDs" id="0Bj-bw-PZy">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This means no data is present." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kg0-Ed-1Km">
-                                            <rect key="frame" x="15" y="15" width="570" height="69"/>
+                                            <rect key="frame" x="15" y="15" width="570" height="70"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>

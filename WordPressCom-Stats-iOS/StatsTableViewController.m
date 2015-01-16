@@ -7,9 +7,9 @@
 #import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
+#import "StatsTableSectionHeaderView.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
-    StatsSectionPeriodSelector,
     StatsSectionGraph,
     StatsSectionEvents,
     StatsSectionPosts,
@@ -36,7 +36,6 @@ static NSInteger const StatsTableRowDataOffsetStandard = 2;
 static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
-static NSString *const StatsTablePeriodSelectorCellIdentifier = @"PeriodSelector";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
 static NSString *const StatsTableGroupTotalsCellIdentifier = @"GroupTotalsRow";
@@ -46,6 +45,7 @@ static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow
 static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
+static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
@@ -69,6 +69,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
     // Force load fonts from bundle
     [WPFontManager openSansBoldFontOfSize:1.0f];
@@ -144,8 +145,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
-        case StatsSectionPeriodSelector:
-            return 1;
         case StatsSectionGraph: {
             return 5;
         }
@@ -204,6 +203,21 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 
 #pragma mark - UITableViewDelegate methods
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    
+    return headerView;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -611,9 +625,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     switch (statsSection) {
-        case StatsSectionPeriodSelector:
-            identifier = StatsTablePeriodSelectorCellIdentifier;
-            break;
         case StatsSectionGraph: {
             switch (indexPath.row) {
                 case 0:
@@ -774,7 +785,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
         [graphView removeFromSuperview];
-        graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
+        graphView.frame = CGRectMake(8.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds) - 16.0f, StatsTableGraphHeight - 1.0);
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
     }
@@ -1130,7 +1141,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     if ( statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
         StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
         data = self.sectionData[@(statsSection)][@(selectedSubsection)];
-    } else if (statsSection != StatsSectionPeriodSelector) {
+    } else {
         data = self.sectionData[@(statsSection)];
     }
     

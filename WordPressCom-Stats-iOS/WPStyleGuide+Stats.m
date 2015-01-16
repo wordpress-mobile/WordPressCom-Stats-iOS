@@ -1,6 +1,9 @@
 #import "WPStyleGuide+Stats.h"
 #import <WPFontManager.h>
 
+const CGFloat RPTVCHorizontalOuterPadding = 8.0f;
+const CGFloat RPTVCVerticalOuterPadding = 16.0f;
+
 @implementation WPStyleGuide (Stats)
 
 + (UIFont *)axisLabelFont {

@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
+#import <WPTableViewCell.h>
 
-@interface StatsSelectableTableViewCell : UITableViewCell
+@interface StatsSelectableTableViewCell : WPTableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *valueLabel;
 
