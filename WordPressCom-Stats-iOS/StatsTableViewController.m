@@ -68,6 +68,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [super viewDidLoad];
 
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
+    self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     
     // Force load fonts from bundle
     [WPFontManager openSansBoldFontOfSize:1.0f];
