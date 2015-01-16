@@ -292,7 +292,7 @@
             </objects>
             <point key="canvasLocation" x="2468" y="103"/>
         </scene>
-        <!--Stats Container View Controller-->
+        <!--Stats-->
         <scene sceneID="VEy-zh-BAL">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="qzH-Vg-Gi3" customClass="WPStatsContainerViewController" sceneMemberID="viewController">
@@ -335,7 +335,7 @@
                             <constraint firstItem="eay-2f-Ldo" firstAttribute="top" secondItem="ENG-tq-nCx" secondAttribute="bottom" id="ofD-Eh-mwY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="DF4-gA-Ade"/>
+                    <navigationItem key="navigationItem" title="Stats" id="DF4-gA-Ade"/>
                     <connections>
                         <outlet property="periodSegmentControl" destination="ysq-ij-dbS" id="1DH-gj-zgx"/>
                     </connections>
