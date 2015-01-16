@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, StatsSubSection) {
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
-static CGFloat const StatsTableSelectableCellHeight = 35.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;
 static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
@@ -213,8 +212,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         return StatsTableGraphHeight;
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         return StatsTableNoResultsHeight;
-    } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
-        return StatsTableSelectableCellHeight;
     }
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
