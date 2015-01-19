@@ -1,6 +1,9 @@
 #import "WPStyleGuide+Stats.h"
 #import <WPFontManager.h>
 
+const CGFloat RPTVCHorizontalOuterPadding = 8.0f;
+const CGFloat RPTVCVerticalOuterPadding = 16.0f;
+
 @implementation WPStyleGuide (Stats)
 
 + (UIFont *)axisLabelFont {
@@ -20,6 +23,16 @@
 + (UIColor *)statsDarkerOrange
 {
     return [self jazzyOrange];
+}
+
++ (UIColor *)statsLightGray
+{
+    return [UIColor colorWithRed:0.91 green:0.941 blue:0.961 alpha:1]; /*#e8f0f5*/
+}
+
++ (UIColor *)statsUltraLightGray
+{
+    return [UIColor colorWithRed:0.957 green:0.973 blue:0.98 alpha:1]; /*#f4f8fa*/
 }
 
 + (UIFont *)subtitleFontBoldItalic

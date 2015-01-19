@@ -7,9 +7,9 @@
 #import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
+#import "StatsTableSectionHeaderView.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
-    StatsSectionPeriodSelector,
     StatsSectionGraph,
     StatsSectionEvents,
     StatsSectionPosts,
@@ -32,12 +32,10 @@ typedef NS_ENUM(NSInteger, StatsSubSection) {
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
-static CGFloat const StatsTableSelectableCellHeight = 35.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;
 static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
-static NSString *const StatsTablePeriodSelectorCellIdentifier = @"PeriodSelector";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
 static NSString *const StatsTableGroupTotalsCellIdentifier = @"GroupTotalsRow";
@@ -47,6 +45,7 @@ static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow
 static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
+static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
@@ -69,6 +68,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [super viewDidLoad];
 
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
+    self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
     // Force load fonts from bundle
     [WPFontManager openSansBoldFontOfSize:1.0f];
@@ -144,8 +145,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
-        case StatsSectionPeriodSelector:
-            return 1;
         case StatsSectionGraph: {
             return 5;
         }
@@ -205,6 +204,33 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 #pragma mark - UITableViewDelegate methods
 
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    
+    return headerView;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    footerView.footer = YES;
+    
+    return footerView;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 10.0f;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
@@ -213,8 +239,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         return StatsTableGraphHeight;
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         return StatsTableNoResultsHeight;
-    } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
-        return StatsTableSelectableCellHeight;
     }
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
@@ -613,9 +637,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     switch (statsSection) {
-        case StatsSectionPeriodSelector:
-            identifier = StatsTablePeriodSelectorCellIdentifier;
-            break;
         case StatsSectionGraph: {
             switch (indexPath.row) {
                 case 0:
@@ -776,7 +797,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
         [graphView removeFromSuperview];
-        graphView.frame = CGRectMake(0.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds), StatsTableGraphHeight);
+        graphView.frame = CGRectMake(8.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds) - 16.0f, StatsTableGraphHeight - 1.0);
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
     }
@@ -802,7 +823,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 1: // Views
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Views", @"");
+            textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.views;
             break;
         }
@@ -810,7 +831,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 2: // Visitors
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Visitors", @"");
+            textLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.visitors;
             break;
         }
@@ -818,7 +839,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 3: // Likes
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Likes", @"");
+            textLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.likes;
             break;
         }
@@ -826,7 +847,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 4: // Comments
         {
             iconLabel.text = @"";
-            textLabel.text = NSLocalizedString(@"Comments", @"");
+            textLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             valueLabel.text = summary.comments;
             break;
         }
@@ -1132,7 +1153,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     if ( statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
         StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
         data = self.sectionData[@(statsSection)][@(selectedSubsection)];
-    } else if (statsSection != StatsSectionPeriodSelector) {
+    } else {
         data = self.sectionData[@(statsSection)];
     }
     
