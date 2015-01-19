@@ -7,6 +7,10 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andSelected:(BOOL)selected;
 
+@property (nonatomic, strong) UIView *theBoxView;
+@property (nonatomic, strong) UIView *contentBackgroundView;
+@property (nonatomic, strong) UIView *dividerView;
+
 @end
 
 @implementation StatsBorderedCellBackgroundView
@@ -16,54 +20,34 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [WPStyleGuide itsEverywhereGrey];
-        self.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
         
-        UIView *theBoxView = [[UIView alloc] initWithFrame:CGRectZero];
-        theBoxView.translatesAutoresizingMaskIntoConstraints = NO;
-        theBoxView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        theBoxView.backgroundColor = [UIColor colorWithRed:210.0/255.0 green:222.0/255.0 blue:238.0/255.0 alpha:1.0];
-        [self addSubview:theBoxView];
+        _theBoxView = [[UIView alloc] initWithFrame:CGRectZero];
+        _theBoxView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _theBoxView.backgroundColor = [UIColor colorWithRed:210.0/255.0 green:222.0/255.0 blue:238.0/255.0 alpha:1.0];
+        [self addSubview:_theBoxView];
         
-        UIView *contentBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-        contentBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-        contentBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        contentBackgroundView.backgroundColor = selected ? [UIColor whiteColor] : [WPStyleGuide statsUltraLightGray];
-        [self addSubview:contentBackgroundView];
+        _contentBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+        _contentBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _contentBackgroundView.backgroundColor = selected ? [UIColor whiteColor] : [WPStyleGuide statsUltraLightGray];
+        [self addSubview:_contentBackgroundView];
         
-        NSNumber *borderSidePadding = IS_IPHONE ? @(RPTVCHorizontalOuterPadding - 1.0f) : @0; // Just to the left of the container
-        NSNumber *borderBottomPadding = @(0);
-        NSNumber *bottomPadding = @(1.0f);
-        NSNumber *sidePadding = IS_IPHONE ? @(RPTVCHorizontalOuterPadding) : @0.0f;
-
-        NSDictionary *metrics =  @{@"borderSidePadding":borderSidePadding,
-                                   @"borderBottomPadding":borderBottomPadding,
-                                   @"sidePadding":sidePadding,
-                                   @"bottomPadding":bottomPadding};
-        
-        NSDictionary *views = NSDictionaryOfVariableBindings(theBoxView, contentBackgroundView);
-        // Border View
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-(borderSidePadding)-[theBoxView]-(borderSidePadding)-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(borderBottomPadding)-[theBoxView]-(borderBottomPadding)-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        
-        // Post View
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-(sidePadding)-[contentBackgroundView]-(sidePadding)-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentBackgroundView]-(bottomPadding)-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-
+        _dividerView = [[UIView alloc] initWithFrame:CGRectZero];
+        _dividerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _dividerView.backgroundColor = [WPStyleGuide statsLightGray];
+        [self addSubview:_dividerView];
     }
     
     return self;
+}
+
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.theBoxView.frame = CGRectMake(7.0, 0.0, CGRectGetWidth(self.frame) - 14.0, CGRectGetHeight(self.frame));
+    self.contentBackgroundView.frame = CGRectMake(8.0, 0.0, CGRectGetWidth(self.frame) - 16.0, CGRectGetHeight(self.frame));
+    self.dividerView.frame = CGRectMake(CGRectGetMinX(self.contentBackgroundView.frame), CGRectGetHeight(self.frame) - 1.0f, CGRectGetWidth(self.contentBackgroundView.frame), 1.0f);
 }
 
 @end
@@ -77,8 +61,18 @@
 @implementation StatsSelectableTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.backgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:NO];
     self.selectedBackgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:YES];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundView.frame = self.bounds;
+    self.selectedBackgroundView.frame = self.bounds;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
