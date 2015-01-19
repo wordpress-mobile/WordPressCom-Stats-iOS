@@ -8,9 +8,11 @@
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
+#import "StatsDateUtilities.h"
 
 typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionGraph,
+    StatsSectionPeriodHeader,
     StatsSectionEvents,
     StatsSectionPosts,
     StatsSectionReferrers,
@@ -45,8 +47,8 @@ static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow
 static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
+static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
-
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
@@ -69,6 +71,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
     // Force load fonts from bundle
@@ -80,7 +83,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     self.refreshControl = refreshControl;
     
     self.sections =     @[ @(StatsSectionGraph),
-                           @(StatsSectionEvents),
+                           @(StatsSectionPeriodHeader),
                            @(StatsSectionPosts),
                            @(StatsSectionReferrers),
                            @(StatsSectionClicks),
@@ -145,9 +148,10 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
-        case StatsSectionGraph: {
+        case StatsSectionGraph:
             return 5;
-        }
+        case StatsSectionPeriodHeader:
+            return 1;
             
         // TODO :: Pull offset from StatsGroup
         default:
@@ -207,17 +211,25 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPeriodHeader) {
+        StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        
+        return headerView;
+    }
     
-    return headerView;
+    return nil;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
-    footerView.footer = YES;
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPeriodHeader) {
+        StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        footerView.footer = YES;
+        
+        return footerView;
+    }
     
-    return footerView;
+    return nil;
 }
 
 
@@ -350,7 +362,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
     self.selectedDate = date;
-    
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
+    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
     
     // Reset the data (except the graph) and refresh
     id graphData = self.sectionData[@(StatsSectionGraph)];
@@ -385,6 +398,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
     self.selectedPeriodUnit = unit;
     self.selectedDate = [NSDate date];
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
+    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
+
     [self.sectionData removeAllObjects];
     self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
     self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
@@ -459,16 +475,16 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
      }
                         eventsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
-         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
-         self.sectionData[@(StatsSectionEvents)] = group;
-         
-         [self.tableView beginUpdates];
-         
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
+//         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
+//         self.sectionData[@(StatsSectionEvents)] = group;
+//         
+//         [self.tableView beginUpdates];
+//         
+//         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
+//         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+//         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//         
+//         [self.tableView endUpdates];
      }
                          postsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
@@ -637,7 +653,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     switch (statsSection) {
-        case StatsSectionGraph: {
+        case StatsSectionGraph:
             switch (indexPath.row) {
                 case 0:
                     identifier = StatsTableGraphCellIdentifier;
@@ -648,7 +664,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                     break;
             }
             break;
-        }
+        case StatsSectionPeriodHeader:
+            return StatsTablePeriodHeaderCellIdentifier;
         case StatsSectionEvents:
         {
             StatsGroup *group = (StatsGroup *)[self statsDataForStatsSection:statsSection];
@@ -750,6 +767,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     if (       [cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
         [self configureSectionGraphCell:cell];
+    
+    } else if ([cellIdentifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
+        [self configurePeriodHeaderCell:cell];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
         [self configureSectionGraphSelectableCell:cell forRow:indexPath.row];
@@ -807,6 +827,41 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     [self.graphViewController doneSettingProperties];
     [self.graphViewController.collectionView reloadData];
     [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+}
+
+
+- (void)configurePeriodHeaderCell:(UITableViewCell *)cell
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSString *labelText = @"";
+    
+    switch (self.selectedPeriodUnit) {
+        case StatsPeriodUnitDay:
+            dateFormatter.dateFormat = @"MMMM d";
+            labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
+            break;
+        case StatsPeriodUnitWeek:
+        {
+            dateFormatter.dateFormat = @"MMMM d";
+            StatsDateUtilities *dateUtils = [StatsDateUtilities new];
+            NSDate *endDate = [dateUtils calculateEndDateForPeriodUnit:self.selectedPeriodUnit withDateWithinPeriod:self.selectedDate];
+            labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@ - %@", @"Stats header label for date range"), [dateFormatter stringFromDate:self.selectedDate], [dateFormatter stringFromDate:endDate]];
+            break;
+        }
+        case StatsPeriodUnitMonth:
+            dateFormatter.dateFormat = @"MMMM";
+            labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
+            break;
+        case StatsPeriodUnitYear:
+            dateFormatter.dateFormat = @"yyyy";
+            labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
+            break;
+    }
+    
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+    label.text = labelText;
+    
+    cell.backgroundColor = self.tableView.backgroundColor;
 }
 
 
