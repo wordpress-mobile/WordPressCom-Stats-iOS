@@ -9,28 +9,9 @@
 #import <WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
 #import "StatsDateUtilities.h"
-
-typedef NS_ENUM(NSInteger, StatsSection) {
-    StatsSectionGraph,
-    StatsSectionPeriodHeader,
-    StatsSectionEvents,
-    StatsSectionPosts,
-    StatsSectionReferrers,
-    StatsSectionClicks,
-    StatsSectionCountry,
-    StatsSectionVideos,
-    StatsSectionComments,
-    StatsSectionTagsCategories,
-    StatsSectionFollowers,
-    StatsSectionPublicize
-};
-
-typedef NS_ENUM(NSInteger, StatsSubSection) {
-    StatsSubSectionCommentsByAuthor,
-    StatsSubSectionCommentsByPosts,
-    StatsSubSectionFollowersDotCom,
-    StatsSubSectionFollowersEmail
-};
+#import "StatsTwoColumnTableViewCell.h"
+#import "StatsViewAllTableViewController.h"
+#import "StatsSection.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -352,6 +333,27 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             }
         }
         
+    }
+}
+
+
+#pragma mark - Segue methods
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
+{
+    [super prepareForSegue:segue sender:sender];
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
+    
+    if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
+        StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
+        viewAllVC.selectedDate = self.selectedDate;
+        viewAllVC.periodUnit = self.selectedPeriodUnit;
+        viewAllVC.statsSection = statsSection;
+        viewAllVC.statsSubSection = statsSubSection;
+        viewAllVC.statsService = self.statsService;
     }
 }
 
@@ -1106,74 +1108,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                       indentLevel:(NSUInteger)indentLevel
                        selectable:(BOOL)selectable
 {
-    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
-    label1.text = leftText;
-    
-    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
-    label2.text = rightText;
-    
-    if (selectable) {
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    } else {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    imageView.image = nil;
-    NSLayoutConstraint *widthConstraint;
-    NSLayoutConstraint *spaceConstraint;
-    NSLayoutConstraint *leadingEdgeConstraint;
-    
-    for (NSLayoutConstraint *constraint in imageView.constraints) {
-        if (constraint.firstAttribute == NSLayoutAttributeWidth) {
-            widthConstraint = constraint;
-            break;
-        }
-    }
-    
-    for (NSLayoutConstraint *constraint in cell.contentView.constraints) {
-        // Space between image view and label
-        if (constraint.firstItem == label1 && constraint.firstAttribute == NSLayoutAttributeLeading
-            && constraint.secondItem == imageView && constraint.secondAttribute == NSLayoutAttributeTrailing) {
-            spaceConstraint = constraint;
-            continue;
-        }
-        
-        // Space between cell left side and image view
-        if (constraint.firstItem == imageView && constraint.firstAttribute == NSLayoutAttributeLeading
-            && constraint.secondItem == cell.contentView && constraint.secondAttribute == NSLayoutAttributeLeadingMargin) {
-            leadingEdgeConstraint = constraint;
-            continue;
-        }
-    }
-
-    // Hide the image if one isn't set
-    if (imageURL) {
-        widthConstraint.constant = 20.0f;
-        spaceConstraint.constant = 8.0f;
-        
-        [[WPImageSource sharedSource] downloadImageForURL:imageURL withSuccess:^(UIImage *image) {
-            imageView.image = image;
-            imageView.backgroundColor = [UIColor clearColor];
-        } failure:^(NSError *error) {
-            DDLogWarn(@"Unable to download icon %@", error);
-        }];
-    } else {
-        widthConstraint.constant = 0.0f;
-        spaceConstraint.constant = 0.0f;
-    }
-    
-    BOOL isNestedRow = indentLevel > 1;
-    if (isNestedRow) {
-        cell.backgroundColor = [WPStyleGuide itsEverywhereGrey];
-    } else {
-        cell.backgroundColor = [UIColor whiteColor];
-    }
-    
-    CGFloat indentWidth = indentLevel * 7.0f;
-    leadingEdgeConstraint.constant = indentWidth;
-
-    [cell setNeedsLayout];
+    StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
+    statsCell.leftText = leftText;
+    statsCell.rightText = rightText;
+    statsCell.imageURL = imageURL;
+    statsCell.indentLevel = indentLevel;
+    statsCell.selectable = selectable;
+    [statsCell doneSettingProperties];
 }
 
 #pragma mark - Row and section calculation methods
@@ -1186,8 +1127,15 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
 {
-    return (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+    NSNumber *subSectionValue = self.selectedSubsections[@(statsSection)];
+    
+    if (!subSectionValue) {
+        return StatsSubSectionNone;
+    }
+    
+    return (StatsSubSection)[subSectionValue integerValue];
 }
+
 
 - (id)statsDataForStatsSection:(StatsSection)statsSection
 {
