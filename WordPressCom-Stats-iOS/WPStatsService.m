@@ -6,6 +6,7 @@
 #import "StatsVisits.h"
 #import "StatsSummary.h"
 #import "StatsEphemory.h"
+#import "StatsDateUtilities.h"
 
 typedef NS_ENUM(NSInteger, StatsCache) {
     StatsCacheVisits,
@@ -29,6 +30,7 @@ typedef NS_ENUM(NSInteger, StatsCache) {
 @property (nonatomic, strong) NSString *oauth2Token;
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
 @property (nonatomic, strong) StatsEphemory *ephemory;
+@property (nonatomic, strong) StatsDateUtilities *dateUtilities;
 
 @end
 
@@ -85,7 +87,7 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
         return;
     }
     
-    NSDate *endDate = [self calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@(unit), endDate]];
     DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
     
@@ -422,54 +424,14 @@ followersDotComCompletionHandler:(StatsItemsCompletion)followersDotComCompletion
     }
 }
 
-- (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date
+
+- (StatsDateUtilities *)dateUtilities
 {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-
-    if (unit == StatsPeriodUnitDay) {
-        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
-        date = [calendar dateFromComponents:dateComponents];
-        
-        return date;
-    } else if (unit == StatsPeriodUnitMonth) {
-        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
-        date = [calendar dateFromComponents:dateComponents];
-        
-        dateComponents = [NSDateComponents new];
-        dateComponents.day = -1;
-        dateComponents.month = +1;
-        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
-        
-        return date;
-    } else if (unit == StatsPeriodUnitWeek) {
-        // Weeks are Monday - Sunday
-        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYearForWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitWeekOfYear fromDate:date];
-        NSInteger weekDay = dateComponents.weekday;
-        
-        if (weekDay > 1) {
-            dateComponents = [NSDateComponents new];
-            dateComponents.weekday = 8 - weekDay;
-            date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
-        }
-        
-        // Strip time
-        dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
-        date = [calendar dateFromComponents:dateComponents];
-
-        return date;
-    } else if (unit == StatsPeriodUnitYear) {
-        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
-        date = [calendar dateFromComponents:dateComponents];
-        
-        dateComponents = [NSDateComponents new];
-        dateComponents.day = -1;
-        dateComponents.year = +1;
-        date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
-        
-        return date;
+    if (!_dateUtilities) {
+        _dateUtilities = [[StatsDateUtilities alloc] init];
     }
     
-    return nil;
+    return _dateUtilities;
 }
 
 @end
