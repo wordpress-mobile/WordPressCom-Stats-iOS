@@ -253,7 +253,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         return StatsTableNoResultsHeight;
     }
     
-    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+    return 44.0f;
 }
 
 
@@ -473,19 +473,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
-                        eventsCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-//         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
-//         self.sectionData[@(StatsSectionEvents)] = group;
-//         
-//         [self.tableView beginUpdates];
-//         
-//         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
-//         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-//         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-//         
-//         [self.tableView endUpdates];
-     }
+                        eventsCompletionHandler:nil
                          postsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
