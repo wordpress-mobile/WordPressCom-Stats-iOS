@@ -42,7 +42,8 @@
     
     BOOL isNestedRow = self.indentLevel > 1;
     if (isNestedRow) {
-        self.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+        StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
+        backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     }
     
     CGFloat indentWidth = self.indentLevel * 7.0f;
@@ -61,7 +62,8 @@
     
     self.widthConstraint.constant = 20.0f;
     self.spaceConstraint.constant = 8.0f;
-    self.backgroundColor = [UIColor whiteColor];
+    StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
+    backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
