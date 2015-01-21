@@ -1,6 +1,7 @@
 #import "StatsSelectableTableViewCell.h"
+#import "StatsStandardBorderedTableViewCell.h"
 
-@interface StatsTwoColumnTableViewCell : StatsSelectableTableViewCell
+@interface StatsTwoColumnTableViewCell : StatsStandardBorderedTableViewCell
 
 @property (nonatomic, copy) NSString *leftText;
 @property (nonatomic, copy) NSString *rightText;

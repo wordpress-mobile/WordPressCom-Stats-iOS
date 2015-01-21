@@ -1,6 +1,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
+#import "StatsBorderedCellBackgroundView.h"
 
 @interface StatsTwoColumnTableViewCell ()
 
@@ -63,6 +64,5 @@
     self.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
-
 
 @end

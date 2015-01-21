@@ -97,13 +97,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)didReceiveMemoryWarning {
