@@ -5,6 +5,10 @@
 #import "StatsTableSectionHeaderView.h"
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
+static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
+static NSString *const StatsTableTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
+static NSString *const StatsTableTwoColumnCellIdentifier = @"TwoColumnRow";
+static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndicator";
 
 @interface StatsViewAllTableViewController ()
 
@@ -29,7 +33,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self.refreshControl beginRefreshing];
     [self retrieveStats];
 }
 
@@ -46,24 +49,51 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.statsGroup.items.count;
+    BOOL isDataLoaded = self.statsGroup != nil;
+    NSInteger numberOfRows = 2 + (isDataLoaded ? self.statsGroup.items.count : 1);
+    
+    return numberOfRows;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwoColumnRow" forIndexPath:indexPath];
+    NSString *identifier;
+    switch (indexPath.row) {
+        case 0:
+            identifier = StatsTableGroupHeaderCellIdentifier;
+            break;
+        case 1:
+            identifier = StatsTableTwoColumnHeaderCellIdentifier;
+            break;
+        case 2:
+            if (self.statsGroup == nil) {
+                identifier = StatsTableLoadingIndicatorCellIdentifier;
+                break;
+            }
+        default:
+            identifier = StatsTableTwoColumnCellIdentifier;
+            break;
+    }
     
-    StatsItem *item = self.statsGroup.items[indexPath.row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
-    [self configureTwoColumnRowCell:cell
-                       withLeftText:item.label
-                          rightText:item.value
-                        andImageURL:item.iconURL
-                        indentLevel:item.depth
-                         selectable:item.actions.count > 0 || item.children.count > 0];
+    if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        StatsItem *item = self.statsGroup.items[indexPath.row - 2];
+        
+        [self configureTwoColumnRowCell:cell
+                           withLeftText:item.label
+                              rightText:item.value
+                            andImageURL:item.iconURL
+                            indentLevel:item.depth
+                             selectable:item.actions.count > 0 || item.children.count > 0];
+    } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
+        UIActivityIndicatorView *indicator = [cell.contentView viewWithTag:100];
+        [indicator startAnimating];
+    }
     
     return cell;
 }
+
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
@@ -71,6 +101,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     return headerView;
 }
+
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
@@ -81,15 +112,23 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44.0f;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 1.0f;
 }
 
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 10.0f;
 }
+
 
 #pragma mark - Private methods
 
