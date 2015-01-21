@@ -9,6 +9,7 @@
 #import "StatsDateUtilities.h"
 
 typedef NS_ENUM(NSInteger, StatsCache) {
+    StatsCacheNone,
     StatsCacheVisits,
     StatsCacheEvents,
     StatsCachePosts,
@@ -178,9 +179,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                      andUnit:(StatsPeriodUnit)unit
        withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchPostsStatsForDate:date andUnit:unit withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error) {
-        
-    }];
+    [self.remote fetchPostsStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
     
 }
 
@@ -189,7 +188,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    
+    [self.remote fetchReferrersStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
 }
 
 
@@ -197,7 +196,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    
+    [self.remote fetchClicksStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
 }
 
 
@@ -205,7 +204,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    
+    [self.remote fetchCountryStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
 }
 
 
@@ -213,7 +212,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    
+    [self.remote fetchVideosStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
 }
 
 
@@ -222,7 +221,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    
+    [self.remote fetchFollowersStatsForFollowerType:followersType date:date andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
 }
 
 
@@ -300,7 +299,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         groupResult.moreItemsExist = moreViewsAvailable;
         groupResult.errorWhileRetrieving = error != nil;
         
-        cacheDictionary[@(cacheType)] = groupResult;
+        if (!cacheDictionary && cacheType != StatsCacheNone) {
+            cacheDictionary[@(cacheType)] = groupResult;
+        }
         
         if (groupCompletion) {
             groupCompletion(groupResult, error);
@@ -318,12 +319,15 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         StatsGroup *commentsAuthorsResult = [StatsGroup new];
         commentsAuthorsResult.items = items.firstObject;
         commentsAuthorsResult.errorWhileRetrieving = error != nil;
-        cacheDictionary[@(StatsCacheCommentsAuthors)] = commentsAuthorsResult;
         
         StatsGroup *commentsPostsResult = [StatsGroup new];
         commentsPostsResult.items = items.lastObject;
         commentsPostsResult.errorWhileRetrieving = error != nil;
-        cacheDictionary[@(StatsCacheCommentsPosts)] = commentsPostsResult;
+        
+        if (!cacheDictionary) {
+            cacheDictionary[@(StatsCacheCommentsAuthors)] = commentsAuthorsResult;
+            cacheDictionary[@(StatsCacheCommentsPosts)] = commentsPostsResult;
+        }
         
         if (commentsAuthorsCompletion) {
             commentsAuthorsCompletion(commentsAuthorsResult, error);

@@ -90,19 +90,19 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
     }
     if (postsCompletion) {
-        [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit withCompletionHandler:postsCompletion]];
+        [mutableOperations addObject:[self operationForPostsForDate:date andUnit:unit viewAll:NO withCompletionHandler:postsCompletion]];
     }
     if (referrersCompletion) {
-        [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit withCompletionHandler:referrersCompletion]];
+        [mutableOperations addObject:[self operationForReferrersForDate:date andUnit:unit viewAll:NO withCompletionHandler:referrersCompletion]];
     }
     if (clicksCompletion) {
-        [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit withCompletionHandler:clicksCompletion]];
+        [mutableOperations addObject:[self operationForClicksForDate:date andUnit:unit viewAll:NO withCompletionHandler:clicksCompletion]];
     }
     if (countryCompletion) {
-        [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit withCompletionHandler:countryCompletion]];
+        [mutableOperations addObject:[self operationForCountryForDate:date andUnit:unit viewAll:NO withCompletionHandler:countryCompletion]];
     }
     if (videosCompletion) {
-        [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit withCompletionHandler:videosCompletion]];
+        [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit viewAll:NO withCompletionHandler:videosCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
@@ -111,10 +111,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion]];
     }
     if (followersDotComCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit withCompletionHandler:followersDotComCompletion]];
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit viewAll:NO withCompletionHandler:followersDotComCompletion]];
     }
     if (followersEmailCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit withCompletionHandler:followersEmailCompletion]];
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit viewAll:NO withCompletionHandler:followersEmailCompletion]];
     }
     if (publicizeCompletion) {
         [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
@@ -171,7 +171,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -182,7 +182,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -193,7 +193,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -204,7 +204,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -215,7 +215,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -249,7 +249,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -414,6 +414,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForPostsForDate:(NSDate *)date
                                              andUnit:(StatsPeriodUnit)unit
+                                             viewAll:(BOOL)viewAll
                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -449,7 +450,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
                                                                  parameters:parameters
                                                                     success:handler
@@ -460,6 +462,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForReferrersForDate:(NSDate *)date
                                                  andUnit:(StatsPeriodUnit)unit
+                                                 viewAll:(BOOL)viewAll
                                    withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -535,7 +538,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
                                                                 parameters:parameters
@@ -548,7 +552,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForClicksForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
-                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                              viewAll:(BOOL)viewAll
+                               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -603,7 +608,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
                                                                 parameters:parameters
@@ -615,6 +621,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForCountryForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
+                                               viewAll:(BOOL)viewAll
                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -645,7 +652,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
                                                                 parameters:parameters
@@ -658,6 +666,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (AFHTTPRequestOperation *)operationForVideosForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
+                                              viewAll:(BOOL)viewAll
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -694,7 +703,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
                                                                 parameters:parameters
@@ -822,6 +832,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (AFHTTPRequestOperation *)operationForFollowersOfType:(StatsFollowerType)followerType
                                                 forDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
+                                                viewAll:(BOOL)viewAll
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -855,7 +866,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
                                  @"date"   : [self siteLocalStringForDate:date],
                                  @"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
-                                 @"max"    : @7}; // TODO - Change this to a non-fixed value?
+                                 @"max"    : (viewAll ? @0 : @7) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
                                                                 parameters:parameters
