@@ -1,16 +1,11 @@
 #import <Foundation/Foundation.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
+#import "WPStatsService.h"
 
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *error);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
-
-typedef NS_ENUM(NSUInteger, StatsFollowerType) {
-    StatsFollowerTypeDotCom,
-    StatsFollowerTypeEmail
-};
-
 
 @interface WPStatsServiceRemote : NSObject
 
