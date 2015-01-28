@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger, StatsSection) {
 };
 
 typedef NS_ENUM(NSInteger, StatsSubSection) {
-    StatsSubSectionCommentsByAuthor,
+    StatsSubSectionCommentsByAuthor = 100,
     StatsSubSectionCommentsByPosts,
     StatsSubSectionFollowersDotCom,
     StatsSubSectionFollowersEmail,
