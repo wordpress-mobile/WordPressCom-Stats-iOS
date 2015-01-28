@@ -7,23 +7,7 @@
 #import "StatsSummary.h"
 #import "StatsEphemory.h"
 #import "StatsDateUtilities.h"
-
-typedef NS_ENUM(NSInteger, StatsCache) {
-    StatsCacheNone,
-    StatsCacheVisits,
-    StatsCacheEvents,
-    StatsCachePosts,
-    StatsCacheReferrers,
-    StatsCacheClicks,
-    StatsCacheCountry,
-    StatsCacheVideos,
-    StatsCacheCommentsAuthors,
-    StatsCacheCommentsPosts,
-    StatsCacheTagsCategories,
-    StatsCacheFollowersDotCom,
-    StatsCacheFollowersEmail,
-    StatsCachePublicize
-};
+#import "StatsSection.h"
 
 @interface WPStatsService ()
 
@@ -89,60 +73,60 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     }
     
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
-    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@(unit), endDate]];
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
     DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
     
     if (cacheDictionary && cacheDictionary.count == 13) {
         if (visitsCompletion) {
-            visitsCompletion(cacheDictionary[@(StatsCacheVisits)], nil);
+            visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
         }
 
         if (eventsCompletion) {
-            eventsCompletion(cacheDictionary[@(StatsCacheEvents)], nil);
+            eventsCompletion(cacheDictionary[@(StatsSectionEvents)], nil);
         }
 
         if (postsCompletion) {
-            postsCompletion(cacheDictionary[@(StatsCachePosts)], nil);
+            postsCompletion(cacheDictionary[@(StatsSectionPosts)], nil);
         }
     
         if (referrersCompletion) {
-            referrersCompletion(cacheDictionary[@(StatsCacheReferrers)], nil);
+            referrersCompletion(cacheDictionary[@(StatsSectionReferrers)], nil);
         }
     
         if (clicksCompletion) {
-            clicksCompletion(cacheDictionary[@(StatsCacheClicks)], nil);
+            clicksCompletion(cacheDictionary[@(StatsSectionClicks)], nil);
         }
     
         if (countryCompletion) {
-            countryCompletion(cacheDictionary[@(StatsCacheCountry)], nil);
+            countryCompletion(cacheDictionary[@(StatsSectionCountry)], nil);
         }
     
         if (videosCompletion) {
-            videosCompletion(cacheDictionary[@(StatsCacheVideos)], nil);
+            videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
         }
     
         if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(cacheDictionary[@(StatsCacheCommentsAuthors)], nil);
+            commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
         }
         
         if (commentsPostsCompletion) {
-            commentsPostsCompletion(cacheDictionary[@(StatsCacheCommentsPosts)], nil);
+            commentsPostsCompletion(cacheDictionary[@(StatsSubSectionCommentsByPosts)], nil);
         }
     
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(cacheDictionary[@(StatsCacheTagsCategories)], nil);
+            tagsCategoriesCompletion(cacheDictionary[@(StatsSectionTagsCategories)], nil);
         }
     
         if (followersDotComCompletion) {
-            followersDotComCompletion(cacheDictionary[@(StatsCacheFollowersDotCom)], nil);
+            followersDotComCompletion(cacheDictionary[@(StatsSubSectionFollowersDotCom)], nil);
         }
     
         if (followersEmailCompletion) {
-            followersEmailCompletion(cacheDictionary[@(StatsCacheFollowersEmail)], nil);
+            followersEmailCompletion(cacheDictionary[@(StatsSubSectionFollowersEmail)], nil);
         }
     
         if (publicizeCompletion) {
-            publicizeCompletion(cacheDictionary[@(StatsCachePublicize)], nil);
+            publicizeCompletion(cacheDictionary[@(StatsSectionPublicize)], nil);
         }
         
         completionHandler();
@@ -150,24 +134,24 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         return;
     } else {
         cacheDictionary = [NSMutableDictionary new];
-        [self.ephemory setObject:cacheDictionary forKey:@[@(unit), endDate]];
+        [self.ephemory setObject:cacheDictionary forKey:@[@"BatchStats", @(unit), endDate]];
     }
 
     [self.remote cancelAllRemoteOperations];
     [self.remote batchFetchStatsForDate:endDate
                                 andUnit:unit
             withVisitsCompletionHandler:[self remoteVisitsCompletionWithCache:cacheDictionary andCompletionHandler:visitsCompletion]
-                eventsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheEvents andCompletionHandler:eventsCompletion]
-                 postsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCachePosts andCompletionHandler:postsCompletion]
-             referrersCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheReferrers andCompletionHandler:referrersCompletion]
-                clicksCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheClicks andCompletionHandler:clicksCompletion]
-               countryCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheCountry andCompletionHandler:countryCompletion]
-                videosCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheVideos andCompletionHandler:videosCompletion]
+                eventsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionEvents andCompletionHandler:eventsCompletion]
+                 postsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPosts andCompletionHandler:postsCompletion]
+             referrersCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionReferrers andCompletionHandler:referrersCompletion]
+                clicksCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionClicks andCompletionHandler:clicksCompletion]
+               countryCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionCountry andCompletionHandler:countryCompletion]
+                videosCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionVideos andCompletionHandler:videosCompletion]
               commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
-        tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCacheTagsCategories andCompletionHandler:tagsCategoriesCompletion]
-       followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary cacheType:StatsCacheFollowersDotCom andCompletionHandler:followersDotComCompletion]
-        followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary cacheType:StatsCacheFollowersEmail andCompletionHandler:followersEmailCompletion]
-             publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary cacheType:StatsCachePublicize andCompletionHandler:publicizeCompletion]
+        tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
+       followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
+        followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
+             publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
             andOverallCompletionHandler:^
     {
         completionHandler();
@@ -179,8 +163,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                      andUnit:(StatsPeriodUnit)unit
        withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchPostsStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
-    
+    [self.remote fetchPostsStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionPosts andCompletionHandler:completionHandler]];
 }
 
 
@@ -188,7 +171,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchReferrersStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
+    [self.remote fetchReferrersStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionReferrers andCompletionHandler:completionHandler]];
 }
 
 
@@ -196,7 +179,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchClicksStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
+    [self.remote fetchClicksStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionClicks andCompletionHandler:completionHandler]];
 }
 
 
@@ -204,7 +187,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchCountryStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
+    [self.remote fetchCountryStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionCountry andCompletionHandler:completionHandler]];
 }
 
 
@@ -212,7 +195,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchVideosStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
+    [self.remote fetchVideosStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionVideos andCompletionHandler:completionHandler]];
 }
 
 
@@ -221,7 +204,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchFollowersStatsForFollowerType:followersType date:date andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil cacheType:StatsCacheNone andCompletionHandler:completionHandler]];
+    [self.remote fetchFollowersStatsForFollowerType:followersType date:date andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
 }
 
 
@@ -280,7 +263,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 {
     return ^(StatsVisits *visits, NSError *error)
     {
-        cacheDictionary[@(StatsCacheVisits)] = visits;
+        cacheDictionary[@(StatsSectionGraph)] = visits;
         visits.errorWhileRetrieving = error != nil;
         
         if (visitsCompletion) {
@@ -290,18 +273,16 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
-- (StatsRemoteItemsCompletion)remoteItemCompletionWithCache:(NSMutableDictionary *)cacheDictionary cacheType:(StatsCache)cacheType andCompletionHandler:(StatsGroupCompletion)groupCompletion
+- (StatsRemoteItemsCompletion)remoteItemCompletionWithCache:(NSMutableDictionary *)cacheDictionary forStatsSection:(StatsSection)statsSection andCompletionHandler:(StatsGroupCompletion)groupCompletion
 {
     return ^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
-        StatsGroup *groupResult = [StatsGroup new];
+        StatsGroup *groupResult = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
         groupResult.items = items;
         groupResult.moreItemsExist = moreViewsAvailable;
         groupResult.errorWhileRetrieving = error != nil;
         
-        if (!cacheDictionary && cacheType != StatsCacheNone) {
-            cacheDictionary[@(cacheType)] = groupResult;
-        }
+        cacheDictionary[@(statsSection)] = groupResult;
         
         if (groupCompletion) {
             groupCompletion(groupResult, error);
@@ -316,18 +297,16 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 {
     return ^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
-        StatsGroup *commentsAuthorsResult = [StatsGroup new];
+        StatsGroup *commentsAuthorsResult = [[StatsGroup alloc] initWithStatsSection:StatsSectionComments andStatsSubSection:StatsSubSectionCommentsByAuthor];
         commentsAuthorsResult.items = items.firstObject;
         commentsAuthorsResult.errorWhileRetrieving = error != nil;
         
-        StatsGroup *commentsPostsResult = [StatsGroup new];
+        StatsGroup *commentsPostsResult = [[StatsGroup alloc] initWithStatsSection:StatsSectionComments andStatsSubSection:StatsSubSectionCommentsByPosts];
         commentsPostsResult.items = items.lastObject;
         commentsPostsResult.errorWhileRetrieving = error != nil;
         
-        if (!cacheDictionary) {
-            cacheDictionary[@(StatsCacheCommentsAuthors)] = commentsAuthorsResult;
-            cacheDictionary[@(StatsCacheCommentsPosts)] = commentsPostsResult;
-        }
+        cacheDictionary[@(StatsSubSectionCommentsByAuthor)] = commentsAuthorsResult;
+        cacheDictionary[@(StatsSubSectionCommentsByPosts)] = commentsPostsResult;
         
         if (commentsAuthorsCompletion) {
             commentsAuthorsCompletion(commentsAuthorsResult, error);
@@ -340,17 +319,18 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
-- (StatsRemoteItemsCompletion)remoteFollowersCompletionWithCache:(NSMutableDictionary *)cacheDictionary cacheType:(StatsCache)cacheType andCompletionHandler:(StatsGroupCompletion)groupCompletion
+- (StatsRemoteItemsCompletion)remoteFollowersCompletionWithCache:(NSMutableDictionary *)cacheDictionary followerType:(StatsFollowerType)followerType andCompletionHandler:(StatsGroupCompletion)groupCompletion
 {
     return ^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
     {
-        StatsGroup *followersResult = [StatsGroup new];
+        StatsSubSection statsSubSection = followerType == StatsFollowerTypeDotCom ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
+        StatsGroup *followersResult = [[StatsGroup alloc] initWithStatsSection:StatsSectionFollowers andStatsSubSection:statsSubSection];
         followersResult.items = items;
         followersResult.moreItemsExist = moreViewsAvailable;
         followersResult.totalCount = totalViews;
         followersResult.errorWhileRetrieving = error != nil;
         
-        cacheDictionary[@(cacheType)] = followersResult;
+        cacheDictionary[@(statsSubSection)] = followersResult;
         
         for (StatsItem *item in items) {
             NSString *age = [self dateAgeForDate:item.date];

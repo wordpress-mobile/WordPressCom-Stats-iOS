@@ -87,8 +87,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                             indentLevel:item.depth
                              selectable:item.actions.count > 0 || item.children.count > 0];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
-        UIActivityIndicatorView *indicator = [cell.contentView viewWithTag:100];
+        UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
+    } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+        [self configureSectionGroupHeaderCell:cell];
     }
     
     return cell;
@@ -169,5 +171,28 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
 }
+
+
+- (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell
+{
+    NSString *headerText = self.statsGroup.groupTitle;
+    
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+    label.text = headerText;
+}
+
+
+- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell
+{
+    NSString *leftText = self.statsGroup.titlePrimary;
+    NSString *rightText = self.statsGroup.titleSecondary;
+    
+    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
+    label1.text = leftText;
+    
+    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
+    label2.text = rightText;
+}
+
 
 @end
