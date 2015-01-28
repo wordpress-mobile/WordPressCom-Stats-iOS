@@ -29,6 +29,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     UIRefreshControl *refreshControl = [UIRefreshControl new];
     [refreshControl addTarget:self action:@selector(retrieveStats) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+    
+    self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
+    self.title = self.statsGroup.groupTitle;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -49,8 +52,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    BOOL isDataLoaded = self.statsGroup != nil;
-    NSInteger numberOfRows = 2 + (isDataLoaded ? self.statsGroup.items.count : 1);
+    BOOL isDataLoaded = self.statsGroup.items != nil;
+    NSInteger numberOfRows = 1 + (isDataLoaded ? self.statsGroup.items.count : 1);
     
     return numberOfRows;
 }
@@ -60,13 +63,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     NSString *identifier;
     switch (indexPath.row) {
         case 0:
-            identifier = StatsTableGroupHeaderCellIdentifier;
-            break;
-        case 1:
             identifier = StatsTableTwoColumnHeaderCellIdentifier;
             break;
         case 2:
-            if (self.statsGroup == nil) {
+            if (self.statsGroup.items == nil) {
                 identifier = StatsTableLoadingIndicatorCellIdentifier;
                 break;
             }
@@ -78,7 +78,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        StatsItem *item = self.statsGroup.items[indexPath.row - 2];
+        StatsItem *item = self.statsGroup.items[indexPath.row - 1];
         
         [self configureTwoColumnRowCell:cell
                            withLeftText:item.label
@@ -139,7 +139,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     if (self.statsGroup) {
-        self.statsGroup = nil;
+        self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
         [self.tableView reloadData];
     }
     
@@ -148,7 +148,16 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.refreshControl endRefreshing];
 
         self.statsGroup = group;
-        [self.tableView reloadData];
+        
+        NSMutableArray *indexPaths = [NSMutableArray new];
+        for (int row = 1; row < (1 + self.statsGroup.items.count); ++row) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+        }
+        
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView endUpdates];
     };
     
     if (self.statsSection == StatsSectionPosts) {

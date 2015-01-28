@@ -264,7 +264,11 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     return ^(StatsVisits *visits, NSError *error)
     {
         cacheDictionary[@(StatsSectionGraph)] = visits;
-        visits.errorWhileRetrieving = error != nil;
+        
+        if (error) {
+            DDLogError(@"Error while fetching Visits: %@", error);
+            visits.errorWhileRetrieving = YES;
+        }
         
         if (visitsCompletion) {
             visitsCompletion(visits, error);
