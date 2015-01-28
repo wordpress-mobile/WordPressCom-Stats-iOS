@@ -79,9 +79,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
                                    @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
-    self.sectionData = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+    [self wipeDataAndSeedGroups];
     
     self.graphViewController = [WPStatsGraphViewController new];
     self.selectedDate = [NSDate date];
@@ -369,10 +367,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     // Reset the data (except the graph) and refresh
     id graphData = self.sectionData[@(StatsSectionGraph)];
-    [self.sectionData removeAllObjects];
+    [self wipeDataAndSeedGroups];
     self.sectionData[@(StatsSectionGraph)] = graphData;
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
 
     [self.tableView reloadData];
     
@@ -403,9 +399,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
 
-    [self.sectionData removeAllObjects];
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+    [self wipeDataAndSeedGroups];
     [self.tableView reloadData];
     
     [self retrieveStatsSkipGraph:NO];
@@ -905,43 +899,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
-    NSString *headerText;
+    StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    NSString *headerText = statsGroup.groupTitle;
     
-    switch (statsSection) {
-        case StatsSectionClicks:
-            headerText = NSLocalizedString(@"Clicks", @"Title for stats section for Clicks");
-            break;
-        case StatsSectionComments:
-            headerText = NSLocalizedString(@"Comments", @"Title for stats section for Comments");
-            break;
-        case StatsSectionCountry:
-            headerText = NSLocalizedString(@"Countries", @"Title for stats section for Countries");
-            break;
-        case StatsSectionEvents:
-            headerText = NSLocalizedString(@"Published", @"Title for stats section for Events");
-            break;
-        case StatsSectionFollowers:
-            headerText = NSLocalizedString(@"Followers", @"Title for stats section for Followers");
-            break;
-        case StatsSectionPosts:
-            headerText = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
-            break;
-        case StatsSectionPublicize:
-            headerText = NSLocalizedString(@"Publicize", @"Title for stats section for Publicize");
-            break;
-        case StatsSectionReferrers:
-            headerText = NSLocalizedString(@"Referrers", @"Title for stats section for Referrers");
-            break;
-        case StatsSectionTagsCategories:
-            headerText = NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories");
-            break;
-        case StatsSectionVideos:
-            headerText = NSLocalizedString(@"Videos", @"Title for stats section for Videos");
-            break;
-            
-        default:
-            break;
-    }
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
 }
@@ -949,54 +909,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
-    NSString *leftText;
-    NSString *rightText;
-    
-    switch (statsSection) {
-        case StatsSectionClicks:
-            leftText = NSLocalizedString(@"Link", @"");
-            rightText = NSLocalizedString(@"Clicks", @"");
-            break;
-        case StatsSectionComments:
-        {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-
-            leftText = selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"");
-            rightText = NSLocalizedString(@"Comments", @"");
-            break;
-        }
-        case StatsSectionCountry:
-            leftText = NSLocalizedString(@"Country", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionFollowers:
-            leftText = NSLocalizedString(@"Follower", @"");
-            rightText = NSLocalizedString(@"Since", @"");
-            break;
-        case StatsSectionPosts:
-            leftText = NSLocalizedString(@"Title", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionPublicize:
-            leftText = NSLocalizedString(@"Service", @"");
-            rightText = NSLocalizedString(@"Followers", @"");
-            break;
-        case StatsSectionReferrers:
-            leftText = NSLocalizedString(@"Referrer", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionTagsCategories:
-            leftText = NSLocalizedString(@"Topic", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionVideos:
-            leftText = NSLocalizedString(@"Video", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-            
-        default:
-            break;
-    }
+    StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    NSString *leftText = statsGroup.titlePrimary;
+    NSString *rightText = statsGroup.titleSecondary;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1149,6 +1064,33 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     }
     
     return data;
+}
+
+- (void)wipeDataAndSeedGroups
+{
+    if (self.sectionData) {
+        [self.sectionData removeAllObjects];
+    } else {
+        self.sectionData = [NSMutableDictionary new];
+    }
+    
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+
+    for (NSNumber *statsSectionNumber in self.sections) {
+        StatsSection statsSection = (StatsSection)statsSectionNumber.integerValue;
+        StatsSubSection statsSubSection = StatsSubSectionNone;
+        
+        if ([self.subSections objectForKey:statsSectionNumber] != nil) {
+            for (NSNumber *statsSubSectionNumber in self.subSections) {
+                statsSubSection = (StatsSubSection)statsSubSectionNumber.integerValue;
+                StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:statsSubSection];
+                self.sectionData[statsSectionNumber][statsSubSectionNumber] = group;
+            }
+        } else {
+            
+        }
+    }
 }
 
 @end
