@@ -65,7 +65,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         case 0:
             identifier = StatsTableTwoColumnHeaderCellIdentifier;
             break;
-        case 2:
+        case 1:
             if (self.statsGroup.items == nil) {
                 identifier = StatsTableLoadingIndicatorCellIdentifier;
                 break;
