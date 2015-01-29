@@ -285,11 +285,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         [tableView beginUpdates];
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
-        // Placeholder for full screen details
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        // Placeholder for full screen details
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
