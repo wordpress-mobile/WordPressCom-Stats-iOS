@@ -220,6 +220,17 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     if (self.statsSection == StatsSectionPosts) {
         [self.statsService retrievePostsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionReferrers) {
+        [self.statsService retrieveReferrersForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionClicks) {
+        [self.statsService retrieveClicksForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionCountry) {
+        [self.statsService retrieveCountriesForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionVideos) {
+        [self.statsService retrieveVideosForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionFollowers) {
+        StatsFollowerType followerType = self.statsSubSection == StatsSubSectionFollowersDotCom ? StatsFollowerTypeDotCom : StatsFollowerTypeEmail;
+        [self.statsService retrieveFollowersOfType:followerType forDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     }
 }
 
