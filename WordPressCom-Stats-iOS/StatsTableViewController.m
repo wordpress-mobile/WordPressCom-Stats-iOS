@@ -350,6 +350,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
     }
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 
