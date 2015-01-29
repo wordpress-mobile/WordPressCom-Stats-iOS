@@ -348,6 +348,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         viewAllVC.statsSection = statsSection;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
+        viewAllVC.statsDelegate = self.statsDelegate;
     }
 }
 

@@ -1,5 +1,7 @@
 #import "StatsViewAllTableViewController.h"
 #import "StatsGroup.h"
+#import "StatsItem.h"
+#import "StatsItemAction.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
@@ -36,13 +38,25 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     [self retrieveStats];
 }
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self abortRetrieveStats];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Table view data source
 
@@ -94,6 +108,50 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     }
     
     return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    StatsItem *statsItem = [self.statsGroup statsItemForTableViewRow:indexPath.row];
+    
+    if (statsItem.children.count > 0) {
+        BOOL insert = !statsItem.isExpanded;
+        NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+        statsItem.expanded = !statsItem.isExpanded;
+        NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+        
+        NSMutableArray *indexPaths = [NSMutableArray new];
+        
+        NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
+        for (NSInteger row = 1; row <= numberOfRows; ++row) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
+        }
+        
+        [self.tableView beginUpdates];
+        
+        if (insert) {
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+        } else {
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        }
+        
+        [self.tableView endUpdates];
+    } else if (statsItem.actions.count > 0) {
+        for (StatsItemAction *action in statsItem.actions) {
+            if (action.defaultAction) {
+                if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+                    WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+                    [self.statsDelegate statsViewController:statsViewController openURL:action.url];
+                } else {
+                    [[UIApplication sharedApplication] openURL:action.url];
+                }
+                break;
+            }
+        }
+    }
 }
 
 
@@ -164,6 +222,14 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.statsService retrievePostsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     }
 }
+
+
+- (void)abortRetrieveStats
+{
+    [self.statsService cancelAnyRunningOperations];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
                      withLeftText:(NSString *)leftText

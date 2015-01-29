@@ -257,6 +257,11 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
+- (void)cancelAnyRunningOperations
+{
+    [self.remote cancelAllRemoteOperations];
+}
+
 #pragma mark - Private completion handler helpers
 
 - (StatsRemoteVisitsCompletion)remoteVisitsCompletionWithCache:(NSMutableDictionary *)cacheDictionary andCompletionHandler:(StatsVisitsCompletion)visitsCompletion

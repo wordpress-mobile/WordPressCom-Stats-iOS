@@ -2,6 +2,7 @@
 #import "StatsSummary.h"
 #import "WPStatsService.h"
 #import "StatsSection.h"
+#import "WPStatsViewController.h"
 
 @interface StatsViewAllTableViewController : UITableViewController
 
@@ -10,5 +11,6 @@
 @property (nonatomic, assign) StatsSection statsSection;
 @property (nonatomic, assign) StatsSubSection statsSubSection;
 @property (nonatomic, strong) WPStatsService *statsService;
+@property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 
 @end
