@@ -9,28 +9,9 @@
 #import <WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
 #import "StatsDateUtilities.h"
-
-typedef NS_ENUM(NSInteger, StatsSection) {
-    StatsSectionGraph,
-    StatsSectionPeriodHeader,
-    StatsSectionEvents,
-    StatsSectionPosts,
-    StatsSectionReferrers,
-    StatsSectionClicks,
-    StatsSectionCountry,
-    StatsSectionVideos,
-    StatsSectionComments,
-    StatsSectionTagsCategories,
-    StatsSectionFollowers,
-    StatsSectionPublicize
-};
-
-typedef NS_ENUM(NSInteger, StatsSubSection) {
-    StatsSubSectionCommentsByAuthor,
-    StatsSubSectionCommentsByPosts,
-    StatsSubSectionFollowersDotCom,
-    StatsSubSectionFollowersEmail
-};
+#import "StatsTwoColumnTableViewCell.h"
+#import "StatsViewAllTableViewController.h"
+#import "StatsSection.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -98,9 +79,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
                                    @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
-    self.sectionData = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+    [self wipeDataAndSeedGroups];
     
     self.graphViewController = [WPStatsGraphViewController new];
     self.selectedDate = [NSDate date];
@@ -116,13 +95,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -306,11 +285,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         [tableView beginUpdates];
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
-        // Placeholder for full screen details
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        // Placeholder for full screen details
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
@@ -356,6 +331,30 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 }
 
 
+#pragma mark - Segue methods
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
+{
+    [super prepareForSegue:segue sender:sender];
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
+    
+    if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
+        StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
+        viewAllVC.selectedDate = self.selectedDate;
+        viewAllVC.periodUnit = self.selectedPeriodUnit;
+        viewAllVC.statsSection = statsSection;
+        viewAllVC.statsSubSection = statsSubSection;
+        viewAllVC.statsService = self.statsService;
+        viewAllVC.statsDelegate = self.statsDelegate;
+    }
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+
 #pragma mark - WPStatsGraphViewControllerDelegate methods
 
 
@@ -367,10 +366,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     // Reset the data (except the graph) and refresh
     id graphData = self.sectionData[@(StatsSectionGraph)];
-    [self.sectionData removeAllObjects];
+    [self wipeDataAndSeedGroups];
     self.sectionData[@(StatsSectionGraph)] = graphData;
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
 
     [self.tableView reloadData];
     
@@ -401,9 +398,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
 
-    [self.sectionData removeAllObjects];
-    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
-    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+    [self wipeDataAndSeedGroups];
     [self.tableView reloadData];
     
     [self retrieveStatsSkipGraph:NO];
@@ -903,43 +898,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
-    NSString *headerText;
+    StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    NSString *headerText = statsGroup.groupTitle;
     
-    switch (statsSection) {
-        case StatsSectionClicks:
-            headerText = NSLocalizedString(@"Clicks", @"Title for stats section for Clicks");
-            break;
-        case StatsSectionComments:
-            headerText = NSLocalizedString(@"Comments", @"Title for stats section for Comments");
-            break;
-        case StatsSectionCountry:
-            headerText = NSLocalizedString(@"Countries", @"Title for stats section for Countries");
-            break;
-        case StatsSectionEvents:
-            headerText = NSLocalizedString(@"Published", @"Title for stats section for Events");
-            break;
-        case StatsSectionFollowers:
-            headerText = NSLocalizedString(@"Followers", @"Title for stats section for Followers");
-            break;
-        case StatsSectionPosts:
-            headerText = NSLocalizedString(@"Posts & Pages", @"Title for stats section for Posts & Pages");
-            break;
-        case StatsSectionPublicize:
-            headerText = NSLocalizedString(@"Publicize", @"Title for stats section for Publicize");
-            break;
-        case StatsSectionReferrers:
-            headerText = NSLocalizedString(@"Referrers", @"Title for stats section for Referrers");
-            break;
-        case StatsSectionTagsCategories:
-            headerText = NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories");
-            break;
-        case StatsSectionVideos:
-            headerText = NSLocalizedString(@"Videos", @"Title for stats section for Videos");
-            break;
-            
-        default:
-            break;
-    }
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
 }
@@ -947,54 +908,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
-    NSString *leftText;
-    NSString *rightText;
-    
-    switch (statsSection) {
-        case StatsSectionClicks:
-            leftText = NSLocalizedString(@"Link", @"");
-            rightText = NSLocalizedString(@"Clicks", @"");
-            break;
-        case StatsSectionComments:
-        {
-            StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-
-            leftText = selectedSubsection == StatsSubSectionCommentsByAuthor ? NSLocalizedString(@"Author", @"") : NSLocalizedString(@"Title", @"");
-            rightText = NSLocalizedString(@"Comments", @"");
-            break;
-        }
-        case StatsSectionCountry:
-            leftText = NSLocalizedString(@"Country", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionFollowers:
-            leftText = NSLocalizedString(@"Follower", @"");
-            rightText = NSLocalizedString(@"Since", @"");
-            break;
-        case StatsSectionPosts:
-            leftText = NSLocalizedString(@"Title", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionPublicize:
-            leftText = NSLocalizedString(@"Service", @"");
-            rightText = NSLocalizedString(@"Followers", @"");
-            break;
-        case StatsSectionReferrers:
-            leftText = NSLocalizedString(@"Referrer", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionTagsCategories:
-            leftText = NSLocalizedString(@"Topic", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-        case StatsSectionVideos:
-            leftText = NSLocalizedString(@"Video", @"");
-            rightText = NSLocalizedString(@"Views", @"");
-            break;
-            
-        default:
-            break;
-    }
+    StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    NSString *leftText = statsGroup.titlePrimary;
+    NSString *rightText = statsGroup.titleSecondary;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1106,74 +1022,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                       indentLevel:(NSUInteger)indentLevel
                        selectable:(BOOL)selectable
 {
-    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
-    label1.text = leftText;
-    
-    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
-    label2.text = rightText;
-    
-    if (selectable) {
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    } else {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    imageView.image = nil;
-    NSLayoutConstraint *widthConstraint;
-    NSLayoutConstraint *spaceConstraint;
-    NSLayoutConstraint *leadingEdgeConstraint;
-    
-    for (NSLayoutConstraint *constraint in imageView.constraints) {
-        if (constraint.firstAttribute == NSLayoutAttributeWidth) {
-            widthConstraint = constraint;
-            break;
-        }
-    }
-    
-    for (NSLayoutConstraint *constraint in cell.contentView.constraints) {
-        // Space between image view and label
-        if (constraint.firstItem == label1 && constraint.firstAttribute == NSLayoutAttributeLeading
-            && constraint.secondItem == imageView && constraint.secondAttribute == NSLayoutAttributeTrailing) {
-            spaceConstraint = constraint;
-            continue;
-        }
-        
-        // Space between cell left side and image view
-        if (constraint.firstItem == imageView && constraint.firstAttribute == NSLayoutAttributeLeading
-            && constraint.secondItem == cell.contentView && constraint.secondAttribute == NSLayoutAttributeLeadingMargin) {
-            leadingEdgeConstraint = constraint;
-            continue;
-        }
-    }
-
-    // Hide the image if one isn't set
-    if (imageURL) {
-        widthConstraint.constant = 20.0f;
-        spaceConstraint.constant = 8.0f;
-        
-        [[WPImageSource sharedSource] downloadImageForURL:imageURL withSuccess:^(UIImage *image) {
-            imageView.image = image;
-            imageView.backgroundColor = [UIColor clearColor];
-        } failure:^(NSError *error) {
-            DDLogWarn(@"Unable to download icon %@", error);
-        }];
-    } else {
-        widthConstraint.constant = 0.0f;
-        spaceConstraint.constant = 0.0f;
-    }
-    
-    BOOL isNestedRow = indentLevel > 1;
-    if (isNestedRow) {
-        cell.backgroundColor = [WPStyleGuide itsEverywhereGrey];
-    } else {
-        cell.backgroundColor = [UIColor whiteColor];
-    }
-    
-    CGFloat indentWidth = indentLevel * 7.0f;
-    leadingEdgeConstraint.constant = indentWidth;
-
-    [cell setNeedsLayout];
+    StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
+    statsCell.leftText = leftText;
+    statsCell.rightText = rightText;
+    statsCell.imageURL = imageURL;
+    statsCell.indentLevel = indentLevel;
+    statsCell.selectable = selectable;
+    [statsCell doneSettingProperties];
 }
 
 #pragma mark - Row and section calculation methods
@@ -1186,8 +1041,15 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
 {
-    return (StatsSubSection)[self.selectedSubsections[@(statsSection)] integerValue];
+    NSNumber *subSectionValue = self.selectedSubsections[@(statsSection)];
+    
+    if (!subSectionValue) {
+        return StatsSubSectionNone;
+    }
+    
+    return (StatsSubSection)[subSectionValue integerValue];
 }
+
 
 - (id)statsDataForStatsSection:(StatsSection)statsSection
 {
@@ -1201,6 +1063,33 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     }
     
     return data;
+}
+
+- (void)wipeDataAndSeedGroups
+{
+    if (self.sectionData) {
+        [self.sectionData removeAllObjects];
+    } else {
+        self.sectionData = [NSMutableDictionary new];
+    }
+    
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+
+    for (NSNumber *statsSectionNumber in self.sections) {
+        StatsSection statsSection = (StatsSection)statsSectionNumber.integerValue;
+        StatsSubSection statsSubSection = StatsSubSectionNone;
+        
+        if ([self.subSections objectForKey:statsSectionNumber] != nil) {
+            for (NSNumber *statsSubSectionNumber in self.subSections) {
+                statsSubSection = (StatsSubSection)statsSubSectionNumber.integerValue;
+                StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:statsSubSection];
+                self.sectionData[statsSectionNumber][statsSubSectionNumber] = group;
+            }
+        } else {
+            
+        }
+    }
 }
 
 @end
