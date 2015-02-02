@@ -46,7 +46,7 @@
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     }
     
-    CGFloat indentWidth = self.indentLevel * 7.0f;
+    CGFloat indentWidth = self.indentLevel * 7.0f + 8.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsLayout];

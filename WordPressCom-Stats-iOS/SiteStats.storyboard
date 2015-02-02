@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xkR-9V-KCm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xkR-9V-KCm">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -52,32 +52,32 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9u9-zI-9kF">
-                                            <rect key="frame" x="15" y="3" width="25" height="44"/>
+                                            <rect key="frame" x="23" y="3" width="25" height="44"/>
                                             <fontDescription key="fontDescription" name="Noticons-Regular" family="Noticons" pointSize="25"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIEWS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mzc-DL-teM">
-                                            <rect key="frame" x="48" y="10" width="50" height="24"/>
+                                            <rect key="frame" x="56" y="10" width="50" height="24"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
                                             <color key="textColor" red="0.19607843137254902" green="0.25490196078431371" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xSH-fQ-AtQ">
-                                            <rect key="frame" x="545" y="10" width="39" height="24"/>
+                                            <rect key="frame" x="538" y="10" width="39" height="24"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailingMargin" secondItem="xSH-fQ-AtQ" secondAttribute="trailing" constant="8" id="0bK-zh-FLZ"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="xSH-fQ-AtQ" secondAttribute="trailing" constant="15" id="0bK-zh-FLZ"/>
                                         <constraint firstAttribute="centerY" secondItem="xSH-fQ-AtQ" secondAttribute="centerY" id="VuV-oq-yHv"/>
                                         <constraint firstItem="9u9-zI-9kF" firstAttribute="baseline" secondItem="xSH-fQ-AtQ" secondAttribute="baseline" id="Xhi-m2-aeL"/>
                                         <constraint firstAttribute="centerY" secondItem="Mzc-DL-teM" secondAttribute="centerY" id="bb3-1l-H26"/>
                                         <constraint firstItem="9u9-zI-9kF" firstAttribute="top" secondItem="eBL-g2-naI" secondAttribute="topMargin" constant="-10" id="bo8-0j-rkK"/>
                                         <constraint firstAttribute="centerY" secondItem="9u9-zI-9kF" secondAttribute="centerY" constant="-3" id="fmG-7n-obz"/>
-                                        <constraint firstItem="9u9-zI-9kF" firstAttribute="leading" secondItem="eBL-g2-naI" secondAttribute="leadingMargin" constant="7" id="hQO-YO-eDt"/>
+                                        <constraint firstItem="9u9-zI-9kF" firstAttribute="leading" secondItem="eBL-g2-naI" secondAttribute="leadingMargin" constant="15" id="hQO-YO-eDt"/>
                                         <constraint firstItem="9u9-zI-9kF" firstAttribute="baseline" secondItem="Mzc-DL-teM" secondAttribute="baseline" id="qPy-LI-p68"/>
                                         <constraint firstItem="Mzc-DL-teM" firstAttribute="leading" secondItem="9u9-zI-9kF" secondAttribute="trailing" constant="8" id="sOz-9D-iHH"/>
                                     </constraints>
@@ -99,15 +99,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Stats for January 41" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KJ3-pN-XTA">
-                                            <rect key="frame" x="15" y="8" width="570" height="28"/>
+                                            <rect key="frame" x="23" y="8" width="554" height="28"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="20"/>
                                             <color key="textColor" red="0.34509803921568627" green="0.44705882352941179" blue="0.58431372549019611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailingMargin" secondItem="KJ3-pN-XTA" secondAttribute="trailing" constant="7" id="Ffn-4J-pqn"/>
-                                        <constraint firstItem="KJ3-pN-XTA" firstAttribute="leading" secondItem="pML-ow-yKw" secondAttribute="leadingMargin" constant="7" id="UAM-H5-mMW"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="KJ3-pN-XTA" secondAttribute="trailing" constant="15" id="Ffn-4J-pqn"/>
+                                        <constraint firstItem="KJ3-pN-XTA" firstAttribute="leading" secondItem="pML-ow-yKw" secondAttribute="leadingMargin" constant="15" id="UAM-H5-mMW"/>
                                         <constraint firstAttribute="centerY" secondItem="KJ3-pN-XTA" secondAttribute="centerY" id="UxL-zO-PSr"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -118,7 +118,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Group Header Text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UHc-xu-haN">
-                                            <rect key="frame" x="15" y="11" width="159" height="24"/>
+                                            <rect key="frame" x="23" y="11" width="159" height="24"/>
                                             <fontDescription key="fontDescription" name="OpenSans-Bold" family="Open Sans" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -154,13 +154,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gf0-YI-zAr">
-                                            <rect key="frame" x="15" y="11" width="515" height="21"/>
+                                            <rect key="frame" x="23" y="11" width="500" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans-Bold" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Views" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4l-GA-6pv">
-                                            <rect key="frame" x="540" y="11" width="44" height="21"/>
+                                            <rect key="frame" x="533" y="11" width="44" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans-Bold" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -170,8 +170,8 @@
                                         <constraint firstItem="Gf0-YI-zAr" firstAttribute="baseline" secondItem="G4l-GA-6pv" secondAttribute="baseline" id="1zj-ku-Urv"/>
                                         <constraint firstItem="G4l-GA-6pv" firstAttribute="leading" secondItem="Gf0-YI-zAr" secondAttribute="trailing" constant="10" id="4uN-KB-8Tj"/>
                                         <constraint firstAttribute="centerY" secondItem="Gf0-YI-zAr" secondAttribute="centerY" id="BBV-dU-zgj"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="G4l-GA-6pv" secondAttribute="trailing" constant="8" id="EhP-Gt-kch"/>
-                                        <constraint firstItem="Gf0-YI-zAr" firstAttribute="leading" secondItem="OP0-Uc-wLW" secondAttribute="leadingMargin" constant="7" id="jKx-ja-3XV"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="G4l-GA-6pv" secondAttribute="trailing" constant="15" id="EhP-Gt-kch"/>
+                                        <constraint firstItem="Gf0-YI-zAr" firstAttribute="leading" secondItem="OP0-Uc-wLW" secondAttribute="leadingMargin" constant="15" id="jKx-ja-3XV"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -181,20 +181,20 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="300" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p4X-m5-Nld">
-                                            <rect key="frame" x="15" y="12" width="20" height="20"/>
+                                            <rect key="frame" x="23" y="12" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="LE8-1h-7xY"/>
                                                 <constraint firstAttribute="width" constant="20" id="Or5-mw-k16"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAp-0f-HXa">
-                                            <rect key="frame" x="43" y="11" width="488" height="21"/>
+                                            <rect key="frame" x="51" y="11" width="473" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="10000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rwp-nF-8c1">
-                                            <rect key="frame" x="541" y="11" width="43" height="21"/>
+                                            <rect key="frame" x="534" y="11" width="43" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -202,10 +202,10 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="GAp-0f-HXa" secondAttribute="centerY" id="ERR-TL-htO"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Rwp-nF-8c1" secondAttribute="trailing" constant="8" id="Gsf-dz-QkE"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Rwp-nF-8c1" secondAttribute="trailing" constant="15" id="Gsf-dz-QkE"/>
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
                                         <constraint firstAttribute="centerY" secondItem="p4X-m5-Nld" secondAttribute="centerY" id="XTA-mJ-ta4"/>
-                                        <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="7" id="XsQ-gt-qaQ"/>
+                                        <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="15" id="XsQ-gt-qaQ"/>
                                         <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="p4X-m5-Nld" secondAttribute="trailing" constant="8" id="jMx-Mh-VzX"/>
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="baseline" secondItem="GAp-0f-HXa" secondAttribute="baseline" id="mna-l6-qeG"/>
                                         <constraint firstItem="p4X-m5-Nld" firstAttribute="top" secondItem="Dnr-8L-jIZ" secondAttribute="topMargin" constant="-8" id="oGv-TS-QBX"/>
@@ -231,7 +231,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="View All" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pXf-GO-N9N">
-                                            <rect key="frame" x="15" y="11" width="537" height="21"/>
+                                            <rect key="frame" x="23" y="11" width="521" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -239,8 +239,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="pXf-GO-N9N" secondAttribute="centerY" id="1G2-lz-lV5"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="pXf-GO-N9N" secondAttribute="trailing" constant="7" id="cKM-pH-vvN"/>
-                                        <constraint firstItem="pXf-GO-N9N" firstAttribute="leading" secondItem="9ex-YE-WVE" secondAttribute="leadingMargin" constant="7" id="uJl-dn-Tqg"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="pXf-GO-N9N" secondAttribute="trailing" constant="15" id="cKM-pH-vvN"/>
+                                        <constraint firstItem="pXf-GO-N9N" firstAttribute="leading" secondItem="9ex-YE-WVE" secondAttribute="leadingMargin" constant="15" id="uJl-dn-Tqg"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -253,16 +253,16 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Total blahblah Followers: 1000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmG-gY-rM9">
-                                            <rect key="frame" x="15" y="11" width="570" height="21"/>
+                                            <rect key="frame" x="23" y="11" width="554" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="HmG-gY-rM9" firstAttribute="leading" secondItem="vYe-7i-oUA" secondAttribute="leadingMargin" constant="7" id="KjH-vZ-SLf"/>
+                                        <constraint firstItem="HmG-gY-rM9" firstAttribute="leading" secondItem="vYe-7i-oUA" secondAttribute="leadingMargin" constant="15" id="KjH-vZ-SLf"/>
                                         <constraint firstAttribute="centerY" secondItem="HmG-gY-rM9" secondAttribute="centerY" id="Upi-Im-2C4"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="HmG-gY-rM9" secondAttribute="trailing" constant="7" id="fAp-db-GbW"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="HmG-gY-rM9" secondAttribute="trailing" constant="15" id="fAp-db-GbW"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -272,7 +272,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This means no data is present." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kg0-Ed-1Km">
-                                            <rect key="frame" x="15" y="15" width="570" height="69"/>
+                                            <rect key="frame" x="23" y="15" width="554" height="69"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -280,10 +280,10 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" constant="7" id="6uY-Ac-ucE"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Kg0-Ed-1Km" secondAttribute="trailing" constant="7" id="CTF-PN-wBx"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Kg0-Ed-1Km" secondAttribute="trailing" constant="15" id="CTF-PN-wBx"/>
                                         <constraint firstItem="Kg0-Ed-1Km" firstAttribute="top" secondItem="0Bj-bw-PZy" secondAttribute="topMargin" constant="7" id="cHY-4n-7mg"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Kg0-Ed-1Km" secondAttribute="bottom" constant="31" id="iH9-GS-iSc"/>
-                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="leading" secondItem="0Bj-bw-PZy" secondAttribute="leadingMargin" constant="7" id="vxP-2u-x6G"/>
+                                        <constraint firstItem="Kg0-Ed-1Km" firstAttribute="leading" secondItem="0Bj-bw-PZy" secondAttribute="leadingMargin" constant="15" id="vxP-2u-x6G"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
