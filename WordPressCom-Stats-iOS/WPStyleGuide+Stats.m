@@ -20,6 +20,11 @@ const CGFloat RPTVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.965 green:0.718 blue:0.494 alpha:0.3]; /*#f6b77e*/
 }
 
++ (UIColor *)statsMediumBlue
+{
+    return [UIColor colorWithRed:0 green:0.667 blue:0.863 alpha:1]; /*#00aadc*/
+}
+
 + (UIColor *)statsDarkerOrange
 {
     return [self jazzyOrange];
