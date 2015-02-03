@@ -8,6 +8,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *leftLabel;
 @property (nonatomic, weak) IBOutlet UILabel *rightLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
+@property (nonatomic, weak) IBOutlet UILabel *indentChevronLabel;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *spaceConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *leadingEdgeConstraint;
@@ -20,6 +21,7 @@
 {
     self.leftLabel.text = self.leftText;
     self.rightLabel.text = self.rightText;
+    self.indentChevronLabel.hidden = !self.indentable;
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -46,7 +48,14 @@
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     }
     
+    if (self.expanded) {
+        self.indentChevronLabel.text = @"";
+    } else {
+        self.indentChevronLabel.text = @"";
+    }
+    
     CGFloat indentWidth = self.indentLevel * 7.0f + 8.0f;
+    indentWidth += self.indentable ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsLayout];
@@ -65,6 +74,7 @@
     StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.accessoryType = UITableViewCellAccessoryNone;
 }
 
 @end

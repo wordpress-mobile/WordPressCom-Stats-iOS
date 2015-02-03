@@ -292,6 +292,10 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
         if (statsItem.children.count > 0) {
+            StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            cell.expanded = !statsItem.isExpanded;
+            [cell doneSettingProperties];
+
             BOOL insert = !statsItem.isExpanded;
             NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
@@ -788,6 +792,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                               rightText:item.value
                             andImageURL:item.iconURL
                             indentLevel:item.depth
+                             indentable:item.children.count > 0
                              selectable:item.actions.count > 0 || item.children.count > 0];
     }
 }
@@ -1020,6 +1025,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                         rightText:(NSString *)rightText
                       andImageURL:(NSURL *)imageURL
                       indentLevel:(NSUInteger)indentLevel
+                       indentable:(BOOL)indentable
                        selectable:(BOOL)selectable
 {
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
@@ -1027,6 +1033,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
     statsCell.indentLevel = indentLevel;
+    statsCell.indentable = indentable;
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
 }
