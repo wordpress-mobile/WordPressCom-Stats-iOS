@@ -43,7 +43,7 @@
     }
     
     BOOL isNestedRow = self.indentLevel > 1;
-    if (isNestedRow) {
+    if (isNestedRow || self.expanded) {
         StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     }
