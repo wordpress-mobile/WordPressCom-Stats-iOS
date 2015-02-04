@@ -10,7 +10,8 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionComments,
     StatsSectionTagsCategories,
     StatsSectionFollowers,
-    StatsSectionPublicize
+    StatsSectionPublicize,
+    StatsSectionWebVersion
 };
 
 typedef NS_ENUM(NSInteger, StatsSubSection) {

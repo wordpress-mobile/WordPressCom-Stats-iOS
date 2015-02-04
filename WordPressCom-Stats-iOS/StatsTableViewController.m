@@ -31,6 +31,7 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
+static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
@@ -74,7 +75,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                            @(StatsSectionComments),
                            @(StatsSectionTagsCategories),
                            @(StatsSectionFollowers),
-                           @(StatsSectionPublicize)];
+                           @(StatsSectionPublicize),
+                           @(StatsSectionWebVersion)];
     self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
                            @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
     self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
@@ -131,6 +133,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         case StatsSectionGraph:
             return 5;
         case StatsSectionPeriodHeader:
+        case StatsSectionWebVersion:
             return 1;
             
         // TODO :: Pull offset from StatsGroup
@@ -248,6 +251,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
+        return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
@@ -754,8 +759,11 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             
             break;
         }
+        case StatsSectionWebVersion:
+            identifier = StatsTableViewWebVersionCellIdentifier;
+            break;
     }
-    
+
     return identifier;
 }
 
@@ -807,6 +815,10 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                              indentable:item.children.count > 0
                                expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0];
+    } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
+        
     }
 }
 
