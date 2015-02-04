@@ -28,6 +28,7 @@
             <string>OpenSans</string>
             <string>OpenSans</string>
             <string>OpenSans</string>
+            <string>OpenSans</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -257,6 +258,25 @@
                                 <connections>
                                     <segue destination="uuT-Sq-uB0" kind="show" identifier="ViewAll" id="ljy-WF-WHT"/>
                                 </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="WebVersion" id="Meo-zE-hCo" userLabel="WebVersion" customClass="StatsStandardBorderedTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Meo-zE-hCo" id="0cD-jz-c8y">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="View Web Version" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aah-rV-Ret">
+                                            <rect key="frame" x="23" y="11" width="521" height="21"/>
+                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="aah-rV-Ret" secondAttribute="centerY" id="EFc-3K-K9e"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="aah-rV-Ret" secondAttribute="trailing" constant="15" id="Vc5-Ka-7b6"/>
+                                        <constraint firstItem="aah-rV-Ret" firstAttribute="leading" secondItem="0cD-jz-c8y" secondAttribute="leadingMargin" constant="15" id="dhm-Fj-gu1"/>
+                                    </constraints>
+                                </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="NuU-bX-mTY" userLabel="GroupTotalsRow" customClass="StatsStandardBorderedTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>

@@ -12,6 +12,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsSection.h"
+#import <WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -30,6 +31,7 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
+static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
@@ -73,7 +75,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                            @(StatsSectionComments),
                            @(StatsSectionTagsCategories),
                            @(StatsSectionFollowers),
-                           @(StatsSectionPublicize)];
+                           @(StatsSectionPublicize),
+                           @(StatsSectionWebVersion)];
     self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
                            @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
     self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
@@ -130,6 +133,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         case StatsSectionGraph:
             return 5;
         case StatsSectionPeriodHeader:
+        case StatsSectionWebVersion:
             return 1;
             
         // TODO :: Pull offset from StatsGroup
@@ -248,6 +252,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
         return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
+        return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
@@ -331,7 +337,26 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                 }
             }
         }
-        
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
+        [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
+
+        if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
+            WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.siteID];
+        } else {
+            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.siteID]];
+            [[UIApplication sharedApplication] openURL:webURL];
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger numberOfSections = [self.tableView numberOfSections];
+    NSInteger numberOfRows = [self.tableView numberOfRowsInSection:(numberOfSections - 1)];
+    
+    if (indexPath.section == (numberOfSections - 1) && indexPath.row == (numberOfRows - 1)) {
+        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom];
     }
 }
 
@@ -347,6 +372,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
+
         StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
         viewAllVC.selectedDate = self.selectedDate;
         viewAllVC.periodUnit = self.selectedPeriodUnit;
@@ -365,6 +392,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
+    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart];
+
     self.selectedDate = date;
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
@@ -743,8 +772,11 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             
             break;
         }
+        case StatsSectionWebVersion:
+            identifier = StatsTableViewWebVersionCellIdentifier;
+            break;
     }
-    
+
     return identifier;
 }
 
@@ -796,6 +828,10 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                              indentable:item.children.count > 0
                                expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0];
+    } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
+        
     }
 }
 
