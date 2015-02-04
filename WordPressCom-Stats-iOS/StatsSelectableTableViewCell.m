@@ -31,9 +31,18 @@
     [super setSelected:selected animated:animated];
 
     if (selected) {
+        self.categoryIconLabel.textColor = [WPStyleGuide statsDarkGray];
+        self.categoryLabel.textColor = [WPStyleGuide statsDarkGray];
         self.valueLabel.textColor = [WPStyleGuide jazzyOrange];
     } else {
-        self.valueLabel.textColor = [WPStyleGuide littleEddieGrey];
+        self.categoryIconLabel.textColor = [WPStyleGuide statsLessDarkGrey];
+        self.categoryLabel.textColor = [WPStyleGuide statsLessDarkGrey];
+        
+        if ([self.valueLabel.text isEqualToString:@"0"]) {
+            self.valueLabel.textColor = [WPStyleGuide statsLightGrayZeroValue];
+        } else {
+            self.valueLabel.textColor = [WPStyleGuide littleEddieGrey];
+        }
     }
 }
 

@@ -224,6 +224,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 {
     return @[@{ @"color" : [WPStyleGuide wordPressBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
+                @"highlightedColor" : [WPStyleGuide statsMediumBlue],
                 @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
                 @"name" : @"views"
                 },

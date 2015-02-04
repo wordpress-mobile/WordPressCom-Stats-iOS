@@ -296,7 +296,11 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
             NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
-            
+
+            StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            cell.expanded = statsItem.isExpanded;
+            [cell doneSettingProperties];
+
             NSMutableArray *indexPaths = [NSMutableArray new];
             
             NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
@@ -305,6 +309,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             }
             
             [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             if (insert) {
                 [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
@@ -788,6 +793,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                               rightText:item.value
                             andImageURL:item.iconURL
                             indentLevel:item.depth
+                             indentable:item.children.count > 0
+                               expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0];
     }
 }
@@ -1020,6 +1027,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                         rightText:(NSString *)rightText
                       andImageURL:(NSURL *)imageURL
                       indentLevel:(NSUInteger)indentLevel
+                       indentable:(BOOL)indentable
+                         expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
 {
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
@@ -1027,6 +1036,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
     statsCell.indentLevel = indentLevel;
+    statsCell.indentable = indentable;
+    statsCell.expanded = expanded;
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
 }

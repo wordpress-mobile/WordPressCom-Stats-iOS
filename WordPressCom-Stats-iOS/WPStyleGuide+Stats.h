@@ -11,8 +11,12 @@ extern const CGFloat RPTVCVerticalOuterPadding;
 + (UIColor *)statsLighterOrange;
 + (UIColor *)statsDarkerOrange;
 
++ (UIColor *)statsMediumBlue;
 + (UIColor *)statsLightGray;
 + (UIColor *)statsUltraLightGray;
++ (UIColor *)statsDarkGray;
++ (UIColor *)statsLessDarkGrey;
++ (UIColor *)statsLightGrayZeroValue;
 
 + (UIFont *)subtitleFontBoldItalic;
 

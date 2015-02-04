@@ -99,12 +99,14 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                               rightText:item.value
                             andImageURL:item.iconURL
                             indentLevel:item.depth
+                             indentable:item.children.count > 0
+                               expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
-    } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
-        [self configureSectionGroupHeaderCell:cell];
+    } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
+        [self configureSectionTwoColumnHeaderCell:cell];
     }
     
     return cell;
@@ -123,6 +125,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         statsItem.expanded = !statsItem.isExpanded;
         NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
         
+        StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.expanded = statsItem.isExpanded;
+        [cell doneSettingProperties];
+        
         NSMutableArray *indexPaths = [NSMutableArray new];
         
         NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
@@ -131,6 +137,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         }
         
         [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         if (insert) {
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
@@ -247,6 +254,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                         rightText:(NSString *)rightText
                       andImageURL:(NSURL *)imageURL
                       indentLevel:(NSUInteger)indentLevel
+                       indentable:(BOOL)indentable
+                         expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
 {
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
@@ -254,17 +263,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
     statsCell.indentLevel = indentLevel;
+    statsCell.indentable = indentable;
+    statsCell.expanded = expanded;
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
-}
-
-
-- (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell
-{
-    NSString *headerText = self.statsGroup.groupTitle;
-    
-    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-    label.text = headerText;
 }
 
 

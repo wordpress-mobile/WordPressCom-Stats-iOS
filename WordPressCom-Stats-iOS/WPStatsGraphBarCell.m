@@ -34,9 +34,32 @@
     }];
 }
 
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+    
+    if (highlighted) {
+        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLightGray];
+    } else {
+        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+    }
+    
+    [self.barsWithColors enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
+        UIView *view = dict[@"view"];
+        UIColor *color = dict[@"color"];
+        UIColor *highlightedColor = dict[@"highlightedColor"];
+        
+        view.backgroundColor = self.isHighlighted ? highlightedColor : color;
+    }];
+}
+
 - (void)setSelected:(BOOL)selected
 {
     [super setSelected:selected];
+    
+    if (selected) {
+        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+    }
     
     [self.barsWithColors enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
         UIView *view = dict[@"view"];
@@ -59,6 +82,7 @@
     [self.categoryBars enumerateObjectsUsingBlock:^(NSDictionary *category, NSUInteger idx, BOOL *stop) {
         UIColor *color = category[@"color"];
         UIColor *selectedColor = category[@"selectedColor"];
+        UIColor *highlightedColor = category[@"highlightedColor"];
         NSInteger value = [category[@"value"] integerValue];
         NSString *name = category[@"name"];
         
@@ -84,7 +108,7 @@
     
         inset += 2.0;
         
-        [self.barsWithColors addObject:@{ @"view" : view, @"color" : color, @"selectedColor" : selectedColor }];
+        [self.barsWithColors addObject:@{ @"view" : view, @"color" : color, @"selectedColor" : selectedColor, @"highlightedColor": highlightedColor}];
     }];
     
     UILabel *axisLabel = [self axisLabelWithText:self.barName];
