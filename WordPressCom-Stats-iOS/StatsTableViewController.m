@@ -337,7 +337,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 }
             }
         }
-        
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
+        [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
+
+        if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
+            WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.siteID];
+        } else {
+            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.siteID]];
+            [[UIApplication sharedApplication] openURL:webURL];
+        }
     }
 }
 
