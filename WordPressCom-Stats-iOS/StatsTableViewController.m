@@ -12,6 +12,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsSection.h"
+#import <WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -332,6 +333,16 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             }
         }
         
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger numberOfSections = [self.tableView numberOfSections];
+    NSInteger numberOfRows = [self.tableView numberOfRowsInSection:(numberOfSections - 1)];
+    
+    if (indexPath.section == (numberOfSections - 1) && indexPath.row == (numberOfRows - 1)) {
+        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom];
     }
 }
 
