@@ -428,7 +428,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             break;
     }
     
-    self.selectedSubsections[@(section)] = @(subSection);
+    self.selectedSubsections[@(statsSection)] = @(subSection);
     NSInteger newSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
     
     NSUInteger sectionNumber = [self.sections indexOfObject:@(statsSection)];
