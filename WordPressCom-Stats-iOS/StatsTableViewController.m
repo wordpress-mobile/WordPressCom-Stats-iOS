@@ -372,6 +372,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
+
         StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
         viewAllVC.selectedDate = self.selectedDate;
         viewAllVC.periodUnit = self.selectedPeriodUnit;
