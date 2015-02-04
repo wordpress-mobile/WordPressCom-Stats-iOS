@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
+#import <WPTableViewCell.h>
 
-@interface StatsStandardBorderedTableViewCell : UITableViewCell
+@interface StatsStandardBorderedTableViewCell : WPTableViewCell
 
 @end
