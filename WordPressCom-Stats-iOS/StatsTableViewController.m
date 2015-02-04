@@ -390,6 +390,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
+    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart];
+
     self.selectedDate = date;
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
