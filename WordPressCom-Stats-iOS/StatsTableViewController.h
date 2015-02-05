@@ -1,6 +1,8 @@
 #import <UIKit/UIKit.h>
 #import "WPStatsViewController.h"
 
+@protocol WPStatsViewControllerDelegate;
+
 @interface StatsTableViewController : UITableViewController
 
 @property (nonatomic, strong) NSNumber *siteID;

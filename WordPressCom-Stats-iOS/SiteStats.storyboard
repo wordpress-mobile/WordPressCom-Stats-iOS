@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xkR-9V-KCm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="qzH-Vg-Gi3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -103,7 +103,7 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uMq-k6-6FG" id="pML-ow-yKw">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Stats for January 41" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KJ3-pN-XTA">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Stats for January 41" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="KJ3-pN-XTA">
                                             <rect key="frame" x="23" y="8" width="554" height="28"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="20"/>
                                             <color key="textColor" red="0.34509803921568627" green="0.44705882352941179" blue="0.58431372549019611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -475,13 +475,13 @@
         <!--Stats-->
         <scene sceneID="VEy-zh-BAL">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="qzH-Vg-Gi3" customClass="WPStatsContainerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StatsContainerViewController" automaticallyAdjustsScrollViewInsets="NO" id="qzH-Vg-Gi3" customClass="WPStatsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IUN-av-KWH"/>
                         <viewControllerLayoutGuide type="bottom" id="eay-2f-Ldo"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="yO0-Lr-iKb">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ENG-tq-nCx">
@@ -515,6 +515,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Stats" id="DF4-gA-Ade"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="periodSegmentControl" destination="ysq-ij-dbS" id="1DH-gj-zgx"/>
                     </connections>
@@ -522,22 +523,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fb0-xY-90L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1669" y="98"/>
-        </scene>
-        <!--Stats View Controller-->
-        <scene sceneID="2Kt-k2-d36">
-            <objects>
-                <navigationController id="xkR-9V-KCm" customClass="WPStatsViewController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1vs-JE-tai">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="qzH-Vg-Gi3" kind="relationship" relationship="rootViewController" id="5eg-83-thV"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="n9b-NU-cCU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="940" y="103"/>
         </scene>
     </scenes>
 </document>
