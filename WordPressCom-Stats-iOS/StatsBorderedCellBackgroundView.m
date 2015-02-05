@@ -34,9 +34,9 @@
 {
     [super layoutSubviews];
     
-    CGFloat borderSidePadding = IS_IPHONE ? RPTVCHorizontalOuterPadding - 1.0f : 0.0f;
+    CGFloat borderSidePadding = RPTVCHorizontalOuterPadding - 1.0f;
     CGFloat bottomPadding = 1.0f;
-    CGFloat sidePadding = IS_IPHONE ? RPTVCHorizontalOuterPadding : 0.0f;
+    CGFloat sidePadding = RPTVCHorizontalOuterPadding;
     
     self.theBoxView.frame = CGRectMake(borderSidePadding, 0.0, CGRectGetWidth(self.frame) - 2 * borderSidePadding, CGRectGetHeight(self.frame));
     self.contentBackgroundView.frame = CGRectMake(sidePadding, 0.0, CGRectGetWidth(self.frame) - 2 * sidePadding, CGRectGetHeight(self.frame));

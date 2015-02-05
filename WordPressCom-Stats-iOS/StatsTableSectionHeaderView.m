@@ -58,7 +58,7 @@
         self.frame = frame;
     }
 
-    CGFloat borderSidePadding = IS_IPHONE ? RPTVCHorizontalOuterPadding - 1.0f : 0.0f; // Just to the left of the container
+    CGFloat borderSidePadding = RPTVCHorizontalOuterPadding - 1.0f; // Just to the left of the container
     self.theBoxView.frame = CGRectMake(borderSidePadding, self.isFooter ? -1.0f : 0.0f, CGRectGetWidth(self.frame) - 2 * borderSidePadding, 1.0f);
 }
 
