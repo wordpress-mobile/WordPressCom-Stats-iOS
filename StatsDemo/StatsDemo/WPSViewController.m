@@ -84,10 +84,11 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
     statsViewController.siteTimeZone = self.timeZone;
     statsViewController.oauth2Token = self.oauth2Token;
     statsViewController.statsDelegate = self;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:statsViewController];
     
-    [self addChildViewController:statsViewController];
-    [self.view addSubview:[statsViewController view]];
-    [statsViewController didMoveToParentViewController:self];
+    [self addChildViewController:navController];
+    [self.view addSubview:[navController view]];
+    [navController didMoveToParentViewController:self];
     
     self.statsViewController = statsViewController;
 }
