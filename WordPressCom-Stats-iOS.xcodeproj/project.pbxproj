@@ -213,14 +213,16 @@
 		9367D9D51A6EB5770033911A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				936E74A21A688E6F0048F552 /* StatsSelectableTableViewCell.h */,
-				936E74A31A688E6F0048F552 /* StatsSelectableTableViewCell.m */,
-				9367D9D61A6EB5A90033911A /* StatsTwoColumnTableViewCell.h */,
-				9367D9D71A6EB5A90033911A /* StatsTwoColumnTableViewCell.m */,
 				9367D9DA1A7018350033911A /* StatsBorderedCellBackgroundView.h */,
 				9367D9DB1A7018350033911A /* StatsBorderedCellBackgroundView.m */,
+				936E74A21A688E6F0048F552 /* StatsSelectableTableViewCell.h */,
+				936E74A31A688E6F0048F552 /* StatsSelectableTableViewCell.m */,
 				9367D9DD1A70194D0033911A /* StatsStandardBorderedTableViewCell.h */,
 				9367D9DE1A70194D0033911A /* StatsStandardBorderedTableViewCell.m */,
+				936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */,
+				936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */,
+				9367D9D61A6EB5A90033911A /* StatsTwoColumnTableViewCell.h */,
+				9367D9D71A6EB5A90033911A /* StatsTwoColumnTableViewCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -362,8 +364,6 @@
 				9367D9D51A6EB5770033911A /* Cells */,
 				936B22491958C65A0058C828 /* Graph */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
-				936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */,
-				936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */,
 				93FABB811A126DC5000C15ED /* StatsTableViewController.h */,
 				93FABB821A126DC5000C15ED /* StatsTableViewController.m */,
 				9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */,
