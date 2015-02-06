@@ -641,7 +641,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
-            statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flag_icon"]];
+            statsItem.iconURL = [NSURL URLWithString:[countryInfoDict[key] stringForKey:@"flat_flag_icon"]];
             
             [items addObject:statsItem];
         }
