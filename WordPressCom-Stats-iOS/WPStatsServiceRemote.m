@@ -856,7 +856,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [subscriber stringForKey:@"label"];
             NSURLComponents *components = [NSURLComponents componentsWithString:[subscriber stringForKey:@"avatar"]];
-            components.query = @"?d=mm&s=60";
+            components.query = @"d=mm&s=60";
             statsItem.iconURL = components.URL;
 
             statsItem.date = [self.rfc3339DateFormatter dateFromString:[subscriber stringForKey:@"date_subscribed"]];
