@@ -9,6 +9,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+        _bottomBorderEnabled = YES;
         
         _theBoxView = [[UIView alloc] initWithFrame:CGRectZero];
         _theBoxView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -35,7 +36,7 @@
     [super layoutSubviews];
     
     CGFloat borderSidePadding = StatsVCHorizontalOuterPadding - 1.0f;
-    CGFloat bottomPadding = 1.0f;
+    CGFloat bottomPadding = self.bottomBorderEnabled ? 1.0f : 0.0f;
     CGFloat sidePadding = StatsVCHorizontalOuterPadding;
     
     self.theBoxView.frame = CGRectMake(borderSidePadding, 0.0, CGRectGetWidth(self.frame) - 2 * borderSidePadding, CGRectGetHeight(self.frame));

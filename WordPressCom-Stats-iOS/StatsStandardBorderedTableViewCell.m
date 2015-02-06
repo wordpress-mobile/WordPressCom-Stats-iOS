@@ -17,8 +17,20 @@
 {
     [super awakeFromNib];
     
+    _bottomBorderEnabled = YES;
     self.backgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:YES];
     self.selectedBackgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:NO];
+}
+
+
+- (void)setBottomBorderEnabled:(BOOL)bottomBorderEnabled
+{
+    _bottomBorderEnabled = bottomBorderEnabled;
+    
+    StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
+    StatsBorderedCellBackgroundView *selectedBackgroundView = (StatsBorderedCellBackgroundView *)self.selectedBackgroundView;
+    backgroundView.bottomBorderEnabled = bottomBorderEnabled;
+    selectedBackgroundView.bottomBorderEnabled = bottomBorderEnabled;
 }
 
 @end
