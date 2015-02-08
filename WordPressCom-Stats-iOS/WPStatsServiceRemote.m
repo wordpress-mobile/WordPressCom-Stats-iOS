@@ -641,9 +641,13 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
-            NSURLComponents *components = [NSURLComponents componentsWithString:[countryInfoDict[key] stringForKey:@"flat_flag_icon"]];
-            components.query = @"s=60";
-            statsItem.iconURL = components.URL;
+
+            NSString *urlString = [countryInfoDict[key] stringForKey:@"flat_flag_icon"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"s=60";
+                statsItem.iconURL = components.URL;
+            }
             
             [items addObject:statsItem];
         }
@@ -732,9 +736,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         for (NSDictionary *author in authors) {
             StatsItem *item = [StatsItem new];
             item.label = [author stringForKey:@"name"];
-            NSURLComponents *components = [NSURLComponents componentsWithString:[author stringForKey:@"gravatar"]];
-            components.query = @"d=mm&s=60";
-            item.iconURL = components.URL;
+            NSString *urlString = [author stringForKey:@"gravatar"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"d=mm&s=60";
+                item.iconURL = components.URL;
+            }
             item.value = [self localizedStringForNumber:[author numberForKey:@"comments"]];
             // TODO follow data
             
@@ -855,9 +862,13 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         for (NSDictionary *subscriber in subscribers) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [subscriber stringForKey:@"label"];
-            NSURLComponents *components = [NSURLComponents componentsWithString:[subscriber stringForKey:@"avatar"]];
-            components.query = @"d=mm&s=60";
-            statsItem.iconURL = components.URL;
+            
+            NSString *urlString = [subscriber stringForKey:@"avatar"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"d=mm&s=60";
+                statsItem.iconURL = components.URL;
+            }
 
             statsItem.date = [self.rfc3339DateFormatter dateFromString:[subscriber stringForKey:@"date_subscribed"]];
             
