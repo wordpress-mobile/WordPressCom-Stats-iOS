@@ -827,7 +827,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                             indentLevel:item.depth
                              indentable:item.children.count > 0
                                expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0];
+                             selectable:item.actions.count > 0 || item.children.count > 0
+                        forStatsSection:statsSection];
     } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
@@ -1066,11 +1067,15 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                        indentable:(BOOL)indentable
                          expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
+                  forStatsSection:(StatsSection)statsSection
 {
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = leftText;
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
+    statsCell.showCircularIcon = showCircularIcon;
     statsCell.indentLevel = indentLevel;
     statsCell.indentable = indentable;
     statsCell.expanded = expanded;

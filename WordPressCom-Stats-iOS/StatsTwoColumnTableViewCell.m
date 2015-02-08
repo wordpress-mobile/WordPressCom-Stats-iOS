@@ -2,6 +2,7 @@
 #import "WPStyleGuide+Stats.h"
 #import <WPImageSource.h>
 #import "StatsBorderedCellBackgroundView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface StatsTwoColumnTableViewCell ()
 
@@ -32,6 +33,12 @@
 
     // Hide the image if one isn't set
     if (self.imageURL) {
+        if (self.showCircularIcon) {
+            self.iconImageView.layer.cornerRadius = 10.0f;
+            self.iconImageView.layer.masksToBounds = YES;
+            [self.iconImageView.layer setNeedsDisplay];
+        }
+
         [[WPImageSource sharedSource] downloadImageForURL:self.imageURL withSuccess:^(UIImage *image) {
             self.iconImageView.image = image;
             self.iconImageView.backgroundColor = [UIColor clearColor];
@@ -62,10 +69,11 @@
     [self setNeedsLayout];
 }
 
+
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    
+
     self.leftLabel.text = nil;
     self.rightLabel.text = nil;
     self.leftLabel.textColor = [UIColor blackColor];
@@ -78,6 +86,11 @@
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryNone;
+ 
+    self.showCircularIcon = NO;
+    self.iconImageView.layer.cornerRadius = 0.0f;
+    self.iconImageView.layer.masksToBounds = NO;
+    [self.iconImageView.layer setNeedsDisplay];
 }
 
 @end
