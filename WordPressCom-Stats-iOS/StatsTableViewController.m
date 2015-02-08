@@ -16,6 +16,7 @@
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
+static CGFloat const StatsTableGroupHeaderHeight = 30.0f;
 static NSInteger const StatsTableRowDataOffsetStandard = 2;
 static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
 static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
@@ -232,6 +233,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
     if ([cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
         return StatsTableGraphHeight;
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+        return StatsTableGroupHeaderHeight;
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         return StatsTableNoResultsHeight;
     }
@@ -939,13 +942,15 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGroupHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
     NSString *headerText = statsGroup.groupTitle;
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
+    
+    cell.bottomBorderEnabled = NO;
 }
 
 

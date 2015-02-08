@@ -3,4 +3,6 @@
 
 @interface StatsStandardBorderedTableViewCell : WPTableViewCell
 
+@property (nonatomic, assign) BOOL bottomBorderEnabled;
+
 @end
