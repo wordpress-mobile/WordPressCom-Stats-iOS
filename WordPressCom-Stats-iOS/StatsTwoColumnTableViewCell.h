@@ -6,6 +6,7 @@
 @property (nonatomic, copy) NSString *leftText;
 @property (nonatomic, copy) NSString *rightText;
 @property (nonatomic, strong) NSURL *imageURL;
+@property (nonatomic, assign) BOOL showCircularIcon;
 @property (nonatomic, assign) NSUInteger indentLevel;
 @property (nonatomic, assign) BOOL selectable;
 @property (nonatomic, assign) BOOL indentable;

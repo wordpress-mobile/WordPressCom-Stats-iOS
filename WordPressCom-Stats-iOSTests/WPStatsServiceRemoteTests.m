@@ -485,13 +485,13 @@
          XCTAssertTrue(moreViewsAvailable);
          XCTAssertNil(error);
          
-         XCTAssertEqual(12, items.count);
+         XCTAssertEqual(10, items.count);
          
          StatsItem *item = items[0];
          XCTAssertTrue([item.label isEqualToString:@"United States"]);
-         XCTAssertTrue([@"23" isEqualToString:item.value]);
+         XCTAssertTrue([@"8" isEqualToString:item.value]);
          XCTAssertNil(item.itemID);
-         XCTAssertTrue([item.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48"]);
+         XCTAssertTrue([item.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=60"]);
          XCTAssertEqual(0, item.actions.count);
          XCTAssertEqual(0, item.children.count);
          
@@ -589,7 +589,7 @@
          StatsItem *author1 = authorItems.firstObject;
          XCTAssertTrue([@"Aaron Douglas" isEqualToString:author1.label]);
          XCTAssertTrue([@"20" isEqualToString:author1.value]);
-         XCTAssertTrue([author1.iconURL.absoluteString isEqualToString:@"https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?s=64&amp;d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"]);
+         XCTAssertTrue([author1.iconURL.absoluteString isEqualToString:@"https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?d=mm&s=60"]);
          XCTAssertEqual(0, author1.actions.count);
          XCTAssertEqual(0, author1.children.count);
          
@@ -674,7 +674,7 @@
          XCTAssertTrue([@"ritu929" isEqualToString:item1.label]);
          XCTAssertNil(item1.value);
          XCTAssertNotNil(item1.date);
-         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://0.gravatar.com/avatar/624b89cb0c8b9136f9629dd7bcab0517?s=64&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G"]);
+         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://0.gravatar.com/avatar/624b89cb0c8b9136f9629dd7bcab0517?d=mm&s=60"]);
          XCTAssertEqual(0, item1.actions.count);
          XCTAssertEqual(0, item1.children.count);
          
@@ -710,7 +710,7 @@
          XCTAssertTrue([@"user1@example.com" isEqualToString:item1.label]);
          XCTAssertNil(item1.value);
          XCTAssertNotNil(item1.date);
-         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://2.gravatar.com/avatar/e82142697283897ad7444810e5975895?s=64&amp;d=https%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G"]);
+         XCTAssertTrue([item1.iconURL.absoluteString isEqualToString:@"https://2.gravatar.com/avatar/e82142697283897ad7444810e5975895?d=mm&s=60"]);
          XCTAssertEqual(0, item1.actions.count);
          XCTAssertEqual(0, item1.children.count);
          
