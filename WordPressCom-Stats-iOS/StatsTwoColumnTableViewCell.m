@@ -55,8 +55,8 @@
         self.indentChevronLabel.text = @"";
     }
     
-    CGFloat indentWidth = self.indentLevel * 7.0f + 8.0f;
-    indentWidth += self.indentable ? 28.0f : 0.0f;
+    CGFloat indentWidth = self.indentLevel * 8.0f + 7.0f;
+    indentWidth += self.indentable || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsLayout];
@@ -73,6 +73,7 @@
     
     self.widthConstraint.constant = 20.0f;
     self.spaceConstraint.constant = 8.0f;
+    self.leadingEdgeConstraint.constant = 43.0f;
     StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
