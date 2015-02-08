@@ -25,6 +25,7 @@
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
+        self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
     }
     
     self.iconImageView.image = nil;
@@ -67,6 +68,7 @@
     
     self.leftLabel.text = nil;
     self.rightLabel.text = nil;
+    self.leftLabel.textColor = [UIColor blackColor];
     self.iconImageView.image = nil;
     
     self.widthConstraint.constant = 20.0f;
