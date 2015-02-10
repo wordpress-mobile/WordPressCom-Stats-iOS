@@ -398,8 +398,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart];
 
     self.selectedDate = date;
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
+
+    NSUInteger section = [self.sections indexOfObject:@(StatsSectionPeriodHeader)];
+    if (section != NSNotFound) {
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:section];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
+    }
     
     // Reset the data (except the graph) and refresh
     id graphData = self.sectionData[@(StatsSectionGraph)];
@@ -408,9 +412,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
     [self.tableView reloadData];
     
-    NSUInteger section = [self.sections indexOfObject:@(StatsSectionGraph)];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:section];
-    [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    section = [self.sections indexOfObject:@(StatsSectionGraph)];
+    if (section != NSNotFound) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:section];
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
     
     [self retrieveStatsSkipGraph:YES];
 }
