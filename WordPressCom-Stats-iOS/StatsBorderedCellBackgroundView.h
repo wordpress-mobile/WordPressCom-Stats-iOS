@@ -4,9 +4,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andSelected:(BOOL)selected;
 
-@property (nonatomic, strong) UIView *theBoxView;
 @property (nonatomic, strong) UIView *contentBackgroundView;
-@property (nonatomic, strong) UIView *dividerView;
 @property (nonatomic, assign) BOOL bottomBorderEnabled;
+@property (nonatomic, assign) BOOL topBorderDarkEnabled;
 
 @end

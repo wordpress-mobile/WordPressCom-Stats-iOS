@@ -12,11 +12,14 @@ extern const CGFloat StatsCVerticalOuterPadding;
 + (UIColor *)statsDarkerOrange;
 
 + (UIColor *)statsMediumBlue;
++ (UIColor *)statsMediumGray;
 + (UIColor *)statsLightGray;
 + (UIColor *)statsUltraLightGray;
 + (UIColor *)statsDarkGray;
 + (UIColor *)statsLessDarkGrey;
 + (UIColor *)statsLightGrayZeroValue;
+
++ (UIColor *)statsNestedCellBackground;
 
 + (UIFont *)subtitleFontBoldItalic;
 
