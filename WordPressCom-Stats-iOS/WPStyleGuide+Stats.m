@@ -50,6 +50,12 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.576 green:0.651 blue:0.753 alpha:1]; /*#93a6c0*/
 }
 
++ (UIColor *)statsNestedCellBackground
+{
+    // AKA Calypso $gray-light
+    return [UIColor colorWithRed:0.953 green:0.965 blue:0.973 alpha:1]; /*#f3f6f8*/
+}
+
 + (UIColor *)statsUltraLightGray
 {
     return [UIColor colorWithRed:0.957 green:0.973 blue:0.98 alpha:1]; /*#f4f8fa*/

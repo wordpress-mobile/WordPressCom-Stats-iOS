@@ -53,7 +53,7 @@
     BOOL isNestedRow = self.indentLevel > 1;
     if (isNestedRow || self.expanded) {
         StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
-        backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+        backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide statsNestedCellBackground];
     }
     
     if (self.expanded) {
@@ -91,6 +91,14 @@
     self.iconImageView.layer.cornerRadius = 0.0f;
     self.iconImageView.layer.masksToBounds = NO;
     [self.iconImageView.layer setNeedsDisplay];
+}
+
+
+- (void)setExpanded:(BOOL)expanded
+{
+    _expanded = expanded;
+    
+    self.topBorderDarkEnabled = expanded;
 }
 
 @end

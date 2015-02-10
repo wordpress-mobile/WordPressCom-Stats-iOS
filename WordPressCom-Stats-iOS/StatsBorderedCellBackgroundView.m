@@ -1,6 +1,16 @@
 #import "StatsBorderedCellBackgroundView.h"
 #import "WPStyleGuide+Stats.h"
 
+
+@interface StatsBorderedCellBackgroundView ()
+
+@property (nonatomic, strong) UIView *theBoxView;
+@property (nonatomic, strong) UIView *bottomDividerView;
+@property (nonatomic, strong) UIView *topDividerView;
+
+@end
+
+
 @implementation StatsBorderedCellBackgroundView
 
 
@@ -9,6 +19,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+        _topBorderDarkEnabled = NO;
         _bottomBorderEnabled = YES;
         
         _theBoxView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -21,10 +32,16 @@
         _contentBackgroundView.backgroundColor = selected ? [UIColor whiteColor] : [WPStyleGuide statsUltraLightGray];
         [self addSubview:_contentBackgroundView];
         
-        _dividerView = [[UIView alloc] initWithFrame:CGRectZero];
-        _dividerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        _dividerView.backgroundColor = [WPStyleGuide statsLightGray];
-        [self addSubview:_dividerView];
+        _bottomDividerView = [[UIView alloc] initWithFrame:CGRectZero];
+        _bottomDividerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _bottomDividerView.backgroundColor = [WPStyleGuide statsLightGray];
+        [self addSubview:_bottomDividerView];
+
+        _topDividerView = [[UIView alloc] initWithFrame:CGRectZero];
+        _topDividerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _topDividerView.backgroundColor = [WPStyleGuide statsDarkGray];
+        _topDividerView.hidden = YES;
+        [self addSubview:_topDividerView];
     }
     
     return self;
@@ -41,7 +58,16 @@
     
     self.theBoxView.frame = CGRectMake(borderSidePadding, 0.0, CGRectGetWidth(self.frame) - 2 * borderSidePadding, CGRectGetHeight(self.frame));
     self.contentBackgroundView.frame = CGRectMake(sidePadding, 0.0, CGRectGetWidth(self.frame) - 2 * sidePadding, CGRectGetHeight(self.frame));
-    self.dividerView.frame = CGRectMake(CGRectGetMinX(self.contentBackgroundView.frame), CGRectGetHeight(self.frame) - bottomPadding, CGRectGetWidth(self.contentBackgroundView.frame), bottomPadding);
+    self.bottomDividerView.frame = CGRectMake(CGRectGetMinX(self.contentBackgroundView.frame), CGRectGetHeight(self.frame) - bottomPadding, CGRectGetWidth(self.contentBackgroundView.frame), bottomPadding);
+    self.topDividerView.frame = CGRectMake(CGRectGetMinX(self.contentBackgroundView.frame), 0.0f, CGRectGetWidth(self.contentBackgroundView.frame), 1.0f);
+}
+
+
+- (void)setTopBorderDarkEnabled:(BOOL)topBorderDarkEnabled
+{
+    _topBorderDarkEnabled = topBorderDarkEnabled;
+    
+    self.topDividerView.hidden = !topBorderDarkEnabled;
 }
 
 

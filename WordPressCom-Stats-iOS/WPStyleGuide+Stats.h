@@ -18,6 +18,8 @@ extern const CGFloat StatsCVerticalOuterPadding;
 + (UIColor *)statsLessDarkGrey;
 + (UIColor *)statsLightGrayZeroValue;
 
++ (UIColor *)statsNestedCellBackground;
+
 + (UIFont *)subtitleFontBoldItalic;
 
 @end
