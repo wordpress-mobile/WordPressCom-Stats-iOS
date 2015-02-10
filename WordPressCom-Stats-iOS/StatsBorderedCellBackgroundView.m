@@ -39,7 +39,7 @@
 
         _topDividerView = [[UIView alloc] initWithFrame:CGRectZero];
         _topDividerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        _topDividerView.backgroundColor = [WPStyleGuide statsDarkGray];
+        _topDividerView.backgroundColor = [WPStyleGuide statsMediumGray];
         _topDividerView.hidden = YES;
         [self addSubview:_topDividerView];
     }
