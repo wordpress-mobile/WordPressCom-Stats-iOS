@@ -2,6 +2,15 @@
 #import "WPStatsViewController.h"
 
 @protocol WPStatsViewControllerDelegate;
+@class StatsTableViewController;
+
+@protocol StatsTableViewControllerDelegate <NSObject>
+
+- (void)statsTableViewControllerDidBeginLoadingStats:(StatsTableViewController *)controller;
+- (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller;
+
+@end
+
 
 @interface StatsTableViewController : UITableViewController
 
@@ -9,6 +18,7 @@
 @property (nonatomic, copy)   NSString *oauth2Token;
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
+@property (nonatomic, weak) id<StatsTableViewControllerDelegate> statsTableDelegate;
 
 - (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control;
 

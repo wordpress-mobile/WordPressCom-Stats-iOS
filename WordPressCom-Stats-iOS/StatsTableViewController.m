@@ -485,6 +485,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
+    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]) {
+        [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
+    }
+    
     [self.statsService retrieveAllStatsForDate:self.selectedDate
                                        andUnit:self.selectedPeriodUnit
                     withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
@@ -661,6 +665,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      {
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
          [self.refreshControl endRefreshing];
+         
+         if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidEndLoadingStats:)]) {
+             [self.statsTableDelegate statsTableViewControllerDidEndLoadingStats:self];
+         }
      }];
 }
 
