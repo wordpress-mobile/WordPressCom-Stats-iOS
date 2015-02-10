@@ -129,8 +129,11 @@
 }
 
 - (UILabel *)axisLabelWithText:(NSString *)text {
-    UILabel *label = [[UILabel alloc] init];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 17.0f)];
     label.text = text;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.minimumScaleFactor = 0.5;
     label.font = [WPStyleGuide axisLabelFont];
     
     if (self.selected) {
@@ -141,7 +144,6 @@
 
     label.backgroundColor = [UIColor clearColor];
     label.opaque = YES;
-    [label sizeToFit];
     return label;
 }
 
