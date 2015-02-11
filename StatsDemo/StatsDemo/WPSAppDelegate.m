@@ -110,6 +110,6 @@ int ddLogLevel = LOG_LEVEL_VERBOSE;
         returnValue = YES;
     }
 
-    return NO;
+    return returnValue;
 }
 @end
