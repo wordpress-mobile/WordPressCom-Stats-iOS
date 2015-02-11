@@ -61,10 +61,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     // Force load fonts from bundle
     [WPFontManager openSansBoldFontOfSize:1.0f];
     [WPFontManager openSansRegularFontOfSize:1.0f];
-
-    UIRefreshControl *refreshControl = [UIRefreshControl new];
-    [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl = refreshControl;
+    
+    [self setupRefreshControl];
     
     self.sections =     @[ @(StatsSectionGraph),
                            @(StatsSectionPeriodHeader),
@@ -491,7 +489,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]) {
+    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
+        && self.refreshControl.isRefreshing == NO) {
+        self.refreshControl = nil;
         [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
     }
     
@@ -670,6 +670,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                     andOverallCompletionHandler:^
      {
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
+         [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          
          if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidEndLoadingStats:)]) {
@@ -1161,6 +1163,18 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             
         }
     }
+}
+
+
+- (void)setupRefreshControl
+{
+    if (self.refreshControl) {
+        return;
+    }
+    
+    UIRefreshControl *refreshControl = [UIRefreshControl new];
+    [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
 
 @end
