@@ -506,13 +506,19 @@
                                     <action selector="periodUnitControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="hOE-hN-hw1"/>
                                 </connections>
                             </segmentedControl>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="KIb-ye-eic">
+                                <rect key="frame" x="282" y="116" width="37" height="37"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="9Zh-6H-jIN"/>
+                            <constraint firstAttribute="centerX" secondItem="KIb-ye-eic" secondAttribute="centerX" id="Abw-qw-qtM"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="top" secondItem="IUN-av-KWH" secondAttribute="bottom" constant="8" id="Baf-6r-wmp"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="trailing" secondItem="yO0-Lr-iKb" secondAttribute="trailingMargin" id="IqO-Bi-pb0"/>
                             <constraint firstAttribute="trailing" secondItem="ENG-tq-nCx" secondAttribute="trailing" id="RNR-wQ-XR1"/>
+                            <constraint firstItem="KIb-ye-eic" firstAttribute="top" secondItem="IUN-av-KWH" secondAttribute="bottom" constant="52" id="TMF-p5-FmT"/>
                             <constraint firstAttribute="centerX" secondItem="ysq-ij-dbS" secondAttribute="centerX" id="ZcA-XO-INA"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="top" secondItem="ysq-ij-dbS" secondAttribute="bottom" constant="8" id="cJs-j1-1ro"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leadingMargin" id="elG-AZ-S2o"/>
@@ -522,6 +528,7 @@
                     <navigationItem key="navigationItem" title="Stats" id="DF4-gA-Ade"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="KIb-ye-eic" id="xeq-HP-2xe"/>
                         <outlet property="periodSegmentControl" destination="ysq-ij-dbS" id="1DH-gj-zgx"/>
                     </connections>
                 </viewController>

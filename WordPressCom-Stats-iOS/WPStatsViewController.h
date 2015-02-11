@@ -17,7 +17,6 @@
 @property (nonatomic, copy)   NSString *oauth2Token;
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
-@property (nonatomic, weak) IBOutlet UISegmentedControl *periodSegmentControl;
 
 - (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control;
 

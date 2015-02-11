@@ -1,9 +1,11 @@
 #import "WPStatsViewController.h"
 #import "StatsTableViewController.h"
 
-@interface WPStatsViewController ()
+@interface WPStatsViewController () <StatsTableViewControllerDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
+@property (nonatomic, weak) IBOutlet UISegmentedControl *periodSegmentControl;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
 @end
 
@@ -29,6 +31,7 @@
     tableVC.siteID = self.siteID;
     tableVC.siteTimeZone = self.siteTimeZone;
     tableVC.statsDelegate = self.statsDelegate;
+    tableVC.statsTableDelegate = self;
 }
 
 - (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
@@ -36,5 +39,19 @@
     [self.statsTableViewController periodUnitControlDidChange:control];
 }
 
+
+#pragma mark StatsTableViewControllerDelegate methods
+
+
+- (void)statsTableViewControllerDidBeginLoadingStats:(StatsTableViewController *)controller
+{
+    [self.activityIndicatorView startAnimating];
+}
+
+
+- (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller
+{
+    [self.activityIndicatorView stopAnimating];
+}
 
 @end
