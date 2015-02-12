@@ -163,7 +163,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                      andUnit:(StatsPeriodUnit)unit
        withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchPostsStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionPosts andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+
+    [self.remote fetchPostsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionPosts andCompletionHandler:completionHandler]];
 }
 
 
@@ -171,7 +173,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchReferrersStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionReferrers andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+
+    [self.remote fetchReferrersStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionReferrers andCompletionHandler:completionHandler]];
 }
 
 
@@ -179,7 +183,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchClicksStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionClicks andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchClicksStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionClicks andCompletionHandler:completionHandler]];
 }
 
 
@@ -187,7 +193,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                          andUnit:(StatsPeriodUnit)unit
            withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchCountryStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionCountry andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchCountryStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil  forStatsSection:StatsSectionCountry andCompletionHandler:completionHandler]];
 }
 
 
@@ -195,7 +203,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchVideosStatsForDate:date andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionVideos andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchVideosStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionVideos andCompletionHandler:completionHandler]];
 }
 
 
@@ -204,7 +214,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    [self.remote fetchFollowersStatsForFollowerType:followersType date:date andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchFollowersStatsForFollowerType:followersType date:endDate andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
 }
 
 
@@ -400,7 +412,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 - (StatsDateUtilities *)dateUtilities
 {
     if (!_dateUtilities) {
-        _dateUtilities = [[StatsDateUtilities alloc] init];
+        _dateUtilities = [[StatsDateUtilities alloc] initWithTimeZone:self.siteTimeZone];
     }
     
     return _dateUtilities;
