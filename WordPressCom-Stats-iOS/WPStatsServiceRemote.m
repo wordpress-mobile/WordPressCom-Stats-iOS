@@ -44,6 +44,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         _deviceDateFormatter = [NSDateFormatter new];
         _deviceDateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         _deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
+        _deviceDateFormatter.timeZone = timeZone;
         
         _deviceNumberFormatter = [NSNumberFormatter new];
         
@@ -356,7 +357,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSNumber *quantity = IS_IPAD ? @9 : @5;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
-                                 @"date"     : [self siteLocalStringForDate:date]};
+                                 @"date"     : [self deviceLocalStringForDate:date]};
     
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
                                                                  parameters:parameters
@@ -400,8 +401,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"after"   : [self siteLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
-                                 @"before"  : [self siteLocalStringForDate:date],
+    NSDictionary *parameters = @{@"after"   : [self deviceLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
+                                 @"before"  : [self deviceLocalStringForDate:date],
                                  @"number"  : @10,
                                  @"fields"  : @"ID, title, URL"};
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
@@ -450,7 +451,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
                                                                  parameters:parameters
@@ -538,7 +539,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
@@ -608,7 +609,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
@@ -658,7 +659,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
@@ -709,7 +710,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
@@ -772,7 +773,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self deviceLocalStringForDate:date]};
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
                                                                 parameters:parameters
@@ -831,7 +832,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self deviceLocalStringForDate:date]};
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
                                                                 parameters:parameters
@@ -882,7 +883,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date],
+                                 @"date"   : [self deviceLocalStringForDate:date],
                                  @"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
                                  @"max"    : (viewAll ? @0 : @7) };
     
@@ -945,7 +946,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self siteLocalStringForDate:date]};
+                                 @"date"   : [self deviceLocalStringForDate:date]};
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
                                                                 parameters:parameters
@@ -1089,20 +1090,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     
     NSDate *localDate = [self.deviceDateFormatter dateFromString:dateString];
-    
     return localDate;
 }
 
 
-- (NSString *)siteLocalStringForDate:(NSDate *)date
+- (NSString *)deviceLocalStringForDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = @"yyyy-MM-dd";
-    formatter.timeZone = self.siteTimeZone;
+    formatter.timeZone = [NSTimeZone systemTimeZone];
     
     NSString *todayString = [formatter stringFromDate:date];
-
     return todayString;
 }
 
