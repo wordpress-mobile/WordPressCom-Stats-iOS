@@ -66,6 +66,10 @@ static CGFloat const AxisPadding = 18.0f;
     }
     CGFloat yAxisStepSize = yAxisHeight/yAxisTicks;
     
+    for (UIView *view in self.subviews) {
+        [view removeFromSuperview];
+    }
+    
     for (NSUInteger tick = 0; tick <= yAxisTicks; tick++) {
         CGFloat linePosition = yAxisStartPoint + yAxisHeight - (yAxisStepSize * tick) - 2.0f;
         CGContextMoveToPoint(context, xAxisStartPoint, linePosition);
