@@ -1,10 +1,39 @@
 #import "StatsDateUtilities.h"
 
+@interface StatsDateUtilities ()
+
+@property (nonatomic, strong) NSTimeZone *timeZone;
+
+@end
+
 @implementation StatsDateUtilities
+
+- (instancetype)init
+{
+    self = [self initWithTimeZone:[NSTimeZone systemTimeZone]];
+    if (self) {
+        
+    }
+    
+    return self;
+}
+
+
+- (instancetype)initWithTimeZone:(NSTimeZone *)timeZone
+{
+    self = [super init];
+    if (self) {
+        _timeZone = timeZone;
+    }
+    
+    return self;
+}
+
 
 - (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    calendar.timeZone = self.timeZone;
     
     if (unit == StatsPeriodUnitDay) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
