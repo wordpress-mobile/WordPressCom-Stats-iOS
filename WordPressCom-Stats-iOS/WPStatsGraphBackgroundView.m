@@ -66,6 +66,10 @@ static CGFloat const AxisPadding = 18.0f;
     }
     CGFloat yAxisStepSize = yAxisHeight/yAxisTicks;
     
+    for (UIView *view in self.subviews) {
+        [view removeFromSuperview];
+    }
+    
     for (NSUInteger tick = 0; tick <= yAxisTicks; tick++) {
         CGFloat linePosition = yAxisStartPoint + yAxisHeight - (yAxisStepSize * tick) - 2.0f;
         CGContextMoveToPoint(context, xAxisStartPoint, linePosition);
@@ -73,20 +77,23 @@ static CGFloat const AxisPadding = 18.0f;
         CGContextStrokePath(context);
         
         UILabel *yIncrement = [self axisLabelWithText:[NSString stringWithFormat:@" %@", @(stepValue*tick)]];
-        yIncrement.center = CGPointMake(CGRectGetWidth(rect) - CGRectGetMidX(yIncrement.frame) - 6.0f, linePosition);
+        yIncrement.center = CGPointMake(CGRectGetWidth(rect) - CGRectGetMidX(yIncrement.frame) - 2.0f, linePosition);
         [self addSubview:yIncrement];
     }
 }
 
 - (UILabel *)axisLabelWithText:(NSString *)text {
-    UILabel *label = [[UILabel alloc] init];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 28.0f, 17.0f)];
     label.text = text;
-    label.font = [WPStyleGuide axisLabelFont];
+    label.textAlignment = NSTextAlignmentRight;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.minimumScaleFactor = 0.5;
+    label.font = [WPStyleGuide axisLabelFontSmaller];
     label.textColor = [WPStyleGuide littleEddieGrey];
-    label.backgroundColor = [UIColor whiteColor];
-    label.opaque = YES;
+    label.backgroundColor = [UIColor clearColor];
+    label.opaque = NO;
     label.isAccessibilityElement = NO;
-    [label sizeToFit];
+    
     return label;
 }
 

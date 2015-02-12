@@ -6,6 +6,7 @@ extern const CGFloat StatsCVerticalOuterPadding;
 @interface WPStyleGuide (Stats)
 
 + (UIFont *)axisLabelFont;
++ (UIFont *)axisLabelFontSmaller;
 
 + (UIColor *)statsLighterOrangeTransparent;
 + (UIColor *)statsLighterOrange;
