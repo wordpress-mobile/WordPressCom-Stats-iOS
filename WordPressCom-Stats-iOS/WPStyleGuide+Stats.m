@@ -11,6 +11,12 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
 }
 
 
++ (UIFont *)axisLabelFontSmaller
+{
+    return [[self axisLabelFont] fontWithSize:8.0f];
+}
+
+
 + (UIColor *)statsLighterOrange
 {
     return [UIColor colorWithRed:0.965 green:0.718 blue:0.494 alpha:1]; /*#f6b77e*/
