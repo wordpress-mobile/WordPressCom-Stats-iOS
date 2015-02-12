@@ -221,8 +221,8 @@
                                         <constraint firstItem="Rwp-nF-8c1" firstAttribute="leading" secondItem="GAp-0f-HXa" secondAttribute="trailing" constant="10" id="RaW-kA-vQK"/>
                                         <constraint firstAttribute="centerY" secondItem="p4X-m5-Nld" secondAttribute="centerY" id="XTA-mJ-ta4"/>
                                         <constraint firstItem="p4X-m5-Nld" firstAttribute="leading" secondItem="Dnr-8L-jIZ" secondAttribute="leadingMargin" constant="43" id="XsQ-gt-qaQ"/>
+                                        <constraint firstAttribute="centerY" secondItem="Rwp-nF-8c1" secondAttribute="centerY" id="c2y-Bi-kSh"/>
                                         <constraint firstItem="GAp-0f-HXa" firstAttribute="leading" secondItem="p4X-m5-Nld" secondAttribute="trailing" constant="8" id="jMx-Mh-VzX"/>
-                                        <constraint firstItem="Rwp-nF-8c1" firstAttribute="baseline" secondItem="GAp-0f-HXa" secondAttribute="baseline" id="mna-l6-qeG"/>
                                         <constraint firstItem="p4X-m5-Nld" firstAttribute="top" secondItem="Dnr-8L-jIZ" secondAttribute="topMargin" constant="-8" id="oGv-TS-QBX"/>
                                     </constraints>
                                     <variation key="default">
