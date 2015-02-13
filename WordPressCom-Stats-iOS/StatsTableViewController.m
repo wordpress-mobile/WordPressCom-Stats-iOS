@@ -844,7 +844,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                               rightText:item.value
                             andImageURL:item.iconURL
                             indentLevel:item.depth
-                             indentable:item.children.count > 0
+                             indentable:NO
+                             expandable:item.children.count > 0
                                expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0
                         forStatsSection:statsSection];
@@ -1099,6 +1100,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                       andImageURL:(NSURL *)imageURL
                       indentLevel:(NSUInteger)indentLevel
                        indentable:(BOOL)indentable
+                       expandable:(BOOL)expandable
                          expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
@@ -1112,6 +1114,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     statsCell.showCircularIcon = showCircularIcon;
     statsCell.indentLevel = indentLevel;
     statsCell.indentable = indentable;
+    statsCell.expandable = expandable;
     statsCell.expanded = expanded;
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
