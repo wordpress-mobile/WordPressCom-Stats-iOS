@@ -10,6 +10,7 @@
 @property (nonatomic, assign) NSUInteger indentLevel;
 @property (nonatomic, assign) BOOL selectable;
 @property (nonatomic, assign) BOOL indentable;
+@property (nonatomic, assign) BOOL expandable;
 @property (nonatomic, assign) BOOL expanded;
 
 - (void)doneSettingProperties;
