@@ -47,9 +47,10 @@
     [self.barsWithColors enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
         UIView *view = dict[@"view"];
         UIColor *color = dict[@"color"];
+        UIColor *selectedColor = dict[@"selectedColor"];
         UIColor *highlightedColor = dict[@"highlightedColor"];
         
-        view.backgroundColor = self.isHighlighted ? highlightedColor : color;
+        view.backgroundColor = self.isHighlighted ? highlightedColor : self.isSelected ? selectedColor : color;
     }];
 }
 
