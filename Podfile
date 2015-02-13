@@ -1,9 +1,9 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '7.0'
 
-pod 'AFNetworking',	'~> 2.3.1'
+pod 'AFNetworking',	'~> 2.5.1'
 pod 'CocoaLumberjack', '~> 1.9'
-pod 'WordPress-iOS-Shared', '~> 0.1.6'
+pod 'WordPress-iOS-Shared', '~> 0.1.9'
 pod 'NSObject-SafeExpectations', '0.0.2'
 pod 'WordPressCom-Analytics-iOS'
 
