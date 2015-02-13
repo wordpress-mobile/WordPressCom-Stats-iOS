@@ -814,7 +814,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [self configureSectionGraphSelectableCell:cell forRow:indexPath.row];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
-        [self configureSectionGroupHeaderCell:cell
+        [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                              withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
