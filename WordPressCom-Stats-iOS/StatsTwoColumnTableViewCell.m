@@ -22,7 +22,7 @@
 {
     self.leftLabel.text = self.leftText;
     self.rightLabel.text = self.rightText;
-    self.indentChevronLabel.hidden = !self.indentable;
+    self.indentChevronLabel.hidden = !self.expandable;
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -62,8 +62,8 @@
         self.indentChevronLabel.text = @"";
     }
     
-    CGFloat indentWidth = self.indentLevel * 8.0f + 7.0f;
-    indentWidth += self.indentable || self.indentLevel > 1 ? 28.0f : 0.0f;
+    CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 7.0f : 15.0f;
+    indentWidth += self.expandable || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsLayout];
