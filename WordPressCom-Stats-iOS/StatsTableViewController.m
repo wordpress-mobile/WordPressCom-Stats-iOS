@@ -84,7 +84,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [self wipeDataAndSeedGroups];
     
     self.graphViewController = [WPStatsGraphViewController new];
-    self.selectedDate = [NSDate date];
+    
+    [self resetDateToTodayForSite];
     self.selectedPeriodUnit = StatsPeriodUnitDay;
     self.selectedSummaryType = StatsSummaryTypeViews;
     self.graphViewController.allowDeselection = NO;
@@ -425,7 +426,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
-    self.selectedDate = [NSDate date];
+    [self resetDateToTodayForSite];
     [self.statsService expireAllItemsInCache];
     [self retrieveStatsSkipGraph:NO];
 }
@@ -435,7 +436,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 {
     StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
     self.selectedPeriodUnit = unit;
-    self.selectedDate = [NSDate date];
+    [self resetDateToTodayForSite];
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
 
@@ -1154,6 +1155,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     return data;
 }
 
+
 - (void)wipeDataAndSeedGroups
 {
     if (self.sectionData) {
@@ -1192,5 +1194,21 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
 }
+
+
+// Resets self.selected date to an NSDate with device local timezone but representing what today is
+// for the site, not the device
+- (void)resetDateToTodayForSite
+{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    calendar.timeZone = self.siteTimeZone;
+    
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
+    
+    calendar.timeZone = [NSTimeZone localTimeZone];
+    NSDate *date = [calendar dateFromComponents:components];
+    self.selectedDate = date;
+}
+
 
 @end
