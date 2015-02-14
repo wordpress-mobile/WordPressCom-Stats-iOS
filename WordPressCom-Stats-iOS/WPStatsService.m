@@ -44,7 +44,7 @@
     if (self) {
         _siteId = siteId;
         _oauth2Token = oauth2Token;
-        _siteTimeZone = timeZone ?: [NSTimeZone systemTimeZone];
+        _siteTimeZone = timeZone ?: [NSTimeZone localTimeZone];
         _ephemory = [[StatsEphemory alloc] initWithExpiryInterval:cacheExpirationInterval];
     }
 
@@ -354,7 +354,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         cacheDictionary[@(statsSubSection)] = followersResult;
         
         for (StatsItem *item in items) {
-            NSString *age = [self dateAgeForDate:item.date];
+            NSString *age = [self.dateUtilities dateAgeForDate:item.date];
             item.value = age;
         }
         
@@ -368,54 +368,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 #pragma mark - Private helper methods
 
 
-// TODO - Extract this into a separate class that's unit testable
-- (NSString *)dateAgeForDate:(NSDate *)date
-{
-    if (!date) {
-        return @"";
-    }
-    
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDate *now = [NSDate date];
-    
-    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay
-                                                   fromDate:date
-                                                     toDate:now
-                                                    options:0];
-    NSDateComponents *niceDateComponents = [calendar components:NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
-                                                       fromDate:date
-                                                         toDate:now
-                                                        options:0];
-    
-    if (dateComponents.day >= 548) {
-        return [NSString stringWithFormat:NSLocalizedString(@"%d years", @"Age between dates over one year."), niceDateComponents.year];
-    } else if (dateComponents.day >= 345) {
-        return NSLocalizedString(@"a year", @"Age between dates equaling one year.");
-    } else if (dateComponents.day >= 45) {
-        return [NSString stringWithFormat:NSLocalizedString(@"%d months", @"Age between dates over one month."), niceDateComponents.month];
-    } else if (dateComponents.day >= 25) {
-        return NSLocalizedString(@"a month", @"Age between dates equaling one month.");
-    } else if (dateComponents.day > 1 || (dateComponents.day == 1 && dateComponents.hour >= 12)) {
-        return [NSString stringWithFormat:NSLocalizedString(@"%d days", @"Age between dates over one day."), niceDateComponents.day];
-    } else if (dateComponents.hour >= 22) {
-        return NSLocalizedString(@"a day", @"Age between dates equaling one day.");
-    } else if (dateComponents.hour > 1 || (dateComponents.hour == 1 && dateComponents.minute >= 30)) {
-        return [NSString stringWithFormat:NSLocalizedString(@"%d hours", @"Age between dates over one hour."), niceDateComponents.hour];
-    } else if (dateComponents.minute >= 45) {
-        return NSLocalizedString(@"an hour", @"Age between dates equaling one hour.");
-    } else {
-        return NSLocalizedString(@"<1 hour", @"Age between dates less than one hour.");
-    }
-}
-
-
 - (StatsDateUtilities *)dateUtilities
 {
     if (!_dateUtilities) {
-        _dateUtilities = [[StatsDateUtilities alloc] initWithTimeZone:self.siteTimeZone];
+        _dateUtilities = [StatsDateUtilities new];
     }
     
     return _dateUtilities;
 }
+
 
 @end

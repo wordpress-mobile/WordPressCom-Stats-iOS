@@ -17,7 +17,7 @@
 - (void)setUp {
     [super setUp];
     
-    self.subject = [[WPStatsServiceRemote alloc] initWithOAuth2Token:@"token" siteId:@123456 andSiteTimeZone:[NSTimeZone systemTimeZone]];
+    self.subject = [[WPStatsServiceRemote alloc] initWithOAuth2Token:@"token" siteId:@123456 andSiteTimeZone:[NSTimeZone localTimeZone]];
 }
 
 - (void)tearDown {

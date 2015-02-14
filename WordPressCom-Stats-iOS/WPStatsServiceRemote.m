@@ -44,7 +44,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         _deviceDateFormatter = [NSDateFormatter new];
         _deviceDateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         _deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
-        _deviceDateFormatter.timeZone = timeZone;
+        _deviceDateFormatter.timeZone = [NSTimeZone localTimeZone];
         
         _deviceNumberFormatter = [NSNumberFormatter new];
         
@@ -1099,7 +1099,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = @"yyyy-MM-dd";
-    formatter.timeZone = [NSTimeZone systemTimeZone];
+    formatter.timeZone = [NSTimeZone localTimeZone];
     
     NSString *todayString = [formatter stringFromDate:date];
     return todayString;

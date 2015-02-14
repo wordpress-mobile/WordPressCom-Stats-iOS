@@ -6,5 +6,6 @@
 - (instancetype)initWithTimeZone:(NSTimeZone *)timeZone;
 
 - (NSDate *)calculateEndDateForPeriodUnit:(StatsPeriodUnit)unit withDateWithinPeriod:(NSDate *)date;
+- (NSString *)dateAgeForDate:(NSDate *)date;
 
 @end
