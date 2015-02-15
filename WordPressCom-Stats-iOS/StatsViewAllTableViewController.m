@@ -67,7 +67,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     BOOL isDataLoaded = self.statsGroup.items != nil;
-    NSInteger numberOfRows = 1 + (isDataLoaded ? self.statsGroup.items.count : 1);
+    NSInteger numberOfRows = 1 + (isDataLoaded ? self.statsGroup.numberOfRows : 1);
     
     return numberOfRows;
 }
@@ -92,16 +92,18 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        StatsItem *item = self.statsGroup.items[indexPath.row - 1];
+        StatsItem *item = [self.statsGroup statsItemForTableViewRow:indexPath.row];
         
         [self configureTwoColumnRowCell:cell
                            withLeftText:item.label
                               rightText:item.value
                             andImageURL:item.iconURL
                             indentLevel:item.depth
-                             indentable:item.children.count > 0
+                             indentable:NO
+                             expandable:item.children.count > 0
                                expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0];
+                             selectable:item.actions.count > 0 || item.children.count > 0
+                        forStatsSection:self.statsSection];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
@@ -213,6 +215,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.refreshControl endRefreshing];
 
         self.statsGroup = group;
+        self.statsGroup.offsetRows = 1;
         
         NSMutableArray *indexPaths = [NSMutableArray new];
         for (int row = 1; row < (1 + self.statsGroup.items.count); ++row) {
@@ -255,15 +258,21 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                       andImageURL:(NSURL *)imageURL
                       indentLevel:(NSUInteger)indentLevel
                        indentable:(BOOL)indentable
+                       expandable:(BOOL)expandable
                          expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
+                  forStatsSection:(StatsSection)statsSection
 {
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = leftText;
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
+    statsCell.showCircularIcon = showCircularIcon;
     statsCell.indentLevel = indentLevel;
     statsCell.indentable = indentable;
+    statsCell.expandable = expandable;
     statsCell.expanded = expanded;
     statsCell.selectable = selectable;
     [statsCell doneSettingProperties];
