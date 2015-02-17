@@ -1200,7 +1200,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 // for the site, not the device
 - (void)resetDateToTodayForSite
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     calendar.timeZone = self.siteTimeZone;
     
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
