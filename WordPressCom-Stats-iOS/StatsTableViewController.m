@@ -115,6 +115,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
+    [self resetDateToTodayForSite];
     [self retrieveStatsSkipGraph:NO];
 }
 
