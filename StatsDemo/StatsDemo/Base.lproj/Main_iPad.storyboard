@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,13 +19,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vyi-2K-WbS">
-                                <rect key="frame" x="232" y="451" width="304" height="122"/>
+                                <rect key="frame" x="20" y="421" width="728" height="183"/>
                                 <string key="text">To Select a Site for StatsDemo:
 
 Launch WP Internal.
-View Stats for a site (Me &gt; Site &gt; Stats).
+View Stats for a site (My Sites &gt; Site &gt; Stats).
 Tap the Today button.
-Switch back to this app.</string>
+Switch back to this app.
+
+Developers should review the project README.md file for details on setting OAuth2 token and site ID.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -32,7 +35,9 @@ Switch back to this app.</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="vyi-2K-WbS" secondAttribute="trailing" id="0da-5u-LGw"/>
                             <constraint firstAttribute="centerY" secondItem="vyi-2K-WbS" secondAttribute="centerY" id="1rt-y1-lJ7"/>
+                            <constraint firstItem="vyi-2K-WbS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="7cj-np-gO6"/>
                             <constraint firstAttribute="centerX" secondItem="vyi-2K-WbS" secondAttribute="centerX" id="Rjf-Pv-lPf"/>
                         </constraints>
                     </view>
