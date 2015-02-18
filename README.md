@@ -4,7 +4,7 @@
 
 # WordPressCom-Stats-iOS
 
-![WordPressCom-Stats-iOS Screenshot](https://i.cloudup.com/y3su7U3jJi.png)
+![WordPressCom-Stats-iOS Screenshot](https://cldup.com/CwXYN563C2.png)
 
 ## Introduction
 
@@ -38,6 +38,7 @@ and the following Cocoapods:
 * [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack)
 * [NSObject+SafeExpectations](https://github.com/wordpress-mobile/NSObject-SafeExpectations)
 * [WordPress-iOS-Shared](https://github.com/wordpress-mobile/WordPress-iOS-Shared)
+* [WordPressCom-Analytics-iOS](https://github.com/wordpress-mobile/WordPressCom-Analytics-iOS)
 
 See the [podspec](https://github.com/wordpress-mobile/WordPressCom-Stats-iOS/blob/develop/WordPressCom-Stats-iOS.podspec) for more details.
 
@@ -54,7 +55,7 @@ There are three things that you need to do in order to use WordPressCom-Stats-iO
 
         @end
 
-2. Obtain an OAuth2 token from WordPress.com.  Currently the authentication mechanism to WordPress.com is not part of a reusable library.  You will need to obtain this manually by following (these directions)[https://developer.wordpress.com/docs/oauth2/].
+2. Obtain an OAuth2 token from WordPress.com.  Currently the authentication mechanism to WordPress.com is not part of a reusable library.  You will need to obtain this manually by following (these directions)[https://developer.wordpress.com/docs/oauth2/].  The easiest way to snag the OAuth2 token is by setting a breakpoint in the WordPress-iOS application after generating a token.
 
 3. Obtain the site/blog ID for the site you wish to view stats for.
 
