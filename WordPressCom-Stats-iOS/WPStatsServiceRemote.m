@@ -436,7 +436,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             statsItem.label = [post stringForKey:@"title"];
             
             StatsItemAction *statsItemAction = [StatsItemAction new];
-            statsItemAction.url = [NSURL URLWithString:post[@"href"]];
+            statsItemAction.url = [NSURL URLWithString:[post stringForKey:@"href"]];
             statsItemAction.defaultAction = YES;
             
             statsItem.actions = @[statsItemAction];
