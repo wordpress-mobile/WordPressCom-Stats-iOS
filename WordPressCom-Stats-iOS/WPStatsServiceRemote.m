@@ -435,11 +435,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             statsItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
             statsItem.label = [post stringForKey:@"title"];
             
-            StatsItemAction *statsItemAction = [StatsItemAction new];
-            statsItemAction.url = [NSURL URLWithString:[post stringForKey:@"href"]];
-            statsItemAction.defaultAction = YES;
-            
-            statsItem.actions = @[statsItemAction];
+            id url = post[@"href"];
+            if ([url isKindOfClass:[NSString class]]) {
+                StatsItemAction *statsItemAction = [StatsItemAction new];
+                statsItemAction.url = [NSURL URLWithString:url];
+                statsItemAction.defaultAction = YES;
+
+                statsItem.actions = @[statsItemAction];
+            }
             
             [items addObject:statsItem];
         }

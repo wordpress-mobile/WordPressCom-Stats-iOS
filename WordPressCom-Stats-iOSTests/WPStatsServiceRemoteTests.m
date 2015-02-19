@@ -157,6 +157,35 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testTopPostsBooleanException
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostsStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day-exception.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchPostsStatsForDate:[NSDate date]
+                                 andUnit:StatsPeriodUnitDay
+                   withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
+     {
+         XCTAssertNotNil(items, @"Posts should not be nil.");
+         XCTAssertNotNil(totalViews, @"There should be a number provided.");
+         XCTAssertNil(error);
+         
+         XCTAssertEqual(10, items.count);
+         
+         StatsItem *item = items[0];
+         XCTAssertEqual(0, item.actions.count);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 - (void)testTopPostsDayLarge
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostsStatsForDate completion"];
