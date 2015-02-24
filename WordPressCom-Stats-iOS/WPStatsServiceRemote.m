@@ -401,8 +401,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"after"   : [self deviceLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
-                                 @"before"  : [self deviceLocalStringForDate:date],
+    NSDictionary *parameters = @{@"after"   : [self deviceLocalISOStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
+                                 @"before"  : [self deviceLocalISOStringForDate:date],
                                  @"number"  : @10,
                                  @"fields"  : @"ID, title, URL"};
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
@@ -1109,6 +1109,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (NSString *)deviceLocalISOStringForDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *todayString = [formatter stringFromDate:date];
+    return todayString;
+}
+
+
 - (StatsPeriodUnit)periodUnitForString:(NSString *)unitString
 {
     if ([unitString isEqualToString:@"day"]) {
@@ -1188,13 +1200,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (NSDate *)calculateStartDateForPeriodUnit:(StatsPeriodUnit)unit withEndDate:(NSDate *)date
 {
-    if (unit == StatsPeriodUnitDay) {
-        return date;
-    }
-    
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
-    if (unit == StatsPeriodUnitMonth) {
+    if (unit == StatsPeriodUnitDay) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
         date = [calendar dateFromComponents:dateComponents];
         
