@@ -390,6 +390,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             item.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
             
             StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.defaultAction = YES;
             itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
             item.actions = @[itemAction];
             
