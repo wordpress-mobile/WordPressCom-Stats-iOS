@@ -37,11 +37,17 @@
     
     if (unit == StatsPeriodUnitDay) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+        dateComponents.hour = 23;
+        dateComponents.minute = 59;
+        dateComponents.second = 59;
         date = [calendar dateFromComponents:dateComponents];
         
         return date;
     } else if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
+        dateComponents.hour = 23;
+        dateComponents.minute = 59;
+        dateComponents.second = 59;
         date = [calendar dateFromComponents:dateComponents];
         
         dateComponents = [NSDateComponents new];
@@ -61,13 +67,19 @@
             date = [calendar dateByAddingComponents:dateComponents toDate:date options:0];
         }
         
-        // Strip time
+        // Force time
         dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+        dateComponents.hour = 23;
+        dateComponents.minute = 59;
+        dateComponents.second = 59;
         date = [calendar dateFromComponents:dateComponents];
         
         return date;
     } else if (unit == StatsPeriodUnitYear) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:date];
+        dateComponents.hour = 23;
+        dateComponents.minute = 59;
+        dateComponents.second = 59;
         date = [calendar dateFromComponents:dateComponents];
         
         dateComponents = [NSDateComponents new];

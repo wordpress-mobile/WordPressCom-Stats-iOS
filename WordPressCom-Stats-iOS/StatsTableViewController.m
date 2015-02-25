@@ -66,6 +66,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     self.sections =     @[ @(StatsSectionGraph),
                            @(StatsSectionPeriodHeader),
+                           @(StatsSectionEvents),
                            @(StatsSectionPosts),
                            @(StatsSectionCountry),
                            @(StatsSectionReferrers),
@@ -517,7 +518,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
-                        eventsCompletionHandler:nil
+                       eventsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
+         self.sectionData[@(StatsSectionEvents)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
                          postsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;

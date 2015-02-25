@@ -35,11 +35,15 @@
     
     NSDate *result = [self.subject calculateEndDateForPeriodUnit:StatsPeriodUnitDay withDateWithinPeriod:date];
     
-    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:result];
+    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:result];
     
     XCTAssertEqual(dateComponents.year, 2014);
     XCTAssertEqual(dateComponents.month, 12);
     XCTAssertEqual(dateComponents.day, 30);
+    XCTAssertEqual(dateComponents.hour, 23);
+    XCTAssertEqual(dateComponents.minute, 59);
+    XCTAssertEqual(dateComponents.second, 59);
+    
 }
 
 
@@ -56,11 +60,14 @@
     
     NSDate *result = [self.subject calculateEndDateForPeriodUnit:StatsPeriodUnitWeek withDateWithinPeriod:date];
     
-    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:result];
+    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:result];
     
     XCTAssertEqual(dateComponents.year, 2015);
     XCTAssertEqual(dateComponents.month, 1);
     XCTAssertEqual(dateComponents.day, 11);
+    XCTAssertEqual(dateComponents.hour, 23);
+    XCTAssertEqual(dateComponents.minute, 59);
+    XCTAssertEqual(dateComponents.second, 59);
 }
 
 
@@ -77,11 +84,14 @@
     
     NSDate *result = [self.subject calculateEndDateForPeriodUnit:StatsPeriodUnitMonth withDateWithinPeriod:date];
     
-    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:result];
+    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:result];
     
     XCTAssertEqual(dateComponents.year, 2015);
     XCTAssertEqual(dateComponents.month, 1);
     XCTAssertEqual(dateComponents.day, 31);
+    XCTAssertEqual(dateComponents.hour, 23);
+    XCTAssertEqual(dateComponents.minute, 59);
+    XCTAssertEqual(dateComponents.second, 59);
 }
 
 
@@ -98,11 +108,14 @@
     
     NSDate *result = [self.subject calculateEndDateForPeriodUnit:StatsPeriodUnitYear withDateWithinPeriod:date];
     
-    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:result];
+    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:result];
     
     XCTAssertEqual(dateComponents.year, 2015);
     XCTAssertEqual(dateComponents.month, 12);
     XCTAssertEqual(dateComponents.day, 31);
+    XCTAssertEqual(dateComponents.hour, 23);
+    XCTAssertEqual(dateComponents.minute, 59);
+    XCTAssertEqual(dateComponents.second, 59);
 }
 
 @end
