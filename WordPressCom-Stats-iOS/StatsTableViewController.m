@@ -1155,7 +1155,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                        selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
 {
-    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = leftText;

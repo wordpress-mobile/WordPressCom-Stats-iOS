@@ -742,10 +742,44 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *authorsArray = [firstDay arrayForKey:@"authors"];
+        BOOL moreAuthorsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
         NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *author in authorsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [author stringForKey:@"name"];
+            item.value = [self localizedStringForNumber:[author numberForKey:@"views"]];
+            NSString *urlString = [author stringForKey:@"avatar"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"d=mm&s=60";
+                item.iconURL = components.URL;
+            }
+
+            NSArray *posts = [author arrayForKey:@"posts"];
+            for (NSDictionary *post in posts) {
+                StatsItem *postItem = [StatsItem new];
+                postItem.itemID = [post numberForKey:@"ID"];
+                postItem.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+                postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
+                
+                StatsItemAction *itemAction = [StatsItemAction new];
+                itemAction.defaultAction = YES;
+                itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
+                postItem.actions = @[itemAction];
+                
+                [item.children addObject:postItem];
+            }
+
+            [items addObject:item];
+        }
 
         if (completionHandler) {
-            completionHandler(items, nil, nil, nil);
+            completionHandler(items, nil, moreAuthorsAvailable, nil);
         }
     };
     
