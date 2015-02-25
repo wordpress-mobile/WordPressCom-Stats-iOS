@@ -72,6 +72,11 @@
 - (void)setUpTitles
 {
     switch (self.statsSection) {
+        case StatsSectionAuthors:
+            self.groupTitle = NSLocalizedString(@"Authors", @"Title for stats section for Authors");
+            self.titlePrimary = NSLocalizedString(@"Author", @"");
+            self.titleSecondary = NSLocalizedString(@"Views", @"");
+            break;
         case StatsSectionClicks:
             self.groupTitle = NSLocalizedString(@"Clicks", @"Title for stats section for Clicks");
             self.titlePrimary = NSLocalizedString(@"Link", @"");
@@ -110,6 +115,11 @@
             self.titlePrimary = NSLocalizedString(@"Referrer", @"");
             self.titleSecondary = NSLocalizedString(@"Views", @"");
             break;
+        case StatsSectionSearchTerms:
+            self.groupTitle = NSLocalizedString(@"Search Terms", @"Title for stats section for Search Terms");
+            self.titlePrimary = NSLocalizedString(@"Search", @"");
+            self.titleSecondary = NSLocalizedString(@"Views", @"");
+            break;
         case StatsSectionTagsCategories:
             self.groupTitle = NSLocalizedString(@"Tags & Categories", @"Title for stats section for Tags & Categories");
             self.titlePrimary = NSLocalizedString(@"Topic", @"");
@@ -120,8 +130,10 @@
             self.titlePrimary = NSLocalizedString(@"Video", @"");
             self.titleSecondary = NSLocalizedString(@"Views", @"");
             break;
-            
-        default:
+
+        case StatsSectionGraph:
+        case StatsSectionPeriodHeader:
+        case StatsSectionWebVersion:
             break;
     }
 

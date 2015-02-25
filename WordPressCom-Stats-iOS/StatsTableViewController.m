@@ -64,13 +64,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     [self setupRefreshControl];
     
+    // Posts, Referrers, Clicks, Authors, Countries, Search Terms, Published, Videos, Comments, Tags, Followers, Publicize
     self.sections =     @[ @(StatsSectionGraph),
                            @(StatsSectionPeriodHeader),
-                           @(StatsSectionEvents),
                            @(StatsSectionPosts),
-                           @(StatsSectionCountry),
                            @(StatsSectionReferrers),
                            @(StatsSectionClicks),
+                           @(StatsSectionAuthors),
+                           @(StatsSectionCountry),
+                           @(StatsSectionSearchTerms),
+                           @(StatsSectionEvents),
                            @(StatsSectionVideos),
                            @(StatsSectionComments),
                            @(StatsSectionTagsCategories),
@@ -598,11 +601,29 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      }
                       authorsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
-         // TODO
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionAuthors)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionAuthors)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
      }
                   searchTermsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
-         // TODO
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionSearchTerms)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionSearchTerms)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
      }
                 commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
@@ -745,6 +766,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionClicks:
         case StatsSectionCountry:
         case StatsSectionVideos:
+        case StatsSectionAuthors:
+        case StatsSectionSearchTerms:
         case StatsSectionTagsCategories:
         case StatsSectionPublicize:
         {
@@ -1090,6 +1113,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionFollowers:
                 text = NSLocalizedString(@"No followers", @"");
                 break;
+            case StatsSectionAuthors:
             case StatsSectionPosts:
                 text = NSLocalizedString(@"No posts or pages viewed", @"");
                 break;
@@ -1098,6 +1122,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 break;
             case StatsSectionReferrers:
                 text = NSLocalizedString(@"No referrers recorded", @"");
+                break;
+            case StatsSectionSearchTerms:
+                text = NSLocalizedString(@"No search terms recorded", @"");
                 break;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");

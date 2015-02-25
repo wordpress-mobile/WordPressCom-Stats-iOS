@@ -108,10 +108,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit viewAll:NO withCompletionHandler:videosCompletion]];
     }
     if (authorsCompletion) {
-        [mutableOperations addObject:nil];
+        [mutableOperations addObject:[self operationForAuthorsForDate:date andUnit:unit viewAll:NO withCompletionHandler:authorsCompletion]];
     }
     if (searchTermsCompletion) {
-        [mutableOperations addObject:nil];
+        [mutableOperations addObject:[self operationForSearchTermsForDate:date andUnit:unit viewAll:NO withCompletionHandler:searchTermsCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
@@ -742,9 +742,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
-        
+        NSMutableArray *items = [NSMutableArray new];
+
         if (completionHandler) {
-            completionHandler(nil, nil, nil, nil);
+            completionHandler(items, nil, nil, nil);
         }
     };
     
@@ -771,9 +772,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
-        
+        NSMutableArray *items = [NSMutableArray new];
+
         if (completionHandler) {
-            completionHandler(nil, nil, nil, nil);
+            completionHandler(items, nil, nil, nil);
         }
     };
     
