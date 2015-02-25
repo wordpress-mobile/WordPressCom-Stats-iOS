@@ -806,10 +806,36 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *termsArray = [firstDay arrayForKey:@"search_terms"];
+        BOOL moreTermsAvailable = [firstDay numberForKey:@"other_search_terms"].integerValue > 0;
         NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *term in termsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [term stringForKey:@"term"];
+            item.value = [self localizedStringForNumber:[term numberForKey:@"views"]];
+            [items addObject:item];
+        }
+        
+        NSNumber *encryptedSearchTermsViews = [firstDay numberForKey:@"encrypted_search_terms"];
+        if (![encryptedSearchTermsViews isEqualToNumber:@0]) {
+            StatsItem *item = [StatsItem new];
+            item.label = NSLocalizedString(@"Unknown Search Terms", @"");
+            item.value = [self localizedStringForNumber:encryptedSearchTermsViews];
+            
+            StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.defaultAction = YES;
+            itemAction.url = [NSURL URLWithString:@"http://en.support.wordpress.com/stats/#search-engine-terms"];
+            item.actions = @[itemAction];
+            
+            [items addObject:item];
+        }
 
         if (completionHandler) {
-            completionHandler(items, nil, nil, nil);
+            completionHandler(items, nil, moreTermsAvailable, nil);
         }
     };
     
