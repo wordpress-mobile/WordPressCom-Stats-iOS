@@ -734,6 +734,62 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (AFHTTPRequestOperation *)operationForAuthorsForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                               viewAll:(BOOL)viewAll
+                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForAuthors]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
+
+
+- (AFHTTPRequestOperation *)operationForSearchTermsForDate:(NSDate *)date
+                                                   andUnit:(StatsPeriodUnit)unit
+                                                   viewAll:(BOOL)viewAll
+                                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSearchTerms]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
 - (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
@@ -1044,9 +1100,22 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForVideos
 {
     return [NSString stringWithFormat:@"%@/video-plays/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForAuthors
+{
+    return [NSString stringWithFormat:@"%@/top-authors/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForSearchTerms
+{
+    return [NSString stringWithFormat:@"%@/search-terms/", self.statsPathPrefix];
 }
 
 
