@@ -60,6 +60,8 @@
         clicksCompletionHandler:(StatsGroupCompletion)clicksCompletion
        countryCompletionHandler:(StatsGroupCompletion)countryCompletion
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
+       authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
+   searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletion
 commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
  commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
 tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -105,6 +107,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
         }
     
+        if (authorsCompletion) {
+            authorsCompletion(cacheDictionary[@(StatsSectionAuthors)], nil);
+        }
+        
+        if (searchTermsCompletion) {
+            searchTermsCompletion(cacheDictionary[@(StatsSectionSearchTerms)], nil);
+        }
+        
         if (commentsAuthorsCompletion) {
             commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
         }

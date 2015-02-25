@@ -596,6 +596,14 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          
          [self.tableView endUpdates];
      }
+                      authorsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         // TODO
+     }
+                  searchTermsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         // TODO
+     }
                 commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
