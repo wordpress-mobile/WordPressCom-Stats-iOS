@@ -229,6 +229,29 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+
+- (void)fetchAuthorsStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForAuthorsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
+- (void)fetchSearchTermsStatsForDate:(NSDate *)date
+                             andUnit:(StatsPeriodUnit)unit
+               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForSearchTermsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
 - (void)fetchCommentsStatsForDate:(NSDate *)date
                           andUnit:(StatsPeriodUnit)unit
             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler

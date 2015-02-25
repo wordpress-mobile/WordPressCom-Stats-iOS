@@ -232,6 +232,27 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
+
+- (void)retrieveAuthorsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchAuthorsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionAuthors andCompletionHandler:completionHandler]];
+}
+
+
+- (void)retrieveSearchTermsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchSearchTermsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionSearchTerms andCompletionHandler:completionHandler]];
+}
+
+
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler
 {
     void (^failure)(NSError *error) = ^void (NSError *error) {

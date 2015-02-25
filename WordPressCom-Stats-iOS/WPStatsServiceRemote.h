@@ -76,6 +76,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
+- (void)fetchAuthorsStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)fetchSearchTermsStatsForDate:(NSDate *)date
+                             andUnit:(StatsPeriodUnit)unit
+               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
 - (void)fetchCommentsStatsForDate:(NSDate *)date
                           andUnit:(StatsPeriodUnit)unit
             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;

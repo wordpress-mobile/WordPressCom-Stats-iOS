@@ -59,6 +59,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
+- (void)retrieveAuthorsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(StatsGroupCompletion)completionHandler;
+
+- (void)retrieveSearchTermsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsGroupCompletion)completionHandler;
+
 - (void)retrieveFollowersOfType:(StatsFollowerType)followersType
                         forDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit

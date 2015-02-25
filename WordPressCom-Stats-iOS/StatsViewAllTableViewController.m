@@ -238,6 +238,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.statsService retrieveCountriesForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     } else if (self.statsSection == StatsSectionVideos) {
         [self.statsService retrieveVideosForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionAuthors) {
+        [self.statsService retrieveAuthorsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+    } else if (self.statsSection == StatsSectionSearchTerms) {
+        [self.statsService retrieveSearchTermsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     } else if (self.statsSection == StatsSectionFollowers) {
         StatsFollowerType followerType = self.statsSubSection == StatsSubSectionFollowersDotCom ? StatsFollowerTypeDotCom : StatsFollowerTypeEmail;
         [self.statsService retrieveFollowersOfType:followerType forDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
