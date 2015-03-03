@@ -75,6 +75,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
+  searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -104,6 +106,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (videosCompletion) {
         [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit viewAll:NO withCompletionHandler:videosCompletion]];
+    }
+    if (authorsCompletion) {
+        [mutableOperations addObject:[self operationForAuthorsForDate:date andUnit:unit viewAll:NO withCompletionHandler:authorsCompletion]];
+    }
+    if (searchTermsCompletion) {
+        [mutableOperations addObject:[self operationForSearchTermsForDate:date andUnit:unit viewAll:NO withCompletionHandler:searchTermsCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
@@ -217,6 +225,29 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSParameterAssert(date != nil);
     
     AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
+
+- (void)fetchAuthorsStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForAuthorsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
+- (void)fetchSearchTermsStatsForDate:(NSDate *)date
+                             andUnit:(StatsPeriodUnit)unit
+               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForSearchTermsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -726,6 +757,124 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (AFHTTPRequestOperation *)operationForAuthorsForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                               viewAll:(BOOL)viewAll
+                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *authorsArray = [firstDay arrayForKey:@"authors"];
+        BOOL moreAuthorsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *author in authorsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [author stringForKey:@"name"];
+            item.value = [self localizedStringForNumber:[author numberForKey:@"views"]];
+            NSString *urlString = [author stringForKey:@"avatar"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"d=mm&s=60";
+                item.iconURL = components.URL;
+            }
+
+            NSArray *posts = [author arrayForKey:@"posts"];
+            for (NSDictionary *post in posts) {
+                StatsItem *postItem = [StatsItem new];
+                postItem.itemID = [post numberForKey:@"ID"];
+                postItem.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+                postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
+                
+                StatsItemAction *itemAction = [StatsItemAction new];
+                itemAction.defaultAction = YES;
+                itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
+                postItem.actions = @[itemAction];
+                
+                [item.children addObject:postItem];
+            }
+
+            [items addObject:item];
+        }
+
+        if (completionHandler) {
+            completionHandler(items, nil, moreAuthorsAvailable, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForAuthors]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
+
+
+- (AFHTTPRequestOperation *)operationForSearchTermsForDate:(NSDate *)date
+                                                   andUnit:(StatsPeriodUnit)unit
+                                                   viewAll:(BOOL)viewAll
+                                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *termsArray = [firstDay arrayForKey:@"search_terms"];
+        BOOL moreTermsAvailable = [firstDay numberForKey:@"other_search_terms"].integerValue > 0;
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *term in termsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [term stringForKey:@"term"];
+            item.value = [self localizedStringForNumber:[term numberForKey:@"views"]];
+            [items addObject:item];
+        }
+        
+        NSNumber *encryptedSearchTermsViews = [firstDay numberForKey:@"encrypted_search_terms"];
+        if (![encryptedSearchTermsViews isEqualToNumber:@0]) {
+            StatsItem *item = [StatsItem new];
+            item.label = NSLocalizedString(@"Unknown Search Terms", @"");
+            item.value = [self localizedStringForNumber:encryptedSearchTermsViews];
+            
+            StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.defaultAction = YES;
+            itemAction.url = [NSURL URLWithString:@"http://en.support.wordpress.com/stats/#search-engine-terms"];
+            item.actions = @[itemAction];
+            
+            [items addObject:item];
+        }
+
+        if (completionHandler) {
+            completionHandler(items, nil, moreTermsAvailable, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSearchTerms]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
 - (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
@@ -1036,9 +1185,22 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForVideos
 {
     return [NSString stringWithFormat:@"%@/video-plays/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForAuthors
+{
+    return [NSString stringWithFormat:@"%@/top-authors/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForSearchTerms
+{
+    return [NSString stringWithFormat:@"%@/search-terms/", self.statsPathPrefix];
 }
 
 

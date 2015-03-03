@@ -60,6 +60,8 @@
         clicksCompletionHandler:(StatsGroupCompletion)clicksCompletion
        countryCompletionHandler:(StatsGroupCompletion)countryCompletion
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
+       authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
+   searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletion
 commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
  commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
 tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -105,6 +107,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
         }
     
+        if (authorsCompletion) {
+            authorsCompletion(cacheDictionary[@(StatsSectionAuthors)], nil);
+        }
+        
+        if (searchTermsCompletion) {
+            searchTermsCompletion(cacheDictionary[@(StatsSectionSearchTerms)], nil);
+        }
+        
         if (commentsAuthorsCompletion) {
             commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
         }
@@ -147,6 +157,8 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                 clicksCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionClicks andCompletionHandler:clicksCompletion]
                countryCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionCountry andCompletionHandler:countryCompletion]
                 videosCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionVideos andCompletionHandler:videosCompletion]
+               authorsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionAuthors andCompletionHandler:authorsCompletion]
+           searchTermsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionSearchTerms andCompletionHandler:searchTermsCompletion]
               commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
         tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
        followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
@@ -217,6 +229,27 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     
     [self.remote fetchFollowersStatsForFollowerType:followersType date:endDate andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
+}
+
+
+
+- (void)retrieveAuthorsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchAuthorsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionAuthors andCompletionHandler:completionHandler]];
+}
+
+
+- (void)retrieveSearchTermsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchSearchTermsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionSearchTerms andCompletionHandler:completionHandler]];
 }
 
 

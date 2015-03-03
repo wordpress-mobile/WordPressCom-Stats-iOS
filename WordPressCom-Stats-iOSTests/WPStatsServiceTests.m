@@ -41,6 +41,8 @@
     XCTestExpectation *countryExpectation = [self expectationWithDescription:@"countryExpectation"];
     XCTestExpectation *videosExpectation = [self expectationWithDescription:@"videosExpectation"];
     XCTestExpectation *commentsAuthorExpectation = [self expectationWithDescription:@"commentsAuthorExpectation"];
+    XCTestExpectation *authorsExpectation = [self expectationWithDescription:@"authorsExpectation"];
+    XCTestExpectation *searchTermsExpectation = [self expectationWithDescription:@"searchTermsExpectation"];
     XCTestExpectation *commentsPostsExpectation = [self expectationWithDescription:@"commentsPostsExpectation"];
     XCTestExpectation *tagsExpectation = [self expectationWithDescription:@"tagsExpectation"];
     XCTestExpectation *followersDotComExpectation = [self expectationWithDescription:@"followersDotComExpectation"];
@@ -71,6 +73,12 @@
                   videosCompletionHandler:^(StatsGroup *group, NSError *error) {
                       [videosExpectation fulfill];
                   }
+                 authorsCompletionHandler:^(StatsGroup *group, NSError *error) {
+                     [authorsExpectation fulfill];
+                 }
+             searchTermsCompletionHandler:^(StatsGroup *group, NSError *error) {
+                 [searchTermsExpectation fulfill];
+             }
           commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
               [commentsAuthorExpectation fulfill];
           }
@@ -333,19 +341,21 @@
     
     OCMExpect([remote batchFetchStatsForDate:dateCheckBlock
                                      andUnit:unit
-                  withVisitsCompletionHandler:[OCMArg any]
-                      eventsCompletionHandler:[OCMArg any]
-                       postsCompletionHandler:[OCMArg any]
-                   referrersCompletionHandler:[OCMArg any]
-                      clicksCompletionHandler:[OCMArg any]
-                     countryCompletionHandler:[OCMArg any]
-                      videosCompletionHandler:[OCMArg any]
-                    commentsCompletionHandler:[OCMArg any]
-              tagsCategoriesCompletionHandler:[OCMArg any]
-             followersDotComCompletionHandler:[OCMArg any]
-              followersEmailCompletionHandler:[OCMArg any]
-                   publicizeCompletionHandler:[OCMArg any]
-                  andOverallCompletionHandler:[OCMArg any]]);
+                 withVisitsCompletionHandler:[OCMArg any]
+                     eventsCompletionHandler:[OCMArg any]
+                      postsCompletionHandler:[OCMArg any]
+                  referrersCompletionHandler:[OCMArg any]
+                     clicksCompletionHandler:[OCMArg any]
+                    countryCompletionHandler:[OCMArg any]
+                     videosCompletionHandler:[OCMArg any]
+                    authorsCompletionHandler:[OCMArg any]
+                searchTermsCompletionHandler:[OCMArg any]
+                   commentsCompletionHandler:[OCMArg any]
+             tagsCategoriesCompletionHandler:[OCMArg any]
+            followersDotComCompletionHandler:[OCMArg any]
+             followersEmailCompletionHandler:[OCMArg any]
+                  publicizeCompletionHandler:[OCMArg any]
+                 andOverallCompletionHandler:[OCMArg any]]);
     
     self.subject.remote = remote;
     
@@ -358,6 +368,8 @@
                   clicksCompletionHandler:nil
                  countryCompletionHandler:nil
                   videosCompletionHandler:nil
+                 authorsCompletionHandler:nil
+             searchTermsCompletionHandler:nil
           commentsAuthorCompletionHandler:nil
            commentsPostsCompletionHandler:nil
           tagsCategoriesCompletionHandler:nil
@@ -385,6 +397,8 @@
        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
+  searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -412,6 +426,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (videosCompletion) {
         videosCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (authorsCompletion) {
+        authorsCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    if (searchTermsCompletion) {
+        searchTermsCompletion(@[[StatsItem new]], nil, false, nil);
     }
     if (commentsCompletion) {
         commentsCompletion(@[[StatsItem new]], nil, false, nil);

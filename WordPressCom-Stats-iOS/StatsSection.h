@@ -7,6 +7,8 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionClicks,
     StatsSectionCountry,
     StatsSectionVideos,
+    StatsSectionAuthors,
+    StatsSectionSearchTerms,
     StatsSectionComments,
     StatsSectionTagsCategories,
     StatsSectionFollowers,

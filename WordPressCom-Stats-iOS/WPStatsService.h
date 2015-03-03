@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
         clicksCompletionHandler:(StatsGroupCompletion)clicksCompletion
        countryCompletionHandler:(StatsGroupCompletion)countryCompletion
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
+       authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
+   searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletionHandler
 commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
  commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
 tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -56,6 +58,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 - (void)retrieveVideosForDate:(NSDate *)date
                       andUnit:(StatsPeriodUnit)unit
         withCompletionHandler:(StatsGroupCompletion)completionHandler;
+
+- (void)retrieveAuthorsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(StatsGroupCompletion)completionHandler;
+
+- (void)retrieveSearchTermsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
 - (void)retrieveFollowersOfType:(StatsFollowerType)followersType
                         forDate:(NSDate *)date
