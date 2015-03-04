@@ -13,7 +13,11 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionTagsCategories,
     StatsSectionFollowers,
     StatsSectionPublicize,
-    StatsSectionWebVersion
+    StatsSectionWebVersion,
+    StatsSectionPostDetailsGraph,
+    StatsSectionPostDetailsMonthsYears,
+    StatsSectionPostDetailsAveragePerDay,
+    StatsSectionPostDetailsRecentWeeks
 };
 
 typedef NS_ENUM(NSInteger, StatsSubSection) {
