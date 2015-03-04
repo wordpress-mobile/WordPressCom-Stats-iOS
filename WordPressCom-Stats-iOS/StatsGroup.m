@@ -130,10 +130,26 @@
             self.titlePrimary = NSLocalizedString(@"Video", @"");
             self.titleSecondary = NSLocalizedString(@"Views", @"");
             break;
+        case StatsSectionPostDetailsMonthsYears:
+            self.groupTitle = NSLocalizedString(@"Months and Years", @"Title for stats section for post details months & years");
+            self.titlePrimary = NSLocalizedString(@"Period", @"");
+            self.titleSecondary = NSLocalizedString(@"Total", @"");
+            break;
+        case StatsSectionPostDetailsAveragePerDay:
+            self.groupTitle = NSLocalizedString(@"Average per Day", @"Title for stats section for post details average per day");
+            self.titlePrimary = NSLocalizedString(@"Period", @"");
+            self.titleSecondary = NSLocalizedString(@"Overall", @"");
+            break;
+        case StatsSectionPostDetailsRecentWeeks:
+            self.groupTitle = NSLocalizedString(@"Recent Weeks", @"Title for stats section for post details recent weeks");
+            self.titlePrimary = NSLocalizedString(@"Period", @"");
+            self.titleSecondary = NSLocalizedString(@"Total", @"");
+            break;
 
         case StatsSectionGraph:
         case StatsSectionPeriodHeader:
         case StatsSectionWebVersion:
+        case StatsSectionPostDetailsGraph:
             break;
     }
 
