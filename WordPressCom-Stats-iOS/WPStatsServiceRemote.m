@@ -145,6 +145,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
 }
 
+- (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
+                 withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
+{
+    // TODO - Implement
+}
+
 - (void)fetchSummaryStatsForDate:(NSDate *)date
            withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
 {
