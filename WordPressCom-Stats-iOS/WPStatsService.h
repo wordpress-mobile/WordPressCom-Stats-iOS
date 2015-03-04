@@ -6,6 +6,7 @@
 typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsGroupCompletion)(StatsGroup *group, NSError *error);
+typedef void (^StatsPostDetailsCompletion)(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error);
 
 typedef NS_ENUM(NSUInteger, StatsFollowerType) {
     StatsFollowerTypeDotCom,
@@ -38,6 +39,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
       publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
      andOverallCompletionHandler:(void (^)())completionHandler;
+
+- (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    withCompletionHandler:(StatsPostDetailsCompletion)completion;
 
 - (void)retrievePostsForDate:(NSDate *)date
                      andUnit:(StatsPeriodUnit)unit
