@@ -148,7 +148,115 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
 {
-    // TODO - Implement
+    NSParameterAssert(postID != nil);
+    NSParameterAssert(completionHandler != nil);
+    
+    NSComparator numberComparator = ^NSComparisonResult(id obj1, id obj2) {
+        NSNumber *number1 = [NSNumber numberWithInteger:[obj1 integerValue]];
+        NSNumber *number2 = [NSNumber numberWithInteger:[obj2 integerValue]];
+        return [number1 compare:number2];
+    };
+
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+        NSArray *visitsData = [responseDictionary arrayForKey:@"data"];
+        NSDictionary *yearsData = [responseDictionary dictionaryForKey:@"years"];
+        NSDictionary *averageData = [responseDictionary dictionaryForKey:@"averages"];
+        NSArray *weeksData = [responseDictionary arrayForKey:@"weeks"];
+        
+        NSMutableArray *visitsArray = [NSMutableArray new];
+        StatsVisits *visits = [StatsVisits new];
+        visits.unit = StatsPeriodUnitDay;
+        visits.statsData = visitsArray;
+        
+        for (NSArray *visit in visitsData) {
+            StatsSummary *statsSummary = [StatsSummary new];
+            statsSummary.periodUnit = StatsPeriodUnitDay;
+            statsSummary.date = [self deviceLocalDateForString:visit[0] withPeriodUnit:StatsPeriodUnitDay];
+            statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
+            statsSummary.views = [self localizedStringForNumber:visit[1]];
+            statsSummary.viewsValue = visit[1];
+            
+            [visitsArray addObject:statsSummary];
+        }
+        
+        NSMutableArray *yearsItems = [NSMutableArray new];
+        NSArray *yearsKeys = [yearsData.allKeys sortedArrayUsingComparator:numberComparator];
+        for (NSString *year in yearsKeys) {
+            NSDictionary *yearSummary = [yearsData dictionaryForKey:year];
+            NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
+            
+            StatsItem *yearItem = [StatsItem new];
+            yearItem.label = year;
+            [yearsItems addObject:yearItem];
+            
+            for (NSString *month in monthsKeys) {
+                NSNumber *value = [months numberForKey:month];
+                
+                StatsItem *monthItem = [StatsItem new];
+                monthItem.label = month;
+                monthItem.value = [self localizedStringForNumber:value];
+                [yearItem.children addObject:monthItem];
+            }
+        }
+        
+        NSMutableArray *averageItems = [NSMutableArray new];
+        NSArray *avgYearsKeys = [averageData.allKeys sortedArrayUsingComparator:numberComparator];
+        for (NSString *year in avgYearsKeys) {
+            NSDictionary *yearSummary = [yearsData dictionaryForKey:year];
+            NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
+            
+            StatsItem *yearItem = [StatsItem new];
+            yearItem.label = year;
+            yearItem.value = [self localizedStringForNumber:[yearSummary numberForKey:@"overall"]];
+            [averageItems addObject:yearItem];
+            
+            for (NSString *month in monthsKeys) {
+                NSNumber *value = [months numberForKey:month];
+                
+                StatsItem *monthItem = [StatsItem new];
+                monthItem.label = month;
+                monthItem.value = [self localizedStringForNumber:value];
+                [yearItem.children addObject:monthItem];
+            }
+        }
+        
+        NSMutableArray *weekItems = [NSMutableArray new];
+        for (NSDictionary *week in weeksData) {
+            NSArray *days = [week arrayForKey:@"days"];
+            NSDate *startDate = [self deviceLocalDateForString:[days.firstObject stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+            NSDate *endDate = [self deviceLocalDateForString:[days.lastObject stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+            
+            StatsItem *weekItem = [StatsItem new];
+            weekItem.label = [self localizedStringForPeriodStartDate:startDate endDate:endDate];
+            weekItem.value = [self localizedStringForNumber:[week numberForKey:@"count"]];
+            [weekItems addObject:weekItem];
+            
+            for (NSDictionary *day in days) {
+                StatsItem *dayItem = [StatsItem new];
+                // TODO localize this either here or up further in the service layers
+                dayItem.label = [day stringForKey:@"day"];
+                dayItem.value = [self localizedStringForNumber:[day numberForKey:@"count"]];
+                [weekItem.children addObject:dayItem];
+            }
+        }
+
+        completionHandler(visits, yearsItems, averageItems, weekItems, nil);
+    };
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        // TODO - Implement
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
+    [operation start];
 }
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
@@ -1364,6 +1472,20 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSString *formattedNumber = [self.deviceNumberFormatter stringFromNumber:number];
     
     return formattedNumber;
+}
+
+
+- (NSString *)localizedStringForPeriodStartDate:(NSDate *)startDate endDate:(NSDate *)endDate
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.dateFormat = @"MM-dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *startString = [formatter stringFromDate:startDate];
+    NSString *endString = [formatter stringFromDate:endDate];
+    
+    return [NSString stringWithFormat:@"%@ - %@", startString, endString];
 }
 
 

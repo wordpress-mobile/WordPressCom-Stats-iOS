@@ -755,4 +755,43 @@
     // TODO
 }
 
+
+- (void)testPostDetails
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostDetails completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-post-details.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchPostDetailsStatsForPostID:@123
+                           withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error)
+     {
+         XCTAssertNotNil(visits);
+         XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
+         XCTAssertNotNil(visits.statsData);
+         XCTAssertEqual(274, visits.statsData.count);
+         
+         XCTAssertNotNil(monthsYearsItems);
+         XCTAssertTrue([[monthsYearsItems[0] label] isEqualToString:@"2014"]);
+         XCTAssertTrue([[monthsYearsItems[1] label] isEqualToString:@"2015"]);
+         XCTAssertTrue([[[monthsYearsItems[0] children][0] label] isEqualToString:@"6"]);
+         
+         XCTAssertNotNil(averagePerDayItems);
+         XCTAssertEqual(2, averagePerDayItems.count);
+         
+         XCTAssertNotNil(recentWeeksItems);
+         XCTAssertEqual(6, recentWeeksItems.count);
+         
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 @end
