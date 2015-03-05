@@ -27,11 +27,12 @@
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
-        self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
         
         if (self.expandable == NO) {
             self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             self.rightEdgeConstraint.constant = -10.0f;
+        } else {
+            self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
         }
     }
     
