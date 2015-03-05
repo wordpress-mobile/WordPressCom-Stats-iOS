@@ -299,6 +299,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        // Do nothing for posts - handled by segue to show post details
+        if (statsSection == StatsSectionPosts) {
+            return;
+        }
+        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
@@ -369,6 +374,20 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 
 #pragma mark - Segue methods
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(UITableViewCell *)sender
+{
+    if ([identifier isEqualToString:@"PostDetails"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        
+        // Only fire the segue for the posts section
+        return statsSection == StatsSectionPosts;
+    }
+    
+    return YES;
+}
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
 {
