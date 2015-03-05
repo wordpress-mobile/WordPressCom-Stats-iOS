@@ -1,4 +1,18 @@
 #import "StatsPostDetailsTableViewController.h"
+#import "StatsGroup.h"
+#import "StatsItem.h"
+#import "StatsItemAction.h"
+#import "StatsTwoColumnTableViewCell.h"
+#import "WPStyleGuide+Stats.h"
+#import "StatsTableSectionHeaderView.h"
+
+static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
+static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
+static NSString *const StatsTableTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
+static NSString *const StatsTableTwoColumnCellIdentifier = @"TwoColumnRow";
+static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndicator";
+static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow";
+static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 
 @interface StatsPostDetailsTableViewController ()
 
@@ -9,11 +23,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
+    self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UIRefreshControl *refreshControl = [UIRefreshControl new];
+    [refreshControl addTarget:self action:@selector(retrieveStats) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    
+    self.title = self.postTitle;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self retrieveStats];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self abortRetrieveStats];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,69 +58,138 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 4;
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
+    switch (section) {
+        case 0:
+            return 1;
+            break;
+            
+        default:
+            break;
+    }
+
     return 0;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    NSString *identifier;
+    switch (indexPath.section) {
+        case 0:
+            identifier = StatsTableGraphCellIdentifier;
+            break;
+        case 1:
+            break;
+        default:
+            identifier = StatsTableTwoColumnCellIdentifier;
+            break;
+    }
     
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    
+    return headerView;
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    footerView.footer = YES;
+    
+    return footerView;
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44.0f;
 }
-*/
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 1.0f;
 }
-*/
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 10.0f;
+}
+
+
+#pragma mark - Private methods
+
+- (void)retrieveStats
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+}
+
+
+- (void)abortRetrieveStats
+{
+    [self.statsService cancelAnyRunningOperations];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+
+- (void)configureTwoColumnRowCell:(UITableViewCell *)cell
+                     withLeftText:(NSString *)leftText
+                        rightText:(NSString *)rightText
+                      andImageURL:(NSURL *)imageURL
+                      indentLevel:(NSUInteger)indentLevel
+                       indentable:(BOOL)indentable
+                       expandable:(BOOL)expandable
+                         expanded:(BOOL)expanded
+                       selectable:(BOOL)selectable
+                  forStatsSection:(StatsSection)statsSection
+{
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    
+    StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
+    statsCell.leftText = leftText;
+    statsCell.rightText = rightText;
+    statsCell.imageURL = imageURL;
+    statsCell.showCircularIcon = showCircularIcon;
+    statsCell.indentLevel = indentLevel;
+    statsCell.indentable = indentable;
+    statsCell.expandable = expandable;
+    statsCell.expanded = expanded;
+    statsCell.selectable = selectable;
+    [statsCell doneSettingProperties];
+}
+
+
+- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell
+{
+//    NSString *leftText = self.statsGroup.titlePrimary;
+//    NSString *rightText = self.statsGroup.titleSecondary;
+    
+//    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
+//    label1.text = leftText;
+//    
+//    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
+//    label2.text = rightText;
+}
 
 @end

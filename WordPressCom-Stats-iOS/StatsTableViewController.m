@@ -11,6 +11,7 @@
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
+#import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
 #import <WPAnalytics.h>
 
@@ -407,6 +408,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
+        postVC.postID = statsItem.itemID;
+        postVC.postTitle = statsItem.label;
+        postVC.statsService = self.statsService;
+        postVC.statsDelegate = self.statsDelegate;
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
