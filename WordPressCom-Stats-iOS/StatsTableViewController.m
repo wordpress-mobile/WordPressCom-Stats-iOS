@@ -840,6 +840,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionWebVersion:
             identifier = StatsTableViewWebVersionCellIdentifier;
             break;
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
+            break;
     }
 
     return identifier;
@@ -1135,6 +1140,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionGraph:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
+            case StatsSectionPostDetailsAveragePerDay:
+            case StatsSectionPostDetailsGraph:
+            case StatsSectionPostDetailsMonthsYears:
+            case StatsSectionPostDetailsRecentWeeks:
                 break;
         }
     }
