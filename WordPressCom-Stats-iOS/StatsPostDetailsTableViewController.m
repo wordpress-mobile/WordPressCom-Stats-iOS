@@ -6,6 +6,9 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 
+static CGFloat const StatsTableGraphHeight = 185.0f;
+static CGFloat const StatsTableNoResultsHeight = 100.0f;
+static CGFloat const StatsTableGroupHeaderHeight = 30.0f;
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
@@ -13,8 +16,14 @@ static NSString *const StatsTableTwoColumnCellIdentifier = @"TwoColumnRow";
 static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndicator";
 static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
+static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 @interface StatsPostDetailsTableViewController ()
+
+@property (nonatomic, strong) StatsVisits *visits;
+@property (nonatomic, strong) StatsGroup *monthsYears;
+@property (nonatomic, strong) StatsGroup *averagePerDay;
+@property (nonatomic, strong) StatsGroup *recentWeeks;
 
 @end
 
@@ -66,10 +75,12 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
     switch (section) {
         case 0:
             return 1;
-            break;
-            
-        default:
-            break;
+        case 1:
+            return 3;
+        case 2:
+            return 3;
+        case 3:
+            return 3;
     }
 
     return 0;
@@ -77,17 +88,7 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *identifier;
-    switch (indexPath.section) {
-        case 0:
-            identifier = StatsTableGraphCellIdentifier;
-            break;
-        case 1:
-            break;
-        default:
-            identifier = StatsTableTwoColumnCellIdentifier;
-            break;
-    }
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
@@ -119,21 +120,29 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 }
 
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 44.0f;
-}
-
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 1.0f;
 }
 
-
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 10.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
+        return StatsTableGraphHeight;
+    } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+        return StatsTableGroupHeaderHeight;
+    } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
+        return StatsTableNoResultsHeight;
+    }
+    
+    return 44.0f;
 }
 
 
@@ -143,6 +152,27 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
+    if (!self.visits) {
+        self.visits = [StatsVisits new];
+        self.monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
+        self.averagePerDay = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsAveragePerDay andStatsSubSection:StatsSubSectionNone];
+        self.recentWeeks = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsRecentWeeks andStatsSubSection:StatsSubSectionNone];
+    }
+    
+    [self.statsService retrievePostDetailsStatsForPostID:self.postID
+                                   withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
+    {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [self.refreshControl endRefreshing];
+
+        self.visits = visits;
+        self.monthsYears = monthsYears;
+        self.averagePerDay = averagePerDay;
+        self.recentWeeks = recentWeeks;
+        
+        [self.tableView reloadData];
+    }];
+    
 }
 
 
@@ -150,6 +180,30 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 {
     [self.statsService cancelAnyRunningOperations];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+
+- (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = @"";
+    
+    if (indexPath.section == 0) {
+        identifier = StatsTableGraphCellIdentifier;
+    } else {
+        switch (indexPath.row) {
+            case 0:
+                identifier = StatsTableGroupHeaderCellIdentifier;
+                break;
+            case 1:
+                identifier = StatsTableTwoColumnHeaderCellIdentifier;
+                break;
+            case 2:
+                identifier = StatsTableTwoColumnCellIdentifier;
+                break;
+        }
+    }
+
+    return identifier;
 }
 
 
