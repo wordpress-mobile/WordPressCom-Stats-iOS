@@ -6,6 +6,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
+#import <WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -32,6 +33,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
     
     self.sections = [@[@(StatsSectionPostDetailsLoadingIndicator), @(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)] mutableCopy];
     self.sectionData = [NSMutableDictionary new];
