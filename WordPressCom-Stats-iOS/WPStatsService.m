@@ -78,7 +78,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
     DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
     
-    if (cacheDictionary && cacheDictionary.count == 13) {
+    if (cacheDictionary && cacheDictionary.count == 15) {
         if (visitsCompletion) {
             visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
         }
