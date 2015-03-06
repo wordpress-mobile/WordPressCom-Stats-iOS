@@ -3,7 +3,7 @@ platform :ios, '7.0'
 
 pod 'AFNetworking',	'~> 2.5.1'
 pod 'CocoaLumberjack', '~> 1.9'
-pod 'WordPress-iOS-Shared', '~> 0.2.0'
+pod 'WordPress-iOS-Shared', '~> 0.3.0'
 pod 'NSObject-SafeExpectations', '0.0.2'
 pod 'WordPressCom-Analytics-iOS'
 
