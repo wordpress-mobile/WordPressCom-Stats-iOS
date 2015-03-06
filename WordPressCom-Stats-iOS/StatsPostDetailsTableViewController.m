@@ -19,7 +19,7 @@ static NSString *const StatsTableGraphSelectableCellIdentifier = @"SelectableRow
 static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
-@interface StatsPostDetailsTableViewController ()
+@interface StatsPostDetailsTableViewController () <WPStatsGraphViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
@@ -44,6 +44,12 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     UIRefreshControl *refreshControl = [UIRefreshControl new];
     [refreshControl addTarget:self action:@selector(retrieveStats) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+    
+    self.graphViewController = [WPStatsGraphViewController new];
+    self.graphViewController.allowDeselection = NO;
+    self.graphViewController.graphDelegate = self;
+    [self addChildViewController:self.graphViewController];
+    [self.graphViewController didMoveToParentViewController:self];
     
     self.title = self.postTitle;
     
@@ -107,7 +113,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
 
-    if ([identifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
+    if ([identifier isEqualToString:StatsTableGraphCellIdentifier]) {
+        [self configureSectionGraphCell:cell];
+    } else if ([identifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
         [self configureSectionGraphSelectableCell:cell];
     } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
@@ -317,6 +325,26 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
+- (void)configureSectionGraphCell:(UITableViewCell *)cell
+{
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
+    
+    if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
+        UIView *graphView = self.graphViewController.view;
+        [graphView removeFromSuperview];
+        graphView.frame = CGRectMake(8.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds) - 16.0f, StatsTableGraphHeight - 1.0);
+        graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [cell.contentView addSubview:graphView];
+    }
+    
+    self.graphViewController.currentSummaryType = StatsSummaryTypeViews;
+    self.graphViewController.visits = visits;
+    [self.graphViewController doneSettingProperties];
+    [self.graphViewController.collectionView reloadData];
+    [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+}
+
+
 - (void)configureSectionGraphSelectableCell:(UITableViewCell *)cell
 {
     UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
@@ -391,6 +419,17 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (id)statsDataForStatsSection:(StatsSection)statsSection
 {
     return self.sectionData[@(statsSection)];
+}
+
+
+#pragma mark - WPStatsGraphViewControllerDelegate methods
+
+
+- (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
+{
+    self.selectedDate = date;
+    
+    [self.tableView reloadData];
 }
 
 
