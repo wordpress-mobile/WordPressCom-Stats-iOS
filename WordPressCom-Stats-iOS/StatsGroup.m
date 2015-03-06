@@ -150,6 +150,7 @@
         case StatsSectionPeriodHeader:
         case StatsSectionWebVersion:
         case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
             break;
     }
 

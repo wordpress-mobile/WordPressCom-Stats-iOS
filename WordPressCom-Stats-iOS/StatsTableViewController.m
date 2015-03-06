@@ -875,6 +875,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             break;
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
             break;
@@ -1175,6 +1176,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionWebVersion:
             case StatsSectionPostDetailsAveragePerDay:
             case StatsSectionPostDetailsGraph:
+            case StatsSectionPostDetailsLoadingIndicator:
             case StatsSectionPostDetailsMonthsYears:
             case StatsSectionPostDetailsRecentWeeks:
                 break;
