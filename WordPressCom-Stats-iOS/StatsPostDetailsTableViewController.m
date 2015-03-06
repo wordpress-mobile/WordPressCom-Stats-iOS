@@ -1,4 +1,5 @@
 #import "StatsPostDetailsTableViewController.h"
+#import "WPStatsGraphViewController.h"
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
@@ -20,10 +21,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 @interface StatsPostDetailsTableViewController ()
 
-@property (nonatomic, strong) StatsVisits *visits;
-@property (nonatomic, strong) StatsGroup *monthsYears;
-@property (nonatomic, strong) StatsGroup *averagePerDay;
-@property (nonatomic, strong) StatsGroup *recentWeeks;
+@property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSMutableDictionary *sectionData;
+@property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 
 @end
 
@@ -32,6 +32,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.sections = @[@(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)];
+    self.sectionData = [NSMutableDictionary new];
+
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -76,11 +79,14 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case 0:
             return 1;
         case 1:
-            return 3;
         case 2:
-            return 3;
         case 3:
-            return 3;
+        {
+            StatsSection statsSection = [self statsSectionForTableViewSection:section];
+            StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+            NSUInteger numberOfRows = [statsGroup numberOfRows];
+            return 2 + numberOfRows + (numberOfRows == 0 ? 1 : 0);
+        }
     }
 
     return 0;
@@ -91,6 +97,27 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+
+    if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        [self configureTwoColumnRowCell:cell
+                           withLeftText:statsItem.label
+                              rightText:statsItem.value
+                            andImageURL:statsItem.iconURL
+                            indentLevel:statsItem.depth
+                             indentable:NO
+                             expandable:statsItem.children.count > 0
+                               expanded:statsItem.expanded
+                             selectable:statsItem.actions.count > 0 || statsItem.children.count > 0
+                        forStatsSection:statsSection];
+    } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        [self configureSectionTwoColumnHeaderCell:cell withStatsGroup:statsGroup];
+    }
     
     return cell;
 }
@@ -152,11 +179,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    if (!self.visits) {
-        self.visits = [StatsVisits new];
-        self.monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
-        self.averagePerDay = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsAveragePerDay andStatsSubSection:StatsSubSectionNone];
-        self.recentWeeks = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsRecentWeeks andStatsSubSection:StatsSubSectionNone];
+    if (self.sectionData.count == 0) {
+        self.sectionData[@(StatsSectionPostDetailsGraph)] = [StatsVisits new];
+        self.sectionData[@(StatsSectionPostDetailsMonthsYears)] = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
+        self.sectionData[@(StatsSectionPostDetailsAveragePerDay)] = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsAveragePerDay andStatsSubSection:StatsSubSectionNone];
+        self.sectionData[@(StatsSectionPostDetailsRecentWeeks)] = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsRecentWeeks andStatsSubSection:StatsSubSectionNone];
     }
     
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
@@ -164,11 +191,15 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [self.refreshControl endRefreshing];
+        
+        monthsYears.offsetRows = 2;
+        averagePerDay.offsetRows = 2;
+        recentWeeks.offsetRows = 2;
 
-        self.visits = visits;
-        self.monthsYears = monthsYears;
-        self.averagePerDay = averagePerDay;
-        self.recentWeeks = recentWeeks;
+        self.sectionData[@(StatsSectionPostDetailsGraph)] = visits;
+        self.sectionData[@(StatsSectionPostDetailsMonthsYears)] = monthsYears;
+        self.sectionData[@(StatsSectionPostDetailsAveragePerDay)] = averagePerDay;
+        self.sectionData[@(StatsSectionPostDetailsRecentWeeks)] = recentWeeks;
         
         [self.tableView reloadData];
     }];
@@ -197,7 +228,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
             case 1:
                 identifier = StatsTableTwoColumnHeaderCellIdentifier;
                 break;
-            case 2:
+            default:
                 identifier = StatsTableTwoColumnCellIdentifier;
                 break;
         }
@@ -234,16 +265,29 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell
+- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsGroup:(StatsGroup *)statsGroup
 {
-//    NSString *leftText = self.statsGroup.titlePrimary;
-//    NSString *rightText = self.statsGroup.titleSecondary;
+    NSString *leftText = statsGroup.titlePrimary;
+    NSString *rightText = statsGroup.titleSecondary;
     
-//    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
-//    label1.text = leftText;
-//    
-//    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
-//    label2.text = rightText;
+    UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
+    label1.text = leftText;
+    
+    UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
+    label2.text = rightText;
 }
+
+
+- (StatsSection)statsSectionForTableViewSection:(NSInteger)section
+{
+    return (StatsSection)[self.sections[section] integerValue];
+}
+
+
+- (id)statsDataForStatsSection:(StatsSection)statsSection
+{
+    return self.sectionData[@(statsSection)];
+}
+
 
 @end
