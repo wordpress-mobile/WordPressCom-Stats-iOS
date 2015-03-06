@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionFollowers,
     StatsSectionPublicize,
     StatsSectionWebVersion,
+    StatsSectionPostDetailsLoadingIndicator,
     StatsSectionPostDetailsGraph,
     StatsSectionPostDetailsMonthsYears,
     StatsSectionPostDetailsAveragePerDay,

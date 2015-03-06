@@ -6,8 +6,8 @@
 
 @protocol StatsTableViewControllerDelegate <NSObject>
 
-- (void)statsTableViewControllerDidBeginLoadingStats:(StatsTableViewController *)controller;
-- (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller;
+- (void)statsTableViewControllerDidBeginLoadingStats:(UIViewController *)controller;
+- (void)statsTableViewControllerDidEndLoadingStats:(UIViewController *)controller;
 
 @end
 

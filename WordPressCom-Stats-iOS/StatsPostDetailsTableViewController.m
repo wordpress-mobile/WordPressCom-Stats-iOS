@@ -21,11 +21,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 @interface StatsPostDetailsTableViewController () <WPStatsGraphViewControllerDelegate>
 
-@property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
 @property (nonatomic, strong) NSDate *selectedDate;
-
+@property (nonatomic, assign) BOOL isRefreshing;
 @end
 
 @implementation StatsPostDetailsTableViewController
@@ -33,7 +33,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.sections = @[@(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)];
+    self.sections = [@[@(StatsSectionPostDetailsLoadingIndicator), @(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)] mutableCopy];
     self.sectionData = [NSMutableDictionary new];
 
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
@@ -41,9 +41,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
-    UIRefreshControl *refreshControl = [UIRefreshControl new];
-    [refreshControl addTarget:self action:@selector(retrieveStats) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl = refreshControl;
+    [self setupRefreshControl];
     
     self.graphViewController = [WPStatsGraphViewController new];
     self.graphViewController.allowDeselection = NO;
@@ -88,18 +86,24 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
-        case 0:
+    StatsSection statsSection = [self statsSectionForTableViewSection:section];
+    
+    switch (statsSection) {
+        case StatsSectionPostDetailsLoadingIndicator:
+            return self.isRefreshing ? 1 : 0;
+        case StatsSectionPostDetailsGraph:
             return 2;
-        case 1:
-        case 2:
-        case 3:
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
         {
             StatsSection statsSection = [self statsSectionForTableViewSection:section];
             StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
             NSUInteger numberOfRows = [statsGroup numberOfRows];
             return 2 + numberOfRows + (numberOfRows == 0 ? 1 : 0);
         }
+        default:
+            return 0;
     }
 
     return 0;
@@ -137,6 +141,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         [self configureSectionTwoColumnHeaderCell:cell withStatsGroup:statsGroup];
+    } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
+        cell.backgroundColor = self.tableView.backgroundColor;
     }
     
     return cell;
@@ -219,18 +225,25 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPostDetailsLoadingIndicator) {
+        StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        
+        return headerView;
+    }
     
-    return headerView;
+    return nil;
 }
-
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
-    footerView.footer = YES;
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPostDetailsLoadingIndicator) {
+        StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        footerView.footer = YES;
+        
+        return footerView;
+    }
     
-    return footerView;
+    return nil;
 }
 
 
@@ -266,11 +279,21 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
+    if (self.refreshControl.isRefreshing == NO) {
+        self.refreshControl = nil;
+        self.isRefreshing = YES;
+        [self.tableView reloadData];
+    }
+    
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+        [self setupRefreshControl];
         [self.refreshControl endRefreshing];
+
+        self.isRefreshing = NO;
         
         monthsYears.offsetRows = 2;
         averagePerDay.offsetRows = 2;
@@ -298,8 +321,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
 {
     NSString *identifier = @"";
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
-    if (indexPath.section == 0) {
+    if (statsSection == StatsSectionPostDetailsLoadingIndicator) {
+        identifier = StatsTableLoadingIndicatorCellIdentifier;
+    } else if (statsSection == StatsSectionPostDetailsGraph) {
         switch (indexPath.row) {
             case 0:
                 identifier = StatsTableGraphCellIdentifier;
@@ -422,6 +448,19 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
+- (void)setupRefreshControl
+{
+    if (self.refreshControl) {
+        return;
+    }
+    
+    UIRefreshControl *refreshControl = [UIRefreshControl new];
+    [refreshControl addTarget:self action:@selector(retrieveStats) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    self.isRefreshing = NO;
+}
+
+
 #pragma mark - WPStatsGraphViewControllerDelegate methods
 
 
@@ -432,5 +471,16 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self.tableView reloadData];
 }
 
+
+- (void)setIsRefreshing:(BOOL)isRefreshing
+{
+    _isRefreshing = isRefreshing;
+    
+    if (_isRefreshing && [self.sections containsObject:@(StatsSectionPostDetailsLoadingIndicator)] == NO) {
+        [self.sections insertObject:@(StatsSectionPostDetailsLoadingIndicator) atIndex:0];
+    } else if (_isRefreshing == NO && [self.sections containsObject:@(StatsSectionPostDetailsLoadingIndicator)]) {
+        [self.sections removeObject:@(StatsSectionPostDetailsLoadingIndicator)];
+    }
+}
 
 @end
