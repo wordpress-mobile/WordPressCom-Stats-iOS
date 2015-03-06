@@ -172,6 +172,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         visits.statsData = visitsArray;
         visits.statsDataByDate = visitsDictionary;
         
+        // TODO :: Abstract this out to the local service
+        NSInteger quantity = IS_IPAD ? 9 : 5;
+        if (visitsData.count > quantity) {
+            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
+        }
+
         for (NSArray *visit in visitsData) {
             StatsSummary *statsSummary = [StatsSummary new];
             statsSummary.periodUnit = StatsPeriodUnitDay;
