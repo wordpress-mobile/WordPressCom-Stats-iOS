@@ -24,6 +24,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 @property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
+@property (nonatomic, strong) NSDate *selectedDate;
 
 @end
 
@@ -83,7 +84,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case 0:
-            return 1;
+            return 2;
         case 1:
         case 2:
         case 3:
@@ -106,7 +107,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
 
-    if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+    if ([identifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
+        [self configureSectionGraphSelectableCell:cell];
+    } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                              withStatsSection:statsSection];
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
@@ -132,10 +135,77 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        // Disable taps on rows without children
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
+        
+        BOOL hasChildItems = item.children.count > 0;
+        // TODO :: Look for default action boolean
+        BOOL hasDefaultAction = item.actions.count > 0;
+        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
+        
+        return newIndexPath;
+    }
+    
+    return nil;
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        if (statsItem.children.count > 0) {
+            BOOL insert = !statsItem.isExpanded;
+            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            statsItem.expanded = !statsItem.isExpanded;
+            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            
+            StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            cell.expanded = statsItem.isExpanded;
+            [cell doneSettingProperties];
+            
+            NSMutableArray *indexPaths = [NSMutableArray new];
+            
+            NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
+            for (NSInteger row = 1; row <= numberOfRows; ++row) {
+                [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
+            }
+            
+            [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if (insert) {
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+            } else {
+                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+            }
+            
+            [self.tableView endUpdates];
+        } else if (statsItem.actions.count > 0) {
+            for (StatsItemAction *action in statsItem.actions) {
+                if (action.defaultAction) {
+                    if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+                        WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+                        [self.statsDelegate statsViewController:statsViewController openURL:action.url];
+                    } else {
+                        [[UIApplication sharedApplication] openURL:action.url];
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
 
 
@@ -202,7 +272,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         self.sectionData[@(StatsSectionPostDetailsMonthsYears)] = monthsYears;
         self.sectionData[@(StatsSectionPostDetailsAveragePerDay)] = averagePerDay;
         self.sectionData[@(StatsSectionPostDetailsRecentWeeks)] = recentWeeks;
-        
+
+        self.selectedDate = [visits.statsData.lastObject date];
         [self.tableView reloadData];
     }];
     
@@ -221,7 +292,13 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     NSString *identifier = @"";
     
     if (indexPath.section == 0) {
-        identifier = StatsTableGraphCellIdentifier;
+        switch (indexPath.row) {
+            case 0:
+                identifier = StatsTableGraphCellIdentifier;
+                break;
+            case 1:
+                identifier = StatsTableGraphSelectableCellIdentifier;
+        }
     } else {
         switch (indexPath.row) {
             case 0:
@@ -237,6 +314,21 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     }
 
     return identifier;
+}
+
+
+- (void)configureSectionGraphSelectableCell:(UITableViewCell *)cell
+{
+    UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
+    UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
+    UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
+    
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
+    StatsSummary *summary = visits.statsDataByDate[self.selectedDate];
+    
+    iconLabel.text = @"";
+    textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    valueLabel.text = summary.views;
 }
 
 
@@ -263,13 +355,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                        selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
 {
-    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
-    
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = leftText;
     statsCell.rightText = rightText;
     statsCell.imageURL = imageURL;
-    statsCell.showCircularIcon = showCircularIcon;
+    statsCell.showCircularIcon = NO;
     statsCell.indentLevel = indentLevel;
     statsCell.indentable = indentable;
     statsCell.expandable = expandable;

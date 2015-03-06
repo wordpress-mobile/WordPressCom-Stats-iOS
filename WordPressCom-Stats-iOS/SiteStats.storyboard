@@ -639,31 +639,31 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="jKA-Ep-Ez8" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="wxo-tg-wyr" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jKA-Ep-Ez8" id="Vdf-QV-Ztz">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wxo-tg-wyr" id="Bhb-Lf-NMz">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="300" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gqt-qW-LpO">
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="300" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJ9-l4-ma4">
                                             <rect key="frame" x="51" y="12" width="20" height="20"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="553-Ct-bW6"/>
-                                                <constraint firstAttribute="width" constant="20" id="lrH-Iw-PBZ"/>
+                                                <constraint firstAttribute="height" constant="20" id="47V-72-IJj"/>
+                                                <constraint firstAttribute="width" constant="20" id="Fly-Qk-4KA"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pJ2-wd-kTW">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" verticalHuggingPriority="251" text="Example Label Goes Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S1J-4p-3xt">
                                             <rect key="frame" x="79" y="11" width="445" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="10000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLb-33-Q5Q">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="10000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLg-e2-NVR">
                                             <rect key="frame" x="534" y="11" width="43" height="21"/>
                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8nN-aH-MaG">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="arT-06-SQA">
                                             <rect key="frame" x="23" y="12" width="23" height="21"/>
                                             <fontDescription key="fontDescription" name="Noticons-Regular" family="Noticons" pointSize="22"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -671,30 +671,30 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="centerY" secondItem="gqt-qW-LpO" secondAttribute="centerY" id="4Za-2n-QLQ"/>
-                                        <constraint firstAttribute="centerY" secondItem="ZLb-33-Q5Q" secondAttribute="centerY" id="8wa-3m-wfA"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="ZLb-33-Q5Q" secondAttribute="trailing" constant="15" id="KKK-3o-2cG"/>
-                                        <constraint firstAttribute="centerY" secondItem="pJ2-wd-kTW" secondAttribute="centerY" id="VS1-yS-uXN"/>
-                                        <constraint firstItem="gqt-qW-LpO" firstAttribute="top" secondItem="Vdf-QV-Ztz" secondAttribute="topMargin" constant="-8" id="emX-H1-642"/>
-                                        <constraint firstItem="gqt-qW-LpO" firstAttribute="leading" secondItem="Vdf-QV-Ztz" secondAttribute="leadingMargin" constant="43" id="iev-SJ-HHP"/>
-                                        <constraint firstItem="ZLb-33-Q5Q" firstAttribute="leading" secondItem="pJ2-wd-kTW" secondAttribute="trailing" constant="10" id="lCb-m3-oyb"/>
-                                        <constraint firstItem="pJ2-wd-kTW" firstAttribute="leading" secondItem="gqt-qW-LpO" secondAttribute="trailing" constant="8" id="rcg-Ic-ccZ"/>
+                                        <constraint firstItem="LLg-e2-NVR" firstAttribute="leading" secondItem="S1J-4p-3xt" secondAttribute="trailing" constant="10" id="302-C1-tvL"/>
+                                        <constraint firstItem="gJ9-l4-ma4" firstAttribute="leading" secondItem="Bhb-Lf-NMz" secondAttribute="leadingMargin" constant="43" id="Fcc-qv-Ptc"/>
+                                        <constraint firstAttribute="centerY" secondItem="S1J-4p-3xt" secondAttribute="centerY" id="KUi-NR-747"/>
+                                        <constraint firstAttribute="centerY" secondItem="LLg-e2-NVR" secondAttribute="centerY" id="QtK-fM-8OH"/>
+                                        <constraint firstItem="gJ9-l4-ma4" firstAttribute="top" secondItem="Bhb-Lf-NMz" secondAttribute="topMargin" constant="-8" id="Sov-0C-fkv"/>
+                                        <constraint firstAttribute="centerY" secondItem="gJ9-l4-ma4" secondAttribute="centerY" id="V0X-IC-fhq"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="LLg-e2-NVR" secondAttribute="trailing" constant="15" id="ps0-8Q-dlq"/>
+                                        <constraint firstItem="S1J-4p-3xt" firstAttribute="leading" secondItem="gJ9-l4-ma4" secondAttribute="trailing" constant="8" id="rVD-SF-Sv4"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
-                                            <exclude reference="emX-H1-642"/>
+                                            <exclude reference="Sov-0C-fkv"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="iconImageView" destination="gqt-qW-LpO" id="rhg-IS-DZg"/>
-                                    <outlet property="indentChevronLabel" destination="8nN-aH-MaG" id="iQk-WE-9qk"/>
-                                    <outlet property="leadingEdgeConstraint" destination="iev-SJ-HHP" id="WDX-sz-DQv"/>
-                                    <outlet property="leftLabel" destination="pJ2-wd-kTW" id="UU8-Pb-ixM"/>
-                                    <outlet property="rightEdgeConstraint" destination="KKK-3o-2cG" id="l17-ox-J8v"/>
-                                    <outlet property="rightLabel" destination="ZLb-33-Q5Q" id="iyM-hj-BZW"/>
-                                    <outlet property="spaceConstraint" destination="rcg-Ic-ccZ" id="n0Y-td-RSm"/>
-                                    <outlet property="widthConstraint" destination="lrH-Iw-PBZ" id="hUk-cJ-Fdk"/>
+                                    <outlet property="iconImageView" destination="gJ9-l4-ma4" id="jPx-FX-sgX"/>
+                                    <outlet property="indentChevronLabel" destination="arT-06-SQA" id="XAe-ij-lHB"/>
+                                    <outlet property="leadingEdgeConstraint" destination="Fcc-qv-Ptc" id="brl-CN-gLV"/>
+                                    <outlet property="leftLabel" destination="S1J-4p-3xt" id="92M-02-icu"/>
+                                    <outlet property="rightEdgeConstraint" destination="ps0-8Q-dlq" id="uDz-p3-U5y"/>
+                                    <outlet property="rightLabel" destination="LLg-e2-NVR" id="LiU-y2-4wY"/>
+                                    <outlet property="spaceConstraint" destination="rVD-SF-Sv4" id="pqR-7Y-ls4"/>
+                                    <outlet property="widthConstraint" destination="Fly-Qk-4KA" id="QML-Px-dSM"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

@@ -166,9 +166,11 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSArray *weeksData = [responseDictionary arrayForKey:@"weeks"];
         
         NSMutableArray *visitsArray = [NSMutableArray new];
+        NSMutableDictionary *visitsDictionary = [NSMutableDictionary new];
         StatsVisits *visits = [StatsVisits new];
         visits.unit = StatsPeriodUnitDay;
         visits.statsData = visitsArray;
+        visits.statsDataByDate = visitsDictionary;
         
         for (NSArray *visit in visitsData) {
             StatsSummary *statsSummary = [StatsSummary new];
@@ -179,6 +181,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             statsSummary.viewsValue = visit[1];
             
             [visitsArray addObject:statsSummary];
+            visitsDictionary[statsSummary.date] = statsSummary;
         }
         
         NSMutableArray *yearsItems = [NSMutableArray new];
@@ -186,41 +189,44 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         for (NSString *year in yearsKeys) {
             NSDictionary *yearSummary = [yearsData dictionaryForKey:year];
             NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSNumber *yearTotal = [yearSummary numberForKey:@"total"];
             NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
             
             StatsItem *yearItem = [StatsItem new];
             yearItem.label = year;
+            yearItem.value = [self localizedStringForNumber:yearTotal];
             [yearsItems addObject:yearItem];
             
             for (NSString *month in monthsKeys) {
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = month;
+                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
-                [yearItem.children addObject:monthItem];
+                [yearItem addChildStatsItem:monthItem];
             }
         }
         
         NSMutableArray *averageItems = [NSMutableArray new];
         NSArray *avgYearsKeys = [averageData.allKeys sortedArrayUsingComparator:numberComparator];
         for (NSString *year in avgYearsKeys) {
-            NSDictionary *yearSummary = [yearsData dictionaryForKey:year];
+            NSDictionary *yearSummary = [averageData dictionaryForKey:year];
             NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSNumber *yearTotal = [yearSummary numberForKey:@"overall"];
             NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
             
             StatsItem *yearItem = [StatsItem new];
             yearItem.label = year;
-            yearItem.value = [self localizedStringForNumber:[yearSummary numberForKey:@"overall"]];
+            yearItem.value = [self localizedStringForNumber:yearTotal];
             [averageItems addObject:yearItem];
             
             for (NSString *month in monthsKeys) {
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = month;
+                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
-                [yearItem.children addObject:monthItem];
+                [yearItem addChildStatsItem:monthItem];
             }
         }
         
@@ -232,7 +238,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             
             StatsItem *weekItem = [StatsItem new];
             weekItem.label = [self localizedStringForPeriodStartDate:startDate endDate:endDate];
-            weekItem.value = [self localizedStringForNumber:[week numberForKey:@"count"]];
+            weekItem.value = [self localizedStringForNumber:[week numberForKey:@"total"]];
             [weekItems addObject:weekItem];
             
             for (NSDictionary *day in days) {
@@ -240,7 +246,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 // TODO localize this either here or up further in the service layers
                 dayItem.label = [day stringForKey:@"day"];
                 dayItem.value = [self localizedStringForNumber:[day numberForKey:@"count"]];
-                [weekItem.children addObject:dayItem];
+                [weekItem addChildStatsItem:dayItem];
             }
         }
 
@@ -1486,6 +1492,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSString *endString = [formatter stringFromDate:endDate];
     
     return [NSString stringWithFormat:@"%@ - %@", startString, endString];
+}
+
+- (NSString *)localizedStringForMonthOrdinal:(NSInteger)monthNumber
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    
+    return formatter.monthSymbols[monthNumber - 1];
 }
 
 
