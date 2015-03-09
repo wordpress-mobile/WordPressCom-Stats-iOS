@@ -912,7 +912,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             NSArray *posts = [author arrayForKey:@"posts"];
             for (NSDictionary *post in posts) {
                 StatsItem *postItem = [StatsItem new];
-                postItem.itemID = [post numberForKey:@"ID"];
+                postItem.itemID = [post numberForKey:@"id"];
                 postItem.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
                 postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
                 
