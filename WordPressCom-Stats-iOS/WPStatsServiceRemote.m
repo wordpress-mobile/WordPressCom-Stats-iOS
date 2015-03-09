@@ -921,7 +921,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
                 postItem.actions = @[itemAction];
                 
-                [item.children addObject:postItem];
+                [item addChildStatsItem:postItem];
             }
 
             [items addObject:item];
