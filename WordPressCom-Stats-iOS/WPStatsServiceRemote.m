@@ -249,8 +249,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             
             for (NSDictionary *day in days) {
                 StatsItem *dayItem = [StatsItem new];
-                // TODO localize this either here or up further in the service layers
-                dayItem.label = [day stringForKey:@"day"];
+                NSDate *date = [self deviceLocalDateForString:[day stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+                dayItem.label = [self localizedStringWithShortFormatForDate:date];
                 dayItem.value = [self localizedStringForNumber:[day numberForKey:@"count"]];
                 [weekItem addChildStatsItem:dayItem];
             }
@@ -1491,7 +1491,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
-    formatter.dateFormat = @"MM-dd";
+    formatter.dateFormat = @"MMM dd";
     formatter.timeZone = [NSTimeZone localTimeZone];
     
     NSString *startString = [formatter stringFromDate:startDate];
@@ -1499,6 +1499,20 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     return [NSString stringWithFormat:@"%@ - %@", startString, endString];
 }
+
+
+- (NSString *)localizedStringWithShortFormatForDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.dateFormat = @"EEE, MMM dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *dateString = [formatter stringFromDate:date];
+    
+    return dateString;
+}
+
 
 - (NSString *)localizedStringForMonthOrdinal:(NSInteger)monthNumber
 {
