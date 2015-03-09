@@ -300,16 +300,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
-        // Do nothing for posts - handled by segue to show post details
-        if (statsSection == StatsSectionPosts) {
-            return;
-        }
-        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
+        // Do nothing for posts - handled by segue to show post details
+        if (statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil)) {
+            return;
+        }
+
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
             NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
@@ -381,9 +381,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     if ([identifier isEqualToString:@"PostDetails"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
-        
-        // Only fire the segue for the posts section
-        return statsSection == StatsSectionPosts;
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        // Only fire the segue for the posts section or authors if a nested row
+        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
     }
     
     return YES;
