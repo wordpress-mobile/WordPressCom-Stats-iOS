@@ -155,8 +155,14 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
-    
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+
+    if (statsSection == StatsSectionPostDetailsGraph && indexPath.row > 0) {
+        for (NSIndexPath *selectedIndexPath in [tableView indexPathsForSelectedRows]) {
+            [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
+        }
+        
+        return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
@@ -173,10 +179,25 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self statsSectionForTableViewSection:indexPath.section] == StatsSectionPostDetailsGraph && indexPath.row > 0) {
+        return nil;
+    }
+    
+    return indexPath;
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+    if (statsSection == StatsSectionPostDetailsGraph && indexPath.row > 0) {
+        NSIndexPath *graphIndexPath = [NSIndexPath indexPathForItem:0 inSection:indexPath.section];
+        [tableView beginUpdates];
+        [tableView reloadRowsAtIndexPaths:@[graphIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [tableView endUpdates];
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
@@ -309,6 +330,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
         self.selectedDate = [visits.statsData.lastObject date];
         [self.tableView reloadData];
+        
+        
+        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }];
     
 }
@@ -382,6 +408,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
     StatsSummary *summary = visits.statsDataByDate[self.selectedDate];
+    
+    cell.selected = YES;
     
     iconLabel.text = @"";
     textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
@@ -472,6 +500,12 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.selectedDate = date;
     
     [self.tableView reloadData];
+    
+    NSUInteger section = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+    if (section != NSNotFound) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:section];
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 }
 
 
