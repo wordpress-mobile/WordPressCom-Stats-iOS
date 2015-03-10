@@ -78,7 +78,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
     DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
     
-    if (cacheDictionary && cacheDictionary.count == 13) {
+    if (cacheDictionary && cacheDictionary.count == 15) {
         if (visitsCompletion) {
             visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
         }
@@ -168,6 +168,32 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     {
         completionHandler();
     }];
+}
+
+
+- (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    withCompletionHandler:(StatsPostDetailsCompletion)completion
+{
+    if (!postID || !completion) {
+        return;
+    }
+    
+    [self.remote fetchPostDetailsStatsForPostID:postID withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
+        StatsGroup *monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
+        monthsYears.items = monthsYearsItems;
+        monthsYears.errorWhileRetrieving = !error;
+        
+        StatsGroup *averagePerDay = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsAveragePerDay andStatsSubSection:StatsSubSectionNone];
+        averagePerDay.items = averagePerDayItems;
+        averagePerDay.errorWhileRetrieving = !error;
+        
+        StatsGroup *recentWeeks = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsRecentWeeks andStatsSubSection:StatsSubSectionNone];
+        recentWeeks.items = recentWeeksItems;
+        recentWeeks.errorWhileRetrieving = !error;
+        
+        completion(visits, monthsYears, averagePerDay, recentWeeks, error);
+    }];
+    
 }
 
 

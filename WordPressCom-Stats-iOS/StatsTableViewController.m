@@ -11,6 +11,7 @@
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
+#import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
 #import <WPAnalytics.h>
 
@@ -304,6 +305,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
+        // Do nothing for posts - handled by segue to show post details
+        if (statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil)) {
+            return;
+        }
+
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
             NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
@@ -370,6 +376,22 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 #pragma mark - Segue methods
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(UITableViewCell *)sender
+{
+    if ([identifier isEqualToString:@"PostDetails"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        // Only fire the segue for the posts section or authors if a nested row
+        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
+    }
+    
+    return YES;
+}
+
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
 {
     [super prepareForSegue:segue sender:sender];
@@ -388,6 +410,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
+        postVC.postID = statsItem.itemID;
+        postVC.postTitle = statsItem.label;
+        postVC.statsService = self.statsService;
+        postVC.statsDelegate = self.statsDelegate;
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -840,6 +875,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionWebVersion:
             identifier = StatsTableViewWebVersionCellIdentifier;
             break;
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
+            break;
     }
 
     return identifier;
@@ -1135,6 +1176,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionGraph:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
+            case StatsSectionPostDetailsAveragePerDay:
+            case StatsSectionPostDetailsGraph:
+            case StatsSectionPostDetailsLoadingIndicator:
+            case StatsSectionPostDetailsMonthsYears:
+            case StatsSectionPostDetailsRecentWeeks:
                 break;
         }
     }

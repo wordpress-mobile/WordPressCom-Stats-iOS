@@ -13,6 +13,7 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *spaceConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *leadingEdgeConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *rightEdgeConstraint;
 
 @end
 
@@ -26,7 +27,13 @@
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
-        self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
+        
+        if (self.expandable == NO) {
+            self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            self.rightEdgeConstraint.constant = -10.0f;
+        } else {
+            self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
+        }
     }
     
     self.iconImageView.image = nil;
@@ -82,6 +89,7 @@
     self.widthConstraint.constant = 20.0f;
     self.spaceConstraint.constant = 8.0f;
     self.leadingEdgeConstraint.constant = 43.0f;
+    self.rightEdgeConstraint.constant = 15.0f;
     StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
