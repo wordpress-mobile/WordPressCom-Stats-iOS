@@ -84,7 +84,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4 + (self.isRefreshing ? 1 : 0);
+    return self.sections.count;
 }
 
 
