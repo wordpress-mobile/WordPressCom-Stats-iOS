@@ -358,7 +358,7 @@
         <!--Stats View All Table View Controller-->
         <scene sceneID="nII-vT-hUT">
             <objects>
-                <tableViewController id="uuT-Sq-uB0" customClass="StatsViewAllTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="StatsViewAllTableViewController" id="uuT-Sq-uB0" customClass="StatsViewAllTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="URJ-3C-2Md">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="492"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
