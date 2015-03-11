@@ -662,8 +662,12 @@
          StatsItem *item1 = items.firstObject;
          XCTAssertTrue([@"Uncategorized" isEqualToString:item1.label]);
          XCTAssertTrue([@"461" isEqualToString:item1.value]);
-         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(1, item1.actions.count);
          XCTAssertEqual(0, item1.children.count);
+         
+         StatsItemAction *itemAction = item1.actions[0];
+         XCTAssertNotNil(itemAction.url);
+         XCTAssertTrue(itemAction.defaultAction);
          
          StatsItem *item9 = items[8];
          XCTAssertTrue([@"unit test XCTest asynchronous testing" isEqualToString:item9.label]);
