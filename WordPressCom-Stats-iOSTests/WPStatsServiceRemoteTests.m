@@ -670,7 +670,7 @@
          XCTAssertTrue(itemAction.defaultAction);
          
          StatsItem *item9 = items[8];
-         XCTAssertTrue([@"unit test XCTest asynchronous testing" isEqualToString:item9.label]);
+         XCTAssertTrue([@"unit test, XCTest, asynchronous, testing" isEqualToString:item9.label]);
          XCTAssertTrue([@"43" isEqualToString:item9.value]);
          XCTAssertEqual(0, item9.actions.count);
          XCTAssertEqual(4, item9.children.count);
