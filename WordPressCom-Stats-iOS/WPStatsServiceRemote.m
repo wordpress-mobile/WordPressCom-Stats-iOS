@@ -1081,6 +1081,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = [theTag stringForKey:@"name"];
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
+                NSString *linkURL = [theTag stringForKey:@"link"];
+                if (linkURL.length > 0) {
+                    StatsItemAction *itemAction = [StatsItemAction new];
+                    itemAction.url = [NSURL URLWithString:linkURL];
+                    itemAction.defaultAction = YES;
+                    statsItem.actions = @[itemAction];
+                }
+                
                 [items addObject:statsItem];
             } else {
                 NSMutableString *tagLabel = [NSMutableString new];
@@ -1090,13 +1098,22 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     
                     StatsItem *childItem = [StatsItem new];
                     childItem.label = [subTag stringForKey:@"name"];
-                    
-                    [tagLabel appendFormat:@"%@ ", childItem.label];
+                    NSString *linkURL = [subTag stringForKey:@"link"];
+                    if (linkURL.length > 0) {
+                        StatsItemAction *itemAction = [StatsItemAction new];
+                        itemAction.url = [NSURL URLWithString:linkURL];
+                        itemAction.defaultAction = YES;
+                        childItem.actions = @[itemAction];
+                    }
+
+                    [tagLabel appendFormat:@"%@, ", childItem.label];
                     
                     [statsItem addChildStatsItem:childItem];
                 }
                 
-                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                NSMutableCharacterSet *whitespaceCharacters = [NSMutableCharacterSet whitespaceCharacterSet];
+                [whitespaceCharacters addCharactersInString:@","];
+                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:whitespaceCharacters];
                 statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 
