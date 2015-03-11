@@ -1106,12 +1106,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                         childItem.actions = @[itemAction];
                     }
 
-                    [tagLabel appendFormat:@"%@ ", childItem.label];
+                    [tagLabel appendFormat:@"%@, ", childItem.label];
                     
                     [statsItem addChildStatsItem:childItem];
                 }
                 
-                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                NSMutableCharacterSet *whitespaceCharacters = [NSMutableCharacterSet whitespaceCharacterSet];
+                [whitespaceCharacters addCharactersInString:@","];
+                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:whitespaceCharacters];
                 statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 
