@@ -352,6 +352,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         }
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
         if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
