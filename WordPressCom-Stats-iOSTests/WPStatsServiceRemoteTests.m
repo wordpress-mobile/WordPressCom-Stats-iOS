@@ -662,11 +662,15 @@
          StatsItem *item1 = items.firstObject;
          XCTAssertTrue([@"Uncategorized" isEqualToString:item1.label]);
          XCTAssertTrue([@"461" isEqualToString:item1.value]);
-         XCTAssertEqual(0, item1.actions.count);
+         XCTAssertEqual(1, item1.actions.count);
          XCTAssertEqual(0, item1.children.count);
          
+         StatsItemAction *itemAction = item1.actions[0];
+         XCTAssertNotNil(itemAction.url);
+         XCTAssertTrue(itemAction.defaultAction);
+         
          StatsItem *item9 = items[8];
-         XCTAssertTrue([@"unit test XCTest asynchronous testing" isEqualToString:item9.label]);
+         XCTAssertTrue([@"unit test, XCTest, asynchronous, testing" isEqualToString:item9.label]);
          XCTAssertTrue([@"43" isEqualToString:item9.value]);
          XCTAssertEqual(0, item9.actions.count);
          XCTAssertEqual(4, item9.children.count);
@@ -753,6 +757,46 @@
 - (void)testPublicizeDay
 {
     // TODO
+}
+
+
+- (void)testPostDetails
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchPostDetails completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-post-details.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchPostDetailsStatsForPostID:@123
+                           withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error)
+     {
+         XCTAssertNotNil(visits);
+         XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
+         XCTAssertNotNil(visits.statsData);
+         NSInteger quantity = IS_IPAD ? 9 : 5;
+         XCTAssertEqual(quantity, visits.statsData.count);
+         
+         XCTAssertNotNil(monthsYearsItems);
+         XCTAssertTrue([[monthsYearsItems[0] label] isEqualToString:@"2014"]);
+         XCTAssertTrue([[monthsYearsItems[1] label] isEqualToString:@"2015"]);
+         XCTAssertTrue([[[monthsYearsItems[0] children][0] label] isEqualToString:@"June"]);
+         
+         XCTAssertNotNil(averagePerDayItems);
+         XCTAssertEqual(2, averagePerDayItems.count);
+         
+         XCTAssertNotNil(recentWeeksItems);
+         XCTAssertEqual(6, recentWeeksItems.count);
+         
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 @end

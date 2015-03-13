@@ -7,11 +7,18 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionClicks,
     StatsSectionCountry,
     StatsSectionVideos,
+    StatsSectionAuthors,
+    StatsSectionSearchTerms,
     StatsSectionComments,
     StatsSectionTagsCategories,
     StatsSectionFollowers,
     StatsSectionPublicize,
-    StatsSectionWebVersion
+    StatsSectionWebVersion,
+    StatsSectionPostDetailsLoadingIndicator,
+    StatsSectionPostDetailsGraph,
+    StatsSectionPostDetailsMonthsYears,
+    StatsSectionPostDetailsAveragePerDay,
+    StatsSectionPostDetailsRecentWeeks
 };
 
 typedef NS_ENUM(NSInteger, StatsSubSection) {

@@ -60,6 +60,8 @@
         clicksCompletionHandler:(StatsGroupCompletion)clicksCompletion
        countryCompletionHandler:(StatsGroupCompletion)countryCompletion
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
+       authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
+   searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletion
 commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
  commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
 tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -76,7 +78,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
     DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
     
-    if (cacheDictionary && cacheDictionary.count == 13) {
+    if (cacheDictionary && cacheDictionary.count == 15) {
         if (visitsCompletion) {
             visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
         }
@@ -105,6 +107,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
         }
     
+        if (authorsCompletion) {
+            authorsCompletion(cacheDictionary[@(StatsSectionAuthors)], nil);
+        }
+        
+        if (searchTermsCompletion) {
+            searchTermsCompletion(cacheDictionary[@(StatsSectionSearchTerms)], nil);
+        }
+        
         if (commentsAuthorsCompletion) {
             commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
         }
@@ -147,6 +157,8 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                 clicksCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionClicks andCompletionHandler:clicksCompletion]
                countryCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionCountry andCompletionHandler:countryCompletion]
                 videosCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionVideos andCompletionHandler:videosCompletion]
+               authorsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionAuthors andCompletionHandler:authorsCompletion]
+           searchTermsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionSearchTerms andCompletionHandler:searchTermsCompletion]
               commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
         tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
        followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
@@ -156,6 +168,32 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     {
         completionHandler();
     }];
+}
+
+
+- (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    withCompletionHandler:(StatsPostDetailsCompletion)completion
+{
+    if (!postID || !completion) {
+        return;
+    }
+    
+    [self.remote fetchPostDetailsStatsForPostID:postID withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
+        StatsGroup *monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
+        monthsYears.items = monthsYearsItems;
+        monthsYears.errorWhileRetrieving = !error;
+        
+        StatsGroup *averagePerDay = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsAveragePerDay andStatsSubSection:StatsSubSectionNone];
+        averagePerDay.items = averagePerDayItems;
+        averagePerDay.errorWhileRetrieving = !error;
+        
+        StatsGroup *recentWeeks = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsRecentWeeks andStatsSubSection:StatsSubSectionNone];
+        recentWeeks.items = recentWeeksItems;
+        recentWeeks.errorWhileRetrieving = !error;
+        
+        completion(visits, monthsYears, averagePerDay, recentWeeks, error);
+    }];
+    
 }
 
 
@@ -217,6 +255,27 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     
     [self.remote fetchFollowersStatsForFollowerType:followersType date:endDate andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
+}
+
+
+
+- (void)retrieveAuthorsForDate:(NSDate *)date
+                       andUnit:(StatsPeriodUnit)unit
+         withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchAuthorsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionAuthors andCompletionHandler:completionHandler]];
+}
+
+
+- (void)retrieveSearchTermsForDate:(NSDate *)date
+                           andUnit:(StatsPeriodUnit)unit
+             withCompletionHandler:(StatsGroupCompletion)completionHandler
+{
+    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
+    
+    [self.remote fetchSearchTermsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionSearchTerms andCompletionHandler:completionHandler]];
 }
 
 

@@ -75,6 +75,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
+  searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -104,6 +106,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (videosCompletion) {
         [mutableOperations addObject:[self operationForVideosForDate:date andUnit:unit viewAll:NO withCompletionHandler:videosCompletion]];
+    }
+    if (authorsCompletion) {
+        [mutableOperations addObject:[self operationForAuthorsForDate:date andUnit:unit viewAll:NO withCompletionHandler:authorsCompletion]];
+    }
+    if (searchTermsCompletion) {
+        [mutableOperations addObject:[self operationForSearchTermsForDate:date andUnit:unit viewAll:NO withCompletionHandler:searchTermsCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
@@ -135,6 +143,132 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }];
     
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
+}
+
+- (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
+                 withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
+{
+    NSParameterAssert(postID != nil);
+    NSParameterAssert(completionHandler != nil);
+    
+    NSComparator numberComparator = ^NSComparisonResult(id obj1, id obj2) {
+        NSNumber *number1 = [NSNumber numberWithInteger:[obj1 integerValue]];
+        NSNumber *number2 = [NSNumber numberWithInteger:[obj2 integerValue]];
+        return [number1 compare:number2];
+    };
+
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+        NSArray *visitsData = [responseDictionary arrayForKey:@"data"];
+        NSDictionary *yearsData = [responseDictionary dictionaryForKey:@"years"];
+        NSDictionary *averageData = [responseDictionary dictionaryForKey:@"averages"];
+        NSArray *weeksData = [responseDictionary arrayForKey:@"weeks"];
+        
+        NSMutableArray *visitsArray = [NSMutableArray new];
+        NSMutableDictionary *visitsDictionary = [NSMutableDictionary new];
+        StatsVisits *visits = [StatsVisits new];
+        visits.unit = StatsPeriodUnitDay;
+        visits.statsData = visitsArray;
+        visits.statsDataByDate = visitsDictionary;
+        
+        // TODO :: Abstract this out to the local service
+        NSInteger quantity = IS_IPAD ? 9 : 5;
+        if (visitsData.count > quantity) {
+            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
+        }
+
+        for (NSArray *visit in visitsData) {
+            StatsSummary *statsSummary = [StatsSummary new];
+            statsSummary.periodUnit = StatsPeriodUnitDay;
+            statsSummary.date = [self deviceLocalDateForString:visit[0] withPeriodUnit:StatsPeriodUnitDay];
+            statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
+            statsSummary.views = [self localizedStringForNumber:visit[1]];
+            statsSummary.viewsValue = visit[1];
+            
+            [visitsArray addObject:statsSummary];
+            visitsDictionary[statsSummary.date] = statsSummary;
+        }
+        
+        NSMutableArray *yearsItems = [NSMutableArray new];
+        NSArray *yearsKeys = [yearsData.allKeys sortedArrayUsingComparator:numberComparator];
+        for (NSString *year in yearsKeys) {
+            NSDictionary *yearSummary = [yearsData dictionaryForKey:year];
+            NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSNumber *yearTotal = [yearSummary numberForKey:@"total"];
+            NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
+            
+            StatsItem *yearItem = [StatsItem new];
+            yearItem.label = year;
+            yearItem.value = [self localizedStringForNumber:yearTotal];
+            [yearsItems addObject:yearItem];
+            
+            for (NSString *month in monthsKeys) {
+                NSNumber *value = [months numberForKey:month];
+                
+                StatsItem *monthItem = [StatsItem new];
+                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.value = [self localizedStringForNumber:value];
+                [yearItem addChildStatsItem:monthItem];
+            }
+        }
+        
+        NSMutableArray *averageItems = [NSMutableArray new];
+        NSArray *avgYearsKeys = [averageData.allKeys sortedArrayUsingComparator:numberComparator];
+        for (NSString *year in avgYearsKeys) {
+            NSDictionary *yearSummary = [averageData dictionaryForKey:year];
+            NSDictionary *months = [yearSummary dictionaryForKey:@"months"];
+            NSNumber *yearTotal = [yearSummary numberForKey:@"overall"];
+            NSArray *monthsKeys = [months.allKeys sortedArrayUsingComparator:numberComparator];
+            
+            StatsItem *yearItem = [StatsItem new];
+            yearItem.label = year;
+            yearItem.value = [self localizedStringForNumber:yearTotal];
+            [averageItems addObject:yearItem];
+            
+            for (NSString *month in monthsKeys) {
+                NSNumber *value = [months numberForKey:month];
+                
+                StatsItem *monthItem = [StatsItem new];
+                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.value = [self localizedStringForNumber:value];
+                [yearItem addChildStatsItem:monthItem];
+            }
+        }
+        
+        NSMutableArray *weekItems = [NSMutableArray new];
+        for (NSDictionary *week in weeksData) {
+            NSArray *days = [week arrayForKey:@"days"];
+            NSDate *startDate = [self deviceLocalDateForString:[days.firstObject stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+            NSDate *endDate = [self deviceLocalDateForString:[days.lastObject stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+            
+            StatsItem *weekItem = [StatsItem new];
+            weekItem.label = [self localizedStringForPeriodStartDate:startDate endDate:endDate];
+            weekItem.value = [self localizedStringForNumber:[week numberForKey:@"total"]];
+            [weekItems addObject:weekItem];
+            
+            for (NSDictionary *day in days) {
+                StatsItem *dayItem = [StatsItem new];
+                NSDate *date = [self deviceLocalDateForString:[day stringForKey:@"day"] withPeriodUnit:StatsPeriodUnitDay];
+                dayItem.label = [self localizedStringWithShortFormatForDate:date];
+                dayItem.value = [self localizedStringForNumber:[day numberForKey:@"count"]];
+                [weekItem addChildStatsItem:dayItem];
+            }
+        }
+
+        completionHandler(visits, yearsItems, averageItems, weekItems, nil);
+    };
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        // TODO - Implement
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
+    [operation start];
 }
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
@@ -217,6 +351,29 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSParameterAssert(date != nil);
     
     AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
+
+- (void)fetchAuthorsStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForAuthorsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    [operation start];
+}
+
+
+- (void)fetchSearchTermsStatsForDate:(NSDate *)date
+                             andUnit:(StatsPeriodUnit)unit
+               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    NSParameterAssert(date != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForSearchTermsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -390,6 +547,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             item.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
             
             StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.defaultAction = YES;
             itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
             item.actions = @[itemAction];
             
@@ -401,8 +559,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"after"   : [self deviceLocalStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
-                                 @"before"  : [self deviceLocalStringForDate:date],
+    NSDictionary *parameters = @{@"after"   : [self deviceLocalISOStringForDate:[self calculateStartDateForPeriodUnit:unit withEndDate:date]],
+                                 @"before"  : [self deviceLocalISOStringForDate:date],
                                  @"number"  : @10,
                                  @"fields"  : @"ID, title, URL"};
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
@@ -725,6 +883,124 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (AFHTTPRequestOperation *)operationForAuthorsForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                               viewAll:(BOOL)viewAll
+                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *authorsArray = [firstDay arrayForKey:@"authors"];
+        BOOL moreAuthorsAvailable = [firstDay numberForKey:@"other_views"].integerValue > 0;
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *author in authorsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [author stringForKey:@"name"];
+            item.value = [self localizedStringForNumber:[author numberForKey:@"views"]];
+            NSString *urlString = [author stringForKey:@"avatar"];
+            if (urlString.length > 0) {
+                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+                components.query = @"d=mm&s=60";
+                item.iconURL = components.URL;
+            }
+
+            NSArray *posts = [author arrayForKey:@"posts"];
+            for (NSDictionary *post in posts) {
+                StatsItem *postItem = [StatsItem new];
+                postItem.itemID = [post numberForKey:@"id"];
+                postItem.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+                postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
+                
+                StatsItemAction *itemAction = [StatsItemAction new];
+                itemAction.defaultAction = YES;
+                itemAction.url = [NSURL URLWithString:[post stringForKey:@"URL"]];
+                postItem.actions = @[itemAction];
+                
+                [item addChildStatsItem:postItem];
+            }
+
+            [items addObject:item];
+        }
+
+        if (completionHandler) {
+            completionHandler(items, nil, moreAuthorsAvailable, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForAuthors]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
+
+
+- (AFHTTPRequestOperation *)operationForSearchTermsForDate:(NSDate *)date
+                                                   andUnit:(StatsPeriodUnit)unit
+                                                   viewAll:(BOOL)viewAll
+                                     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *days = [responseDict dictionaryForKey:@"days"];
+        id firstKey = days.allKeys.firstObject;
+        NSDictionary *firstDay = [days dictionaryForKey:firstKey];
+        NSArray *termsArray = [firstDay arrayForKey:@"search_terms"];
+        BOOL moreTermsAvailable = [firstDay numberForKey:@"other_search_terms"].integerValue > 0;
+        NSMutableArray *items = [NSMutableArray new];
+        
+        for (NSDictionary *term in termsArray) {
+            StatsItem *item = [StatsItem new];
+            item.label = [term stringForKey:@"term"];
+            item.value = [self localizedStringForNumber:[term numberForKey:@"views"]];
+            [items addObject:item];
+        }
+        
+        NSNumber *encryptedSearchTermsViews = [firstDay numberForKey:@"encrypted_search_terms"];
+        if (![encryptedSearchTermsViews isEqualToNumber:@0]) {
+            StatsItem *item = [StatsItem new];
+            item.label = NSLocalizedString(@"Unknown Search Terms", @"");
+            item.value = [self localizedStringForNumber:encryptedSearchTermsViews];
+            
+            StatsItemAction *itemAction = [StatsItemAction new];
+            itemAction.defaultAction = YES;
+            itemAction.url = [NSURL URLWithString:@"http://en.support.wordpress.com/stats/#search-engine-terms"];
+            item.actions = @[itemAction];
+            
+            [items addObject:item];
+        }
+
+        if (completionHandler) {
+            completionHandler(items, nil, moreTermsAvailable, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
+                                 @"date"   : [self deviceLocalStringForDate:date],
+                                 @"max"    : (viewAll ? @0 : @10) };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSearchTerms]
+                                                                parameters:parameters
+                                                                   success:handler
+                                                                   failure:[self failureForCompletionHandler:completionHandler]];
+    
+    return operation;
+}
+
+
 - (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
                                                 andUnit:(StatsPeriodUnit)unit
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
@@ -805,6 +1081,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = [theTag stringForKey:@"name"];
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
+                NSString *linkURL = [theTag stringForKey:@"link"];
+                if (linkURL.length > 0) {
+                    StatsItemAction *itemAction = [StatsItemAction new];
+                    itemAction.url = [NSURL URLWithString:linkURL];
+                    itemAction.defaultAction = YES;
+                    statsItem.actions = @[itemAction];
+                }
+                
                 [items addObject:statsItem];
             } else {
                 NSMutableString *tagLabel = [NSMutableString new];
@@ -814,13 +1098,22 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     
                     StatsItem *childItem = [StatsItem new];
                     childItem.label = [subTag stringForKey:@"name"];
-                    
-                    [tagLabel appendFormat:@"%@ ", childItem.label];
+                    NSString *linkURL = [subTag stringForKey:@"link"];
+                    if (linkURL.length > 0) {
+                        StatsItemAction *itemAction = [StatsItemAction new];
+                        itemAction.url = [NSURL URLWithString:linkURL];
+                        itemAction.defaultAction = YES;
+                        childItem.actions = @[itemAction];
+                    }
+
+                    [tagLabel appendFormat:@"%@, ", childItem.label];
                     
                     [statsItem addChildStatsItem:childItem];
                 }
                 
-                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                NSMutableCharacterSet *whitespaceCharacters = [NSMutableCharacterSet whitespaceCharacterSet];
+                [whitespaceCharacters addCharactersInString:@","];
+                NSString *trimmedLabel = [tagLabel stringByTrimmingCharactersInSet:whitespaceCharacters];
                 statsItem.label = trimmedLabel;
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 
@@ -1035,9 +1328,22 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     return [NSString stringWithFormat:@"%@/top-posts/", self.statsPathPrefix];
 }
 
+
 - (NSString *)urlForVideos
 {
     return [NSString stringWithFormat:@"%@/video-plays/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForAuthors
+{
+    return [NSString stringWithFormat:@"%@/top-authors/", self.statsPathPrefix];
+}
+
+
+- (NSString *)urlForSearchTerms
+{
+    return [NSString stringWithFormat:@"%@/search-terms/", self.statsPathPrefix];
 }
 
 
@@ -1102,6 +1408,18 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = @"yyyy-MM-dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *todayString = [formatter stringFromDate:date];
+    return todayString;
+}
+
+
+- (NSString *)deviceLocalISOStringForDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss";
     formatter.timeZone = [NSTimeZone localTimeZone];
     
     NSString *todayString = [formatter stringFromDate:date];
@@ -1186,15 +1504,52 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (NSString *)localizedStringForPeriodStartDate:(NSDate *)startDate endDate:(NSDate *)endDate
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.dateFormat = @"MMM dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *startString = [formatter stringFromDate:startDate];
+    NSString *endString = [formatter stringFromDate:endDate];
+    
+    return [NSString stringWithFormat:@"%@ - %@", startString, endString];
+}
+
+
+- (NSString *)localizedStringWithShortFormatForDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.dateFormat = @"EEE, MMM dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *dateString = [formatter stringFromDate:date];
+    
+    return dateString;
+}
+
+
+- (NSString *)localizedStringForMonthOrdinal:(NSInteger)monthNumber
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    
+    return formatter.monthSymbols[monthNumber - 1];
+}
+
+
 - (NSDate *)calculateStartDateForPeriodUnit:(StatsPeriodUnit)unit withEndDate:(NSDate *)date
 {
-    if (unit == StatsPeriodUnitDay) {
-        return date;
-    }
-    
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
-    if (unit == StatsPeriodUnitMonth) {
+    if (unit == StatsPeriodUnitDay) {
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+        date = [calendar dateFromComponents:dateComponents];
+        
+        return date;
+    } else if (unit == StatsPeriodUnitMonth) {
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:date];
         date = [calendar dateFromComponents:dateComponents];
         

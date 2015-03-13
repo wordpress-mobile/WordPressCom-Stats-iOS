@@ -6,6 +6,7 @@
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *error);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
+typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error);
 
 @interface WPStatsServiceRemote : NSObject
 
@@ -40,12 +41,17 @@ typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews,
        clicksCompletionHandler:(StatsRemoteItemsCompletion)clicksCompletion
       countryCompletionHandler:(StatsRemoteItemsCompletion)countryCompletion
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
+      authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
+  searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
      commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
      publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
     andOverallCompletionHandler:(void (^)())completionHandler;
+
+- (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
+                 withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler;
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
            withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler;
@@ -73,6 +79,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchVideosStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)fetchAuthorsStatsForDate:(NSDate *)date
+                         andUnit:(StatsPeriodUnit)unit
+           withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)fetchSearchTermsStatsForDate:(NSDate *)date
+                             andUnit:(StatsPeriodUnit)unit
+               withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchCommentsStatsForDate:(NSDate *)date
                           andUnit:(StatsPeriodUnit)unit

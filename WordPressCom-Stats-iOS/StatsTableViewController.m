@@ -11,6 +11,7 @@
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
+#import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
 #import <WPAnalytics.h>
 
@@ -64,12 +65,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     [self setupRefreshControl];
     
+    // Posts, Referrers, Clicks, Authors, Countries, Search Terms, Published, Videos, Comments, Tags, Followers, Publicize
     self.sections =     @[ @(StatsSectionGraph),
                            @(StatsSectionPeriodHeader),
                            @(StatsSectionPosts),
-                           @(StatsSectionCountry),
                            @(StatsSectionReferrers),
                            @(StatsSectionClicks),
+                           @(StatsSectionAuthors),
+                           @(StatsSectionCountry),
+                           @(StatsSectionSearchTerms),
+                           @(StatsSectionEvents),
                            @(StatsSectionVideos),
                            @(StatsSectionComments),
                            @(StatsSectionTagsCategories),
@@ -300,6 +305,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
+        // Do nothing for posts - handled by segue to show post details
+        if (statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil)) {
+            return;
+        }
+
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
             NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
@@ -342,6 +352,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         }
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
         if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
@@ -366,6 +377,22 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 #pragma mark - Segue methods
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(UITableViewCell *)sender
+{
+    if ([identifier isEqualToString:@"PostDetails"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        // Only fire the segue for the posts section or authors if a nested row
+        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
+    }
+    
+    return YES;
+}
+
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
 {
     [super prepareForSegue:segue sender:sender];
@@ -384,6 +411,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+
+        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
+        postVC.postID = statsItem.itemID;
+        postVC.postTitle = statsItem.label;
+        postVC.statsService = self.statsService;
+        postVC.statsDelegate = self.statsDelegate;
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -517,7 +557,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
-                        eventsCompletionHandler:nil
+                       eventsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithoutGroupHeader;
+         self.sectionData[@(StatsSectionEvents)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionEvents)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
                          postsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
@@ -578,6 +630,32 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          [self.tableView beginUpdates];
          
          NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionVideos)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
+                      authorsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionAuthors)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionAuthors)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
+                  searchTermsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionSearchTerms)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionSearchTerms)];
          NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
          [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
@@ -724,6 +802,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionClicks:
         case StatsSectionCountry:
         case StatsSectionVideos:
+        case StatsSectionAuthors:
+        case StatsSectionSearchTerms:
         case StatsSectionTagsCategories:
         case StatsSectionPublicize:
         {
@@ -795,6 +875,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         }
         case StatsSectionWebVersion:
             identifier = StatsTableViewWebVersionCellIdentifier;
+            break;
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
             break;
     }
 
@@ -1069,6 +1155,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionFollowers:
                 text = NSLocalizedString(@"No followers", @"");
                 break;
+            case StatsSectionAuthors:
             case StatsSectionPosts:
                 text = NSLocalizedString(@"No posts or pages viewed", @"");
                 break;
@@ -1077,6 +1164,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 break;
             case StatsSectionReferrers:
                 text = NSLocalizedString(@"No referrers recorded", @"");
+                break;
+            case StatsSectionSearchTerms:
+                text = NSLocalizedString(@"No search terms recorded", @"");
                 break;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
@@ -1087,6 +1177,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionGraph:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
+            case StatsSectionPostDetailsAveragePerDay:
+            case StatsSectionPostDetailsGraph:
+            case StatsSectionPostDetailsLoadingIndicator:
+            case StatsSectionPostDetailsMonthsYears:
+            case StatsSectionPostDetailsRecentWeeks:
                 break;
         }
     }
@@ -1107,7 +1202,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                        selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
 {
-    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = leftText;
