@@ -52,6 +52,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchSummaryStatsForDate:(NSDate *)date
            withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler;
 
+- (void)fetchEventsForDate:(NSDate *)date
+                   andUnit:(StatsPeriodUnit)unit
+     withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
 - (void)fetchVisitsStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler;

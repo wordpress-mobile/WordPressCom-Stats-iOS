@@ -307,7 +307,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *statsSummaryDict = (NSDictionary *)responseObject;
+        NSDictionary *statsSummaryDict = [self dictionaryFromResponse:responseObject];
         StatsSummary *statsSummary = [StatsSummary new];
         statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
         statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
@@ -344,7 +344,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *statsVisitsDict = (NSDictionary *)responseObject;
+        NSDictionary *statsVisitsDict = [self dictionaryFromResponse:responseObject];
         
         StatsVisits *statsVisits = [StatsVisits new];
         statsVisits.date = [self deviceLocalDateForString:statsVisitsDict[@"date"] withPeriodUnit:unit];
@@ -411,7 +411,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *rootDict = (NSDictionary *)responseObject;
+        NSDictionary *rootDict = [self dictionaryFromResponse:responseObject];
         NSArray *posts = [rootDict arrayForKey:@"posts"];
         NSMutableArray *items = [NSMutableArray new];
         
@@ -452,7 +452,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *statsPostsDict = (NSDictionary *)responseObject;
+        NSDictionary *statsPostsDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -503,7 +503,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *referrersDict = (NSDictionary *)responseObject;
+        NSDictionary *referrersDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -593,7 +593,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *referrersDict = (NSDictionary *)responseObject;
+        NSDictionary *referrersDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -662,7 +662,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *countryViewsDict = (NSDictionary *)responseObject;
+        NSDictionary *countryViewsDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -713,7 +713,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *videosDict = (NSDictionary *)responseObject;
+        NSDictionary *videosDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -764,7 +764,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [responseDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -828,7 +828,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [responseDict dictionaryForKey:@"days"];
         id firstKey = days.allKeys.firstObject;
         NSDictionary *firstDay = [days dictionaryForKey:firstKey];
@@ -884,8 +884,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSMutableArray *authorItems = [NSMutableArray new];
         NSMutableArray *postsItems = [NSMutableArray new];
         
-        NSArray *authors = [responseObject arrayForKey:@"authors"];
-        NSArray *posts = [responseObject arrayForKey:@"posts"];
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
+        NSArray *authors = [responseDict arrayForKey:@"authors"];
+        NSArray *posts = [responseDict arrayForKey:@"posts"];
         
         for (NSDictionary *author in authors) {
             StatsItem *item = [StatsItem new];
@@ -943,7 +944,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSArray *tagGroups = [responseDict arrayForKey:@"tags"];
         NSMutableArray *items = [NSMutableArray new];
         
@@ -1002,12 +1003,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *response = (NSDictionary *)responseObject;
-        NSArray *subscribers = [response arrayForKey:@"subscribers"];
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
+        NSArray *subscribers = [responseDict arrayForKey:@"subscribers"];
         NSMutableArray *items = [NSMutableArray new];
         NSString *totalKey = followerType == StatsFollowerTypeDotCom ? @"total_wpcom" : @"total_email";
-        NSString *totalFollowers = [self localizedStringForNumber:[response numberForKey:totalKey]];
-        BOOL moreFollowersAvailable = [response numberForKey:@"pages"].integerValue > 1;
+        NSString *totalFollowers = [self localizedStringForNumber:[responseDict numberForKey:totalKey]];
+        BOOL moreFollowersAvailable = [responseDict numberForKey:@"pages"].integerValue > 1;
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
         dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
@@ -1055,8 +1056,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *servicesDict = (NSDictionary *)responseObject;
-        NSArray *services = [servicesDict arrayForKey:@"services"];
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
+        NSArray *services = [responseDict arrayForKey:@"services"];
         NSMutableArray *items = [NSMutableArray new];
         
         for (NSDictionary *service in services) {
@@ -1414,6 +1415,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     DDLogVerbose(@"Canceling %@ operations...", @(self.manager.operationQueue.operationCount));
     [self.manager.operationQueue cancelAllOperations];
+}
+
+
+- (NSDictionary *)dictionaryFromResponse:(id)responseObject
+{
+    if ([responseObject isKindOfClass:[NSDictionary class]]) {
+        return responseObject;
+    }
+    
+    return nil;
 }
 
 
