@@ -893,7 +893,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
     if (       [cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
-        [self configureSectionGraphCell:cell];
+        [self configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell];
     
     } else if ([cellIdentifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
         [self configurePeriodHeaderCell:cell];
@@ -945,7 +945,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGraphCell:(UITableViewCell *)cell
+- (void)configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell
 {
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
 
@@ -956,6 +956,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
     }
+    
+    cell.bottomBorderEnabled = NO;
     
     self.graphViewController.currentSummaryType = self.selectedSummaryType;
     self.graphViewController.visits = visits;
