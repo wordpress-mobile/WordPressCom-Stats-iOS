@@ -35,7 +35,7 @@ static CGFloat const AxisPadding = 18.0f;
     NSUInteger maxXAxisPointCount = 0; // # points along the x axis
     
     CGFloat xAxisStartPoint = 0;
-    CGFloat xAxisWidth = CGRectGetWidth(rect) - 10.0;
+    CGFloat xAxisWidth = CGRectGetWidth(rect) - 15.0;
     CGFloat yAxisStartPoint = 20.0f;
     CGFloat yAxisHeight = CGRectGetHeight(rect) - AxisPadding - yAxisStartPoint - 10.0;
 
@@ -77,7 +77,7 @@ static CGFloat const AxisPadding = 18.0f;
         CGContextStrokePath(context);
         
         UILabel *yIncrement = [self axisLabelWithText:[NSString stringWithFormat:@" %@", @(stepValue*tick)]];
-        yIncrement.center = CGPointMake(CGRectGetWidth(rect) - CGRectGetMidX(yIncrement.frame) - 2.0f, linePosition);
+        yIncrement.center = CGPointMake(CGRectGetWidth(rect) - CGRectGetMidX(yIncrement.frame) - 7.0f, linePosition);
         [self addSubview:yIncrement];
     }
 }
