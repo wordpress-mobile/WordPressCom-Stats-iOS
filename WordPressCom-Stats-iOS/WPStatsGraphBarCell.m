@@ -140,7 +140,7 @@
     if (self.selected) {
         label.textColor = [WPStyleGuide jazzyOrange];
     } else {
-        label.textColor = [WPStyleGuide wordPressBlue];
+        label.textColor = [WPStyleGuide greyDarken30];
     }
 
     label.backgroundColor = [UIColor clearColor];
