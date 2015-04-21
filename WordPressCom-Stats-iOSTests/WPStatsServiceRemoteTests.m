@@ -52,6 +52,23 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testSummaryArrayResponse
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSummaryStats completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary, NSError *error) {
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 - (void)testVisitsDaySmall
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVisitsStatsForPeriodUnit completion"];
@@ -80,6 +97,27 @@
          XCTAssertTrue([firstSummary.likes isEqualToString:@"1"]);
          XCTAssertTrue([firstSummary.comments isEqualToString:@"3"]);
          
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+
+- (void)testVisitsDayArrayResponse
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVisitsStatsForPeriodUnit completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchVisitsStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(StatsVisits *visits, NSError *error)
+     {
          [expectation fulfill];
      }];
     
@@ -754,9 +792,24 @@
 }
 
 
-- (void)testPublicizeDay
+- (void)testEventsDayArrayResponse
 {
-    // TODO
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVideosStatsForDate completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/posts"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchEventsForDate:[NSDate date]
+                             andUnit:StatsPeriodUnitDay
+               withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
+     {
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 

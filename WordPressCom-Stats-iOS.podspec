@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "http://apps.wordpress.org"
-  s.license      = "MIT"
+  s.license      = "GPLv2"
   s.author             = { "Aaron Douglas" => "astralbodies@gmail.com" }
   # s.authors            = { "Aaron Douglas" => "astralbodies@gmail.com" }
   s.social_media_url   = "http://twitter.com/WordPressiOS"
