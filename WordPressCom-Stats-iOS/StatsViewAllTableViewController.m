@@ -155,7 +155,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                     WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                     [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                 } else {
+#ifndef AF_APP_EXTENSIONS
                     [[UIApplication sharedApplication] openURL:action.url];
+#endif
                 }
                 break;
             }
@@ -203,7 +205,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (void)retrieveStats
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if (self.statsGroup) {
         self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
@@ -211,7 +215,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     }
     
     StatsGroupCompletion completion = ^(StatsGroup *group, NSError *error) {
+#ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
         [self.refreshControl endRefreshing];
 
         self.statsGroup = group;
@@ -252,7 +258,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
 }
 
 
