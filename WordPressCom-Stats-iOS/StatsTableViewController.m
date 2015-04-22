@@ -507,6 +507,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
             break;
         default:
+            subSection = StatsSubSectionNone;
             break;
     }
     

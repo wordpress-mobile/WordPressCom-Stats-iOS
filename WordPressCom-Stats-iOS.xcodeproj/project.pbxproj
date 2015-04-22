@@ -736,6 +736,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WARNING_CFLAGS = "-Wsometimes-uninitialized";
 			};
 			name = Debug;
 		};
@@ -753,6 +754,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Bridging-Header.h";
+				WARNING_CFLAGS = "-Wsometimes-uninitialized";
 			};
 			name = Release;
 		};
