@@ -3,7 +3,6 @@
 #import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsBorderedCellBackgroundView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "WPStatsLogger.h"
 
 @interface StatsTwoColumnTableViewCell ()
 

@@ -8,7 +8,6 @@
 #import "StatsEphemory.h"
 #import "StatsDateUtilities.h"
 #import "StatsSection.h"
-#import "WPStatsLogger.h"
 
 @interface WPStatsService ()
 
