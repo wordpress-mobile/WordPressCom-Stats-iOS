@@ -1,6 +1,6 @@
 #import "StatsTableSectionHeaderView.h"
 #import "WPStyleGuide+Stats.h"
-#import <WPTableViewCell.h>
+#import <WordPress-iOS-Shared/WPTableViewCell.h>
 
 @interface StatsTableSectionHeaderView ()
 

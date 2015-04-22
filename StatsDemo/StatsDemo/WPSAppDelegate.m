@@ -7,16 +7,13 @@
 //
 
 #import "WPSAppDelegate.h"
-#import <DDLog.h>
-#import "DDTTYLogger.h"
-#import "DDASLLogger.h"
 #import <HockeySDK/HockeySDK.h>
 #import <WPStyleGuide.h>
 #import <WPFontManager.h>
 #import <UIImage+Util.h>
 #import <UIColor+Helpers.h>
 
-int ddLogLevel = LOG_LEVEL_VERBOSE;
+int ddLogLevel = DDLogLevelVerbose;
 
 @interface WPSAppDelegate () <BITHockeyManagerDelegate>
 
