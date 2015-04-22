@@ -103,6 +103,8 @@
 		930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		930C2EE9195DB4D300C6964D /* WPStatsGraphBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphBackgroundView.h; sourceTree = "<group>"; };
 		930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphBackgroundView.m; sourceTree = "<group>"; };
+		930F799B1AE72B4C00E27CBF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		930F799C1AE72B4C00E27CBF /* WordPressCom-Stats-iOS.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "WordPressCom-Stats-iOS.podspec"; sourceTree = "<group>"; };
 		931193E71A0BAA660005BED2 /* stats-v1.1-clicks-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-clicks-day.json"; sourceTree = "<group>"; };
 		931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-country-views-day.json"; sourceTree = "<group>"; };
 		931193EB1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-visits-day-large.json"; sourceTree = "<group>"; };
@@ -415,6 +417,8 @@
 		E3A80993E8D02E9C1E3E5FAC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				930F799B1AE72B4C00E27CBF /* Podfile */,
+				930F799C1AE72B4C00E27CBF /* WordPressCom-Stats-iOS.podspec */,
 				59F7A8357DDCE3F86D3BED7B /* Pods.debug.xcconfig */,
 				54EA5FB3B639F9207FF4B268 /* Pods.release.xcconfig */,
 				75E10D2A02191F399746881E /* Pods-WordPressCom-Stats-iOSTests.debug.xcconfig */,

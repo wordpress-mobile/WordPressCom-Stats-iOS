@@ -4,16 +4,16 @@
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <WPFontManager.h>
+#import <WordPress-iOS-Shared/WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
-#import <WPImageSource.h>
+#import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
-#import <WPAnalytics.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;

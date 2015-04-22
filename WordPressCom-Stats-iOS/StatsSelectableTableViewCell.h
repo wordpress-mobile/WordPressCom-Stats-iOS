@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import <WPTableViewCell.h>
+#import <WordPress-iOS-Shared/WPTableViewCell.h>
 
 @interface StatsSelectableTableViewCell : WPTableViewCell
 
