@@ -6,6 +6,7 @@
 #import "StatsItemAction.h"
 #import <NSObject+SafeExpectations.h>
 #import <NSString+XMLExtensions.h>
+#import "WPStatsLogger.h"
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
