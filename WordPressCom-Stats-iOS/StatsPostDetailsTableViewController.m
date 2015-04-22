@@ -237,7 +237,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
+#endif
                     }
                     break;
                 }
@@ -301,7 +303,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStats
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if (self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
@@ -312,8 +316,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
+#ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
+#endif
         [self setupRefreshControl];
         [self.refreshControl endRefreshing];
 
@@ -343,7 +348,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
 }
 
 
