@@ -11,7 +11,7 @@ static NSString * const kBundle = @"WordPressCom-Stats-iOS.bundle";
     NSString *fontName = @"Noticons";
     UIFont *font = [UIFont fontWithName:fontName size:size];
     if (!font) {
-        [[super class] dynamicallyLoadFontResourceNamed:resourceName];
+        [[super class] dynamicallyLoadStatsFontResourceNamed:resourceName];
         font = [UIFont fontWithName:fontName size:size];
         
         // safe fallback
@@ -23,7 +23,7 @@ static NSString * const kBundle = @"WordPressCom-Stats-iOS.bundle";
     return font;
 }
 
-+ (void)dynamicallyLoadFontResourceNamed:(NSString *)name
++ (void)dynamicallyLoadStatsFontResourceNamed:(NSString *)name
 {
     NSString *resourceName = [NSString stringWithFormat:@"%@/%@", kBundle, name];
     NSURL *url = [[NSBundle bundleForClass:self] URLForResource:resourceName withExtension:@"otf"];
