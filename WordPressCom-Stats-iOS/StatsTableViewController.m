@@ -4,16 +4,16 @@
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <WPFontManager.h>
+#import <WordPress-iOS-Shared/WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
-#import <WPImageSource.h>
+#import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
-#import <WPAnalytics.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -344,7 +344,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
+#endif
                     }
                     break;
                 }
@@ -358,8 +360,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
             [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.siteID];
         } else {
+#ifndef AF_APP_EXTENSIONS
             NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.siteID]];
             [[UIApplication sharedApplication] openURL:webURL];
+#endif
         }
     }
 }
@@ -503,6 +507,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
             break;
         default:
+            subSection = StatsSubSectionNone;
             break;
     }
     
@@ -529,7 +534,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
@@ -749,8 +756,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      }
                     andOverallCompletionHandler:^
      {
+#ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
+#endif
+         
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          

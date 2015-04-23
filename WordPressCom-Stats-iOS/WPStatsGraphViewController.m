@@ -1,7 +1,6 @@
 #import "WPStatsGraphViewController.h"
 #import "WPStatsGraphLegendView.h"
 #import "WPStatsGraphBarCell.h"
-#import <WPStyleGuide.h>
 #import "WPStatsCollectionViewFlowLayout.h"
 #import "WPStatsGraphBackgroundView.h"
 #import "WPStyleGuide+Stats.h"

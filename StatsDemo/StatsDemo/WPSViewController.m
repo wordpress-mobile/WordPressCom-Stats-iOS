@@ -79,7 +79,10 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
         [self.statsViewController removeFromParentViewController];
     }
     
-    WPStatsViewController *statsViewController = [[UIStoryboard storyboardWithName:@"SiteStats" bundle:nil] instantiateInitialViewController];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:path];
+
+    WPStatsViewController *statsViewController = [[UIStoryboard storyboardWithName:@"SiteStats" bundle:bundle] instantiateInitialViewController];
     statsViewController.siteID = self.siteID;
     statsViewController.siteTimeZone = self.timeZone;
     statsViewController.oauth2Token = self.oauth2Token;

@@ -1,5 +1,4 @@
 #import "WPStatsGraphBarCell.h"
-#import <WPStyleGuide.h>
 #import "WPStyleGuide+Stats.h"
 
 @interface WPStatsGraphBarCell ()
