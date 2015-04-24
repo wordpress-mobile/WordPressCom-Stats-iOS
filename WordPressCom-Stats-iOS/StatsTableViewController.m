@@ -4,7 +4,6 @@
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <WordPress-iOS-Shared/WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
 #import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
@@ -13,6 +12,7 @@
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
+#import "WPFontManager+Stats.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
@@ -51,6 +51,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 @implementation StatsTableViewController
 
+- (void)awakeFromNib
+{
+    // Force load fonts from bundle
+    [WPFontManager openSansBoldFontOfSize:1.0f];
+    [WPFontManager openSansRegularFontOfSize:1.0f];
+    [WPFontManager noticonsReguarFontOfSize:1.0f];
+
+    [super awakeFromNib];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -58,10 +68,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
-    
-    // Force load fonts from bundle
-    [WPFontManager openSansBoldFontOfSize:1.0f];
-    [WPFontManager openSansRegularFontOfSize:1.0f];
     
     [self setupRefreshControl];
     
