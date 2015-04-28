@@ -3,6 +3,7 @@
 #import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsBorderedCellBackgroundView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "WPStyleGuide+Stats.h"
 
 @interface StatsTwoColumnTableViewCell ()
 
@@ -63,6 +64,7 @@
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide statsNestedCellBackground];
     }
     
+    self.indentChevronLabel.textColor = [WPStyleGuide grey];
     if (self.expanded) {
         self.indentChevronLabel.text = @"";
     } else {
