@@ -925,7 +925,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                              withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
-        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
+        [self configureSectionGroupSelectorCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
         [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
@@ -1123,7 +1123,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionGroupSelectorCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     NSArray *titles;
     NSInteger selectedIndex = 0;
@@ -1145,6 +1145,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     }
     
     UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
+    cell.bottomBorderEnabled = NO;
     cell.contentView.tag = statsSection;
     
     [control removeAllSegments];
