@@ -39,6 +39,10 @@
 - (StatsItem *)statsItemForTableViewRow:(NSInteger)row
 {
     NSInteger index = row - self.offsetRows;
+    
+    if (index < 0) {
+        return nil;
+    }
 
     NSInteger currentIndex = 0;
     return [self statsItemForIndex:index withItems:self.items andCurrentIndex:&currentIndex];

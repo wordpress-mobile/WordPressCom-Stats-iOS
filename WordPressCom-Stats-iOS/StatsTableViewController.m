@@ -333,7 +333,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
             }
             
+            // Reload row one above to get rid of the double border
+            NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            
             [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             if (insert) {
@@ -924,7 +928,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                                  withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
@@ -941,6 +945,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
+        StatsItem *nextItem = [group statsItemForTableViewRow:indexPath.row + 1];
         
         [self configureTwoColumnRowCell:cell
                            withLeftText:item.label
@@ -951,7 +956,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                              expandable:item.children.count > 0
                                expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0
-                        forStatsSection:statsSection];
+                        forStatsSection:statsSection
+                  andRowBelowIsExpanded:nextItem.isExpanded];
     } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
@@ -1077,11 +1083,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    StatsItem *statsItem = [statsGroup statsItemForTableViewRow:2];
+    
     NSString *leftText = statsGroup.titlePrimary;
     NSString *rightText = statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1218,6 +1229,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                          expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
+            andRowBelowIsExpanded:(BOOL)rowBelowIsExpanded
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
 
@@ -1231,6 +1243,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     statsCell.expandable = expandable;
     statsCell.expanded = expanded;
     statsCell.selectable = selectable;
+    statsCell.bottomBorderEnabled = !rowBelowIsExpanded;
     [statsCell doneSettingProperties];
 }
 

@@ -32,6 +32,8 @@
     StatsBorderedCellBackgroundView *selectedBackgroundView = (StatsBorderedCellBackgroundView *)self.selectedBackgroundView;
     backgroundView.bottomBorderEnabled = bottomBorderEnabled;
     selectedBackgroundView.bottomBorderEnabled = bottomBorderEnabled;
+    
+    [self setNeedsLayout];
 }
 
 
