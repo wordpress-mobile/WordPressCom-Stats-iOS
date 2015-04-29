@@ -5,7 +5,8 @@
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *periodSegmentControl;
-@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, assign) NSUInteger numberOfSteps;
 
 @end
 
@@ -43,15 +44,30 @@
 #pragma mark StatsTableViewControllerDelegate methods
 
 
-- (void)statsTableViewControllerDidBeginLoadingStats:(StatsTableViewController *)controller
+- (void)statsTableViewController:(UIViewController *)controller didBeginLoadingStatsWithTotalNumberOfProgressSteps:(NSUInteger)steps
 {
-    [self.activityIndicatorView startAnimating];
+    self.numberOfSteps = steps;
+    self.progressView.progress = 0.0f;
+    self.progressView.hidden = NO;
 }
 
+- (void)statsTableViewController:(UIViewController *)controller didFinishNumberOfLoadingSteps:(NSUInteger)steps
+{
+    float progress = (float)steps / (float)self.numberOfSteps;
+    [self.progressView setProgress:progress animated:YES];
+}
 
 - (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller
 {
-    [self.activityIndicatorView stopAnimating];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.progressView.alpha = 0.0f;
+        }
+                         completion:^(BOOL finished) {
+                             self.progressView.alpha = 1.0f;
+                             self.progressView.hidden = YES;
+                         }];
+    });
 }
 
 @end

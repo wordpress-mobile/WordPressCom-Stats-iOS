@@ -37,7 +37,8 @@ commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
 tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
-      publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
+     publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
+                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
      andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID

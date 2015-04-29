@@ -548,10 +548,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 #endif
     
-    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
+    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didBeginLoadingStatsWithTotalNumberOfProgressSteps:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
-        [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
     }
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
@@ -764,7 +763,17 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          
          [self.tableView endUpdates];
      }
-                    andOverallCompletionHandler:^
+                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
+    {
+        if (numberOfFinishedOperations == 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didBeginLoadingStatsWithTotalNumberOfProgressSteps:)]) {
+            [self.statsTableDelegate statsTableViewController:self didBeginLoadingStatsWithTotalNumberOfProgressSteps:totalNumberOfOperations];
+        }
+        
+        if (numberOfFinishedOperations > 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didFinishNumberOfLoadingSteps:)]) {
+            [self.statsTableDelegate statsTableViewController:self didFinishNumberOfLoadingSteps:numberOfFinishedOperations];
+        }
+     }
+                   andOverallCompletionHandler:^
      {
 #ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;

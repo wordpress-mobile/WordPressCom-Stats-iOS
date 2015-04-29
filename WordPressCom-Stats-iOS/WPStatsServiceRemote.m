@@ -81,7 +81,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler
 {
     NSMutableArray *mutableOperations = [NSMutableArray new];
@@ -129,9 +130,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
     }
     
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
-        DDLogVerbose(@"Finished remote operations %@ of %@", @(numberOfFinishedOperations), @(totalNumberOfOperations));
-    } completionBlock:^(NSArray *operations) {
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
+                                                               progressBlock:progressBlock
+                                                             completionBlock:^(NSArray *operations)
+    {
         BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
         if (!zeroOperationsCancelled) {
             DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
@@ -143,6 +145,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }];
     
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
+    
+    if (progressBlock) {
+        progressBlock(0, mutableOperations.count);
+    }
 }
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
