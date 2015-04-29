@@ -6,8 +6,8 @@
 
 @protocol StatsTableViewControllerDelegate <NSObject>
 
-- (void)statsTableViewController:(UIViewController *)controller didBeginLoadingStatsWithTotalNumberOfProgressSteps:(NSUInteger)steps;
-- (void)statsTableViewController:(UIViewController *)controller didFinishNumberOfLoadingSteps:(NSUInteger)steps;
+- (void)statsTableViewControllerDidBeginLoadingStats:(UIViewController *)controller;
+- (void)statsTableViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage;
 - (void)statsTableViewControllerDidEndLoadingStats:(UIViewController *)controller;
 
 @end

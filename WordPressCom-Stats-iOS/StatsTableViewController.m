@@ -548,7 +548,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 #endif
     
-    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didBeginLoadingStatsWithTotalNumberOfProgressSteps:)]
+    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
     }
@@ -765,12 +765,13 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      }
                                  progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
     {
-        if (numberOfFinishedOperations == 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didBeginLoadingStatsWithTotalNumberOfProgressSteps:)]) {
-            [self.statsTableDelegate statsTableViewController:self didBeginLoadingStatsWithTotalNumberOfProgressSteps:totalNumberOfOperations];
+        if (numberOfFinishedOperations == 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]) {
+            [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
         }
         
-        if (numberOfFinishedOperations > 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:didFinishNumberOfLoadingSteps:)]) {
-            [self.statsTableDelegate statsTableViewController:self didFinishNumberOfLoadingSteps:numberOfFinishedOperations];
+        if (numberOfFinishedOperations > 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:loadingProgressPercentage:)]) {
+            CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
+            [self.statsTableDelegate statsTableViewController:self loadingProgressPercentage:percentage];
         }
      }
                    andOverallCompletionHandler:^

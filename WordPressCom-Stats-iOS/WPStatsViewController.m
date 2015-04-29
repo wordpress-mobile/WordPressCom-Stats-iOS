@@ -6,7 +6,6 @@
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *periodSegmentControl;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
-@property (nonatomic, assign) NSUInteger numberOfSteps;
 
 @end
 
@@ -44,17 +43,15 @@
 #pragma mark StatsTableViewControllerDelegate methods
 
 
-- (void)statsTableViewController:(UIViewController *)controller didBeginLoadingStatsWithTotalNumberOfProgressSteps:(NSUInteger)steps
+- (void)statsTableViewControllerDidBeginLoadingStats:(UIViewController *)controller
 {
-    self.numberOfSteps = steps;
     self.progressView.progress = 0.0f;
     self.progressView.hidden = NO;
 }
 
-- (void)statsTableViewController:(UIViewController *)controller didFinishNumberOfLoadingSteps:(NSUInteger)steps
+- (void)statsTableViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage
 {
-    float progress = (float)steps / (float)self.numberOfSteps;
-    [self.progressView setProgress:progress animated:YES];
+    [self.progressView setProgress:percentage animated:YES];
 }
 
 - (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller
