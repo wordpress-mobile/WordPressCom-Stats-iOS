@@ -97,6 +97,7 @@
                publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
                    [publicizeExpectation fulfill];
                }
+                            progressBlock:nil
               andOverallCompletionHandler:^{
                   [overallExpectation fulfill];
               }];
@@ -355,6 +356,7 @@
             followersDotComCompletionHandler:[OCMArg any]
              followersEmailCompletionHandler:[OCMArg any]
                   publicizeCompletionHandler:[OCMArg any]
+                               progressBlock:[OCMArg any]
                  andOverallCompletionHandler:[OCMArg any]]);
     
     self.subject.remote = remote;
@@ -376,6 +378,7 @@
          followersDotComCompletionHandler:nil
           followersEmailCompletionHandler:nil
                publicizeCompletionHandler:nil
+                            progressBlock:nil
                andOverallCompletionHandler:^{
                    // Don't do anything
                }];
@@ -404,6 +407,7 @@ tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesComple
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger, NSUInteger))progressBlock
    andOverallCompletionHandler:(void (^)())completionHandler
 {
     if (visitsCompletion) {
@@ -447,6 +451,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (publicizeCompletion) {
         publicizeCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    
+    if (progressBlock) {
+        progressBlock(1, 1);
     }
     
     if (completionHandler) {
