@@ -29,11 +29,13 @@
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
         
+        if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
+            self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
+        }
+        
         if (self.expandable == NO) {
             self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             self.rightEdgeConstraint.constant = -10.0f;
-        } else {
-            self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
         }
     }
     
@@ -96,6 +98,7 @@
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryNone;
+    self.selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
  
     self.showCircularIcon = NO;
     self.iconImageView.layer.cornerRadius = 0.0f;

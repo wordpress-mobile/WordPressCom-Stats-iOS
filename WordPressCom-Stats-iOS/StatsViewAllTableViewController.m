@@ -93,7 +93,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsItem *item = [self.statsGroup statsItemForTableViewRow:indexPath.row];
-        
+        StatsItem *nextItem = [self.statsGroup statsItemForTableViewRow:indexPath.row + 1];
+       
         [self configureTwoColumnRowCell:cell
                            withLeftText:item.label
                               rightText:item.value
@@ -103,12 +104,14 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                              expandable:item.children.count > 0
                                expanded:item.expanded
                              selectable:item.actions.count > 0 || item.children.count > 0
-                        forStatsSection:self.statsSection];
+                             selectType:item.actions.count > 0 ? StatsTwoColumnTableViewCellSelectTypeURL : StatsTwoColumnTableViewCellSelectTypeDetail
+                        forStatsSection:self.statsSection
+                  andRowBelowIsExpanded:nextItem.isExpanded];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
     } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell];
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell];
     }
     
     return cell;
@@ -273,7 +276,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                        expandable:(BOOL)expandable
                          expanded:(BOOL)expanded
                        selectable:(BOOL)selectable
+                       selectType:(StatsTwoColumnTableViewCellSelectType)selectType
                   forStatsSection:(StatsSection)statsSection
+            andRowBelowIsExpanded:(BOOL)rowBelowIsExpanded
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
     
@@ -287,14 +292,21 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     statsCell.expandable = expandable;
     statsCell.expanded = expanded;
     statsCell.selectable = selectable;
+    statsCell.selectType = selectType;
+    statsCell.bottomBorderEnabled = !rowBelowIsExpanded;
     [statsCell doneSettingProperties];
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
 {
+    StatsItem *statsItem = [self.statsGroup statsItemForTableViewRow:1];
+    
     NSString *leftText = self.statsGroup.titlePrimary;
     NSString *rightText = self.statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;

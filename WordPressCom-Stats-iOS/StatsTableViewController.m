@@ -956,18 +956,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
         StatsItem *nextItem = [group statsItemForTableViewRow:indexPath.row + 1];
-        
+
         [self configureTwoColumnRowCell:cell
-                           withLeftText:item.label
-                              rightText:item.value
-                            andImageURL:item.iconURL
-                            indentLevel:item.depth
-                             indentable:NO
-                             expandable:item.children.count > 0
-                               expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0
                         forStatsSection:statsSection
-                  andRowBelowIsExpanded:nextItem.isExpanded];
+                          withStatsItem:item
+                       andNextStatsItem:nextItem];
     } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
@@ -1231,30 +1224,26 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
-            andRowBelowIsExpanded:(BOOL)rowBelowIsExpanded
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    BOOL isUrlSelection = statsItem.actions.count > 0 && statsSection != StatsSectionPosts;
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
     statsCell.showCircularIcon = showCircularIcon;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
-    statsCell.bottomBorderEnabled = !rowBelowIsExpanded;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = isUrlSelection ? StatsTwoColumnTableViewCellSelectTypeURL : StatsTwoColumnTableViewCellSelectTypeDetail;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 
