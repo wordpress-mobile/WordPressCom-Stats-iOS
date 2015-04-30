@@ -96,17 +96,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         StatsItem *nextItem = [self.statsGroup statsItemForTableViewRow:indexPath.row + 1];
        
         [self configureTwoColumnRowCell:cell
-                           withLeftText:item.label
-                              rightText:item.value
-                            andImageURL:item.iconURL
-                            indentLevel:item.depth
-                             indentable:NO
-                             expandable:item.children.count > 0
-                               expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0
-                             selectType:item.actions.count > 0 ? StatsTwoColumnTableViewCellSelectTypeURL : StatsTwoColumnTableViewCellSelectTypeDetail
                         forStatsSection:self.statsSection
-                  andRowBelowIsExpanded:nextItem.isExpanded];
+                          withStatsItem:item
+                       andNextStatsItem:nextItem];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
@@ -141,7 +133,11 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
             [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
         }
         
+        // Reload row one above to get rid of the double border
+        NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+        
         [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         if (insert) {
@@ -268,32 +264,26 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
-                       selectType:(StatsTwoColumnTableViewCellSelectType)selectType
                   forStatsSection:(StatsSection)statsSection
-            andRowBelowIsExpanded:(BOOL)rowBelowIsExpanded
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
-    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    BOOL isUrlSelection = statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks);
     
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
     statsCell.showCircularIcon = showCircularIcon;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
-    statsCell.selectType = selectType;
-    statsCell.bottomBorderEnabled = !rowBelowIsExpanded;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = isUrlSelection ? StatsTwoColumnTableViewCellSelectTypeURL : StatsTwoColumnTableViewCellSelectTypeDetail;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 

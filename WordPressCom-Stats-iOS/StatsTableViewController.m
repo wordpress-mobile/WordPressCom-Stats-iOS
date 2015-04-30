@@ -1229,7 +1229,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                  andNextStatsItem:(StatsItem *)nextStatsItem
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
-    BOOL isUrlSelection = statsItem.actions.count > 0 && statsSection != StatsSectionPosts;
+    BOOL isUrlSelection = statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks);
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = statsItem.label;
