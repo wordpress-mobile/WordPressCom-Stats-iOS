@@ -56,6 +56,6 @@ SPEC CHECKSUMS:
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
   WordPress-iOS-Shared: bd0506db9b824611246f35e774832ecbc18fc45e
   WordPressCom-Analytics-iOS: a35692b0bb5a1d5081da2481614a66663dfb091f
-  WordPressCom-Stats-iOS: 63269dc52c52087184eaacbc1ad9d502fd189450
+  WordPressCom-Stats-iOS: 19260039c3da32c8df63e452edb278d22c2199f7
 
 COCOAPODS: 0.36.4

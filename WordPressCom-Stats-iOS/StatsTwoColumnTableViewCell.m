@@ -55,6 +55,10 @@
         } failure:^(NSError *error) {
             DDLogWarn(@"Unable to download icon %@", error);
         }];
+    } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+        NSBundle *bundle = [NSBundle bundleWithPath:path];
+        self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
     } else {
         self.widthConstraint.constant = 0.0f;
         self.spaceConstraint.constant = 0.0f;
