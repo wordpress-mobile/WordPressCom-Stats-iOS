@@ -30,7 +30,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
 {
     self.leftLabel.text = self.leftText;
     self.rightLabel.text = self.rightText;
-    self.leftHandGlyphLabel.hidden = !self.expandable || self.selectType == StatsTwoColumnTableViewCellSelectTypeDetail;
+    self.leftHandGlyphLabel.hidden = !self.expandable && self.selectType == StatsTwoColumnTableViewCellSelectTypeDetail;
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;

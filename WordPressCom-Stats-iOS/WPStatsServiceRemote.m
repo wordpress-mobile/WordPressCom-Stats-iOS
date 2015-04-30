@@ -1087,6 +1087,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSDictionary *theTag = tags[0];
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = [theTag stringForKey:@"name"];
+                statsItem.alternateIconValue = [theTag stringForKey:@"type"];
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 NSString *linkURL = [theTag stringForKey:@"link"];
                 if (linkURL.length > 0) {
@@ -1105,6 +1106,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     
                     StatsItem *childItem = [StatsItem new];
                     childItem.label = [subTag stringForKey:@"name"];
+                    childItem.alternateIconValue = [subTag stringForKey:@"type"];
                     NSString *linkURL = [subTag stringForKey:@"link"];
                     if (linkURL.length > 0) {
                         StatsItemAction *itemAction = [StatsItemAction new];
