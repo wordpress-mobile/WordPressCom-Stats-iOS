@@ -221,7 +221,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PG6-Dp-SyI">
-                                            <rect key="frame" x="23" y="12" width="23" height="21"/>
+                                            <rect key="frame" x="23" y="8" width="23" height="30"/>
                                             <fontDescription key="fontDescription" name="Noticons-Regular" family="Noticons" pointSize="22"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -245,8 +245,8 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="iconImageView" destination="p4X-m5-Nld" id="vGG-5N-ZJU"/>
-                                    <outlet property="indentChevronLabel" destination="PG6-Dp-SyI" id="81D-dR-orS"/>
                                     <outlet property="leadingEdgeConstraint" destination="XsQ-gt-qaQ" id="Uc0-wa-tLH"/>
+                                    <outlet property="leftHandGlyphLabel" destination="PG6-Dp-SyI" id="7Kc-Au-n6V"/>
                                     <outlet property="leftLabel" destination="GAp-0f-HXa" id="RhP-wA-2kf"/>
                                     <outlet property="rightEdgeConstraint" destination="Gsf-dz-QkE" id="we2-E8-SxF"/>
                                     <outlet property="rightLabel" destination="Rwp-nF-8c1" id="uEP-I2-NDN"/>
@@ -475,8 +475,8 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="iconImageView" destination="g7j-Vo-yXz" id="Gyy-X8-ELs"/>
-                                    <outlet property="indentChevronLabel" destination="9Ll-bb-jS9" id="Gej-56-M06"/>
                                     <outlet property="leadingEdgeConstraint" destination="d0f-2W-xHH" id="PiQ-b8-QpD"/>
+                                    <outlet property="leftHandGlyphLabel" destination="9Ll-bb-jS9" id="yLG-mL-qrg"/>
                                     <outlet property="leftLabel" destination="2eD-pO-g0w" id="5ym-7D-X1k"/>
                                     <outlet property="rightEdgeConstraint" destination="P8v-yS-wyP" id="zDH-lG-mg2"/>
                                     <outlet property="rightLabel" destination="iW2-sz-KQ2" id="OTC-Vx-7zJ"/>
@@ -689,8 +689,8 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="iconImageView" destination="gJ9-l4-ma4" id="jPx-FX-sgX"/>
-                                    <outlet property="indentChevronLabel" destination="arT-06-SQA" id="XAe-ij-lHB"/>
                                     <outlet property="leadingEdgeConstraint" destination="Fcc-qv-Ptc" id="brl-CN-gLV"/>
+                                    <outlet property="leftHandGlyphLabel" destination="arT-06-SQA" id="6fi-8J-BlJ"/>
                                     <outlet property="leftLabel" destination="S1J-4p-3xt" id="92M-02-icu"/>
                                     <outlet property="rightEdgeConstraint" destination="ps0-8Q-dlq" id="uDz-p3-U5y"/>
                                     <outlet property="rightLabel" destination="LLg-e2-NVR" id="LiU-y2-4wY"/>

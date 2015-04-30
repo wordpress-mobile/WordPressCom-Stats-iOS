@@ -10,7 +10,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *leftLabel;
 @property (nonatomic, weak) IBOutlet UILabel *rightLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
-@property (nonatomic, weak) IBOutlet UILabel *indentChevronLabel;
+@property (nonatomic, weak) IBOutlet UILabel *leftHandGlyphLabel;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *spaceConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *leadingEdgeConstraint;
@@ -18,13 +18,19 @@
 
 @end
 
+static NSString *const StatsTwoColumnCellChevronExpanded = @"";
+static NSString *const StatsTwoColumnCellChevronCollapsed = @"";
+static NSString *const StatsTwoColumnCellLink = @"";
+static NSString *const StatsTwoColumnCellTag = @"";
+static NSString *const StatsTwoColumnCellCategory = @"";
+
 @implementation StatsTwoColumnTableViewCell
 
 - (void)doneSettingProperties
 {
     self.leftLabel.text = self.leftText;
     self.rightLabel.text = self.rightText;
-    self.indentChevronLabel.hidden = !self.expandable;
+    self.leftHandGlyphLabel.hidden = !self.expandable || self.selectType == StatsTwoColumnTableViewCellSelectTypeDetail;
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -70,15 +76,22 @@
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide statsNestedCellBackground];
     }
     
-    self.indentChevronLabel.textColor = [WPStyleGuide grey];
-    if (self.expanded) {
-        self.indentChevronLabel.text = @"";
-    } else {
-        self.indentChevronLabel.text = @"";
+    self.leftHandGlyphLabel.textColor = [WPStyleGuide grey];
+    if (self.expandable && self.expanded) {
+        self.leftHandGlyphLabel.text = StatsTwoColumnCellChevronExpanded;
+    } else if (self.expandable && !self.expanded){
+        self.leftHandGlyphLabel.text = StatsTwoColumnCellChevronCollapsed;
+    } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
+        self.leftHandGlyphLabel.text = StatsTwoColumnCellLink;
+    } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeTag) {
+        self.leftHandGlyphLabel.text = StatsTwoColumnCellTag;
+    } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeCategory) {
+        self.leftHandGlyphLabel.text = StatsTwoColumnCellCategory;
     }
     
     CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 7.0f : 15.0f;
-    indentWidth += self.expandable || self.indentLevel > 1 ? 28.0f : 0.0f;
+    // Account for chevron or link icon or if its a nested row
+    indentWidth += !self.leftHandGlyphLabel.hidden || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsLayout];

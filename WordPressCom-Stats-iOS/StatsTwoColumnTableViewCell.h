@@ -2,7 +2,9 @@
 #import "StatsStandardBorderedTableViewCell.h"
 
 typedef NS_ENUM(NSInteger, StatsTwoColumnTableViewCellSelectType) {
+    StatsTwoColumnTableViewCellSelectTypeCategory,
     StatsTwoColumnTableViewCellSelectTypeDetail,
+    StatsTwoColumnTableViewCellSelectTypeTag,
     StatsTwoColumnTableViewCellSelectTypeURL
 };
 
