@@ -45,12 +45,13 @@
 
 - (void)statsTableViewControllerDidBeginLoadingStats:(UIViewController *)controller
 {
-    self.progressView.progress = 0.0f;
+    self.progressView.progress = 0.03f;
     self.progressView.hidden = NO;
 }
 
 - (void)statsTableViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage
 {
+    self.progressView.hidden = NO;
     [self.progressView setProgress:percentage animated:YES];
 }
 
