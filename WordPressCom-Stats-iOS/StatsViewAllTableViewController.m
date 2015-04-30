@@ -269,7 +269,17 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                  andNextStatsItem:(StatsItem *)nextStatsItem
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
-    BOOL isUrlSelection = statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks);
+    
+    StatsTwoColumnTableViewCellSelectType selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
+    if (statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks)) {
+        selectType = StatsTwoColumnTableViewCellSelectTypeURL;
+    } else if (statsSection == StatsSectionTagsCategories) {
+        if ([statsItem.alternateIconValue isEqualToString:@"category"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeCategory;
+        } else if ([statsItem.alternateIconValue isEqualToString:@"tag"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeTag;
+        }
+    }
     
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
     statsCell.leftText = statsItem.label;
@@ -281,7 +291,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     statsCell.expandable = statsItem.children.count > 0;
     statsCell.expanded = statsItem.expanded;
     statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
-    statsCell.selectType = isUrlSelection ? StatsTwoColumnTableViewCellSelectTypeURL : StatsTwoColumnTableViewCellSelectTypeDetail;
+    statsCell.selectType = selectType;
     statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
     
     [statsCell doneSettingProperties];
