@@ -829,7 +829,7 @@
          XCTAssertNotNil(visits);
          XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
          XCTAssertNotNil(visits.statsData);
-         NSInteger quantity = IS_IPAD ? 9 : 5;
+         NSInteger quantity = IS_IPAD ? 12 : 7;
          XCTAssertEqual(quantity, visits.statsData.count);
          
          XCTAssertNotNil(monthsYearsItems);

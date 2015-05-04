@@ -179,7 +179,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         visits.statsDataByDate = visitsDictionary;
         
         // TODO :: Abstract this out to the local service
-        NSInteger quantity = IS_IPAD ? 9 : 5;
+        NSInteger quantity = IS_IPAD ? 12 : 7;
         if (visitsData.count > quantity) {
             visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
         }
@@ -517,7 +517,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @9 : @5;
+    NSNumber *quantity = IS_IPAD ? @12 : @7;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
