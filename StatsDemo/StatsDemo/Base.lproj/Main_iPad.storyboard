@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
+        <deployment version="2048" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vyi-2K-WbS">
-                                <rect key="frame" x="20" y="421" width="728" height="183"/>
+                                <rect key="frame" x="20" y="28" width="728" height="976"/>
                                 <string key="text">To Select a Site for StatsDemo:
 
 Launch WP Internal.
@@ -36,9 +36,9 @@ Developers should review the project README.md file for details on setting OAuth
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="vyi-2K-WbS" secondAttribute="trailing" id="0da-5u-LGw"/>
-                            <constraint firstAttribute="centerY" secondItem="vyi-2K-WbS" secondAttribute="centerY" id="1rt-y1-lJ7"/>
                             <constraint firstItem="vyi-2K-WbS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="7cj-np-gO6"/>
-                            <constraint firstAttribute="centerX" secondItem="vyi-2K-WbS" secondAttribute="centerX" id="Rjf-Pv-lPf"/>
+                            <constraint firstItem="vyi-2K-WbS" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="AoQ-Ss-WYl"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vyi-2K-WbS" secondAttribute="bottom" constant="20" id="IAY-FE-X78"/>
                         </constraints>
                     </view>
                 </viewController>
