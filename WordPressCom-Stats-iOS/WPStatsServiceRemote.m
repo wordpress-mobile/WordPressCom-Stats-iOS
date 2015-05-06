@@ -1387,6 +1387,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     switch (unit) {
         case StatsPeriodUnitDay:
+        case StatsPeriodUnitMonth:
+        case StatsPeriodUnitYear:
         {
             self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
             break;
@@ -1397,14 +1399,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             self.deviceDateFormatter.dateFormat = @"yyyy'W'MM'W'dd";
             break;
         }
-        case StatsPeriodUnitMonth:
-        {
-            self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
-            break;
-        }
-        case StatsPeriodUnitYear:
-            
-            break;
     }
     
     NSDate *localDate = [self.deviceDateFormatter dateFromString:dateString];

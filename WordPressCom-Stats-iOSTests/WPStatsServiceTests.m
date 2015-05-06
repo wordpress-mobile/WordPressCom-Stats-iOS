@@ -107,7 +107,7 @@
 
 - (void)testDateSanitizationDay
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -127,7 +127,7 @@
 
 - (void)testDateSanitizationWeek
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -147,7 +147,7 @@
 
 - (void)testDateSanitizationWeek2
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -167,7 +167,7 @@
 
 - (void)testDateSanitizationWeek3
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -187,7 +187,7 @@
 
 - (void)testDateSanitizationAlreadySunday
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -207,7 +207,7 @@
 
 - (void)testDateSanitizationWeekCrossesYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -227,7 +227,7 @@
 
 - (void)testDateSanitizationMonth
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -247,7 +247,7 @@
 
 - (void)testDateSanitizationMonthLeapYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2016;
     dateComponents.month = 2;
@@ -267,7 +267,7 @@
 
 - (void)testDateSanitizationYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 2;
@@ -287,7 +287,7 @@
 
 - (void)testDateSanitizationYearFirstOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 1;
@@ -307,7 +307,7 @@
 
 - (void)testDateSanitizationYearLastOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -333,7 +333,7 @@
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj;
-        NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         
