@@ -23,7 +23,7 @@
 }
 
 - (void)testCalculateEndDateForPeriodUnitDay {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -48,7 +48,7 @@
 
 
 - (void)testCalculateEndDateForPeriodUnitWeek {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -72,7 +72,7 @@
 
 
 - (void)testCalculateEndDateForPeriodUnitMonth {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -96,7 +96,7 @@
 
 
 - (void)testCalculateEndDateForPeriodUnitYear {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;

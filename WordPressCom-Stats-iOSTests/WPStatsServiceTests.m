@@ -97,6 +97,7 @@
                publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
                    [publicizeExpectation fulfill];
                }
+                            progressBlock:nil
               andOverallCompletionHandler:^{
                   [overallExpectation fulfill];
               }];
@@ -106,7 +107,7 @@
 
 - (void)testDateSanitizationDay
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -126,7 +127,7 @@
 
 - (void)testDateSanitizationWeek
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -146,7 +147,7 @@
 
 - (void)testDateSanitizationWeek2
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -166,7 +167,7 @@
 
 - (void)testDateSanitizationWeek3
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -186,7 +187,7 @@
 
 - (void)testDateSanitizationAlreadySunday
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -206,7 +207,7 @@
 
 - (void)testDateSanitizationWeekCrossesYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -226,7 +227,7 @@
 
 - (void)testDateSanitizationMonth
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -246,7 +247,7 @@
 
 - (void)testDateSanitizationMonthLeapYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2016;
     dateComponents.month = 2;
@@ -266,7 +267,7 @@
 
 - (void)testDateSanitizationYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 2;
@@ -286,7 +287,7 @@
 
 - (void)testDateSanitizationYearFirstOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 1;
@@ -306,7 +307,7 @@
 
 - (void)testDateSanitizationYearLastOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -332,7 +333,7 @@
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj;
-        NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         
@@ -355,6 +356,7 @@
             followersDotComCompletionHandler:[OCMArg any]
              followersEmailCompletionHandler:[OCMArg any]
                   publicizeCompletionHandler:[OCMArg any]
+                               progressBlock:[OCMArg any]
                  andOverallCompletionHandler:[OCMArg any]]);
     
     self.subject.remote = remote;
@@ -376,6 +378,7 @@
          followersDotComCompletionHandler:nil
           followersEmailCompletionHandler:nil
                publicizeCompletionHandler:nil
+                            progressBlock:nil
                andOverallCompletionHandler:^{
                    // Don't do anything
                }];
@@ -404,6 +407,7 @@ tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesComple
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger, NSUInteger))progressBlock
    andOverallCompletionHandler:(void (^)())completionHandler
 {
     if (visitsCompletion) {
@@ -447,6 +451,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (publicizeCompletion) {
         publicizeCompletion(@[[StatsItem new]], nil, false, nil);
+    }
+    
+    if (progressBlock) {
+        progressBlock(1, 1);
     }
     
     if (completionHandler) {

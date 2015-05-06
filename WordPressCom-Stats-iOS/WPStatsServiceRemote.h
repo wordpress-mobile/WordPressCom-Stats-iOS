@@ -47,7 +47,8 @@ typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *m
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID

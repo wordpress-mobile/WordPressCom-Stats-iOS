@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
+        <deployment version="2048" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PCX-pl-Xoc">
-                                <rect key="frame" x="16" y="172" width="288" height="224"/>
+                                <rect key="frame" x="16" y="28" width="288" height="520"/>
                                 <string key="text">To Select a Site for StatsDemo:
 
 Launch WP Internal.
@@ -29,16 +29,16 @@ Switch back to this app.
 
 Developers should review the project README.md file for details on setting OAuth2 token and site ID.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="PCX-pl-Xoc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" id="1k2-QU-kQ4"/>
                             <constraint firstItem="PCX-pl-Xoc" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="74j-em-0T9"/>
-                            <constraint firstAttribute="centerX" secondItem="PCX-pl-Xoc" secondAttribute="centerX" id="9jJ-sK-N3s"/>
-                            <constraint firstAttribute="centerY" secondItem="PCX-pl-Xoc" secondAttribute="centerY" id="Kqt-r7-yDw"/>
                             <constraint firstAttribute="trailingMargin" secondItem="PCX-pl-Xoc" secondAttribute="trailing" id="MVl-Ey-x6o"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="PCX-pl-Xoc" secondAttribute="bottom" constant="20" id="TWW-FZ-GRG"/>
                         </constraints>
                     </view>
                 </viewController>

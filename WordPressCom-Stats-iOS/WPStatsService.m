@@ -68,6 +68,7 @@ tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
       publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
+                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
      andOverallCompletionHandler:(void (^)())completionHandler
 {
     if (!completionHandler) {
@@ -164,6 +165,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
        followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
         followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
              publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
+                          progressBlock:progressBlock
             andOverallCompletionHandler:^
     {
         completionHandler();

@@ -410,7 +410,7 @@
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
 				PRODUCT_NAME = StatsDemo;
-				PROVISIONING_PROFILE = "2361fd60-d77d-49b1-a831-6246e8d2d404";
+				PROVISIONING_PROFILE = "3b5d0f08-ac3a-4ced-b97e-95d7a8a91ca5";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

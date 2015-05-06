@@ -5,8 +5,11 @@
 
 @property (nonatomic, strong) NSMutableArray *barsWithColors;
 @property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UIView *coloredBackgroundView;
 
 @end
+
+CGFloat const BottomMarginUnderYAxis = 20.0f;
 
 @implementation WPStatsGraphBarCell
 
@@ -14,9 +17,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        CGRect rect = self.bounds;
+        rect.size.height = CGRectGetHeight(rect) - BottomMarginUnderYAxis;
+        
         UIView *selectedBGView = [[UIView alloc] initWithFrame:self.bounds];
-        selectedBGView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+        UIView *coloredBGView = [[UIView alloc] initWithFrame:rect];
+        coloredBGView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+        coloredBGView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
+        [selectedBGView addSubview:coloredBGView];
+        
         self.selectedBackgroundView = selectedBGView;
+        _coloredBackgroundView = coloredBGView;
     }
     
     return self;
@@ -38,9 +50,9 @@
     [super setHighlighted:highlighted];
     
     if (highlighted) {
-        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLightGray];
+        self.coloredBackgroundView.backgroundColor = [WPStyleGuide statsLightGray];
     } else {
-        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+        self.coloredBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
     }
     
     [self.barsWithColors enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
@@ -58,7 +70,7 @@
     [super setSelected:selected];
     
     if (selected) {
-        self.selectedBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
+        self.coloredBackgroundView.backgroundColor = [WPStyleGuide statsLighterOrangeTransparent];
     }
     
     [self.barsWithColors enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
@@ -91,8 +103,8 @@
             percentHeight = value / self.maximumY;
         }
         
-        CGFloat height = floorf((CGRectGetHeight(self.contentView.bounds) - 38.0) * percentHeight);
-        CGFloat offsetY = CGRectGetHeight(self.contentView.bounds) - (height + 20.0);
+        CGFloat height = floorf((CGRectGetHeight(self.contentView.bounds) - 18.0 - BottomMarginUnderYAxis) * percentHeight);
+        CGFloat offsetY = CGRectGetHeight(self.contentView.bounds) - (height + BottomMarginUnderYAxis);
         
         CGRect rect = CGRectInset(self.contentView.bounds, inset, 0.0);
         rect.size.height = height;
@@ -139,7 +151,7 @@
     if (self.selected) {
         label.textColor = [WPStyleGuide jazzyOrange];
     } else {
-        label.textColor = [WPStyleGuide wordPressBlue];
+        label.textColor = [WPStyleGuide greyDarken30];
     }
 
     label.backgroundColor = [UIColor clearColor];

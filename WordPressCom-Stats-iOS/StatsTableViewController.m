@@ -333,7 +333,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
             }
             
+            // Reload row one above to get rid of the double border
+            NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            
             [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             if (insert) {
@@ -547,7 +551,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
-        [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
     }
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
@@ -760,7 +763,18 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          
          [self.tableView endUpdates];
      }
-                    andOverallCompletionHandler:^
+                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
+    {
+        if (numberOfFinishedOperations == 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]) {
+            [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
+        }
+        
+        if (numberOfFinishedOperations > 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:loadingProgressPercentage:)]) {
+            CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
+            [self.statsTableDelegate statsTableViewController:self loadingProgressPercentage:percentage];
+        }
+     }
+                   andOverallCompletionHandler:^
      {
 #ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -908,7 +922,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
     if (       [cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
-        [self configureSectionGraphCell:cell];
+        [self configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell];
     
     } else if ([cellIdentifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
         [self configurePeriodHeaderCell:cell];
@@ -921,10 +935,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                              withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
-        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
+        [self configureSectionGroupSelectorCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                                  withStatsSection:statsSection];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
@@ -941,17 +955,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
-        
+        StatsItem *nextItem = [group statsItemForTableViewRow:indexPath.row + 1];
+
         [self configureTwoColumnRowCell:cell
-                           withLeftText:item.label
-                              rightText:item.value
-                            andImageURL:item.iconURL
-                            indentLevel:item.depth
-                             indentable:NO
-                             expandable:item.children.count > 0
-                               expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0
-                        forStatsSection:statsSection];
+                        forStatsSection:statsSection
+                          withStatsItem:item
+                       andNextStatsItem:nextItem];
     } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
@@ -960,7 +969,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGraphCell:(UITableViewCell *)cell
+- (void)configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell
 {
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
 
@@ -971,6 +980,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
     }
+    
+    cell.bottomBorderEnabled = NO;
     
     self.graphViewController.currentSummaryType = self.selectedSummaryType;
     self.graphViewController.visits = visits;
@@ -1075,11 +1086,16 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    StatsItem *statsItem = [statsGroup statsItemForTableViewRow:2];
+    
     NSString *leftText = statsGroup.titlePrimary;
     NSString *rightText = statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1110,7 +1126,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionGroupSelectorCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     NSArray *titles;
     NSInteger selectedIndex = 0;
@@ -1132,6 +1148,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     }
     
     UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
+    cell.bottomBorderEnabled = NO;
     cell.contentView.tag = statsSection;
     
     [control removeAllSegments];
@@ -1207,28 +1224,36 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    
+    StatsTwoColumnTableViewCellSelectType selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
+    if (statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks)) {
+        selectType = StatsTwoColumnTableViewCellSelectTypeURL;
+    } else if (statsSection == StatsSectionTagsCategories) {
+        if ([statsItem.alternateIconValue isEqualToString:@"category"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeCategory;
+        } else if ([statsItem.alternateIconValue isEqualToString:@"tag"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeTag;
+        }
+    }
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
     statsCell.showCircularIcon = showCircularIcon;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = selectType;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 

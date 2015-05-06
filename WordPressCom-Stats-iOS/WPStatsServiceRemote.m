@@ -81,7 +81,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
 followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
 followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler
 {
     NSMutableArray *mutableOperations = [NSMutableArray new];
@@ -129,9 +130,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
     }
     
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
-        DDLogVerbose(@"Finished remote operations %@ of %@", @(numberOfFinishedOperations), @(totalNumberOfOperations));
-    } completionBlock:^(NSArray *operations) {
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
+                                                               progressBlock:progressBlock
+                                                             completionBlock:^(NSArray *operations)
+    {
         BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
         if (!zeroOperationsCancelled) {
             DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
@@ -143,6 +145,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }];
     
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
+    
+    if (progressBlock) {
+        progressBlock(0, mutableOperations.count);
+    }
 }
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
@@ -173,7 +179,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         visits.statsDataByDate = visitsDictionary;
         
         // TODO :: Abstract this out to the local service
-        NSInteger quantity = IS_IPAD ? 9 : 5;
+        NSInteger quantity = IS_IPAD ? 12 : 7;
         if (visitsData.count > quantity) {
             visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
         }
@@ -511,7 +517,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @9 : @5;
+    NSNumber *quantity = IS_IPAD ? @12 : @7;
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
@@ -1081,6 +1087,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSDictionary *theTag = tags[0];
                 StatsItem *statsItem = [StatsItem new];
                 statsItem.label = [theTag stringForKey:@"name"];
+                statsItem.alternateIconValue = [theTag stringForKey:@"type"];
                 statsItem.value = [self localizedStringForNumber:[tagGroup numberForKey:@"views"]];
                 NSString *linkURL = [theTag stringForKey:@"link"];
                 if (linkURL.length > 0) {
@@ -1099,6 +1106,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     
                     StatsItem *childItem = [StatsItem new];
                     childItem.label = [subTag stringForKey:@"name"];
+                    childItem.alternateIconValue = [subTag stringForKey:@"type"];
                     NSString *linkURL = [subTag stringForKey:@"link"];
                     if (linkURL.length > 0) {
                         StatsItemAction *itemAction = [StatsItemAction new];
@@ -1379,6 +1387,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     switch (unit) {
         case StatsPeriodUnitDay:
+        case StatsPeriodUnitMonth:
+        case StatsPeriodUnitYear:
         {
             self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
             break;
@@ -1389,14 +1399,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             self.deviceDateFormatter.dateFormat = @"yyyy'W'MM'W'dd";
             break;
         }
-        case StatsPeriodUnitMonth:
-        {
-            self.deviceDateFormatter.dateFormat = @"yyyy-MM-dd";
-            break;
-        }
-        case StatsPeriodUnitYear:
-            
-            break;
     }
     
     NSDate *localDate = [self.deviceDateFormatter dateFromString:dateString];

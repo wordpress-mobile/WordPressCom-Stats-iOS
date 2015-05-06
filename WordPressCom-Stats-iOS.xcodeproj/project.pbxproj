@@ -160,6 +160,9 @@
 		936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTableSectionHeaderView.h; sourceTree = "<group>"; };
 		936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableSectionHeaderView.m; sourceTree = "<group>"; };
 		937632801AC1B35700086BC6 /* emptyarray.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = emptyarray.json; sourceTree = "<group>"; };
+		937AB1591AF2616600E34D1F /* world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = world.png; sourceTree = "<group>"; };
+		937AB15A1AF2616600E34D1F /* world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "world@2x.png"; sourceTree = "<group>"; };
+		937AB15B1AF2616600E34D1F /* world@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "world@3x.png"; sourceTree = "<group>"; };
 		9383180E1994F701003B953A /* WordPressCom-Stats-iOSTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOSTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9387DB091A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day-exception.json"; sourceTree = "<group>"; };
 		9389C94C197EBBAF0036D437 /* WPStatsGraphToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphToastView.h; sourceTree = "<group>"; };
@@ -254,6 +257,17 @@
 			name = Graph;
 			sourceTree = "<group>";
 		};
+		937AB1511AF25ACC00E34D1F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				937AB1591AF2616600E34D1F /* world.png */,
+				937AB15A1AF2616600E34D1F /* world@2x.png */,
+				937AB15B1AF2616600E34D1F /* world@3x.png */,
+				93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		9396CFA61921096A006A66D7 = {
 			isa = PBXGroup;
 			children = (
@@ -292,6 +306,7 @@
 				9396CFDA19215356006A66D7 /* UI */,
 				9396CFD91921534E006A66D7 /* Services */,
 				9396CFD819215346006A66D7 /* Model */,
+				937AB1511AF25ACC00E34D1F /* Resources */,
 				9396CFB51921096B006A66D7 /* Supporting Files */,
 			);
 			path = "WordPressCom-Stats-iOS";
@@ -300,7 +315,6 @@
 		9396CFB51921096B006A66D7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */,
 				93D3079B19DC543F006826B0 /* WordPressCom-Stats-iOS-Bridging-Header.h */,
 				9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */,
 			);
