@@ -26,6 +26,11 @@ static NSString *const StatsTwoColumnCellCategory = @"";
 
 @implementation StatsTwoColumnTableViewCell
 
++ (BOOL)requiresConstraintBasedLayout
+{
+    return YES;
+}
+
 - (void)doneSettingProperties
 {
     self.leftLabel.text = self.leftText;
@@ -34,6 +39,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
+        self.rightEdgeConstraint.constant = 0.0f;
         
         if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
             self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
@@ -42,6 +48,8 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         if (self.expandable == NO) {
             self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             self.rightEdgeConstraint.constant = -10.0f;
+        } else {
+            self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8.0f, 13.0f)];
         }
     }
     
@@ -66,6 +74,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         NSBundle *bundle = [NSBundle bundleWithPath:path];
         self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
     } else {
+        self.iconImageView.hidden = YES;
         self.widthConstraint.constant = 0.0f;
         self.spaceConstraint.constant = 0.0f;
     }
@@ -94,7 +103,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     indentWidth += !self.leftHandGlyphLabel.hidden || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
-    [self setNeedsLayout];
+    [self setNeedsUpdateConstraints];
 }
 
 
@@ -107,6 +116,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     self.leftLabel.textColor = [UIColor blackColor];
     self.iconImageView.image = nil;
     
+    self.iconImageView.hidden = NO;
     self.widthConstraint.constant = 20.0f;
     self.spaceConstraint.constant = 8.0f;
     self.leadingEdgeConstraint.constant = 43.0f;
@@ -115,6 +125,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryNone;
+    self.accessoryView = nil;
     self.selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
  
     self.showCircularIcon = NO;
