@@ -72,7 +72,13 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
         NSBundle *bundle = [NSBundle bundleWithPath:path];
+        
+        if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
         self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+            NSString *imagePath = [bundle pathForResource:@"world" ofType:@"png"];
+            self.iconImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+        }
     } else {
         self.iconImageView.hidden = YES;
         self.widthConstraint.constant = 0.0f;
