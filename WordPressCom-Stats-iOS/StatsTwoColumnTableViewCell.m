@@ -26,11 +26,6 @@ static NSString *const StatsTwoColumnCellCategory = @"";
 
 @implementation StatsTwoColumnTableViewCell
 
-+ (BOOL)requiresConstraintBasedLayout
-{
-    return YES;
-}
-
 - (void)doneSettingProperties
 {
     self.leftLabel.text = self.leftText;
@@ -39,7 +34,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
-        self.rightEdgeConstraint.constant = 0.0f;
+        self.rightEdgeConstraint.constant = 8.0f;
         
         if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
             self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
@@ -47,7 +42,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         
         if (self.expandable == NO) {
             self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            self.rightEdgeConstraint.constant = -10.0f;
+            self.rightEdgeConstraint.constant = -2.0f;
         } else {
             self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8.0f, 13.0f)];
         }
@@ -74,8 +69,8 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         NSBundle *bundle = [NSBundle bundleWithPath:path];
         
         if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
+            self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
+        } else {
             NSString *imagePath = [bundle pathForResource:@"world" ofType:@"png"];
             self.iconImageView.image = [UIImage imageWithContentsOfFile:imagePath];
         }
@@ -104,7 +99,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         self.leftHandGlyphLabel.text = StatsTwoColumnCellCategory;
     }
     
-    CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 7.0f : 15.0f;
+    CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 15.0f : 23.0f;
     // Account for chevron or link icon or if its a nested row
     indentWidth += !self.leftHandGlyphLabel.hidden || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
@@ -126,7 +121,7 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     self.widthConstraint.constant = 20.0f;
     self.spaceConstraint.constant = 8.0f;
     self.leadingEdgeConstraint.constant = 43.0f;
-    self.rightEdgeConstraint.constant = 15.0f;
+    self.rightEdgeConstraint.constant = 23.0f;
     StatsBorderedCellBackgroundView *backgroundView = (StatsBorderedCellBackgroundView *)self.backgroundView;
     backgroundView.contentBackgroundView.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
