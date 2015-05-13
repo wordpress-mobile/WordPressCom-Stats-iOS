@@ -18,6 +18,6 @@
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 
-- (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control;
+- (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control;
 
 @end

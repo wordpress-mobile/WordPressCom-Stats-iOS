@@ -4,8 +4,10 @@
 @interface WPStatsViewController () <StatsTableViewControllerDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
-@property (nonatomic, weak) IBOutlet UISegmentedControl *periodSegmentControl;
+@property (nonatomic, weak) IBOutlet UISegmentedControl *statsTypeSegmentControl;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIView *insightsContainerView;
+@property (nonatomic, weak) IBOutlet UIView *statsContainerView;
 
 @end
 
@@ -15,28 +17,49 @@
 {
     [super viewDidLoad];
     
-    [self.periodSegmentControl setTitle:NSLocalizedString(@"Days", @"") forSegmentAtIndex:0];
-    [self.periodSegmentControl setTitle:NSLocalizedString(@"Weeks", @"") forSegmentAtIndex:1];
-    [self.periodSegmentControl setTitle:NSLocalizedString(@"Months", @"") forSegmentAtIndex:2];
-    [self.periodSegmentControl setTitle:NSLocalizedString(@"Years", @"") forSegmentAtIndex:3];
+    if (IS_IPAD) {
+        // Don't do anything
+        [self.statsTypeSegmentControl removeAllSegments];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Insights", @"Title of Insights segmented control") atIndex:0 animated:NO];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Days", @"") atIndex:1 animated:NO];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Weeks", @"") atIndex:2 animated:NO];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Months", @"") atIndex:3 animated:NO];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"") atIndex:4 animated:NO];
+    } else {
+        [self.statsTypeSegmentControl removeAllSegments];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Insights", @"Title of Insights segmented control") atIndex:0 animated:NO];
+        [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Details", @"Title of Details segmented control") atIndex:1 animated:NO];
+    }
+
+    self.statsTypeSegmentControl.selectedSegmentIndex = 0;
+    self.insightsContainerView.hidden = NO;
+    self.statsContainerView.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     [super prepareForSegue:segue sender:sender];
     
-    StatsTableViewController *tableVC = (StatsTableViewController *)segue.destinationViewController;
-    self.statsTableViewController = tableVC;
-    tableVC.oauth2Token = self.oauth2Token;
-    tableVC.siteID = self.siteID;
-    tableVC.siteTimeZone = self.siteTimeZone;
-    tableVC.statsDelegate = self.statsDelegate;
-    tableVC.statsTableDelegate = self;
+    if ([segue.identifier isEqualToString:@"StatsTableEmbed"]) {
+        StatsTableViewController *tableVC = (StatsTableViewController *)segue.destinationViewController;
+        self.statsTableViewController = tableVC;
+        tableVC.oauth2Token = self.oauth2Token;
+        tableVC.siteID = self.siteID;
+        tableVC.siteTimeZone = self.siteTimeZone;
+        tableVC.statsDelegate = self.statsDelegate;
+        tableVC.statsTableDelegate = self;
+    }
 }
 
-- (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
+- (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control
 {
-    [self.statsTableViewController periodUnitControlDidChange:control];
+    if (control.selectedSegmentIndex == 0) {
+        self.insightsContainerView.hidden = NO;
+        self.statsContainerView.hidden = YES;
+    } else {
+        self.insightsContainerView.hidden = YES;
+        self.statsContainerView.hidden = NO;
+    }
 }
 
 

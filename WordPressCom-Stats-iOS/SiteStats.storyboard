@@ -356,6 +356,98 @@
             </objects>
             <point key="canvasLocation" x="2468" y="98"/>
         </scene>
+        <!--Insights Table View Controller-->
+        <scene sceneID="5i3-b5-Lrb">
+            <objects>
+                <tableViewController id="Pq6-gc-ScC" userLabel="Insights Table View Controller" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="4oy-Og-Ww9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="492"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <sections>
+                            <tableViewSection id="2LJ-18-NK2">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="ZVK-0y-VvO">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZVK-0y-VvO" id="edL-Mo-vo7">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Most popular Day and Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U94-Ix-7EC">
+                                                    <rect key="frame" x="8" y="11" width="213" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="132" id="qq2-Vb-czH">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qq2-Vb-czH" id="UXn-1E-rBv">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="dIL-dV-nrd">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="i1h-1J-qpN">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="i1h-1J-qpN" id="2k5-0G-j9V">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="All-time posts, views, and visitors" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5F3-oE-jzA">
+                                                    <rect key="frame" x="8" y="11" width="257" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="88" id="3Mz-H6-0pu">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Mz-H6-0pu" id="tND-dE-Btv">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="HRF-1A-qLk">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="8Pa-qA-6le">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8Pa-qA-6le" id="Cho-Tr-KXc">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Today's Stats" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FV4-Ej-Neu">
+                                                    <rect key="frame" x="8" y="11" width="104" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="66" id="dRE-rs-NGi">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRE-rs-NGi" id="hTu-9f-WBB">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Pq6-gc-ScC" id="u32-XZ-8nm"/>
+                            <outlet property="delegate" destination="Pq6-gc-ScC" id="fiJ-94-BBh"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L1W-v8-za2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2335" y="810"/>
+        </scene>
         <!--Stats View All Table View Controller-->
         <scene sceneID="nII-vT-hUT">
             <objects>
@@ -721,49 +813,59 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ENG-tq-nCx">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ENG-tq-nCx" userLabel="Stats Table Container">
                                 <rect key="frame" x="0.0" y="108" width="600" height="492"/>
                                 <connections>
-                                    <segue destination="Tay-X0-ceG" kind="embed" id="n4F-Fg-DNs"/>
+                                    <segue destination="Tay-X0-ceG" kind="embed" identifier="StatsTableEmbed" id="n4F-Fg-DNs"/>
                                 </connections>
                             </containerView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ysq-ij-dbS">
-                                <rect key="frame" x="16" y="72" width="568" height="29"/>
-                                <segments>
-                                    <segment title="Days"/>
-                                    <segment title="Weeks"/>
-                                    <segment title="Months"/>
-                                    <segment title="Years"/>
-                                </segments>
+                            <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dqo-w7-nT9" userLabel="Insights Container">
+                                <rect key="frame" x="0.0" y="108" width="600" height="492"/>
                                 <connections>
-                                    <action selector="periodUnitControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="hOE-hN-hw1"/>
+                                    <segue destination="Pq6-gc-ScC" kind="embed" identifier="InsightsTableEmbed" id="Spw-SF-Sb1"/>
                                 </connections>
-                            </segmentedControl>
+                            </containerView>
                             <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jad-aV-V2h">
                                 <rect key="frame" x="0.0" y="106" width="600" height="2"/>
                                 <color key="trackTintColor" red="0.9137254901960784" green="0.93725490196078431" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ysq-ij-dbS">
+                                <rect key="frame" x="8" y="72" width="584" height="29"/>
+                                <segments>
+                                    <segment title="Insights"/>
+                                    <segment title="Details"/>
+                                </segments>
+                                <connections>
+                                    <action selector="statsTypeControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="bqZ-E6-PAf"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="jad-aV-V2h" secondAttribute="trailing" constant="-16" id="4gP-kc-Crr"/>
+                            <constraint firstItem="eay-2f-Ldo" firstAttribute="top" secondItem="Dqo-w7-nT9" secondAttribute="bottom" id="7AQ-qx-wdD"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="9Zh-6H-jIN"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="top" secondItem="IUN-av-KWH" secondAttribute="bottom" constant="8" id="Baf-6r-wmp"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="top" secondItem="jad-aV-V2h" secondAttribute="bottom" id="DSY-Ka-2fF"/>
-                            <constraint firstItem="ysq-ij-dbS" firstAttribute="trailing" secondItem="yO0-Lr-iKb" secondAttribute="trailingMargin" id="IqO-Bi-pb0"/>
+                            <constraint firstItem="Dqo-w7-nT9" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="H21-0b-TGe"/>
+                            <constraint firstItem="Dqo-w7-nT9" firstAttribute="top" secondItem="ysq-ij-dbS" secondAttribute="bottom" constant="8" id="Hj7-jN-Gy9"/>
+                            <constraint firstItem="ysq-ij-dbS" firstAttribute="trailing" secondItem="yO0-Lr-iKb" secondAttribute="trailingMargin" constant="8" id="IqO-Bi-pb0"/>
                             <constraint firstAttribute="trailing" secondItem="ENG-tq-nCx" secondAttribute="trailing" id="RNR-wQ-XR1"/>
+                            <constraint firstAttribute="trailing" secondItem="Dqo-w7-nT9" secondAttribute="trailing" id="Rdf-Qm-SJq"/>
                             <constraint firstAttribute="centerX" secondItem="ysq-ij-dbS" secondAttribute="centerX" id="ZcA-XO-INA"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="top" secondItem="ysq-ij-dbS" secondAttribute="bottom" constant="8" id="cJs-j1-1ro"/>
                             <constraint firstItem="jad-aV-V2h" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leadingMargin" constant="-16" id="cUz-7N-W37"/>
-                            <constraint firstItem="ysq-ij-dbS" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leadingMargin" id="elG-AZ-S2o"/>
+                            <constraint firstItem="ysq-ij-dbS" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leadingMargin" constant="-8" id="elG-AZ-S2o"/>
                             <constraint firstItem="eay-2f-Ldo" firstAttribute="top" secondItem="ENG-tq-nCx" secondAttribute="bottom" id="ofD-Eh-mwY"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Stats" id="DF4-gA-Ade"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="periodSegmentControl" destination="ysq-ij-dbS" id="1DH-gj-zgx"/>
+                        <outlet property="insightsContainerView" destination="Dqo-w7-nT9" id="p5E-yD-WdY"/>
                         <outlet property="progressView" destination="jad-aV-V2h" id="LXx-ga-2HN"/>
+                        <outlet property="statsContainerView" destination="ENG-tq-nCx" id="JN7-qT-YUE"/>
+                        <outlet property="statsTypeSegmentControl" destination="ysq-ij-dbS" id="k7Y-xV-xMm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fb0-xY-90L" userLabel="First Responder" sceneMemberID="firstResponder"/>
