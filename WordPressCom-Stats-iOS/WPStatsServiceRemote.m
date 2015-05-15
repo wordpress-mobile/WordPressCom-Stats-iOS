@@ -459,7 +459,30 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
 {
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *allTimeDict = [[self dictionaryFromResponse:responseObject] dictionaryForKey:@"stats"];
+        NSInteger posts = [allTimeDict numberForKey:@"posts"].integerValue;
+        NSInteger views = [allTimeDict numberForKey:@"views"].integerValue;
+        NSInteger visitors = [allTimeDict numberForKey:@"visitors"].integerValue;
+        NSInteger bestViews = [allTimeDict numberForKey:@"views_best_day_total"].integerValue;
+        NSDate *bestViewsOn = [self deviceLocalDateForString:[allTimeDict stringForKey:@"views_best_day"] withPeriodUnit:StatsPeriodUnitDay];
+        
+        completionHandler(posts, views, visitors, bestViews, bestViewsOn, nil);
+    };
     
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            completionHandler(0, 0, 0, 0, nil, error);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
+    [operation start];
 }
 
 #pragma mark - Private methods to compose request operations to be reusable

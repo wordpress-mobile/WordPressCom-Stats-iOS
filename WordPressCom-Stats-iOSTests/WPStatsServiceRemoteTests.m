@@ -875,4 +875,32 @@
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
+
+
+- (void)testFetchAllTime
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchAllTime completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-alltime.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchAllTimeStatsWithCompletionHandler:^(NSInteger posts, NSInteger views, NSInteger visitors, NSInteger bestViews, NSDate *bestViewsOn, NSError *error)
+     {
+         XCTAssertEqual(128, posts);
+         XCTAssertEqual(56687, views);
+         XCTAssertEqual(42893, visitors);
+         XCTAssertEqual(3485, bestViews);
+         XCTAssertNotNil(bestViewsOn);
+         
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 @end
