@@ -51,6 +51,7 @@
 		936E74A41A688E6F0048F552 /* StatsSelectableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 936E74A31A688E6F0048F552 /* StatsSelectableTableViewCell.m */; };
 		936E74A71A69A8990048F552 /* StatsTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */; };
 		937632811AC1B35700086BC6 /* emptyarray.json in Resources */ = {isa = PBXBuildFile; fileRef = 937632801AC1B35700086BC6 /* emptyarray.json */; };
+		93797AFB1B064A4D006934EF /* stats-v1.1-insights.json in Resources */ = {isa = PBXBuildFile; fileRef = 93797AFA1B064A4D006934EF /* stats-v1.1-insights.json */; };
 		9387DB0A1A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json in Resources */ = {isa = PBXBuildFile; fileRef = 9387DB091A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json */; };
 		9389C94E197EBBAF0036D437 /* WPStatsGraphToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */; };
 		9396CFB31921096A006A66D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFB21921096A006A66D7 /* Foundation.framework */; };
@@ -165,6 +166,7 @@
 		936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTableSectionHeaderView.h; sourceTree = "<group>"; };
 		936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableSectionHeaderView.m; sourceTree = "<group>"; };
 		937632801AC1B35700086BC6 /* emptyarray.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = emptyarray.json; sourceTree = "<group>"; };
+		93797AFA1B064A4D006934EF /* stats-v1.1-insights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-insights.json"; sourceTree = "<group>"; };
 		937AB1591AF2616600E34D1F /* world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = world.png; sourceTree = "<group>"; };
 		937AB15A1AF2616600E34D1F /* world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "world@2x.png"; sourceTree = "<group>"; };
 		937AB15B1AF2616600E34D1F /* world@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "world@3x.png"; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 		93E3679B1922B72E000FB32A /* Test Data */ = {
 			isa = PBXGroup;
 			children = (
+				937632801AC1B35700086BC6 /* emptyarray.json */,
 				93E3679C1922B751000FB32A /* stats-batch.json */,
 				931193E71A0BAA660005BED2 /* stats-v1.1-clicks-day.json */,
 				931193F11A0C18C70005BED2 /* stats-v1.1-clicks-month-large.json */,
@@ -426,6 +429,7 @@
 				931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */,
 				933FF2231A4085C300336167 /* stats-v1.1-followers-email-day.json */,
 				933FF2211A407F2B00336167 /* stats-v1.1-followers-wpcom-day.json */,
+				93797AFA1B064A4D006934EF /* stats-v1.1-insights.json */,
 				936E001D1AA7A28D00DCFA65 /* stats-v1.1-post-details.json */,
 				931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */,
 				93274AE91A09B4FA0017238F /* stats-v1.1-referrers-day.json */,
@@ -438,7 +442,6 @@
 				933FF21B1A406E0400336167 /* stats-v1.1-video-plays-day.json */,
 				931193EB1A0C09D60005BED2 /* stats-v1.1-visits-day-large.json */,
 				93274AE51A07CCE40017238F /* stats-v1.1-visits-day.json */,
-				937632801AC1B35700086BC6 /* emptyarray.json */,
 			);
 			name = "Test Data";
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 			files = (
 				933FF21C1A406E0400336167 /* stats-v1.1-video-plays-day.json in Resources */,
 				933FF2241A4085C300336167 /* stats-v1.1-followers-email-day.json in Resources */,
+				93797AFB1B064A4D006934EF /* stats-v1.1-insights.json in Resources */,
 				931193E81A0BAA660005BED2 /* stats-v1.1-clicks-day.json in Resources */,
 				931193F21A0C18C70005BED2 /* stats-v1.1-clicks-month-large.json in Resources */,
 				93274AE81A091E840017238F /* stats-v1.1-top-posts-day.json in Resources */,

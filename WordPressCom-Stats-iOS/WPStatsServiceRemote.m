@@ -432,7 +432,29 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
 {
-    // TODO : Implement
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
+        
+        NSInteger highestHour = [insightsDict numberForKey:@"highest_hour"].integerValue;
+        NSInteger highestDayOfWeek = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
+        CGFloat highestDayPercent = [insightsDict numberForKey:@"highest_day_percent"].floatValue;
+        
+        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, nil);
+    };
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            completionHandler(0, 0, 0, error);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
+    [operation start];
 }
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler

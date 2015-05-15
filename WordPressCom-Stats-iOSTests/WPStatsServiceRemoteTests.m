@@ -852,4 +852,27 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+
+- (void)testFetchInsights
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchInsights completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-insights.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchInsightsWithCompletionHandler:^(NSInteger highestHour, NSInteger highestDayOfWeek, CGFloat highestDayPercent, NSError *error)
+     {
+         XCTAssertEqual(9, highestHour);
+         XCTAssertEqual(5, highestDayOfWeek);
+         XCTAssertEqualWithAccuracy(30.5, highestDayPercent, 0.5);
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
 @end
