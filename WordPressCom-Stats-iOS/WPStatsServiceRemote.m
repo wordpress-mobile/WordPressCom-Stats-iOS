@@ -266,7 +266,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        // TODO - Implement
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil, error);
+        }
     };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
@@ -428,6 +430,15 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     [operation start];
 }
 
+- (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
+{
+    // TODO : Implement
+}
+
+- (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
+{
+    
+}
 
 #pragma mark - Private methods to compose request operations to be reusable
 

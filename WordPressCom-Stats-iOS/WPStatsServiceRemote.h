@@ -7,6 +7,8 @@ typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *err
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
 typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error);
+typedef void (^StatsRemoteAllTimeCompletion)(NSInteger posts, NSInteger views, NSInteger visitors, NSInteger bestViews, NSDate *bestViewsOn, NSError *error);
+typedef void (^StatsRemoteInsightsCompletion)(NSInteger highestHour, NSInteger highestDayOfWeek, CGFloat highestDayPercent, NSError *);
 
 @interface WPStatsServiceRemote : NSObject
 
@@ -109,6 +111,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler;
+
+- (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler;
 
 - (void)cancelAllRemoteOperations;
 

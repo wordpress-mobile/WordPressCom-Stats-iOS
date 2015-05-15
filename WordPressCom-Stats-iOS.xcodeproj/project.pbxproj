@@ -68,6 +68,7 @@
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
 		93FABB831A126DC5000C15ED /* StatsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FABB821A126DC5000C15ED /* StatsTableViewController.m */; };
 		93FE886F1B0513820096F187 /* StatsGaugeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FE886E1B0513820096F187 /* StatsGaugeView.m */; };
+		93FE88721B05307D0096F187 /* StatsInsights.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FE88711B05307D0096F187 /* StatsInsights.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -199,6 +200,8 @@
 		93FABB821A126DC5000C15ED /* StatsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableViewController.m; sourceTree = "<group>"; };
 		93FE886D1B0513820096F187 /* StatsGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsGaugeView.h; sourceTree = "<group>"; };
 		93FE886E1B0513820096F187 /* StatsGaugeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsGaugeView.m; sourceTree = "<group>"; };
+		93FE88701B05307D0096F187 /* StatsInsights.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsInsights.h; sourceTree = "<group>"; };
+		93FE88711B05307D0096F187 /* StatsInsights.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsInsights.m; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -367,6 +370,8 @@
 				93A379E619FEAD8400415023 /* StatsSummary.m */,
 				93274AE21A07C7EA0017238F /* StatsVisits.h */,
 				93274AE31A07C7EA0017238F /* StatsVisits.m */,
+				93FE88701B05307D0096F187 /* StatsInsights.h */,
+				93FE88711B05307D0096F187 /* StatsInsights.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -623,6 +628,7 @@
 				930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */,
 				9367D9D81A6EB5A90033911A /* StatsTwoColumnTableViewCell.m in Sources */,
 				9367D9DF1A70194D0033911A /* StatsStandardBorderedTableViewCell.m in Sources */,
+				93FE88721B05307D0096F187 /* StatsInsights.m in Sources */,
 				93274AE41A07C7EA0017238F /* StatsVisits.m in Sources */,
 				93A379E419FEAB8100415023 /* StatsGroup.m in Sources */,
 				93FE886F1B0513820096F187 /* StatsGaugeView.m in Sources */,
