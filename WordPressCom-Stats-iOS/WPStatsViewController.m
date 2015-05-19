@@ -84,7 +84,7 @@ typedef NS_ENUM(NSInteger, StatsType)
         self.statsContainerView.hidden = YES;
         return;
     }
-
+    
     self.insightsContainerView.hidden = YES;
     self.statsContainerView.hidden = NO;
     
@@ -144,6 +144,7 @@ typedef NS_ENUM(NSInteger, StatsType)
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
+        self.statsTypeSegmentControl.selectedSegmentIndex = 1;
         return;
     }
     
@@ -188,7 +189,7 @@ typedef NS_ENUM(NSInteger, StatsType)
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:1 animated:NO];
     }
     
-    [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"...", @"Title of more periods segmented control") atIndex:2 animated:NO];
+    [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"More…", @"Title of more periods segmented control") atIndex:2 animated:NO];
     
     if (self.statsType == StatsTypeInsights) {
         self.statsTypeSegmentControl.selectedSegmentIndex = 0;
