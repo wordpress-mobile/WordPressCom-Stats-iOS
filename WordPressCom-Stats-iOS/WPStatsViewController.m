@@ -101,6 +101,8 @@ typedef NS_ENUM(NSInteger, StatsType)
             [actionSheet showInView:viewController.view];
         }
         self.periodActionSheet = actionSheet;
+    } else if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
+        self.statsType = self.lastSelectedStatsType;
     } else {
         self.statsType = control.selectedSegmentIndex;
         self.lastSelectedStatsType = self.statsType;
@@ -208,6 +210,16 @@ typedef NS_ENUM(NSInteger, StatsType)
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:4 animated:NO];
     
     self.statsTypeSegmentControl.selectedSegmentIndex = self.statsType;
+}
+
+- (void)setStatsType:(StatsType)statsType
+{
+    if (statsType != StatsTypeInsights && statsType != _statsType) {
+        StatsPeriodUnit periodUnit = statsType - 1;
+        [self.statsTableViewController changeGraphPeriod:periodUnit];
+    }
+    
+    _statsType = statsType;
 }
 
 @end
