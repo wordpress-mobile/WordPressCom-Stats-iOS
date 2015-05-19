@@ -1233,7 +1233,10 @@
                                 <rect key="frame" x="8" y="72" width="584" height="29"/>
                                 <segments>
                                     <segment title="Insights"/>
-                                    <segment title="Details"/>
+                                    <segment title="Days"/>
+                                    <segment title="Weeks"/>
+                                    <segment title="Months"/>
+                                    <segment title="Years"/>
                                 </segments>
                                 <connections>
                                     <action selector="statsTypeControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="bqZ-E6-PAf"/>

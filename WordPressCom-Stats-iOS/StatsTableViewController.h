@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "WPStatsViewController.h"
+#import "StatsSummary.h"
 
 @protocol WPStatsViewControllerDelegate;
 @class StatsTableViewController;
@@ -21,6 +22,6 @@
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 @property (nonatomic, weak) id<StatsTableViewControllerDelegate> statsTableDelegate;
 
-- (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control;
+- (void)changeGraphPeriod:(StatsPeriodUnit)toPeriod;
 
 @end

@@ -487,10 +487,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
+- (void)changeGraphPeriod:(StatsPeriodUnit)toPeriod
 {
-    StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
-    self.selectedPeriodUnit = unit;
+    self.selectedPeriodUnit = toPeriod;
     [self resetDateToTodayForSite];
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
