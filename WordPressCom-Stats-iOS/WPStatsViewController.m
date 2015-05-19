@@ -103,6 +103,7 @@ typedef NS_ENUM(NSInteger, StatsType)
         self.periodActionSheet = actionSheet;
     } else {
         self.statsType = control.selectedSegmentIndex;
+        self.lastSelectedStatsType = self.statsType;
     }
     
 }
@@ -142,7 +143,13 @@ typedef NS_ENUM(NSInteger, StatsType)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
     
+    self.statsType = buttonIndex + 1;
+    self.lastSelectedStatsType = self.statsType;
+    [self showAbbreviatedSegments];
 }
 
 
