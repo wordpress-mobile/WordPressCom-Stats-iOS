@@ -863,11 +863,10 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-insights.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchInsightsWithCompletionHandler:^(NSInteger highestHour, NSInteger highestDayOfWeek, CGFloat highestDayPercent, NSError *error)
-     {
-         XCTAssertEqual(9, highestHour);
-         XCTAssertEqual(5, highestDayOfWeek);
-         XCTAssertEqualWithAccuracy(30.5, highestDayPercent, 0.5);
+    [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+         XCTAssertTrue([@"9 AM" isEqualToString:highestHour]);
+         XCTAssertTrue([@"Saturday" isEqualToString:highestDayOfWeek]);
+         XCTAssertTrue([@"31" isEqualToString:highestDayPercent]);
          XCTAssertNil(error);
          
          [expectation fulfill];
@@ -887,12 +886,11 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-alltime.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchAllTimeStatsWithCompletionHandler:^(NSInteger posts, NSInteger views, NSInteger visitors, NSInteger bestViews, NSDate *bestViewsOn, NSError *error)
-     {
-         XCTAssertEqual(128, posts);
-         XCTAssertEqual(56687, views);
-         XCTAssertEqual(42893, visitors);
-         XCTAssertEqual(3485, bestViews);
+    [self.subject fetchAllTimeStatsWithCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
+         XCTAssertTrue([@"128" isEqualToString:posts]);
+         XCTAssertTrue([@"56,687" isEqualToString:views]);
+         XCTAssertTrue([@"42,893" isEqualToString:visitors]);
+         XCTAssertTrue([@"3,485" isEqualToString:bestViews]);
          XCTAssertNotNil(bestViewsOn);
          
          XCTAssertNil(error);

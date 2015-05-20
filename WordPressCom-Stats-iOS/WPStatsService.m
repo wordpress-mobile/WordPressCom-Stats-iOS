@@ -173,6 +173,20 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
+- (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
+                                     insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                   andOverallCompletionHandler:(void (^)())completionHandler
+{
+    [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
+        
+    } insightsCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+        
+    } andOverallCompletionHandler:^{
+        
+    }];
+}
+
+
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
                     withCompletionHandler:(StatsPostDetailsCompletion)completion
 {
@@ -278,14 +292,6 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     
     [self.remote fetchSearchTermsStatsForDate:endDate andUnit:unit withCompletionHandler:[self remoteItemCompletionWithCache:nil forStatsSection:StatsSectionSearchTerms andCompletionHandler:completionHandler]];
-}
-
-
-- (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
-                                     insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
-                                   andOverallCompletionHandler:(void (^)())completionHandler
-{
-    
 }
 
 

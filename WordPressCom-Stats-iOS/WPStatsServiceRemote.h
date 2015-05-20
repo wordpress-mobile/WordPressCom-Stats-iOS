@@ -7,8 +7,8 @@ typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *err
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
 typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error);
-typedef void (^StatsRemoteAllTimeCompletion)(NSInteger posts, NSInteger views, NSInteger visitors, NSInteger bestViews, NSDate *bestViewsOn, NSError *error);
-typedef void (^StatsRemoteInsightsCompletion)(NSInteger highestHour, NSInteger highestDayOfWeek, CGFloat highestDayPercent, NSError *error);
+typedef void (^StatsRemoteAllTimeCompletion)(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error);
+typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error);
 
 @interface WPStatsServiceRemote : NSObject
 
@@ -32,7 +32,6 @@ typedef void (^StatsRemoteInsightsCompletion)(NSInteger highestHour, NSInteger h
  @param followersEmailCompletion
  @param publicizeCompletion
  @param failureHandler
- 
  */
 - (void)batchFetchStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit

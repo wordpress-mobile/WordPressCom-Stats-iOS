@@ -4,6 +4,7 @@
 
 @property (nonatomic, strong) NSDate *highestHour;
 @property (nonatomic, strong) NSDate *highestDayOfWeek;
-@property (nonatomic, assign) CGFloat highestDayPercent;
+@property (nonatomic, copy) NSString *highestDayPercent;
+@property (nonatomic, strong) NSNumber *highestDayPercentValue;
 
 @end

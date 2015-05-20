@@ -499,18 +499,27 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *allTimeDict = [[self dictionaryFromResponse:responseObject] dictionaryForKey:@"stats"];
-        NSInteger posts = [allTimeDict numberForKey:@"posts"].integerValue;
-        NSInteger views = [allTimeDict numberForKey:@"views"].integerValue;
-        NSInteger visitors = [allTimeDict numberForKey:@"visitors"].integerValue;
-        NSInteger bestViews = [allTimeDict numberForKey:@"views_best_day_total"].integerValue;
-        NSDate *bestViewsOn = [self deviceLocalDateForString:[allTimeDict stringForKey:@"views_best_day"] withPeriodUnit:StatsPeriodUnitDay];
+        NSNumber *postsValue = [allTimeDict numberForKey:@"posts"];
+        NSString *posts = [self localizedStringForNumber:postsValue];
+        NSNumber *viewsValue = [allTimeDict numberForKey:@"views"];
+        NSString *views = [self localizedStringForNumber:viewsValue];
+        NSNumber *visitorsValue = [allTimeDict numberForKey:@"visitors"];
+        NSString *visitors = [self localizedStringForNumber:visitorsValue];
+        NSNumber *bestViewsValue = [allTimeDict numberForKey:@"views_best_day_total"];
+        NSString *bestViews = [self localizedStringForNumber:bestViewsValue];
+        NSDate *bestViewsOnDate = [self deviceLocalDateForString:[allTimeDict stringForKey:@"views_best_day"] withPeriodUnit:StatsPeriodUnitDay];
         
-        completionHandler(posts, views, visitors, bestViews, bestViewsOn, nil);
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        NSString *bestViewsOn = [dateFormatter stringFromDate:bestViewsOnDate];
+        
+        completionHandler(posts, postsValue, views, viewsValue, visitors, visitorsValue, bestViews, bestViewsValue, bestViewsOn, nil);
     };
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
-            completionHandler(0, 0, 0, 0, nil, error);
+            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
         }
     };
     
@@ -528,17 +537,34 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
+        NSInteger highestHourValue = [insightsDict numberForKey:@"highest_hour"].integerValue;
+        NSInteger highestDayOfWeekValue = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
+        NSNumber *highestDayPercentValue = [insightsDict numberForKey:@"highest_day_percent"];
         
-        NSInteger highestHour = [insightsDict numberForKey:@"highest_hour"].integerValue;
-        NSInteger highestDayOfWeek = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
-        CGFloat highestDayPercent = [insightsDict numberForKey:@"highest_day_percent"].floatValue;
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        // Apple Sunday == 1, WP.com Monday == 0
+        dateComponents.weekday = highestDayOfWeekValue == 6 ? 1 : highestDayOfWeekValue + 2;
+        dateComponents.weekdayOrdinal = 1;
+        dateComponents.month = 5;
+        dateComponents.year = 2015;
+        dateComponents.hour = highestHourValue;
+        NSDate *date = [calendar dateFromComponents:dateComponents];
         
-        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, nil);
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.dateFormat = @"EEEE";
+        NSString *highestDayOfWeek = [dateFormatter stringFromDate:date];
+        dateFormatter.dateFormat = @"h a";
+        NSString *highestHour = [dateFormatter stringFromDate:date];
+        
+        NSString *highestDayPercent = [self localizedStringForNumber:highestDayPercentValue];
+        
+        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
     };
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
-            completionHandler(0, 0, 0, error);
+            completionHandler(nil, nil, nil, nil, error);
         }
     };
     
