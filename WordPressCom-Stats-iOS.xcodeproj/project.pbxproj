@@ -55,6 +55,7 @@
 		93797AFD1B064FA2006934EF /* stats-v1.1-alltime.json in Resources */ = {isa = PBXBuildFile; fileRef = 93797AFC1B064FA2006934EF /* stats-v1.1-alltime.json */; };
 		9387DB0A1A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json in Resources */ = {isa = PBXBuildFile; fileRef = 9387DB091A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json */; };
 		9389C94E197EBBAF0036D437 /* WPStatsGraphToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */; };
+		938A61851B0CAC23007C5EE7 /* StatsAllTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 938A61841B0CAC23007C5EE7 /* StatsAllTime.m */; };
 		9396CFB31921096A006A66D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFB21921096A006A66D7 /* Foundation.framework */; };
 		9396CFC11921096B006A66D7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFC01921096B006A66D7 /* XCTest.framework */; };
 		9396CFC21921096B006A66D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9396CFB21921096A006A66D7 /* Foundation.framework */; };
@@ -176,6 +177,8 @@
 		9387DB091A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day-exception.json"; sourceTree = "<group>"; };
 		9389C94C197EBBAF0036D437 /* WPStatsGraphToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphToastView.h; sourceTree = "<group>"; };
 		9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphToastView.m; sourceTree = "<group>"; };
+		938A61831B0CAC23007C5EE7 /* StatsAllTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsAllTime.h; sourceTree = "<group>"; };
+		938A61841B0CAC23007C5EE7 /* StatsAllTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsAllTime.m; sourceTree = "<group>"; };
 		9396CFAF1921096A006A66D7 /* libWordPressCom-Stats-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libWordPressCom-Stats-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9396CFB21921096A006A66D7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -364,8 +367,12 @@
 		9396CFD819215346006A66D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				938A61831B0CAC23007C5EE7 /* StatsAllTime.h */,
+				938A61841B0CAC23007C5EE7 /* StatsAllTime.m */,
 				93A379E219FEAB8100415023 /* StatsGroup.h */,
 				93A379E319FEAB8100415023 /* StatsGroup.m */,
+				93FE88701B05307D0096F187 /* StatsInsights.h */,
+				93FE88711B05307D0096F187 /* StatsInsights.m */,
 				93A379DC19FEA9E400415023 /* StatsItem.h */,
 				93A379DD19FEA9E400415023 /* StatsItem.m */,
 				93A379DF19FEAB1C00415023 /* StatsItemAction.h */,
@@ -374,8 +381,6 @@
 				93A379E619FEAD8400415023 /* StatsSummary.m */,
 				93274AE21A07C7EA0017238F /* StatsVisits.h */,
 				93274AE31A07C7EA0017238F /* StatsVisits.m */,
-				93FE88701B05307D0096F187 /* StatsInsights.h */,
-				93FE88711B05307D0096F187 /* StatsInsights.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -650,6 +655,7 @@
 				936B2251195C48700058C828 /* WPStatsGraphBarCell.m in Sources */,
 				9367D9DC1A7018350033911A /* StatsBorderedCellBackgroundView.m in Sources */,
 				936E74A71A69A8990048F552 /* StatsTableSectionHeaderView.m in Sources */,
+				938A61851B0CAC23007C5EE7 /* StatsAllTime.m in Sources */,
 				936E74A41A688E6F0048F552 /* StatsSelectableTableViewCell.m in Sources */,
 				936E00211AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m in Sources */,
 				93302C521A1BD78300B49CFC /* WPStatsService.m in Sources */,

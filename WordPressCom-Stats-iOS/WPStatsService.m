@@ -281,6 +281,14 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
+- (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
+                                     insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                   andOverallCompletionHandler:(void (^)())completionHandler
+{
+    
+}
+
+
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler
 {
     void (^failure)(NSError *error) = ^void (NSError *error) {

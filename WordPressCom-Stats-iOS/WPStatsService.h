@@ -2,11 +2,15 @@
 #import "StatsSummary.h"
 #import "StatsVisits.h"
 #import "StatsGroup.h"
+#import "StatsAllTime.h"
+#import "StatsInsights.h"
 
 typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsGroupCompletion)(StatsGroup *group, NSError *error);
 typedef void (^StatsPostDetailsCompletion)(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error);
+typedef void (^StatsInsightsCompletion)(StatsInsights *insights, NSError *error);
+typedef void (^StatsAllTimeCompletion)(StatsAllTime *allTime, NSError *error);
 
 typedef NS_ENUM(NSUInteger, StatsFollowerType) {
     StatsFollowerTypeDotCom,
@@ -77,6 +81,9 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                         andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
+- (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
+                                     insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                   andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler;
 
