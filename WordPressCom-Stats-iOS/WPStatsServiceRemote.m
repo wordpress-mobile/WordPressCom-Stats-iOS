@@ -151,6 +151,15 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
 }
 
+
+- (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
+                                  insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
+                                andOverallCompletionHandler:(void (^)())completionHandler
+{
+    
+}
+
+
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
 {
@@ -439,12 +448,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
-    {
+{
     AFHTTPRequestOperation *operation = [self operationForAllTimeStatsWithCompletionHandler:completionHandler];
-        
+    
     [operation start];
 }
-        
+
 #pragma mark - Private methods to compose request operations to be reusable
 
 
@@ -468,15 +477,15 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         statsSummary.likesValue = [statsSummaryDict numberForKey:@"likes"];
         statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
         statsSummary.commentsValue = [statsSummaryDict numberForKey:@"comments"];
-    
+        
         if (completionHandler) {
             completionHandler(statsSummary, nil);
         }
     };
     
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
-                                                                parameters:nil
-                                                                   success:handler
+                                                                 parameters:nil
+                                                                    success:handler
                                                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                                         if (completionHandler) {
                                                                             completionHandler(nil, error);
@@ -526,7 +535,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         
         completionHandler(highestHour, highestDayOfWeek, highestDayPercent, nil);
     };
-        
+    
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
             completionHandler(0, 0, 0, error);
@@ -534,8 +543,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
-                                                                 parameters:nil
-                                                                    success:handler
+                                                                parameters:nil
+                                                                   success:handler
                                                                    failure:failureHandler];
     
     return operation;

@@ -53,6 +53,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler;
 
+- (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
+                                  insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
+                                andOverallCompletionHandler:(void (^)())completionHandler;
+
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler;
 
