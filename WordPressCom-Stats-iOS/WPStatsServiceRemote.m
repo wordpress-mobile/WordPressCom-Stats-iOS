@@ -430,34 +430,62 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     [operation start];
 }
 
+
 - (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
-    {
-        NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
-        
-        NSInteger highestHour = [insightsDict numberForKey:@"highest_hour"].integerValue;
-        NSInteger highestDayOfWeek = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
-        CGFloat highestDayPercent = [insightsDict numberForKey:@"highest_day_percent"].floatValue;
-        
-        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, nil);
-    };
-    
-    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (completionHandler) {
-            completionHandler(0, 0, 0, error);
-        }
-    };
-    
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
-                                                                parameters:nil
-                                                                   success:handler
-                                                                   failure:failureHandler];
+    AFHTTPRequestOperation *operation = [self operationForInsightsStatsWithCompletionHandler:completionHandler];
     
     [operation start];
 }
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
+    {
+    AFHTTPRequestOperation *operation = [self operationForAllTimeStatsWithCompletionHandler:completionHandler];
+        
+    [operation start];
+}
+        
+#pragma mark - Private methods to compose request operations to be reusable
+
+
+- (AFHTTPRequestOperation *)operationForSummaryForDate:(NSDate *)date
+                                               andUnit:(StatsPeriodUnit)unit
+                                 withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+{
+    
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *statsSummaryDict = [self dictionaryFromResponse:responseObject];
+        StatsSummary *statsSummary = [StatsSummary new];
+        statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
+        statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
+        statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
+        statsSummary.views = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"views"]];
+        statsSummary.viewsValue = [statsSummaryDict numberForKey:@"views"];
+        statsSummary.visitors = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"visitors"]];
+        statsSummary.visitorsValue = [statsSummaryDict numberForKey:@"visitors"];
+        statsSummary.likes = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"likes"]];
+        statsSummary.likesValue = [statsSummaryDict numberForKey:@"likes"];
+        statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
+        statsSummary.commentsValue = [statsSummaryDict numberForKey:@"comments"];
+    
+        if (completionHandler) {
+            completionHandler(statsSummary, nil);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                        if (completionHandler) {
+                                                                            completionHandler(nil, error);
+                                                                        }
+                                                                    }];
+    return operation;
+}
+
+- (AFHTTPRequestOperation *)operationForAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -482,46 +510,34 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                                    success:handler
                                                                    failure:failureHandler];
     
-    [operation start];
+    return operation;
 }
 
-#pragma mark - Private methods to compose request operations to be reusable
 
-
-- (AFHTTPRequestOperation *)operationForSummaryForDate:(NSDate *)date
-                                               andUnit:(StatsPeriodUnit)unit
-                                 withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForInsightsStatsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
 {
-    
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSDictionary *statsSummaryDict = [self dictionaryFromResponse:responseObject];
-        StatsSummary *statsSummary = [StatsSummary new];
-        statsSummary.periodUnit = [self periodUnitForString:statsSummaryDict[@"period"]];
-        statsSummary.date = [self deviceLocalDateForString:statsSummaryDict[@"date"] withPeriodUnit:unit];
-        statsSummary.label = [self nicePointNameForDate:statsSummary.date forStatsPeriodUnit:statsSummary.periodUnit];
-        statsSummary.views = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"views"]];
-        statsSummary.viewsValue = [statsSummaryDict numberForKey:@"views"];
-        statsSummary.visitors = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"visitors"]];
-        statsSummary.visitorsValue = [statsSummaryDict numberForKey:@"visitors"];
-        statsSummary.likes = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"likes"]];
-        statsSummary.likesValue = [statsSummaryDict numberForKey:@"likes"];
-        statsSummary.comments = [self localizedStringForNumber:[statsSummaryDict numberForKey:@"comments"]];
-        statsSummary.commentsValue = [statsSummaryDict numberForKey:@"comments"];
+        NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
         
+        NSInteger highestHour = [insightsDict numberForKey:@"highest_hour"].integerValue;
+        NSInteger highestDayOfWeek = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
+        CGFloat highestDayPercent = [insightsDict numberForKey:@"highest_day_percent"].floatValue;
+        
+        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, nil);
+    };
+        
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
-            completionHandler(statsSummary, nil);
+            completionHandler(0, 0, 0, error);
         }
     };
     
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
                                                                  parameters:nil
                                                                     success:handler
-                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                                        if (completionHandler) {
-                                                                            completionHandler(nil, error);
-                                                                        }
-                                                                    }];
+                                                                   failure:failureHandler];
+    
     return operation;
 }
 
