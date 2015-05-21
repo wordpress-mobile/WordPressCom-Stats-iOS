@@ -62,6 +62,21 @@
     self.todayVisitorsLabel.text = [NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]];
     self.todayLikesLabel.text = [NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]];
     self.todayCommentsLabel.text = [NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    
+    // Default values for no data
+    self.percentValueLabel.text = @"--";
+    self.gaugeView.percentageFilled = 0.0f;
+    self.percentOnValueLabel.text = @"";
+    self.highestTimeValueLabel.text = @"--";
+    self.allTimePostsValueLabel.text = @"--";
+    self.allTimeViewsValueLabel.text = @"--";
+    self.allTimeVisitorsValueLabel.text = @"--";
+    self.allTimeBestViewsValueLabel.text = @"--";
+    self.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
+    self.todayViewsValueLabel.text = @"--";
+    self.todayVisitorsValueLabel.text = @"--";
+    self.todayLikesValueLabel.text = @"--";
+    self.todayCommentsValueLabel.text = @"--";
 
 //    NSAttributedString *space = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:10.0f]}];
 //
