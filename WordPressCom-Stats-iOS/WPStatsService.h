@@ -22,6 +22,8 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 @interface WPStatsService : NSObject
 
 @property (nonatomic, strong) WPStatsServiceRemote *remote;
+@property (nonatomic, readonly) NSNumber *siteId;
+@property (nonatomic, readonly) NSTimeZone *siteTimeZone;
 
 - (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone oauth2Token:(NSString *)oauth2Token andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval;
 

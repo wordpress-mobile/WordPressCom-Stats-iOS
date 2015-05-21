@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import "WPStatsViewController.h"
 #import "StatsSummary.h"
+#import "WPStatsService.h"
 
 @protocol WPStatsViewControllerDelegate;
 @class StatsTableViewController;
@@ -16,9 +17,7 @@
 
 @interface StatsTableViewController : UITableViewController
 
-@property (nonatomic, strong) NSNumber *siteID;
-@property (nonatomic, copy)   NSString *oauth2Token;
-@property (nonatomic, strong) NSTimeZone *siteTimeZone;
+@property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 @property (nonatomic, weak) id<StatsTableViewControllerDelegate> statsTableDelegate;
 

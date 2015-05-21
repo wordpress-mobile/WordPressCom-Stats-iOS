@@ -324,8 +324,6 @@
 				9396CFD819215346006A66D7 /* Model */,
 				937AB1511AF25ACC00E34D1F /* Resources */,
 				9396CFB51921096B006A66D7 /* Supporting Files */,
-				93554C7B1B03D18700B49657 /* InsightsTableViewController.h */,
-				93554C7C1B03D18700B49657 /* InsightsTableViewController.m */,
 			);
 			path = "WordPressCom-Stats-iOS";
 			sourceTree = "<group>";
@@ -405,6 +403,8 @@
 			children = (
 				9367D9D51A6EB5770033911A /* Cells */,
 				936B22491958C65A0058C828 /* Graph */,
+				93554C7B1B03D18700B49657 /* InsightsTableViewController.h */,
+				93554C7C1B03D18700B49657 /* InsightsTableViewController.m */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 				936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */,
 				936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */,

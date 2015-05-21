@@ -41,7 +41,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 @property (nonatomic, strong) NSDictionary *subSections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
-@property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
 @property (nonatomic, assign) StatsSummaryType selectedSummaryType;
 @property (nonatomic, strong) NSMutableDictionary *selectedSubsections;
@@ -103,9 +102,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     self.graphViewController.graphDelegate = self;
     [self addChildViewController:self.graphViewController];
     [self.graphViewController didMoveToParentViewController:self];
-    
-    NSTimeInterval fiveMinutes = 60 * 5;
-    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -368,10 +364,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
         if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
-            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.siteID];
+            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.statsService.siteId];
         } else {
 #ifndef AF_APP_EXTENSIONS
-            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.siteID]];
+            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.statsService.siteId]];
             [[UIApplication sharedApplication] openURL:webURL];
 #endif
         }
@@ -1336,7 +1332,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (void)resetDateToTodayForSite
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    calendar.timeZone = self.siteTimeZone;
+    calendar.timeZone = self.statsService.siteTimeZone;
     
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
     

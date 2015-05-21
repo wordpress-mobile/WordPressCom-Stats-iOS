@@ -1,6 +1,7 @@
 #import "WPStatsViewController.h"
 #import "StatsTableViewController.h"
-
+#import "WPStatsService.h"
+#import "InsightsTableViewController.h"
 
 typedef NS_ENUM(NSInteger, StatsType)
 {
@@ -14,6 +15,7 @@ typedef NS_ENUM(NSInteger, StatsType)
 @interface WPStatsViewController () <StatsTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
+@property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *statsTypeSegmentControl;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UIView *insightsContainerView;
@@ -23,6 +25,8 @@ typedef NS_ENUM(NSInteger, StatsType)
 @property (nonatomic, assign) StatsType lastSelectedStatsType;
 @property (nonatomic, assign) StatsType statsType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
+
+@property (nonatomic, strong) WPStatsService *statsService;
 
 @end
 
@@ -55,11 +59,13 @@ typedef NS_ENUM(NSInteger, StatsType)
     if ([segue.identifier isEqualToString:@"StatsTableEmbed"]) {
         StatsTableViewController *tableVC = (StatsTableViewController *)segue.destinationViewController;
         self.statsTableViewController = tableVC;
-        tableVC.oauth2Token = self.oauth2Token;
-        tableVC.siteID = self.siteID;
-        tableVC.siteTimeZone = self.siteTimeZone;
         tableVC.statsDelegate = self.statsDelegate;
         tableVC.statsTableDelegate = self;
+        tableVC.statsService = self.statsService;
+    } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
+        InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
+        self.insightsTableViewController = insightsTableViewController;
+        insightsTableViewController.statsService = self.statsService;
     }
 }
 
@@ -155,6 +161,18 @@ typedef NS_ENUM(NSInteger, StatsType)
     [self showAbbreviatedSegments];
 }
 
+
+#pragma mark - Property overrides
+
+- (WPStatsService *)statsService
+{
+    if (!_statsService) {
+        NSTimeInterval fiveMinutes = 60 * 5;
+        _statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
+    }
+    
+    return _statsService;
+}
 
 #pragma mark - Private methods
 
