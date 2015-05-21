@@ -2,8 +2,8 @@
 
 @interface StatsInsights : NSObject
 
-@property (nonatomic, strong) NSDate *highestHour;
-@property (nonatomic, strong) NSDate *highestDayOfWeek;
+@property (nonatomic, copy) NSString *highestHour;
+@property (nonatomic, copy) NSString *highestDayOfWeek;
 @property (nonatomic, copy) NSString *highestDayPercent;
 @property (nonatomic, strong) NSNumber *highestDayPercentValue;
 

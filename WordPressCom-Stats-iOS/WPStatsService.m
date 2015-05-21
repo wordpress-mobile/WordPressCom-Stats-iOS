@@ -178,11 +178,31 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                    andOverallCompletionHandler:(void (^)())completionHandler
 {
     [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
+        StatsAllTime *allTime = [StatsAllTime new];
+        allTime.numberOfPosts = posts;
+        allTime.numberOfPostsValue = postsValue;
+        allTime.numberOfViews = views;
+        allTime.numberOfViewsValue = viewsValue;
+        allTime.numberOfVisitors = visitors;
+        allTime.numberOfVisitorsValue = visitorsValue;
         
+        if (completionHandler) {
+            completionHandler(allTime, error);
+        }
     } insightsCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+        StatsInsights *insights = [StatsInsights new];
+        insights.highestHour = highestHour;
+        insights.highestDayOfWeek = highestDayOfWeek;
+        insights.highestDayPercent = highestDayPercent;
+        insights.highestDayPercentValue = highestDayPercentValue;
         
+        if (completionHandler) {
+            completionHandler(insights, error);
+        }
     } andOverallCompletionHandler:^{
-        
+        if (completionHandler) {
+            completionHandler();
+        }
     }];
 }
 
