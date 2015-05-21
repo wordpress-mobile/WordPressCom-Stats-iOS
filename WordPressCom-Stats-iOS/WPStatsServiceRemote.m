@@ -567,7 +567,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
         NSInteger highestHourValue = [insightsDict numberForKey:@"highest_hour"].integerValue;
         NSInteger highestDayOfWeekValue = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
-        NSNumber *highestDayPercentValue = [insightsDict numberForKey:@"highest_day_percent"];
+        NSNumber *highestDayPercentValue = @([insightsDict numberForKey:@"highest_day_percent"].floatValue / 100.0);
         
         NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
@@ -585,7 +585,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         dateFormatter.dateFormat = @"h a";
         NSString *highestHour = [dateFormatter stringFromDate:date];
         
-        NSString *highestDayPercent = [self localizedStringForNumber:highestDayPercentValue];
+        NSString *highestDayPercent = [self localizedStringForNumber:highestDayPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
         
         completionHandler(highestHour, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
     };
@@ -1629,11 +1629,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (NSString *)localizedStringForNumber:(NSNumber *)number
 {
+    return [self localizedStringForNumber:number withNumberStyle:NSNumberFormatterDecimalStyle];
+}
+
+- (NSString *)localizedStringForNumber:(NSNumber *)number withNumberStyle:(NSNumberFormatterStyle)numberStyle
+{
     if (!number) {
         return nil;
     }
     
-    self.deviceNumberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    self.deviceNumberFormatter.numberStyle = numberStyle;
     self.deviceNumberFormatter.maximumFractionDigits = 0;
     
     NSString *formattedNumber = [self.deviceNumberFormatter stringFromNumber:number];

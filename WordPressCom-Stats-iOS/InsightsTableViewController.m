@@ -135,7 +135,7 @@
                                                   andOverallCompletionHandler:^
      {
          self.percentValueLabel.text = statsInsights.highestDayPercent;
-         self.gaugeView;
+         self.gaugeView.percentageFilled = statsInsights.highestDayPercentValue.floatValue;
          self.percentOnValueLabel.text = [NSString stringWithFormat:NSLocalizedString(@"happen on a %@", @"Stats most popular on a day - parameter is a day"), statsInsights.highestDayOfWeek];
          self.highestTimeValueLabel.text = statsInsights.highestHour;
          self.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
