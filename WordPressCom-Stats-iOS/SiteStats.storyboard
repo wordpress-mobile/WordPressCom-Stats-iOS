@@ -712,29 +712,6 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRE-rs-NGi" id="hTu-9f-WBB">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IwY-dz-TSD">
-                                                    <rect key="frame" x="8" y="0.0" width="146" height="65"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POSTS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4XI-NV-072">
-                                                            <rect key="frame" x="58" y="8" width="31" height="14"/>
-                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bc-rf-qNa">
-                                                            <rect key="frame" x="64" y="27" width="19" height="22"/>
-                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
-                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstAttribute="centerX" secondItem="1bc-rf-qNa" secondAttribute="centerX" id="0I1-Ow-Ngb"/>
-                                                        <constraint firstAttribute="centerY" secondItem="1bc-rf-qNa" secondAttribute="centerY" constant="-5" id="djw-JM-YA5"/>
-                                                        <constraint firstAttribute="centerX" secondItem="4XI-NV-072" secondAttribute="centerX" id="vpg-dD-Qp1"/>
-                                                        <constraint firstItem="4XI-NV-072" firstAttribute="top" secondItem="IwY-dz-TSD" secondAttribute="top" constant="8" id="ypR-tx-ysS"/>
-                                                    </constraints>
-                                                </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iwI-u2-AsI">
                                                     <rect key="frame" x="300" y="0.0" width="146" height="65"/>
                                                     <subviews>
@@ -804,6 +781,29 @@
                                                         <constraint firstItem="UA1-qL-c2p" firstAttribute="top" secondItem="9TN-0u-X0e" secondAttribute="top" constant="8" id="num-S2-ReE"/>
                                                     </constraints>
                                                 </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IwY-dz-TSD">
+                                                    <rect key="frame" x="8" y="0.0" width="146" height="65"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIEWS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4XI-NV-072">
+                                                            <rect key="frame" x="58" y="8" width="30" height="14"/>
+                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bc-rf-qNa">
+                                                            <rect key="frame" x="64" y="27" width="19" height="22"/>
+                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="centerX" secondItem="1bc-rf-qNa" secondAttribute="centerX" id="0I1-Ow-Ngb"/>
+                                                        <constraint firstAttribute="centerY" secondItem="1bc-rf-qNa" secondAttribute="centerY" constant="-5" id="djw-JM-YA5"/>
+                                                        <constraint firstAttribute="centerX" secondItem="4XI-NV-072" secondAttribute="centerX" id="vpg-dD-Qp1"/>
+                                                        <constraint firstItem="4XI-NV-072" firstAttribute="top" secondItem="IwY-dz-TSD" secondAttribute="top" constant="8" id="ypR-tx-ysS"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="9TN-0u-X0e" firstAttribute="leading" secondItem="IwY-dz-TSD" secondAttribute="trailing" id="3KS-h0-4eW"/>
@@ -838,9 +838,31 @@
                     </tableView>
                     <connections>
                         <outlet property="allTimeBestViewsLabel" destination="Ml6-Iu-wKc" id="Qxv-NY-gle"/>
+                        <outlet property="allTimeBestViewsOnValueLabel" destination="p0T-y9-dQS" id="5YO-02-oIq"/>
+                        <outlet property="allTimeBestViewsValueLabel" destination="bhJ-yf-eeg" id="G7l-S3-rbY"/>
                         <outlet property="allTimePostsLabel" destination="qTg-V3-QrG" id="GRz-IC-Tff"/>
+                        <outlet property="allTimePostsValueLabel" destination="kyf-cc-9Pz" id="glp-nx-Oy4"/>
+                        <outlet property="allTimeSectionHeaderLabel" destination="5F3-oE-jzA" id="wli-e6-tZo"/>
                         <outlet property="allTimeViewsLabel" destination="SnZ-To-N2p" id="Ldq-K9-G0L"/>
+                        <outlet property="allTimeViewsValueLabel" destination="qJ0-wu-bhs" id="Yu8-6R-SAc"/>
                         <outlet property="allTimeVisitorsLabel" destination="Ixp-TF-kKn" id="WBm-j9-M2D"/>
+                        <outlet property="allTimeVisitorsValueLabel" destination="RsC-iV-YWj" id="vWw-Mw-ZfW"/>
+                        <outlet property="gaugeView" destination="ryH-2t-aEv" id="3wJ-1T-w4p"/>
+                        <outlet property="highestTimeLabel" destination="txh-pI-huu" id="CJD-jf-nzw"/>
+                        <outlet property="highestTimeValueLabel" destination="xx2-Ii-OSN" id="OMM-RT-2P9"/>
+                        <outlet property="percentOnValueLabel" destination="yKD-YK-Mra" id="1kj-Wc-ycx"/>
+                        <outlet property="percentValueLabel" destination="bMI-94-dwk" id="osO-in-bAA"/>
+                        <outlet property="popularPercentViewsLabel" destination="Jvk-tR-6zx" id="XiX-Hy-IbY"/>
+                        <outlet property="popularSectionHeaderLabel" destination="U94-Ix-7EC" id="tWh-0W-j2Y"/>
+                        <outlet property="todayCommentsLabel" destination="eEO-RS-ees" id="JD7-o1-eYF"/>
+                        <outlet property="todayCommentsValueLabel" destination="Wjj-TE-PQq" id="Ij5-60-OOP"/>
+                        <outlet property="todayLikesLabel" destination="agK-gY-zj6" id="VZf-Ts-ynV"/>
+                        <outlet property="todayLikesValueLabel" destination="uBt-dd-93S" id="Gpg-t6-7la"/>
+                        <outlet property="todaySectionHeaderLabel" destination="FV4-Ej-Neu" id="eNc-HB-TKe"/>
+                        <outlet property="todayViewsLabel" destination="4XI-NV-072" id="sVG-hN-QSS"/>
+                        <outlet property="todayViewsValueLabel" destination="1bc-rf-qNa" id="j5b-Iy-lzS"/>
+                        <outlet property="todayVisitorsLabel" destination="UA1-qL-c2p" id="EGp-5t-nrx"/>
+                        <outlet property="todayVisitorsValueLabel" destination="uYJ-c3-5TZ" id="br6-Ok-awO"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L1W-v8-za2" userLabel="First Responder" sceneMemberID="firstResponder"/>

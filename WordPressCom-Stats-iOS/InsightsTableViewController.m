@@ -2,13 +2,41 @@
 #import "WPFontManager+Stats.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
+#import "StatsGaugeView.h"
 
 @interface InsightsTableViewController ()
 
+// Most popular section
+@property (nonatomic, weak) IBOutlet UILabel *popularSectionHeaderLabel;
+@property (nonatomic, weak) IBOutlet UILabel *popularPercentViewsLabel;
+@property (nonatomic, weak) IBOutlet UILabel *highestTimeLabel;
+// All time section
+@property (nonatomic, weak) IBOutlet UILabel *allTimeSectionHeaderLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeViewsLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsLabel;
+// Today section
+@property (nonatomic, weak) IBOutlet UILabel *todaySectionHeaderLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayViewsLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayVisitorsLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayLikesLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayCommentsLabel;
+
+// Values
+@property (nonatomic, weak) IBOutlet UILabel *percentValueLabel;
+@property (nonatomic, weak) IBOutlet StatsGaugeView *gaugeView;
+@property (nonatomic, weak) IBOutlet UILabel *percentOnValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *highestTimeValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *allTimePostsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *allTimeViewsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsOnValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayViewsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayVisitorsValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayLikesValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *todayCommentsValueLabel;
 
 @end
 
