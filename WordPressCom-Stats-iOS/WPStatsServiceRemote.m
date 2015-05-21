@@ -133,16 +133,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
                                                                progressBlock:progressBlock
                                                              completionBlock:^(NSArray *operations)
-    {
-        BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
-        if (!zeroOperationsCancelled) {
-            DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
-        }
-        
-        if (completionHandler && zeroOperationsCancelled) {
-            completionHandler();
-        }
-    }];
+                           {
+                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               if (!zeroOperationsCancelled) {
+                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
+                               }
+                               
+                               if (completionHandler && zeroOperationsCancelled) {
+                                   completionHandler();
+                               }
+                           }];
     
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
     
@@ -154,9 +154,37 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
+                                              progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler
 {
+    NSMutableArray *mutableOperations = [NSMutableArray new];
+
+    if (allTimeCompletion) {
+        [mutableOperations addObject:[self operationForAllTimeStatsWithCompletionHandler:allTimeCompletion]];
+    }
+    if (insightsCompletion) {
+        [mutableOperations addObject:[self operationForInsightsStatsWithCompletionHandler:insightsCompletion]];
+    }
     
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
+                                                               progressBlock:progressBlock
+                                                             completionBlock:^(NSArray *operations)
+                           {
+                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               if (!zeroOperationsCancelled) {
+                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
+                               }
+                               
+                               if (completionHandler && zeroOperationsCancelled) {
+                                   completionHandler();
+                               }
+                           }];
+    
+    [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
+    
+    if (progressBlock) {
+        progressBlock(0, mutableOperations.count);
+    }
 }
 
 
@@ -523,7 +551,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:self.statsPathPrefix
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:failureHandler];

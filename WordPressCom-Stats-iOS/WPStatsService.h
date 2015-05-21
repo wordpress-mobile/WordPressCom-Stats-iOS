@@ -85,6 +85,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler;

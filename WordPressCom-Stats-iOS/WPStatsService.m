@@ -175,9 +175,11 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
-                                   andOverallCompletionHandler:(void (^)())completionHandler
+                                                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
+                                   andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
-    [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
+    [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
+    {
         StatsAllTime *allTime = [StatsAllTime new];
         allTime.numberOfPosts = posts;
         allTime.numberOfPostsValue = postsValue;
@@ -185,23 +187,31 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         allTime.numberOfViewsValue = viewsValue;
         allTime.numberOfVisitors = visitors;
         allTime.numberOfVisitorsValue = visitorsValue;
+        allTime.bestNumberOfViews = bestViews;
+        allTime.bestNumberOfViewsValue = bestViewsValue;
+        allTime.bestViewsOn = bestViewsOn;
         
-        if (completionHandler) {
-            completionHandler(allTime, error);
+        if (allTimeCompletion) {
+            allTimeCompletion(allTime, error);
         }
-    } insightsCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+    }
+                                           insightsCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
+    {
         StatsInsights *insights = [StatsInsights new];
         insights.highestHour = highestHour;
         insights.highestDayOfWeek = highestDayOfWeek;
         insights.highestDayPercent = highestDayPercent;
         insights.highestDayPercentValue = highestDayPercentValue;
         
-        if (completionHandler) {
-            completionHandler(insights, error);
+        if (insightsCompletion) {
+            insightsCompletion(insights, error);
         }
-    } andOverallCompletionHandler:^{
-        if (completionHandler) {
-            completionHandler();
+    }
+                                                       progressBlock:progressBlock
+                                         andOverallCompletionHandler:^
+    {
+        if (overallCompletionHandler) {
+            overallCompletionHandler();
         }
     }];
 }

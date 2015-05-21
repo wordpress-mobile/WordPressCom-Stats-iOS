@@ -10,6 +10,6 @@
 @property (nonatomic, strong) NSNumber *numberOfVisitorsValue;
 @property (nonatomic, copy) NSString *bestNumberOfViews;
 @property (nonatomic, strong) NSNumber *bestNumberOfViewsValue;
-@property (nonatomic, strong) NSDate *bestViewsOn;
+@property (nonatomic, strong) NSString *bestViewsOn;
 
 @end

@@ -48,6 +48,20 @@
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular Day and Time", @"Insights popular section header");
+    self.popularPercentViewsLabel.text = [NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.highestTimeLabel.text = NSLocalizedString(@"hour with most Views", @"Stats Highest Hour Views label");
+    self.allTimeSectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
+    self.allTimePostsLabel.text = [NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.allTimeViewsLabel.text = [NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.allTimeVisitorsLabel.text = [NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.allTimeBestViewsLabel.text = [NSLocalizedString(@"Best Views Ever", @"Stats Best Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.todaySectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
+    self.todayViewsLabel.text = [NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.todayVisitorsLabel.text = [NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.todayLikesLabel.text = [NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.todayCommentsLabel.text = [NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]];
 
 //    NSAttributedString *space = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:10.0f]}];
 //
@@ -84,7 +98,41 @@
 //    [allTimeBestViews appendAttributedString:space];
 //    [allTimeBestViews appendAttributedString:bestViewsLabel];
 //    self.allTimeBestViewsLabel.attributedText = allTimeBestViews;
-    
+    [self retrieveStats];
+}
+
+- (void)retrieveStats
+{
+    __block StatsAllTime *statsAllTime;
+    __block StatsInsights *statsInsights;
+    [self.statsService retrieveInsightsStatsWithAllTimeStatsCompletionHandler:^(StatsAllTime *allTime, NSError *error)
+     {
+         statsAllTime = allTime;
+     }
+                                                    insightsCompletionHandler:^(StatsInsights *insights, NSError *error)
+     {
+         statsInsights = insights;
+     }
+                                                                progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
+     {
+         
+     }
+                                                  andOverallCompletionHandler:^
+     {
+         self.percentValueLabel.text = statsInsights.highestDayPercent;
+         self.gaugeView;
+         self.percentOnValueLabel.text = [NSString stringWithFormat:NSLocalizedString(@"happen on a %@", @"Stats most popular on a day - parameter is a day"), statsInsights.highestDayOfWeek];
+         self.highestTimeValueLabel.text = statsInsights.highestHour;
+         self.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
+         self.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
+         self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
+         self.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
+         self.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
+         self.todayViewsValueLabel.text = nil;
+         self.todayVisitorsValueLabel.text = nil;
+         self.todayLikesValueLabel.text = nil;
+         self.todayCommentsValueLabel.text = nil;
+     }];
 }
 
 @end
