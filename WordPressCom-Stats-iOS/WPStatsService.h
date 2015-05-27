@@ -5,7 +5,7 @@
 #import "StatsAllTime.h"
 #import "StatsInsights.h"
 
-typedef void (^StatsSummaryCompletion)(StatsSummary *summary);
+typedef void (^StatsSummaryCompletion)(StatsSummary *summary, NSError *error);
 typedef void (^StatsVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsGroupCompletion)(StatsGroup *group, NSError *error);
 typedef void (^StatsPostDetailsCompletion)(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error);
@@ -85,6 +85,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                 todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())completionHandler;
 

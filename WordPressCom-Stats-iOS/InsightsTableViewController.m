@@ -120,6 +120,7 @@
 {
     __block StatsAllTime *statsAllTime;
     __block StatsInsights *statsInsights;
+    __block StatsSummary *todaySummary;
     [self.statsService retrieveInsightsStatsWithAllTimeStatsCompletionHandler:^(StatsAllTime *allTime, NSError *error)
      {
          statsAllTime = allTime;
@@ -127,6 +128,10 @@
                                                     insightsCompletionHandler:^(StatsInsights *insights, NSError *error)
      {
          statsInsights = insights;
+     }
+                                                todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+     {
+         todaySummary = summary;
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
@@ -143,10 +148,10 @@
          self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
          self.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
          self.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
-         self.todayViewsValueLabel.text = nil;
-         self.todayVisitorsValueLabel.text = nil;
-         self.todayLikesValueLabel.text = nil;
-         self.todayCommentsValueLabel.text = nil;
+         self.todayViewsValueLabel.text = todaySummary.views;
+         self.todayVisitorsValueLabel.text = todaySummary.visitors;
+         self.todayLikesValueLabel.text = todaySummary.likes;
+         self.todayCommentsValueLabel.text = todaySummary.comments;
      }];
 }
 

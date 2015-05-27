@@ -175,6 +175,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                 todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
@@ -205,6 +206,12 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         
         if (insightsCompletion) {
             insightsCompletion(insights, error);
+        }
+    }
+                                       todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+    {
+        if (todaySummaryCompletion) {
+            todaySummaryCompletion(summary, error);
         }
     }
                                                        progressBlock:progressBlock
@@ -341,7 +348,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     
     StatsSummary *summary = [self.ephemory objectForKey:@"TodayStats"];
     if (summary) {
-        completion(summary);
+        completion(summary, nil);
     }
     
     [self.remote fetchSummaryStatsForDate:[NSDate date]
@@ -353,7 +360,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 
                         [self.ephemory setObject:summary forKey:@"TodayStats"];
 
-                        completion(summary);
+                        completion(summary, nil);
                     }];
 }
 
