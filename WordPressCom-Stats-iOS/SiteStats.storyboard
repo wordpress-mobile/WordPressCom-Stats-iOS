@@ -421,7 +421,7 @@
                                                     <rect key="frame" x="300" y="0.0" width="292" height="149"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8% of Daily Views" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txh-pI-huu">
-                                                            <rect key="frame" x="94" y="123" width="105" height="18"/>
+                                                            <rect key="frame" x="94" y="107" width="105" height="18"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -433,18 +433,18 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MOST POPULAR HOUR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="owa-7G-DL9">
-                                                            <rect key="frame" x="77" y="8" width="139" height="18"/>
+                                                            <rect key="frame" x="77" y="24" width="139" height="18"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="owa-7G-DL9" firstAttribute="top" secondItem="voB-PG-oGO" secondAttribute="top" constant="8" id="37A-zt-rpu"/>
+                                                        <constraint firstItem="owa-7G-DL9" firstAttribute="top" secondItem="voB-PG-oGO" secondAttribute="top" constant="24" id="37A-zt-rpu"/>
                                                         <constraint firstAttribute="centerY" secondItem="xx2-Ii-OSN" secondAttribute="centerY" id="4CI-Bt-hhp"/>
                                                         <constraint firstAttribute="centerX" secondItem="xx2-Ii-OSN" secondAttribute="centerX" id="HQd-KW-3hY"/>
                                                         <constraint firstAttribute="centerX" secondItem="txh-pI-huu" secondAttribute="centerX" id="IUk-cX-Yd5"/>
-                                                        <constraint firstAttribute="bottom" secondItem="txh-pI-huu" secondAttribute="bottom" constant="8" id="cIs-6l-p9A"/>
+                                                        <constraint firstAttribute="bottom" secondItem="txh-pI-huu" secondAttribute="bottom" constant="24" id="cIs-6l-p9A"/>
                                                         <constraint firstAttribute="centerX" secondItem="owa-7G-DL9" secondAttribute="centerX" id="iay-6G-WoS"/>
                                                     </constraints>
                                                 </view>
@@ -452,7 +452,7 @@
                                                     <rect key="frame" x="8" y="0.0" width="292" height="149"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="31% of Weekly Views" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yKD-YK-Mra">
-                                                            <rect key="frame" x="83" y="123" width="126" height="18"/>
+                                                            <rect key="frame" x="83" y="107" width="126" height="18"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -464,7 +464,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MOST POPULAR DAY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-Vc-rtl">
-                                                            <rect key="frame" x="83" y="8" width="127" height="18"/>
+                                                            <rect key="frame" x="83" y="24" width="127" height="18"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -472,8 +472,8 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="centerY" secondItem="dPU-t1-atl" secondAttribute="centerY" id="QNp-Jv-nqR"/>
-                                                        <constraint firstAttribute="bottom" secondItem="yKD-YK-Mra" secondAttribute="bottom" constant="8" id="cAv-5w-Qdq"/>
-                                                        <constraint firstItem="LqR-Vc-rtl" firstAttribute="top" secondItem="csy-iV-Ucm" secondAttribute="top" constant="8" id="goK-qU-22u"/>
+                                                        <constraint firstAttribute="bottom" secondItem="yKD-YK-Mra" secondAttribute="bottom" constant="24" id="cAv-5w-Qdq"/>
+                                                        <constraint firstItem="LqR-Vc-rtl" firstAttribute="top" secondItem="csy-iV-Ucm" secondAttribute="top" constant="24" id="goK-qU-22u"/>
                                                         <constraint firstAttribute="centerX" secondItem="dPU-t1-atl" secondAttribute="centerX" id="pTv-hu-BaW"/>
                                                         <constraint firstAttribute="centerX" secondItem="yKD-YK-Mra" secondAttribute="centerX" id="yHd-Oh-E3K"/>
                                                         <constraint firstAttribute="centerX" secondItem="LqR-Vc-rtl" secondAttribute="centerX" id="yzq-6H-kYH"/>
@@ -724,12 +724,23 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AgS-4W-V5O" userLabel="Divider View">
+                                                            <rect key="frame" x="145" y="0.0" width="1" height="65"/>
+                                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="1" id="Qbv-PO-urv"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="cb8-Pp-7FM"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="centerX" secondItem="agK-gY-zj6" secondAttribute="centerX" id="GFt-R7-LpT"/>
+                                                        <constraint firstItem="AgS-4W-V5O" firstAttribute="top" secondItem="iwI-u2-AsI" secondAttribute="top" id="Hft-uX-HKa"/>
+                                                        <constraint firstAttribute="bottom" secondItem="AgS-4W-V5O" secondAttribute="bottom" id="Pju-s6-nXU"/>
                                                         <constraint firstItem="agK-gY-zj6" firstAttribute="top" secondItem="iwI-u2-AsI" secondAttribute="top" constant="8" id="QXr-bm-tAN"/>
                                                         <constraint firstAttribute="centerY" secondItem="uBt-dd-93S" secondAttribute="centerY" constant="-5" id="Vo8-SI-RAS"/>
                                                         <constraint firstAttribute="centerX" secondItem="uBt-dd-93S" secondAttribute="centerX" id="a3j-CJ-NBI"/>
+                                                        <constraint firstAttribute="trailing" secondItem="AgS-4W-V5O" secondAttribute="trailing" id="qqG-8p-P8C"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vap-Tr-7k3">
@@ -770,12 +781,23 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZxX-Mc-USG" userLabel="Divider View">
+                                                            <rect key="frame" x="145" y="0.0" width="1" height="65"/>
+                                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="Z6a-z8-trh"/>
+                                                                <constraint firstAttribute="width" constant="1" id="apn-Vx-Jr3"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="centerY" secondItem="uYJ-c3-5TZ" secondAttribute="centerY" constant="-5" id="0Et-UT-pN0"/>
                                                         <constraint firstAttribute="centerX" secondItem="uYJ-c3-5TZ" secondAttribute="centerX" id="1JX-2c-Y5p"/>
+                                                        <constraint firstAttribute="bottom" secondItem="ZxX-Mc-USG" secondAttribute="bottom" id="5qc-Cv-4Ik"/>
                                                         <constraint firstAttribute="centerX" secondItem="UA1-qL-c2p" secondAttribute="centerX" id="Scc-6Z-mWU"/>
+                                                        <constraint firstAttribute="trailing" secondItem="ZxX-Mc-USG" secondAttribute="trailing" id="nh0-lt-MLy"/>
                                                         <constraint firstItem="UA1-qL-c2p" firstAttribute="top" secondItem="9TN-0u-X0e" secondAttribute="top" constant="8" id="num-S2-ReE"/>
+                                                        <constraint firstItem="ZxX-Mc-USG" firstAttribute="top" secondItem="9TN-0u-X0e" secondAttribute="top" id="zG1-hw-tEd"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IwY-dz-TSD">
@@ -793,9 +815,20 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gaP-FE-Uu4" userLabel="Divider View">
+                                                            <rect key="frame" x="145" y="0.0" width="1" height="65"/>
+                                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="1" id="GV0-JN-SmU"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="KFA-Qw-kna"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="centerX" secondItem="1bc-rf-qNa" secondAttribute="centerX" id="0I1-Ow-Ngb"/>
+                                                        <constraint firstAttribute="bottom" secondItem="gaP-FE-Uu4" secondAttribute="bottom" id="Axi-gZ-Awi"/>
+                                                        <constraint firstAttribute="trailing" secondItem="gaP-FE-Uu4" secondAttribute="trailing" id="EkH-7F-gau"/>
+                                                        <constraint firstItem="gaP-FE-Uu4" firstAttribute="top" secondItem="IwY-dz-TSD" secondAttribute="top" id="GVr-LV-PG9"/>
                                                         <constraint firstAttribute="centerY" secondItem="1bc-rf-qNa" secondAttribute="centerY" constant="-5" id="djw-JM-YA5"/>
                                                         <constraint firstAttribute="centerX" secondItem="4XI-NV-072" secondAttribute="centerX" id="vpg-dD-Qp1"/>
                                                         <constraint firstItem="4XI-NV-072" firstAttribute="top" secondItem="IwY-dz-TSD" secondAttribute="top" constant="8" id="ypR-tx-ysS"/>
