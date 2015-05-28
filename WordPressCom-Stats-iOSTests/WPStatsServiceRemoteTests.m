@@ -863,7 +863,7 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-insights.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+    [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
          XCTAssertTrue([@"9 AM" isEqualToString:highestHour]);
          XCTAssertTrue([@"Saturday" isEqualToString:highestDayOfWeek]);
          XCTAssertTrue([@"31%" isEqualToString:highestDayPercent]);

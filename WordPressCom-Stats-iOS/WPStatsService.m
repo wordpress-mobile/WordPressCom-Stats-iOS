@@ -196,10 +196,12 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             allTimeCompletion(allTime, error);
         }
     }
-                                           insightsCompletionHandler:^(NSString *highestHour, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
+                                           insightsCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue,NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
     {
         StatsInsights *insights = [StatsInsights new];
         insights.highestHour = highestHour;
+        insights.highestHourPercent = highestHourPercent;
+        insights.highestHourPercentValue = highestHourPercentValue;
         insights.highestDayOfWeek = highestDayOfWeek;
         insights.highestDayPercent = highestDayPercent;
         insights.highestDayPercentValue = highestDayPercentValue;

@@ -570,6 +570,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     {
         NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
         NSInteger highestHourValue = [insightsDict numberForKey:@"highest_hour"].integerValue;
+        NSNumber *highestHourPercentValue = @([insightsDict numberForKey:@"highest_hour_percent"].floatValue / 100.0);
         NSInteger highestDayOfWeekValue = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
         NSNumber *highestDayPercentValue = @([insightsDict numberForKey:@"highest_day_percent"].floatValue / 100.0);
         
@@ -589,14 +590,15 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         dateFormatter.dateFormat = @"h a";
         NSString *highestHour = [dateFormatter stringFromDate:date];
         
+        NSString *highestHourPercent = [self localizedStringForNumber:highestHourPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
         NSString *highestDayPercent = [self localizedStringForNumber:highestDayPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
         
-        completionHandler(highestHour, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
+        completionHandler(highestHour, highestHourPercent, highestHourPercentValue, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
     };
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
-            completionHandler(nil, nil, nil, nil, error);
+            completionHandler(nil, nil, nil, nil, nil, nil, error);
         }
     };
     

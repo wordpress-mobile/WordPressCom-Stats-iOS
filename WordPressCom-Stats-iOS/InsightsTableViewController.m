@@ -8,8 +8,10 @@
 
 // Most popular section
 @property (nonatomic, weak) IBOutlet UILabel *popularSectionHeaderLabel;
-@property (nonatomic, weak) IBOutlet UILabel *popularPercentViewsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *highestTimeLabel;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularDayLabel;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularDayPercentWeeklyViews;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularHourLabel;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularHourPercentDailyViews;
 // All time section
 @property (nonatomic, weak) IBOutlet UILabel *allTimeSectionHeaderLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsLabel;
@@ -24,10 +26,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *todayCommentsLabel;
 
 // Values
-@property (nonatomic, weak) IBOutlet UILabel *percentValueLabel;
-@property (nonatomic, weak) IBOutlet StatsGaugeView *gaugeView;
-@property (nonatomic, weak) IBOutlet UILabel *percentOnValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *highestTimeValueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularDay;
+@property (nonatomic, weak) IBOutlet UILabel *mostPopularHour;
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeViewsValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsValueLabel;
@@ -49,9 +49,9 @@
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular Day and Time", @"Insights popular section header");
-    self.popularPercentViewsLabel.text = [NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    self.highestTimeLabel.text = NSLocalizedString(@"hour with most Views", @"Stats Highest Hour Views label");
+    self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
+    self.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    self.mostPopularHourLabel.text = [NSLocalizedString(@"Most popular hour", @"Insights most popular hour section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
     self.allTimeSectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
     self.allTimePostsLabel.text = [NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]];
     self.allTimeViewsLabel.text = [NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]];
@@ -64,10 +64,10 @@
     self.todayCommentsLabel.text = [NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]];
     
     // Default values for no data
-    self.percentValueLabel.text = @"--";
-    self.gaugeView.percentageFilled = 0.0f;
-    self.percentOnValueLabel.text = @"";
-    self.highestTimeValueLabel.text = @"--";
+    self.mostPopularDay.text = @"--";
+    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Weekly Views", @"Insights Percent of weekly views label with value"), @"--"];
+    self.mostPopularHour.text = @"--";
+    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Daily Views", @"Insights Percent of daily views label with value"), @"--"];
     self.allTimePostsValueLabel.text = @"--";
     self.allTimeViewsValueLabel.text = @"--";
     self.allTimeVisitorsValueLabel.text = @"--";
@@ -139,10 +139,10 @@
      }
                                                   andOverallCompletionHandler:^
      {
-         self.percentValueLabel.text = statsInsights.highestDayPercent;
-         self.gaugeView.percentageFilled = statsInsights.highestDayPercentValue.floatValue;
-         self.percentOnValueLabel.text = [NSString stringWithFormat:NSLocalizedString(@"happen on a %@", @"Stats most popular on a day - parameter is a day"), statsInsights.highestDayOfWeek];
-         self.highestTimeValueLabel.text = statsInsights.highestHour;
+         self.mostPopularDay.text = statsInsights.highestDayOfWeek;
+         self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Weekly Views", @"Insights Percent of weekly views label with value"), statsInsights.highestDayPercent];
+         self.mostPopularHour.text = statsInsights.highestHour;
+         self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Daily Views", @"Insights Percent of daily views label with value"), statsInsights.highestHourPercent];
          self.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
          self.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
          self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
