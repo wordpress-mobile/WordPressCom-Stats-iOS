@@ -119,7 +119,8 @@
 
 - (void)retrieveStats
 {
-    if (self.refreshControl.isRefreshing == NO) {
+    if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
+        && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
     }
     
@@ -140,7 +141,14 @@
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
+         if (numberOfFinishedOperations == 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {
+             [self.statsProgressViewDelegate statsViewControllerDidBeginLoadingStats:self];
+         }
          
+         if (numberOfFinishedOperations > 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewController:loadingProgressPercentage:)]) {
+             CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
+             [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
+         }
      }
                                                   andOverallCompletionHandler:^
      {
@@ -164,6 +172,10 @@
          
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
+         
+         if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
+             [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
+         }
      }];
 }
 

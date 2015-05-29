@@ -12,12 +12,13 @@ typedef NS_ENUM(NSInteger, StatsType)
     StatsTypeYears
 };
 
-@interface WPStatsViewController () <StatsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface WPStatsViewController () <StatsProgressViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *statsTypeSegmentControl;
-@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIProgressView *insightsProgressView;
+@property (nonatomic, weak) IBOutlet UIProgressView *statsProgressView;
 @property (nonatomic, weak) IBOutlet UIView *insightsContainerView;
 @property (nonatomic, weak) IBOutlet UIView *statsContainerView;
 @property (nonatomic, weak) UIActionSheet *periodActionSheet;
@@ -60,12 +61,13 @@ typedef NS_ENUM(NSInteger, StatsType)
         StatsTableViewController *tableVC = (StatsTableViewController *)segue.destinationViewController;
         self.statsTableViewController = tableVC;
         tableVC.statsDelegate = self.statsDelegate;
-        tableVC.statsTableDelegate = self;
+        tableVC.statsProgressViewDelegate = self;
         tableVC.statsService = self.statsService;
     } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
         InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
         self.insightsTableViewController = insightsTableViewController;
         insightsTableViewController.statsService = self.statsService;
+        insightsTableViewController.statsProgressViewDelegate = self;
     }
 }
 
@@ -120,27 +122,48 @@ typedef NS_ENUM(NSInteger, StatsType)
 #pragma mark StatsTableViewControllerDelegate methods
 
 
-- (void)statsTableViewControllerDidBeginLoadingStats:(UIViewController *)controller
+- (void)statsViewControllerDidBeginLoadingStats:(UIViewController *)controller
 {
-    self.progressView.progress = 0.03f;
-    self.progressView.hidden = NO;
+    UIProgressView *progressView = nil;
+    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+        progressView = self.insightsProgressView;
+    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+        progressView = self.statsProgressView;
+    }
+
+    progressView.progress = 0.03f;
+    progressView.hidden = NO;
 }
 
-- (void)statsTableViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage
+- (void)statsViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage
 {
-    self.progressView.hidden = NO;
-    [self.progressView setProgress:percentage animated:YES];
+    UIProgressView *progressView = nil;
+    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+        progressView = self.insightsProgressView;
+    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+        progressView = self.statsProgressView;
+    }
+    
+    progressView.hidden = NO;
+    [progressView setProgress:percentage animated:YES];
 }
 
-- (void)statsTableViewControllerDidEndLoadingStats:(StatsTableViewController *)controller
+- (void)statsViewControllerDidEndLoadingStats:(UIViewController *)controller
 {
+    UIProgressView *progressView = nil;
+    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+        progressView = self.insightsProgressView;
+    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+        progressView = self.statsProgressView;
+    }
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.progressView.alpha = 0.0f;
+            progressView.alpha = 0.0f;
         }
                          completion:^(BOOL finished) {
-                             self.progressView.alpha = 1.0f;
-                             self.progressView.hidden = YES;
+                             progressView.alpha = 1.0f;
+                             progressView.hidden = YES;
                          }];
     });
 }

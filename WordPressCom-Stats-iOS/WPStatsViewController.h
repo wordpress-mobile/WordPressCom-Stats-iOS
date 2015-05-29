@@ -2,12 +2,21 @@
 #import "StatsTableViewController.h"
 
 @class WPStatsViewController;
+
 @protocol WPStatsViewControllerDelegate <NSObject>
 
 @optional
 
 - (void)statsViewController:(WPStatsViewController *)controller didSelectViewWebStatsForSiteID:(NSNumber *)siteID;
 - (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
+
+@end
+
+@protocol StatsProgressViewDelegate <NSObject>
+
+- (void)statsViewControllerDidBeginLoadingStats:(UIViewController *)controller;
+- (void)statsViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage;
+- (void)statsViewControllerDidEndLoadingStats:(UIViewController *)controller;
 
 @end
 

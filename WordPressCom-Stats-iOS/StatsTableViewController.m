@@ -543,7 +543,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 #endif
     
-    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
+    if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
     }
@@ -760,13 +760,13 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      }
                                  progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
     {
-        if (numberOfFinishedOperations == 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]) {
-            [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
+        if (numberOfFinishedOperations == 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {
+            [self.statsProgressViewDelegate statsViewControllerDidBeginLoadingStats:self];
         }
         
-        if (numberOfFinishedOperations > 0 && [self.statsTableDelegate respondsToSelector:@selector(statsTableViewController:loadingProgressPercentage:)]) {
+        if (numberOfFinishedOperations > 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewController:loadingProgressPercentage:)]) {
             CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
-            [self.statsTableDelegate statsTableViewController:self loadingProgressPercentage:percentage];
+            [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
         }
      }
                    andOverallCompletionHandler:^
@@ -778,8 +778,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          
-         if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidEndLoadingStats:)]) {
-             [self.statsTableDelegate statsTableViewControllerDidEndLoadingStats:self];
+         if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
+             [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
          }
      }];
 }

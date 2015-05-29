@@ -1277,7 +1277,7 @@
                                     <segue destination="Pq6-gc-ScC" kind="embed" identifier="InsightsTableEmbed" id="Spw-SF-Sb1"/>
                                 </connections>
                             </containerView>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jad-aV-V2h">
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jad-aV-V2h" userLabel="Insights Progress View">
                                 <rect key="frame" x="0.0" y="106" width="600" height="2"/>
                                 <color key="trackTintColor" red="0.9137254901960784" green="0.93725490196078431" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
@@ -1294,17 +1294,24 @@
                                     <action selector="statsTypeControlDidChange:" destination="qzH-Vg-Gi3" eventType="valueChanged" id="bqZ-E6-PAf"/>
                                 </connections>
                             </segmentedControl>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DZG-lv-pMh" userLabel="Stats Progress View">
+                                <rect key="frame" x="0.0" y="106" width="600" height="2"/>
+                                <color key="trackTintColor" red="0.91372549020000005" green="0.93725490199999995" blue="0.95294117649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="jad-aV-V2h" secondAttribute="trailing" constant="-16" id="4gP-kc-Crr"/>
+                            <constraint firstAttribute="trailing" secondItem="DZG-lv-pMh" secondAttribute="trailing" id="6lL-lN-PtO"/>
                             <constraint firstItem="eay-2f-Ldo" firstAttribute="top" secondItem="Dqo-w7-nT9" secondAttribute="bottom" id="7AQ-qx-wdD"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="9Zh-6H-jIN"/>
+                            <constraint firstItem="DZG-lv-pMh" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="BKD-XG-ZcQ"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="top" secondItem="IUN-av-KWH" secondAttribute="bottom" constant="8" id="Baf-6r-wmp"/>
                             <constraint firstItem="ENG-tq-nCx" firstAttribute="top" secondItem="jad-aV-V2h" secondAttribute="bottom" id="DSY-Ka-2fF"/>
                             <constraint firstItem="Dqo-w7-nT9" firstAttribute="leading" secondItem="yO0-Lr-iKb" secondAttribute="leading" id="H21-0b-TGe"/>
                             <constraint firstItem="Dqo-w7-nT9" firstAttribute="top" secondItem="ysq-ij-dbS" secondAttribute="bottom" constant="8" id="Hj7-jN-Gy9"/>
                             <constraint firstItem="ysq-ij-dbS" firstAttribute="trailing" secondItem="yO0-Lr-iKb" secondAttribute="trailingMargin" constant="8" id="IqO-Bi-pb0"/>
+                            <constraint firstItem="Dqo-w7-nT9" firstAttribute="top" secondItem="DZG-lv-pMh" secondAttribute="bottom" id="MSG-WT-uZh"/>
                             <constraint firstAttribute="trailing" secondItem="ENG-tq-nCx" secondAttribute="trailing" id="RNR-wQ-XR1"/>
                             <constraint firstAttribute="trailing" secondItem="Dqo-w7-nT9" secondAttribute="trailing" id="Rdf-Qm-SJq"/>
                             <constraint firstAttribute="centerX" secondItem="ysq-ij-dbS" secondAttribute="centerX" id="ZcA-XO-INA"/>
@@ -1318,8 +1325,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="insightsContainerView" destination="Dqo-w7-nT9" id="p5E-yD-WdY"/>
-                        <outlet property="progressView" destination="jad-aV-V2h" id="LXx-ga-2HN"/>
+                        <outlet property="insightsProgressView" destination="jad-aV-V2h" id="IQO-xK-dhD"/>
                         <outlet property="statsContainerView" destination="ENG-tq-nCx" id="JN7-qT-YUE"/>
+                        <outlet property="statsProgressView" destination="DZG-lv-pMh" id="gEs-bm-z0q"/>
                         <outlet property="statsTypeSegmentControl" destination="ysq-ij-dbS" id="k7Y-xV-xMm"/>
                     </connections>
                 </viewController>
