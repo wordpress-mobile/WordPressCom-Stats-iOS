@@ -49,6 +49,8 @@
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
+    [self setupRefreshControl];
+
     self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
     self.popularSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
     self.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
@@ -107,8 +109,20 @@
     [self retrieveStats];
 }
 
+
+- (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
+{
+    [self.statsService expireAllItemsInCache];
+    [self retrieveStats];
+}
+
+
 - (void)retrieveStats
 {
+    if (self.refreshControl.isRefreshing == NO) {
+        self.refreshControl = nil;
+    }
+    
     __block StatsAllTime *statsAllTime;
     __block StatsInsights *statsInsights;
     __block StatsSummary *todaySummary;
@@ -147,7 +161,21 @@
          self.todayLikesValueLabel.textColor = todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
          self.todayCommentsValueLabel.text = todaySummary.comments;
          self.todayCommentsValueLabel.textColor = todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
+         
+         [self setupRefreshControl];
+         [self.refreshControl endRefreshing];
      }];
+}
+
+- (void)setupRefreshControl
+{
+    if (self.refreshControl) {
+        return;
+    }
+    
+    UIRefreshControl *refreshControl = [UIRefreshControl new];
+    [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
 
 @end
