@@ -77,67 +77,98 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
-    DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
+    id visitsData = cacheDictionary[@(StatsSectionGraph)];
+    id eventsData = cacheDictionary[@(StatsSectionEvents)];
+    id postsData = cacheDictionary[@(StatsSectionPosts)];
+    id referrersData = cacheDictionary[@(StatsSectionReferrers)];
+    id clicksData = cacheDictionary[@(StatsSectionClicks)];
+    id countryData = cacheDictionary[@(StatsSectionCountry)];
+    id videosData = cacheDictionary[@(StatsSectionVideos)];
+    id authorsData = cacheDictionary[@(StatsSectionAuthors)];
+    id searchTermsData = cacheDictionary[@(StatsSectionSearchTerms)];
+    id commentsAuthorData = cacheDictionary[@(StatsSubSectionCommentsByAuthor)];
+    id commentsPostsData = cacheDictionary[@(StatsSubSectionCommentsByPosts)];
+    id tagsCategoriesData = cacheDictionary[@(StatsSectionTagsCategories)];
+    id followersDotComData = cacheDictionary[@(StatsSubSectionFollowersDotCom)];
+    id followersEmailData = cacheDictionary[@(StatsSubSectionFollowersEmail)];
+    id publicizeData = cacheDictionary[@(StatsSectionPublicize)];
     
-    if (cacheDictionary && cacheDictionary.count == 15) {
+    if (cacheDictionary
+        && (!visitsCompletion || visitsData)
+        && (!eventsCompletion || eventsData)
+        && (!postsCompletion || postsData)
+        && (!referrersCompletion || referrersData)
+        && (!clicksCompletion || clicksData)
+        && (!countryCompletion || countryData)
+        && (!videosCompletion || videosData)
+        && (!authorsCompletion || authorsData)
+        && (!searchTermsCompletion || searchTermsData)
+        && (!commentsAuthorsCompletion || commentsAuthorData)
+        && (!commentsPostsCompletion || commentsPostsData)
+        && (!tagsCategoriesCompletion || tagsCategoriesData)
+        && (!followersDotComCompletion || followersDotComData)
+        && (!followersEmailCompletion || followersEmailData)
+        && (!publicizeCompletion || publicizeData)
+    ) {
+        DDLogVerbose(@"retrieveAllStatsForDate - Cached data exists.");
         if (visitsCompletion) {
-            visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
+            visitsCompletion(visitsData, nil);
         }
 
         if (eventsCompletion) {
-            eventsCompletion(cacheDictionary[@(StatsSectionEvents)], nil);
+            eventsCompletion(eventsData, nil);
         }
 
         if (postsCompletion) {
-            postsCompletion(cacheDictionary[@(StatsSectionPosts)], nil);
+            postsCompletion(postsData, nil);
         }
     
         if (referrersCompletion) {
-            referrersCompletion(cacheDictionary[@(StatsSectionReferrers)], nil);
+            referrersCompletion(referrersData, nil);
         }
     
         if (clicksCompletion) {
-            clicksCompletion(cacheDictionary[@(StatsSectionClicks)], nil);
+            clicksCompletion(clicksData, nil);
         }
     
         if (countryCompletion) {
-            countryCompletion(cacheDictionary[@(StatsSectionCountry)], nil);
+            countryCompletion(countryData, nil);
         }
     
         if (videosCompletion) {
-            videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
+            videosCompletion(videosData, nil);
         }
     
         if (authorsCompletion) {
-            authorsCompletion(cacheDictionary[@(StatsSectionAuthors)], nil);
+            authorsCompletion(authorsData, nil);
         }
         
         if (searchTermsCompletion) {
-            searchTermsCompletion(cacheDictionary[@(StatsSectionSearchTerms)], nil);
+            searchTermsCompletion(searchTermsData, nil);
         }
         
         if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
+            commentsAuthorsCompletion(commentsAuthorData, nil);
         }
         
         if (commentsPostsCompletion) {
-            commentsPostsCompletion(cacheDictionary[@(StatsSubSectionCommentsByPosts)], nil);
+            commentsPostsCompletion(commentsPostsData, nil);
         }
     
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(cacheDictionary[@(StatsSectionTagsCategories)], nil);
+            tagsCategoriesCompletion(tagsCategoriesData, nil);
         }
     
         if (followersDotComCompletion) {
-            followersDotComCompletion(cacheDictionary[@(StatsSubSectionFollowersDotCom)], nil);
+            followersDotComCompletion(followersDotComData, nil);
         }
     
         if (followersEmailCompletion) {
-            followersEmailCompletion(cacheDictionary[@(StatsSubSectionFollowersEmail)], nil);
+            followersEmailCompletion(followersEmailData, nil);
         }
     
         if (publicizeCompletion) {
-            publicizeCompletion(cacheDictionary[@(StatsSectionPublicize)], nil);
+            publicizeCompletion(publicizeData, nil);
         }
         
         completionHandler();
