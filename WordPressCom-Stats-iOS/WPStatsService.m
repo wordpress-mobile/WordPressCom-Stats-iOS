@@ -211,16 +211,21 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
     NSString *cacheKey = @"BatchInsights";
+    NSString *allTimeCacheKey = @"AllTime";
+    NSString *insightsCacheKey = @"Insights";
+    NSString *todayCacheKey = @"Today";
+    
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:cacheKey];
     if (cacheDictionary.count == 3) {
+        DDLogVerbose(@"retrieveInsightsStats - Cached data exists.");
         if (allTimeCompletion) {
-            allTimeCompletion(cacheDictionary[@"AllTime"], nil);
+            allTimeCompletion(cacheDictionary[allTimeCacheKey], nil);
         }
         if (insightsCompletion) {
-            insightsCompletion(cacheDictionary[@"Insights"], nil);
+            insightsCompletion(cacheDictionary[insightsCacheKey], nil);
         }
         if (todaySummaryCompletion) {
-            todaySummaryCompletion(cacheDictionary[@"Today"], nil);
+            todaySummaryCompletion(cacheDictionary[todayCacheKey], nil);
         }
         
         if (overallCompletionHandler) {
@@ -243,6 +248,8 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         allTime.bestNumberOfViewsValue = bestViewsValue;
         allTime.bestViewsOn = bestViewsOn;
         
+        cacheDictionary[allTimeCacheKey] = allTime;
+        
         if (allTimeCompletion) {
             allTimeCompletion(allTime, error);
         }
@@ -257,12 +264,16 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         insights.highestDayPercent = highestDayPercent;
         insights.highestDayPercentValue = highestDayPercentValue;
         
+        cacheDictionary[insightsCacheKey] = insights;
+        
         if (insightsCompletion) {
             insightsCompletion(insights, error);
         }
     }
                                        todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
     {
+        cacheDictionary[todayCacheKey] = summary;
+        
         if (todaySummaryCompletion) {
             todaySummaryCompletion(summary, error);
         }
