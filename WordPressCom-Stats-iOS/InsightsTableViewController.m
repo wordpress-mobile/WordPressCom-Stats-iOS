@@ -140,9 +140,13 @@
          self.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
          self.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
          self.todayViewsValueLabel.text = todaySummary.views;
+         self.todayViewsValueLabel.textColor = todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
          self.todayVisitorsValueLabel.text = todaySummary.visitors;
+         self.todayVisitorsValueLabel.textColor = todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
          self.todayLikesValueLabel.text = todaySummary.likes;
+         self.todayLikesValueLabel.textColor = todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
          self.todayCommentsValueLabel.text = todaySummary.comments;
+         self.todayCommentsValueLabel.textColor = todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
      }];
 }
 
