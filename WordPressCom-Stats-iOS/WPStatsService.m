@@ -210,6 +210,26 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
+    NSString *cacheKey = @"BatchInsights";
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:cacheKey];
+    if (cacheDictionary.count == 3) {
+        if (allTimeCompletion) {
+            allTimeCompletion(cacheDictionary[@"AllTime"], nil);
+        }
+        if (insightsCompletion) {
+            insightsCompletion(cacheDictionary[@"Insights"], nil);
+        }
+        if (todaySummaryCompletion) {
+            todaySummaryCompletion(cacheDictionary[@"Today"], nil);
+        }
+        
+        if (overallCompletionHandler) {
+            overallCompletionHandler();
+        }
+        
+        return;
+    }
+
     [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
     {
         StatsAllTime *allTime = [StatsAllTime new];
