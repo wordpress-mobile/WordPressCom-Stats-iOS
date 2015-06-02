@@ -1,7 +1,22 @@
 #import <UIKit/UIKit.h>
 #import "StatsTableViewController.h"
 
+typedef NS_ENUM(NSInteger, StatsType)
+{
+    StatsTypeInsights,
+    StatsTypeDays,
+    StatsTypeWeeks,
+    StatsTypeMonths,
+    StatsTypeYears
+};
+
 @class WPStatsViewController;
+
+@protocol WPStatsTypeSelectionDelegate <NSObject>
+
+- (void)viewController:(UIViewController *)viewController changeStatsTypeSelection:(StatsType)statsType;
+
+@end
 
 @protocol WPStatsViewControllerDelegate <NSObject>
 

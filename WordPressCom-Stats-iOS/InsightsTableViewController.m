@@ -197,6 +197,17 @@
 }
 
 
+#pragma mark - UITableViewDelegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (indexPath.section == 3 && indexPath.row == 0) {
+        
+    }
+}
+
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
     [self.statsService expireAllItemsInCache];

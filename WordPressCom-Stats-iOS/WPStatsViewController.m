@@ -3,15 +3,6 @@
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
 
-typedef NS_ENUM(NSInteger, StatsType)
-{
-    StatsTypeInsights,
-    StatsTypeDays,
-    StatsTypeWeeks,
-    StatsTypeMonths,
-    StatsTypeYears
-};
-
 @interface WPStatsViewController () <StatsProgressViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
@@ -118,6 +109,15 @@ typedef NS_ENUM(NSInteger, StatsType)
     
 }
 
+
+#pragma mark WPStatsTypeSelectionDelegate methods
+
+- (void)viewController:(UIViewController *)viewController changeStatsTypeSelection:(StatsType)statsType
+{
+    self.statsType = statsType;
+    self.statsTypeSegmentControl.selectedSegmentIndex = statsType;
+    // TODO - Finish selection
+}
 
 #pragma mark StatsTableViewControllerDelegate methods
 
