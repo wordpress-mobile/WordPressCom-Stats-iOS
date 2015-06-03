@@ -217,7 +217,7 @@
     if (self.showingAbbreviatedSegments && (wasShowingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAbbreviatedSegments];
         
-    } else if (wasShowingAbbreviatedSegments && (self.showingAbbreviatedSegments == NO || forceUpdate)) {
+    } else if ((wasShowingAbbreviatedSegments || forceUpdate) && self.showingAbbreviatedSegments == NO) {
         [self showAllSegments];
     }
 }
