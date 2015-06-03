@@ -204,7 +204,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 2 && indexPath.row == 0) {
+    if (indexPath.section == 2) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsTypeSelection:StatsTypeDays];
         }
