@@ -197,14 +197,17 @@
 }
 
 
+
 #pragma mark - UITableViewDelegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 3 && indexPath.row == 0) {
-        
+    if (indexPath.section == 2 && indexPath.row == 0) {
+        if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
+            [self.statsTypeSelectionDelegate viewController:self changeStatsTypeSelection:StatsTypeDays];
+        }
     }
 }
 

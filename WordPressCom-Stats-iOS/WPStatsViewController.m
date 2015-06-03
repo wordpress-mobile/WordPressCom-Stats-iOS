@@ -3,7 +3,7 @@
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
 
-@interface WPStatsViewController () <StatsProgressViewDelegate, UIActionSheetDelegate>
+@interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsTypeSelectionDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;
@@ -59,6 +59,7 @@
         self.insightsTableViewController = insightsTableViewController;
         insightsTableViewController.statsService = self.statsService;
         insightsTableViewController.statsProgressViewDelegate = self;
+        insightsTableViewController.statsTypeSelectionDelegate = self;
     }
 }
 
@@ -69,7 +70,7 @@
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 
     [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
-    [self updateSegmentedControl];
+    [self updateSegmentedControlForceUpdate:NO];
 }
 
 
@@ -114,9 +115,13 @@
 
 - (void)viewController:(UIViewController *)viewController changeStatsTypeSelection:(StatsType)statsType
 {
+    self.lastSelectedStatsType = statsType;
     self.statsType = statsType;
-    self.statsTypeSegmentControl.selectedSegmentIndex = statsType;
-    // TODO - Finish selection
+
+    [self updateSegmentedControlForceUpdate:YES];
+
+    self.insightsContainerView.hidden = YES;
+    self.statsContainerView.hidden = NO;
 }
 
 #pragma mark StatsTableViewControllerDelegate methods
@@ -199,7 +204,7 @@
 
 #pragma mark - Private methods
 
-- (void)updateSegmentedControl
+- (void)updateSegmentedControlForceUpdate:(BOOL)forceUpdate
 {
     if (IS_IPHONE == NO) {
         return;
@@ -209,10 +214,10 @@
     BOOL wasShowingAbbreviatedSegments = self.showingAbbreviatedSegments;
     self.showingAbbreviatedSegments = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
     
-    if (self.showingAbbreviatedSegments && wasShowingAbbreviatedSegments == NO) {
+    if (self.showingAbbreviatedSegments && (wasShowingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAbbreviatedSegments];
         
-    } else if (wasShowingAbbreviatedSegments && self.showingAbbreviatedSegments == NO) {
+    } else if (wasShowingAbbreviatedSegments && (self.showingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAllSegments];
     }
 }
