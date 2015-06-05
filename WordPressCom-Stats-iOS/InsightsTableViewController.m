@@ -108,6 +108,7 @@
     allTimesPostsTextAttachment.image = postsImage;
     [allTimesPostsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesPostsTextAttachment] atIndex:0];
     [allTimesPostsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [allTimesPostsText appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
     self.allTimePostsLabel.attributedText = allTimesPostsText;
     self.allTimePostsLabel.textColor = [WPStyleGuide greyDarken20];
 
@@ -117,6 +118,7 @@
     allTimesViewsTextAttachment.image = viewsImage;
     [allTimesViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesViewsTextAttachment] atIndex:0];
     [allTimesViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [allTimesViewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
     self.allTimeViewsLabel.attributedText = allTimesViewsText;
     self.allTimeViewsLabel.textColor = [WPStyleGuide greyDarken20];
 
@@ -126,6 +128,7 @@
     allTimesVisitorsTextAttachment.image = visitorsImage;
     [allTimesVisitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesVisitorsTextAttachment] atIndex:0];
     [allTimesVisitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [allTimesVisitorsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
     self.allTimeVisitorsLabel.attributedText = allTimesVisitorsText;
     self.allTimeVisitorsLabel.textColor = [WPStyleGuide greyDarken20];
     
@@ -153,6 +156,7 @@
     likesTextAttachment.image = likesImage;
     [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
     [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [likesText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
     self.todayLikesLabel.attributedText = likesText;
     self.todayLikesLabel.textColor = [WPStyleGuide greyDarken20];
     
