@@ -166,32 +166,32 @@
     self.todayCommentsLabel.textColor = [WPStyleGuide greyDarken20];
     
     // Default values for no data
-    self.mostPopularDay.text = @"--";
-    self.mostPopularDay.textColor = [WPStyleGuide greyDarken30];
-    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"--"];
+    self.mostPopularDay.text = @"-";
+    self.mostPopularDay.textColor = [WPStyleGuide greyLighten20];
+    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
     self.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide greyDarken10];
-    self.mostPopularHour.text = @"--";
-    self.mostPopularHour.textColor = [WPStyleGuide greyDarken30];
-    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"--"];
+    self.mostPopularHour.text = @"-";
+    self.mostPopularHour.textColor = [WPStyleGuide greyLighten20];
+    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
     self.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide greyDarken10];
-    self.allTimePostsValueLabel.text = @"--";
-    self.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
-    self.allTimeViewsValueLabel.text = @"--";
-    self.allTimeViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
-    self.allTimeVisitorsValueLabel.text = @"--";
-    self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
-    self.allTimeBestViewsValueLabel.text = @"--";
-    self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+    self.allTimePostsValueLabel.text = @"-";
+    self.allTimePostsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.allTimeViewsValueLabel.text = @"-";
+    self.allTimeViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.allTimeVisitorsValueLabel.text = @"-";
+    self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.allTimeBestViewsValueLabel.text = @"-";
+    self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
     self.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
-    self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
-    self.todayViewsValueLabel.text = @"--";
-    self.todayViewsValueLabel.textColor = [WPStyleGuide grey];
-    self.todayVisitorsValueLabel.text = @"--";
-    self.todayVisitorsValueLabel.textColor = [WPStyleGuide grey];
-    self.todayLikesValueLabel.text = @"--";
-    self.todayLikesValueLabel.textColor = [WPStyleGuide grey];
-    self.todayCommentsValueLabel.text = @"--";
-    self.todayCommentsValueLabel.textColor = [WPStyleGuide grey];
+    self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.todayViewsValueLabel.text = @"-";
+    self.todayViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.todayVisitorsValueLabel.text = @"-";
+    self.todayVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.todayLikesValueLabel.text = @"-";
+    self.todayLikesValueLabel.textColor = [WPStyleGuide greyLighten20];
+    self.todayCommentsValueLabel.text = @"-";
+    self.todayCommentsValueLabel.textColor = [WPStyleGuide greyLighten20];
 
     [self retrieveStats];
 }
@@ -253,6 +253,19 @@
      }
                                                   andOverallCompletionHandler:^
      {
+         // Set the colors to what they should be (previous color for unknown data)
+         self.mostPopularDay.textColor = [WPStyleGuide greyDarken30];
+         self.mostPopularHour.textColor = [WPStyleGuide greyDarken30];
+         self.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
+         self.allTimeViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+         self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
+         self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+         self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
+         self.todayViewsValueLabel.textColor = [WPStyleGuide grey];
+         self.todayVisitorsValueLabel.textColor = [WPStyleGuide grey];
+         self.todayLikesValueLabel.textColor = [WPStyleGuide grey];
+         self.todayCommentsValueLabel.textColor = [WPStyleGuide grey];
+
          self.mostPopularDay.text = statsInsights.highestDayOfWeek;
          self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestDayPercent];
          self.mostPopularHour.text = statsInsights.highestHour;
