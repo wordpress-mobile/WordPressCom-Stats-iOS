@@ -168,11 +168,11 @@
     // Default values for no data
     self.mostPopularDay.text = @"--";
     self.mostPopularDay.textColor = [WPStyleGuide greyDarken30];
-    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Weekly Views", @"Insights Percent of weekly views label with value"), @"--"];
+    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"--"];
     self.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide greyDarken10];
     self.mostPopularHour.text = @"--";
     self.mostPopularHour.textColor = [WPStyleGuide greyDarken30];
-    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Daily Views", @"Insights Percent of daily views label with value"), @"--"];
+    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"--"];
     self.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide greyDarken10];
     self.allTimePostsValueLabel.text = @"--";
     self.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
@@ -254,9 +254,9 @@
                                                   andOverallCompletionHandler:^
      {
          self.mostPopularDay.text = statsInsights.highestDayOfWeek;
-         self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Weekly Views", @"Insights Percent of weekly views label with value"), statsInsights.highestDayPercent];
+         self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestDayPercent];
          self.mostPopularHour.text = statsInsights.highestHour;
-         self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of Daily Views", @"Insights Percent of daily views label with value"), statsInsights.highestHourPercent];
+         self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestHourPercent];
          self.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
          self.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
          self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
