@@ -139,7 +139,7 @@
     self.allTimeBestViewsLabel.textColor = [WPStyleGuide warningYellow];
 
     self.todaySectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
-    self.todaySectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    self.todaySectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
 
     self.todayViewsLabel.attributedText = allTimesViewsText;
     self.todayViewsLabel.textColor = [WPStyleGuide greyDarken20];
