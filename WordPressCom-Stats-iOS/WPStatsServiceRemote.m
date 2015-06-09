@@ -588,9 +588,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         dateFormatter.dateFormat = @"EEEE";
         NSString *highestDayOfWeek = [dateFormatter stringFromDate:date];
         
-        dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"j a"
-                                                                   options:0
-                                                                    locale:[NSLocale currentLocale]];
+        dateFormatter.dateFormat = nil;
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+        
         NSString *highestHour = [dateFormatter stringFromDate:date];
         
         NSString *highestHourPercent = [self localizedStringForNumber:highestHourPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
