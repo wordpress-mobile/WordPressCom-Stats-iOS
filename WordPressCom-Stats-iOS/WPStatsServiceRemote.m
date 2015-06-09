@@ -133,16 +133,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
                                                                progressBlock:progressBlock
                                                              completionBlock:^(NSArray *operations)
-    {
-        BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
-        if (!zeroOperationsCancelled) {
-            DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
-        }
-        
-        if (completionHandler && zeroOperationsCancelled) {
-            completionHandler();
-        }
-    }];
+                           {
+                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               if (!zeroOperationsCancelled) {
+                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
+                               }
+                               
+                               if (completionHandler && zeroOperationsCancelled) {
+                                   completionHandler();
+                               }
+                           }];
     
     [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
     
@@ -150,6 +150,47 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         progressBlock(0, mutableOperations.count);
     }
 }
+
+
+- (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
+                                  insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
+                              todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                                              progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
+                                andOverallCompletionHandler:(void (^)())completionHandler
+{
+    NSMutableArray *mutableOperations = [NSMutableArray new];
+
+    if (allTimeCompletion) {
+        [mutableOperations addObject:[self operationForAllTimeStatsWithCompletionHandler:allTimeCompletion]];
+    }
+    if (insightsCompletion) {
+        [mutableOperations addObject:[self operationForInsightsStatsWithCompletionHandler:insightsCompletion]];
+    }
+    if (todaySummaryCompletion) {
+        [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:todaySummaryCompletion]];
+    }
+    
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
+                                                               progressBlock:progressBlock
+                                                             completionBlock:^(NSArray *operations)
+                           {
+                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               if (!zeroOperationsCancelled) {
+                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
+                               }
+                               
+                               if (completionHandler && zeroOperationsCancelled) {
+                                   completionHandler();
+                               }
+                           }];
+    
+    [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
+    
+    if (progressBlock) {
+        progressBlock(0, mutableOperations.count);
+    }
+}
+
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
@@ -266,7 +307,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     };
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        // TODO - Implement
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil, error);
+        }
     };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
@@ -429,6 +472,20 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
+- (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
+{
+    AFHTTPRequestOperation *operation = [self operationForInsightsStatsWithCompletionHandler:completionHandler];
+    
+    [operation start];
+}
+
+- (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
+{
+    AFHTTPRequestOperation *operation = [self operationForAllTimeStatsWithCompletionHandler:completionHandler];
+    
+    [operation start];
+}
+
 #pragma mark - Private methods to compose request operations to be reusable
 
 
@@ -466,6 +523,93 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                                             completionHandler(nil, error);
                                                                         }
                                                                     }];
+    return operation;
+}
+
+- (AFHTTPRequestOperation *)operationForAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *allTimeDict = [[self dictionaryFromResponse:responseObject] dictionaryForKey:@"stats"];
+        NSNumber *postsValue = [allTimeDict numberForKey:@"posts"];
+        NSString *posts = [self localizedStringForNumber:postsValue];
+        NSNumber *viewsValue = [allTimeDict numberForKey:@"views"];
+        NSString *views = [self localizedStringForNumber:viewsValue];
+        NSNumber *visitorsValue = [allTimeDict numberForKey:@"visitors"];
+        NSString *visitors = [self localizedStringForNumber:visitorsValue];
+        NSNumber *bestViewsValue = [allTimeDict numberForKey:@"views_best_day_total"];
+        NSString *bestViews = [self localizedStringForNumber:bestViewsValue];
+        NSDate *bestViewsOnDate = [self deviceLocalDateForString:[allTimeDict stringForKey:@"views_best_day"] withPeriodUnit:StatsPeriodUnitDay];
+        
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        NSString *bestViewsOn = [dateFormatter stringFromDate:bestViewsOnDate];
+        
+        completionHandler(posts, postsValue, views, viewsValue, visitors, visitorsValue, bestViews, bestViewsValue, bestViewsOn, nil);
+    };
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:self.statsPathPrefix
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForInsightsStatsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
+        NSInteger highestHourValue = [insightsDict numberForKey:@"highest_hour"].integerValue;
+        NSNumber *highestHourPercentValue = @([insightsDict numberForKey:@"highest_hour_percent"].floatValue / 100.0);
+        NSInteger highestDayOfWeekValue = [insightsDict numberForKey:@"highest_day_of_week"].integerValue;
+        NSNumber *highestDayPercentValue = @([insightsDict numberForKey:@"highest_day_percent"].floatValue / 100.0);
+        
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        // Apple Sunday == 1, WP.com Monday == 0
+        dateComponents.weekday = highestDayOfWeekValue == 6 ? 1 : highestDayOfWeekValue + 2;
+        dateComponents.weekdayOrdinal = 1;
+        dateComponents.month = 5;
+        dateComponents.year = 2015;
+        dateComponents.hour = highestHourValue;
+        NSDate *date = [calendar dateFromComponents:dateComponents];
+        
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.dateFormat = @"EEEE";
+        NSString *highestDayOfWeek = [dateFormatter stringFromDate:date];
+        
+        dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"j a"
+                                                                   options:0
+                                                                    locale:[NSLocale currentLocale]];
+        NSString *highestHour = [dateFormatter stringFromDate:date];
+        
+        NSString *highestHourPercent = [self localizedStringForNumber:highestHourPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
+        NSString *highestDayPercent = [self localizedStringForNumber:highestDayPercentValue withNumberStyle:NSNumberFormatterPercentStyle];
+        
+        completionHandler(highestHour, highestHourPercent, highestHourPercentValue, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
+    };
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil, nil, nil, error);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
+                                                                parameters:nil
+                                                                   success:handler
+                                                                   failure:failureHandler];
+    
     return operation;
 }
 
@@ -1494,11 +1638,16 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 
 - (NSString *)localizedStringForNumber:(NSNumber *)number
 {
+    return [self localizedStringForNumber:number withNumberStyle:NSNumberFormatterDecimalStyle];
+}
+
+- (NSString *)localizedStringForNumber:(NSNumber *)number withNumberStyle:(NSNumberFormatterStyle)numberStyle
+{
     if (!number) {
         return nil;
     }
     
-    self.deviceNumberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    self.deviceNumberFormatter.numberStyle = numberStyle;
     self.deviceNumberFormatter.maximumFractionDigits = 0;
     
     NSString *formattedNumber = [self.deviceNumberFormatter stringFromNumber:number];

@@ -7,6 +7,8 @@ typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *err
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
 typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error);
+typedef void (^StatsRemoteAllTimeCompletion)(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error);
+typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error);
 
 @interface WPStatsServiceRemote : NSObject
 
@@ -30,7 +32,6 @@ typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *m
  @param followersEmailCompletion
  @param publicizeCompletion
  @param failureHandler
- 
  */
 - (void)batchFetchStatsForDate:(NSDate *)date
                        andUnit:(StatsPeriodUnit)unit
@@ -50,6 +51,12 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler;
+
+- (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
+                                  insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
+                              todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                                              progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
+                                andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler;
@@ -109,6 +116,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)fetchPublicizeStatsForDate:(NSDate *)date
                            andUnit:(StatsPeriodUnit)unit
              withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+
+- (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler;
+
+- (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler;
 
 - (void)cancelAllRemoteOperations;
 

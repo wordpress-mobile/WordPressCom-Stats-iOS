@@ -852,4 +852,53 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+
+- (void)testFetchInsights
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchInsights completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-insights.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
+         XCTAssertTrue([@"9 AM" isEqualToString:highestHour]);
+         XCTAssertTrue([@"Saturday" isEqualToString:highestDayOfWeek]);
+         XCTAssertTrue([@"31%" isEqualToString:highestDayPercent]);
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+
+- (void)testFetchAllTime
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchAllTime completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-alltime.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchAllTimeStatsWithCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
+         XCTAssertTrue([@"128" isEqualToString:posts]);
+         XCTAssertTrue([@"56,687" isEqualToString:views]);
+         XCTAssertTrue([@"42,893" isEqualToString:visitors]);
+         XCTAssertTrue([@"3,485" isEqualToString:bestViews]);
+         XCTAssertNotNil(bestViewsOn);
+         
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 @end
