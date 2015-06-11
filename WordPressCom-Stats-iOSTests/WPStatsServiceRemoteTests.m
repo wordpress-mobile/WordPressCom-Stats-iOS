@@ -864,7 +864,7 @@
     }];
     
     [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
-         XCTAssertTrue([@"9 AM" isEqualToString:highestHour]);
+         XCTAssertTrue([@"9:00 AM" isEqualToString:highestHour]);
          XCTAssertTrue([@"Saturday" isEqualToString:highestDayOfWeek]);
          XCTAssertTrue([@"31%" isEqualToString:highestDayPercent]);
          XCTAssertNil(error);
