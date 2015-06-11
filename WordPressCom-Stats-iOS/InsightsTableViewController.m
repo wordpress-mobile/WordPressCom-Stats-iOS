@@ -255,7 +255,7 @@
              [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
          }
      }
-                                                  andOverallCompletionHandler:^
+                                                  andOverallCompletionHandler:^(BOOL cachedDataWasUsed)
      {
          // Set the colors to what they should be (previous color for unknown data)
          self.mostPopularDay.textColor = [WPStyleGuide greyDarken30];

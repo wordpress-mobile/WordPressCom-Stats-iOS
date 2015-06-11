@@ -769,7 +769,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
         }
      }
-                   andOverallCompletionHandler:^
+                   andOverallCompletionHandler:^(BOOL cachedDataWasUsed)
      {
 #ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;

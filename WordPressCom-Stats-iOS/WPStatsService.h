@@ -45,7 +45,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
      publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                   progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
-     andOverallCompletionHandler:(void (^)())completionHandler;
+     andOverallCompletionHandler:(void (^)(BOOL cachedDataWasUsed))completionHandler;
 
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
                     withCompletionHandler:(StatsPostDetailsCompletion)completion;
@@ -87,7 +87,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
-                                   andOverallCompletionHandler:(void (^)())completionHandler;
+                                   andOverallCompletionHandler:(void (^)(BOOL cachedDataWasUsed))completionHandler;
 
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler;
 
