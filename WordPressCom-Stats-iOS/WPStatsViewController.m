@@ -94,12 +94,14 @@
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button title")
                                                    destructiveButtonTitle:nil
                                                         otherButtonTitles:NSLocalizedString(@"Days", @"Title of Days segmented control"), NSLocalizedString(@"Weeks", @"Title of Weeks segmented control"), NSLocalizedString(@"Months", @"Title of Months segmented control"), NSLocalizedString(@"Years", @"Title of Years segmented control"), nil];
+#ifndef AF_APP_EXTENSIONS
         UIViewController *viewController = [[[UIApplication sharedApplication] windows].firstObject rootViewController];
         if ([viewController isKindOfClass:[UITabBarController class]]) {
             [actionSheet showFromTabBar:[(UITabBarController *)viewController tabBar]];
         } else {
             [actionSheet showInView:viewController.view];
         }
+#endif
         self.periodActionSheet = actionSheet;
     } else if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
         self.statsType = self.lastSelectedStatsType;
