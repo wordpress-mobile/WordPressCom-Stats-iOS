@@ -101,8 +101,8 @@
         } else {
             [actionSheet showInView:viewController.view];
         }
-#endif
         self.periodActionSheet = actionSheet;
+#endif
     } else if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
         self.statsType = self.lastSelectedStatsType;
     } else {
