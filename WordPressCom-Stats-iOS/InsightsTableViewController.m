@@ -291,6 +291,10 @@
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          
+         if (cachedDataWasUsed == NO) {
+             UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString(@"Fetch of stats completed.", @"VoiceOver announcement of download finishing for stats."));
+         }
+
          if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
              [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
          }
