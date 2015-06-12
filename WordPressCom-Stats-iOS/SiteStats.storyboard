@@ -426,8 +426,8 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-Ii-OSN">
-                                                            <rect key="frame" x="112" y="53" width="68" height="44"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-Ii-OSN">
+                                                            <rect key="frame" x="108" y="53" width="76" height="44"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="32"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -442,10 +442,12 @@
                                                     <constraints>
                                                         <constraint firstItem="owa-7G-DL9" firstAttribute="top" secondItem="voB-PG-oGO" secondAttribute="top" constant="24" id="37A-zt-rpu"/>
                                                         <constraint firstAttribute="centerY" secondItem="xx2-Ii-OSN" secondAttribute="centerY" id="4CI-Bt-hhp"/>
+                                                        <constraint firstItem="xx2-Ii-OSN" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="voB-PG-oGO" secondAttribute="leading" constant="8" id="B4c-jZ-Pfy"/>
                                                         <constraint firstAttribute="centerX" secondItem="xx2-Ii-OSN" secondAttribute="centerX" id="HQd-KW-3hY"/>
                                                         <constraint firstAttribute="centerX" secondItem="txh-pI-huu" secondAttribute="centerX" id="IUk-cX-Yd5"/>
                                                         <constraint firstAttribute="bottom" secondItem="txh-pI-huu" secondAttribute="bottom" constant="24" id="cIs-6l-p9A"/>
                                                         <constraint firstAttribute="centerX" secondItem="owa-7G-DL9" secondAttribute="centerX" id="iay-6G-WoS"/>
+                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xx2-Ii-OSN" secondAttribute="trailing" constant="8" id="mam-0i-kkd"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csy-iV-Ucm">
@@ -457,8 +459,8 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saturday" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPU-t1-atl">
-                                                            <rect key="frame" x="80" y="53" width="133" height="44"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wednesday" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dPU-t1-atl">
+                                                            <rect key="frame" x="59" y="53" width="174" height="44"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="32"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -471,7 +473,9 @@
                                                         </label>
                                                     </subviews>
                                                     <constraints>
+                                                        <constraint firstItem="dPU-t1-atl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="csy-iV-Ucm" secondAttribute="leading" constant="8" id="K0Z-Ad-MXx"/>
                                                         <constraint firstAttribute="centerY" secondItem="dPU-t1-atl" secondAttribute="centerY" id="QNp-Jv-nqR"/>
+                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="dPU-t1-atl" secondAttribute="trailing" constant="8" id="Ur8-JD-cSM"/>
                                                         <constraint firstAttribute="bottom" secondItem="yKD-YK-Mra" secondAttribute="bottom" constant="24" id="cAv-5w-Qdq"/>
                                                         <constraint firstItem="LqR-Vc-rtl" firstAttribute="top" secondItem="csy-iV-Ucm" secondAttribute="top" constant="24" id="goK-qU-22u"/>
                                                         <constraint firstAttribute="centerX" secondItem="dPU-t1-atl" secondAttribute="centerX" id="pTv-hu-BaW"/>
