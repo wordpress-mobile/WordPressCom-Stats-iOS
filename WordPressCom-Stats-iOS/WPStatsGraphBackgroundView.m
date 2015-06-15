@@ -62,7 +62,7 @@ static CGFloat const AxisPadding = 18.0f;
         CGFloat s = (CGFloat)maxYPoint / (CGFloat)yAxisTicks;
         long len = (long)(double)log10(s);
         long div = (long)(double)pow(10, len);
-        stepValue = ceil(s / div) * div;
+        stepValue = (NSUInteger)(ceil(s / div) * (CGFloat)div);
     }
     CGFloat yAxisStepSize = yAxisHeight/yAxisTicks;
     

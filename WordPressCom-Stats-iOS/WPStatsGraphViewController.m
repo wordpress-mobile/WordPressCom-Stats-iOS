@@ -146,7 +146,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
-    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
+    CGFloat width = floor((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
     CGFloat height = CGRectGetHeight(rect);
     
     CGSize size = CGSizeMake(width, height);
@@ -157,9 +157,9 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
-    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
+    CGFloat width = floor((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
 
-    CGFloat spacing = floorf((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
+    CGFloat spacing = floor((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
 
     return spacing;
 }
@@ -203,10 +203,10 @@ static NSInteger const RecommendedYAxisTicks = 2;
         CGFloat s = (CGFloat)maximumY/(CGFloat)yAxisTicks;
         long len = (long)(double)log10(s);
         long div = (long)(double)pow(10, len);
-        stepValue = ceil(s / div) * div;
+        stepValue = (NSUInteger)(ceil(s / div) * (CGFloat)div);
 
         // Adjust yAxisTicks to accomodate ticks and maximum without too much padding
-        yAxisTicks = ceil( maximumY / stepValue );
+        yAxisTicks = (NSUInteger)ceil( maximumY / stepValue );
         self.maximumY = stepValue * yAxisTicks;
         self.numberOfYValues = yAxisTicks;
     }
