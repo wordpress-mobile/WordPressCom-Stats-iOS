@@ -416,15 +416,15 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     }
     
     [self.remote fetchSummaryStatsForDate:[NSDate date]
-                    withCompletionHandler:^(StatsSummary *summary, NSError *error) {
+                    withCompletionHandler:^(StatsSummary *statsSummary, NSError *error) {
                         if (error) {
                             failure(error);
                             return;
                         }
 
-                        [self.ephemory setObject:summary forKey:@"TodayStats"];
+                        [self.ephemory setObject:statsSummary forKey:@"TodayStats"];
 
-                        completion(summary, nil);
+                        completion(statsSummary, nil);
                     }];
 }
 

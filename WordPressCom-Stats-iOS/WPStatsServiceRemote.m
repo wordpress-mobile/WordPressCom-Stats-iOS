@@ -132,9 +132,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
                                                                progressBlock:progressBlock
-                                                             completionBlock:^(NSArray *operations)
+                                                             completionBlock:^(NSArray *allOperations)
                            {
-                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
                                if (!zeroOperationsCancelled) {
                                    DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
                                }
@@ -172,9 +172,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
                                                                progressBlock:progressBlock
-                                                             completionBlock:^(NSArray *operations)
+                                                             completionBlock:^(NSArray *allOperations)
                            {
-                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
                                if (!zeroOperationsCancelled) {
                                    DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
                                }
@@ -220,7 +220,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         visits.statsDataByDate = visitsDictionary;
         
         // TODO :: Abstract this out to the local service
-        NSInteger quantity = IS_IPAD ? 12 : 7;
+        NSUInteger quantity = IS_IPAD ? 12 : 7;
         if (visitsData.count > quantity) {
             visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
         }
@@ -254,7 +254,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.label = [self localizedStringForMonthOrdinal:(NSUInteger)month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
                 [yearItem addChildStatsItem:monthItem];
             }
@@ -277,7 +277,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.label = [self localizedStringForMonthOrdinal:(NSUInteger)month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
                 [yearItem addChildStatsItem:monthItem];
             }
@@ -518,7 +518,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
                                                                  parameters:nil
                                                                     success:handler
-                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
                                                                         if (completionHandler) {
                                                                             completionHandler(nil, error);
                                                                         }
@@ -670,7 +670,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
                                                                         if (completionHandler) {
                                                                             StatsVisits *visits = [StatsVisits new];
                                                                             visits.errorWhileRetrieving = YES;
@@ -811,10 +811,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                     resultItem.iconURL = [NSURL URLWithString:[result stringForKey:@"icon"]];
                     resultItem.value = [self localizedStringForNumber:[result numberForKey:@"views"]];
                     
-                    NSString *url = [result stringForKey:@"url"];
-                    if (url) {
+                    NSString *resultItemURL = [result stringForKey:@"url"];
+                    if (resultItemURL) {
                         StatsItemAction *action = [StatsItemAction new];
-                        action.url = [NSURL URLWithString:url];
+                        action.url = [NSURL URLWithString:resultItemURL];
                         action.defaultAction = YES;
                         resultItem.actions = @[action];
                     }
@@ -828,10 +828,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                         childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
                         childItem.value = [self localizedStringForNumber:[child numberForKey:@"views"]];
                         
-                        NSString *url = [child stringForKey:@"url"];
-                        if (url) {
+                        NSString *childItemURL = [child stringForKey:@"url"];
+                        if (childItemURL) {
                             StatsItemAction *action = [StatsItemAction new];
-                            action.url = [NSURL URLWithString:url];
+                            action.url = [NSURL URLWithString:childItemURL];
                             action.defaultAction = YES;
                             childItem.actions = @[action];
                         }
@@ -900,10 +900,10 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 childItem.iconURL = [NSURL URLWithString:[child stringForKey:@"icon"]];
                 childItem.value = [self localizedStringForNumber:[child numberForKey:@"views"]];
                 
-                NSString *url = [child stringForKey:@"url"];
-                if (url) {
+                NSString *childItemURL = [child stringForKey:@"url"];
+                if (childItemURL) {
                     StatsItemAction *action = [StatsItemAction new];
-                    action.url = [NSURL URLWithString:url];
+                    action.url = [NSURL URLWithString:childItemURL];
                     action.defaultAction = YES;
                     childItem.actions = @[action];
                 }
@@ -1684,7 +1684,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (NSString *)localizedStringForMonthOrdinal:(NSInteger)monthNumber
+- (NSString *)localizedStringForMonthOrdinal:(NSUInteger)monthNumber
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];

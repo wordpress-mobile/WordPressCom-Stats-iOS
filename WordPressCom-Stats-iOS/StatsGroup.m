@@ -38,7 +38,7 @@
 
 - (StatsItem *)statsItemForTableViewRow:(NSInteger)row
 {
-    NSInteger index = row - self.offsetRows;
+    NSInteger index = row - (NSInteger)self.offsetRows;
     
     if (index < 0) {
         return nil;

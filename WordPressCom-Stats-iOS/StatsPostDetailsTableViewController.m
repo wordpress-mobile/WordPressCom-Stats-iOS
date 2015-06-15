@@ -84,7 +84,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
+    return (NSInteger)self.sections.count;
 }
 
 
@@ -100,9 +100,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
         {
-            StatsSection statsSection = [self statsSectionForTableViewSection:section];
             StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-            NSUInteger numberOfRows = [statsGroup numberOfRows];
+            NSInteger numberOfRows = (NSInteger)statsGroup.numberOfRows;
             return 2 + numberOfRows + (numberOfRows == 0 ? 1 : 0);
         }
         default:
@@ -200,9 +199,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
-            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
-            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
             
             StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             cell.expanded = statsItem.isExpanded;
@@ -336,7 +335,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         [self.tableView reloadData];
         
         
-        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+        NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }];
@@ -490,7 +489,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
-    return (StatsSection)[self.sections[section] integerValue];
+    return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
 }
 
 
@@ -524,7 +523,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     NSUInteger section = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
     if (section != NSNotFound) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:section];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:(NSInteger)section];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }

@@ -67,7 +67,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     BOOL isDataLoaded = self.statsGroup.items != nil;
-    NSInteger numberOfRows = 1 + (isDataLoaded ? self.statsGroup.numberOfRows : 1);
+    NSInteger numberOfRows = 1 + (isDataLoaded ? (NSInteger)self.statsGroup.numberOfRows : 1);
     
     return numberOfRows;
 }
@@ -118,9 +118,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     if (statsItem.children.count > 0) {
         BOOL insert = !statsItem.isExpanded;
-        NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+        NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
         statsItem.expanded = !statsItem.isExpanded;
-        NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+        NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
         
         StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.expanded = statsItem.isExpanded;
@@ -223,7 +223,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         self.statsGroup.offsetRows = 1;
         
         NSMutableArray *indexPaths = [NSMutableArray new];
-        for (int row = 1; row < (1 + self.statsGroup.items.count); ++row) {
+        for (NSInteger row = 1; row < (NSInteger)(1 + self.statsGroup.items.count); ++row) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
         }
         

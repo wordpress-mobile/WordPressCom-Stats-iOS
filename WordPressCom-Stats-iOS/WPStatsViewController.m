@@ -152,7 +152,7 @@
     }
     
     progressView.hidden = NO;
-    [progressView setProgress:percentage animated:YES];
+    [progressView setProgress:(float)percentage animated:YES];
 }
 
 - (void)statsViewControllerDidEndLoadingStats:(UIViewController *)controller
