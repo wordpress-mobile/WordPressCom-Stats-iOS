@@ -89,6 +89,7 @@
     self.statsContainerView.hidden = NO;
     
     if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 2) {
+#ifndef AF_APP_EXTENSIONS
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select Period Unit"
                                                                  delegate:self
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button title")
@@ -101,6 +102,7 @@
             [actionSheet showInView:viewController.view];
         }
         self.periodActionSheet = actionSheet;
+#endif
     } else if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
         self.statsType = self.lastSelectedStatsType;
     } else {
