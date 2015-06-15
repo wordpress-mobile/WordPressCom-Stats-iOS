@@ -338,6 +338,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        
+        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString(@"Fetch of stats completed.", @"VoiceOver announcement of download finishing for stats."));
     }];
     
 }

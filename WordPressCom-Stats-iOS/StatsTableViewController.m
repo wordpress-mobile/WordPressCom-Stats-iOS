@@ -767,7 +767,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
         }
      }
-                   andOverallCompletionHandler:^
+                   andOverallCompletionHandler:^(BOOL cachedDataWasUsed)
      {
 #ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -776,6 +776,10 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          
+         if (cachedDataWasUsed == NO) {
+             UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString(@"Fetch of stats completed.", @"VoiceOver announcement of download finishing for stats."));
+         }
+
          if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
              [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
          }

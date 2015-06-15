@@ -69,7 +69,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
  followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
       publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                   progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
-     andOverallCompletionHandler:(void (^)())completionHandler
+     andOverallCompletionHandler:(void (^)(BOOL cachedDataWasUsed))completionHandler
 {
     if (!completionHandler) {
         return;
@@ -171,7 +171,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             publicizeCompletion(publicizeData, nil);
         }
         
-        completionHandler();
+        completionHandler(YES);
         
         return;
     } else {
@@ -199,7 +199,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                           progressBlock:progressBlock
             andOverallCompletionHandler:^
     {
-        completionHandler();
+        completionHandler(NO);
     }];
 }
 
@@ -208,7 +208,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
-                                   andOverallCompletionHandler:(void (^)())overallCompletionHandler
+                                   andOverallCompletionHandler:(void (^)(BOOL cachedDataWasUsed))overallCompletionHandler
 {
     NSString *cacheKey = @"BatchInsights";
     NSString *allTimeCacheKey = @"AllTime";
@@ -229,7 +229,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         }
         
         if (overallCompletionHandler) {
-            overallCompletionHandler();
+            overallCompletionHandler(YES);
         }
         
         return;
@@ -282,7 +282,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                          andOverallCompletionHandler:^
     {
         if (overallCompletionHandler) {
-            overallCompletionHandler();
+            overallCompletionHandler(NO);
         }
     }];
 }

@@ -231,6 +231,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
         [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
         [self.tableView endUpdates];
+        
+        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString(@"Fetch of stats completed.", @"VoiceOver announcement of download finishing for stats."));
     };
     
     if (self.statsSection == StatsSectionPosts) {

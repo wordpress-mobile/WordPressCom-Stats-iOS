@@ -98,7 +98,7 @@
                    [publicizeExpectation fulfill];
                }
                             progressBlock:nil
-              andOverallCompletionHandler:^{
+              andOverallCompletionHandler:^(BOOL cachedDataWasUsed) {
                   [overallExpectation fulfill];
               }];
     
@@ -379,7 +379,7 @@
           followersEmailCompletionHandler:nil
                publicizeCompletionHandler:nil
                             progressBlock:nil
-               andOverallCompletionHandler:^{
+               andOverallCompletionHandler:^(BOOL cachedDataWasUsed) {
                    // Don't do anything
                }];
     
