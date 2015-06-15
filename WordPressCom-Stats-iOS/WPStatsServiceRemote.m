@@ -254,7 +254,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.label = [self localizedStringForMonthOrdinal:(NSUInteger)month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
                 [yearItem addChildStatsItem:monthItem];
             }
@@ -277,7 +277,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                 NSNumber *value = [months numberForKey:month];
                 
                 StatsItem *monthItem = [StatsItem new];
-                monthItem.label = [self localizedStringForMonthOrdinal:month.integerValue];
+                monthItem.label = [self localizedStringForMonthOrdinal:(NSUInteger)month.integerValue];
                 monthItem.value = [self localizedStringForNumber:value];
                 [yearItem addChildStatsItem:monthItem];
             }
@@ -1684,7 +1684,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (NSString *)localizedStringForMonthOrdinal:(NSInteger)monthNumber
+- (NSString *)localizedStringForMonthOrdinal:(NSUInteger)monthNumber
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];

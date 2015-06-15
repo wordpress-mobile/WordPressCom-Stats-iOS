@@ -199,9 +199,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
-            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
-            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
             
             StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             cell.expanded = statsItem.isExpanded;
@@ -335,7 +335,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         [self.tableView reloadData];
         
         
-        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+        NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }];
@@ -489,7 +489,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
-    return (StatsSection)[self.sections[section] integerValue];
+    return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
 }
 
 
@@ -523,7 +523,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     NSUInteger section = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
     if (section != NSNotFound) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:section];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:(NSInteger)section];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }

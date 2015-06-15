@@ -103,7 +103,7 @@ CGFloat const BottomMarginUnderYAxis = 20.0f;
             percentHeight = value / self.maximumY;
         }
         
-        CGFloat height = floorf((CGRectGetHeight(self.contentView.bounds) - 18.0 - BottomMarginUnderYAxis) * percentHeight);
+        CGFloat height = floor((CGRectGetHeight(self.contentView.bounds) - 18.0 - BottomMarginUnderYAxis) * percentHeight);
         CGFloat offsetY = CGRectGetHeight(self.contentView.bounds) - (height + BottomMarginUnderYAxis);
         
         CGRect rect = CGRectInset(self.contentView.bounds, inset, 0.0);
