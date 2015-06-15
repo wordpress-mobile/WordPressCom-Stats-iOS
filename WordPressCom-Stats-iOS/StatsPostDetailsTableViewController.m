@@ -84,7 +84,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
+    return (NSInteger)self.sections.count;
 }
 
 
@@ -100,9 +100,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
         {
-            StatsSection statsSection = [self statsSectionForTableViewSection:section];
             StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-            NSUInteger numberOfRows = [statsGroup numberOfRows];
+            NSInteger numberOfRows = (NSInteger)statsGroup.numberOfRows;
             return 2 + numberOfRows + (numberOfRows == 0 ? 1 : 0);
         }
         default:

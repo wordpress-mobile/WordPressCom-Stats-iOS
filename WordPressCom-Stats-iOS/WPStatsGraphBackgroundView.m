@@ -32,7 +32,7 @@ static CGFloat const AxisPadding = 18.0f;
 {
     NSUInteger maxYPoint = self.maximumYValue;   // The tallest bar 'point'
     CGFloat xAxisStepWidth = 0;
-    NSUInteger maxXAxisPointCount = 0; // # points along the x axis
+    NSInteger maxXAxisPointCount = 0; // # points along the x axis
     
     CGFloat xAxisStartPoint = 0;
     CGFloat xAxisWidth = CGRectGetWidth(rect) - 15.0;
