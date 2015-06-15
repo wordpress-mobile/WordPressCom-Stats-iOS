@@ -134,7 +134,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                                progressBlock:progressBlock
                                                              completionBlock:^(NSArray *allOperations)
                            {
-                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
                                if (!zeroOperationsCancelled) {
                                    DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
                                }
@@ -174,7 +174,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
                                                                progressBlock:progressBlock
                                                              completionBlock:^(NSArray *allOperations)
                            {
-                               BOOL zeroOperationsCancelled = [operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
+                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
                                if (!zeroOperationsCancelled) {
                                    DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
                                }
