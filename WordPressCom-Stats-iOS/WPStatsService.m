@@ -9,6 +9,12 @@
 #import "StatsDateUtilities.h"
 #import "StatsSection.h"
 
+NSString *const BatchInsightsCacheKey = @"BatchInsights";
+NSString *const BatchPeriodStatsCacheKey = @"BatchStats";
+NSString *const AllTimeCacheKey = @"AllTime";
+NSString *const InsightsCacheKey = @"Insights";
+NSString *const TodayCacheKey = @"Today";
+
 @interface WPStatsService ()
 
 @property (nonatomic, strong) NSNumber *siteId;
@@ -76,7 +82,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     }
     
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
-    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[BatchPeriodStatsCacheKey, @(unit), endDate]];
     id visitsData = cacheDictionary[@(StatsSectionGraph)];
     id eventsData = cacheDictionary[@(StatsSectionEvents)];
     id postsData = cacheDictionary[@(StatsSectionPosts)];
@@ -176,7 +182,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         return;
     } else {
         cacheDictionary = [NSMutableDictionary new];
-        [self.ephemory setObject:cacheDictionary forKey:@[@"BatchStats", @(unit), endDate]];
+        [self.ephemory setObject:cacheDictionary forKey:@[BatchPeriodStatsCacheKey, @(unit), endDate]];
     }
 
     [self.remote cancelAllRemoteOperations];
@@ -210,22 +216,17 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
-    NSString *cacheKey = @"BatchInsights";
-    NSString *allTimeCacheKey = @"AllTime";
-    NSString *insightsCacheKey = @"Insights";
-    NSString *todayCacheKey = @"Today";
-    
-    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:cacheKey];
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:BatchInsightsCacheKey];
     if (cacheDictionary.count == 3) {
         DDLogVerbose(@"retrieveInsightsStats - Cached data exists.");
         if (allTimeCompletion) {
-            allTimeCompletion(cacheDictionary[allTimeCacheKey], nil);
+            allTimeCompletion(cacheDictionary[AllTimeCacheKey], nil);
         }
         if (insightsCompletion) {
-            insightsCompletion(cacheDictionary[insightsCacheKey], nil);
+            insightsCompletion(cacheDictionary[InsightsCacheKey], nil);
         }
         if (todaySummaryCompletion) {
-            todaySummaryCompletion(cacheDictionary[todayCacheKey], nil);
+            todaySummaryCompletion(cacheDictionary[TodayCacheKey], nil);
         }
         
         if (overallCompletionHandler) {
@@ -248,7 +249,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         allTime.bestNumberOfViewsValue = bestViewsValue;
         allTime.bestViewsOn = bestViewsOn;
         
-        cacheDictionary[allTimeCacheKey] = allTime;
+        cacheDictionary[AllTimeCacheKey] = allTime;
         
         if (allTimeCompletion) {
             allTimeCompletion(allTime, error);
@@ -264,7 +265,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         insights.highestDayPercent = highestDayPercent;
         insights.highestDayPercentValue = highestDayPercentValue;
         
-        cacheDictionary[insightsCacheKey] = insights;
+        cacheDictionary[InsightsCacheKey] = insights;
         
         if (insightsCompletion) {
             insightsCompletion(insights, error);
@@ -272,7 +273,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     }
                                        todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
     {
-        cacheDictionary[todayCacheKey] = summary;
+        cacheDictionary[TodayCacheKey] = summary;
         
         if (todaySummaryCompletion) {
             todaySummaryCompletion(summary, error);
