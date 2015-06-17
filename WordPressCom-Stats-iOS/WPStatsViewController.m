@@ -14,7 +14,7 @@
 @property (nonatomic, weak) IBOutlet UIView *statsContainerView;
 @property (nonatomic, weak) UIActionSheet *periodActionSheet;
 
-@property (nonatomic, assign) StatsType lastSelectedStatsType;
+@property (nonatomic, assign) StatsType lastSelectedPeriodStatsType;
 @property (nonatomic, assign) StatsType statsType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
 
@@ -29,7 +29,7 @@
     [super viewDidLoad];
     
     self.statsType = StatsTypeInsights;
-    self.lastSelectedStatsType = StatsTypeDays;
+    self.lastSelectedPeriodStatsType = StatsTypeDays;
 
     if (IS_IPAD || UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
         [self showAllSegments];
@@ -89,13 +89,6 @@
         return;
     }
     
-    self.insightsContainerView.hidden = YES;
-    self.insightsProgressView.hidden = YES;
-    self.statsContainerView.hidden = NO;
-    if (self.statsProgressView.progress > 0.0f) {
-        self.statsProgressView.hidden = NO;
-    }
-    
     if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 2) {
 #ifndef AF_APP_EXTENSIONS
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select Period Unit"
@@ -111,11 +104,20 @@
         }
         self.periodActionSheet = actionSheet;
 #endif
-    } else if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
-        self.statsType = self.lastSelectedStatsType;
     } else {
-        self.statsType = control.selectedSegmentIndex;
-        self.lastSelectedStatsType = self.statsType;
+        self.insightsContainerView.hidden = YES;
+        self.insightsProgressView.hidden = YES;
+        self.statsContainerView.hidden = NO;
+        if (self.statsProgressView.progress > 0.0f) {
+            self.statsProgressView.hidden = NO;
+        }
+   
+        if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
+            self.statsType = self.lastSelectedPeriodStatsType;
+        } else {
+            self.statsType = control.selectedSegmentIndex;
+            self.lastSelectedPeriodStatsType = self.statsType;
+        }
     }
     
 }
@@ -125,7 +127,7 @@
 
 - (void)viewController:(UIViewController *)viewController changeStatsTypeSelection:(StatsType)statsType
 {
-    self.lastSelectedStatsType = statsType;
+    self.lastSelectedPeriodStatsType = statsType;
     self.statsType = statsType;
 
     [self updateSegmentedControlForceUpdate:YES];
@@ -207,12 +209,13 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
-        self.statsTypeSegmentControl.selectedSegmentIndex = 1;
+        // If last selected was Insights, reselect it otherwise force segment 1
+        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsType == StatsTypeInsights ? StatsTypeInsights : 1;
         return;
     }
     
     self.statsType = buttonIndex + 1;
-    self.lastSelectedStatsType = self.statsType;
+    self.lastSelectedPeriodStatsType = self.statsType;
     [self showAbbreviatedSegments];
 }
 
@@ -254,13 +257,13 @@
     [self.statsTypeSegmentControl removeAllSegments];
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Insights", @"Title of Insights segmented control") atIndex:0 animated:NO];
     
-    if (self.lastSelectedStatsType == StatsTypeDays) {
+    if (self.lastSelectedPeriodStatsType == StatsTypeDays) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Days", @"Title of Days segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsType == StatsTypeWeeks) {
+    } else if (self.lastSelectedPeriodStatsType == StatsTypeWeeks) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Weeks", @"Title of Weeks segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsType == StatsTypeMonths) {
+    } else if (self.lastSelectedPeriodStatsType == StatsTypeMonths) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Months", @"Title of Months segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsType == StatsTypeYears) {
+    } else if (self.lastSelectedPeriodStatsType == StatsTypeYears) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:1 animated:NO];
     }
     
