@@ -92,6 +92,8 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 - (void)retrieveTodayStatsWithCompletionHandler:(StatsSummaryCompletion)completion failureHandler:(void (^)(NSError *))failureHandler;
 
 - (void)cancelAnyRunningOperations;
-- (void)expireAllItemsInCache;
+
+- (void)expireAllItemsInCacheForInsights;
+- (void)expireAllItemsInCacheForPeriodStats;
 
 @end

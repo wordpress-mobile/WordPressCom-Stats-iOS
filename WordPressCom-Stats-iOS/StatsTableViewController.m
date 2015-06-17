@@ -476,7 +476,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
     [self resetDateToTodayForSite];
-    [self.statsService expireAllItemsInCache];
+    [self.statsService expireAllItemsInCacheForPeriodStats];
     [self retrieveStatsSkipGraph:NO];
 }
 
