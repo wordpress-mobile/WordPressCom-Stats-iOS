@@ -408,13 +408,13 @@
 			children = (
 				9396CFC91921096B006A66D7 /* Supporting Files */,
 				93E3679B1922B72E000FB32A /* Test Data */,
+				9367D9D01A6E99640033911A /* StatsDateUtilitiesTests.m */,
+				9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */,
 				9327FD2D1A4A058600FF3A2E /* StatsGroupTests.m */,
 				9327FD2B1A4A001100FF3A2E /* StatsItemTests.m */,
 				9383180E1994F701003B953A /* WordPressCom-Stats-iOSTests-Bridging-Header.h */,
 				9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */,
 				933FF2271A41C64300336167 /* WPStatsServiceTests.m */,
-				9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */,
-				9367D9D01A6E99640033911A /* StatsDateUtilitiesTests.m */,
 			);
 			path = "WordPressCom-Stats-iOSTests";
 			sourceTree = "<group>";

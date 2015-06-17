@@ -85,7 +85,7 @@
             continue;
         }
         
-        [self.cache removeObjectForKey:key];
+        [self.cache removeObjectForKey:existingKey];
     }
 }
 
