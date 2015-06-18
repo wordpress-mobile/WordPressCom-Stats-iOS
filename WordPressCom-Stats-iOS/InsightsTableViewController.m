@@ -37,8 +37,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsLabel;
 // Today section
 @property (nonatomic, weak) IBOutlet UILabel *todaySectionHeaderLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayViewsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayVisitorsLabel;
+@property (nonatomic, weak) IBOutlet UIButton *todayViewsButton;
+@property (nonatomic, weak) IBOutlet UIButton *todayVisitorsButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayLikesButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayCommentsButton;
 
@@ -50,8 +50,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsOnValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayViewsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayVisitorsValueLabel;
+@property (nonatomic, weak) IBOutlet UIButton *todayViewsValueButton;
+@property (nonatomic, weak) IBOutlet UIButton *todayVisitorsValueButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayLikesValueButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayCommentsValueButton;
 
@@ -77,97 +77,19 @@
     self.allTimeSectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
     self.allTimeSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-    NSBundle *bundle = [NSBundle bundleWithPath:path];
-    UIImage *postsImage;
-    UIImage *viewsImage;
-    UIImage *visitorsImage;
-    UIImage *bestViewsImage;
-    UIImage *likesImage;
-    UIImage *commentsImage;
+    self.allTimePostsLabel.attributedText = [self postsAttributedString];
+    self.allTimeViewsLabel.attributedText = [self viewsAttributedString];
+    self.allTimeVisitorsLabel.attributedText = [self visitorsAttributedString];
     
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        postsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-text_normal" ofType:@"png"]];
-        viewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-eye_normal" ofType:@"png"]];
-        visitorsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-user_normal" ofType:@"png"]];
-        bestViewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-trophy_normal" ofType:@"png"]];
-        likesImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-star_normal" ofType:@"png"]];
-        commentsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-comment_normal" ofType:@"png"]];
-    }
-
-    NSMutableAttributedString *allTimesPostsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *allTimesPostsTextAttachment = [InlineTextAttachment new];
-    allTimesPostsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
-    allTimesPostsTextAttachment.image = postsImage;
-    [allTimesPostsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesPostsTextAttachment] atIndex:0];
-    [allTimesPostsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [allTimesPostsText appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
-    self.allTimePostsLabel.attributedText = allTimesPostsText;
-    self.allTimePostsLabel.textColor = [WPStyleGuide greyDarken20];
-
-    NSMutableAttributedString *allTimesViewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *allTimesViewsTextAttachment = [InlineTextAttachment new];
-    allTimesViewsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
-    allTimesViewsTextAttachment.image = viewsImage;
-    [allTimesViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesViewsTextAttachment] atIndex:0];
-    [allTimesViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [allTimesViewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    self.allTimeViewsLabel.attributedText = allTimesViewsText;
-    self.allTimeViewsLabel.textColor = [WPStyleGuide greyDarken20];
-
-    NSMutableAttributedString *allTimesVisitorsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *allTimesVisitorsTextAttachment = [InlineTextAttachment new];
-    allTimesVisitorsTextAttachment.fontDescender = self.allTimeVisitorsLabel.font.descender;
-    allTimesVisitorsTextAttachment.image = visitorsImage;
-    [allTimesVisitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesVisitorsTextAttachment] atIndex:0];
-    [allTimesVisitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [allTimesVisitorsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    self.allTimeVisitorsLabel.attributedText = allTimesVisitorsText;
-    self.allTimeVisitorsLabel.textColor = [WPStyleGuide greyDarken20];
-    
-    NSMutableAttributedString *allTimesBestViewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Best Views Ever", @"Stats Best Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *allTimesBestViewsTextAttachment = [InlineTextAttachment new];
-    allTimesBestViewsTextAttachment.fontDescender = self.allTimeBestViewsLabel.font.descender;
-    allTimesBestViewsTextAttachment.image = bestViewsImage;
-    [allTimesBestViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:allTimesBestViewsTextAttachment] atIndex:0];
-    [allTimesBestViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    self.allTimeBestViewsLabel.attributedText = allTimesBestViewsText;
-    self.allTimeBestViewsLabel.textColor = [WPStyleGuide warningYellow];
+    self.allTimeBestViewsLabel.attributedText = [self bestViewsAttributedString];
 
     self.todaySectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
     self.todaySectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
 
-    self.todayViewsLabel.attributedText = allTimesViewsText;
-    self.todayViewsLabel.textColor = [WPStyleGuide greyDarken20];
-    
-    self.todayVisitorsLabel.attributedText = allTimesVisitorsText;
-    self.todayVisitorsLabel.textColor = [WPStyleGuide greyDarken20];
-    
-    NSMutableAttributedString *likesText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *likesTextAttachment = [InlineTextAttachment new];
-    likesTextAttachment.fontDescender = self.todayLikesButton.titleLabel.font.descender;
-    likesTextAttachment.image = likesImage;
-    [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
-    [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [likesText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [self.todayLikesButton setAttributedTitle:likesText forState:UIControlStateNormal];
-    [self.todayLikesButton setTitleColor:[WPStyleGuide greyDarken20] forState:UIControlStateNormal];
-    
-    NSMutableAttributedString *commentsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *commentsTextAttachment = [InlineTextAttachment new];
-    commentsTextAttachment.fontDescender = self.todayCommentsButton.titleLabel.font.descender;
-    commentsTextAttachment.image = commentsImage;
-    [commentsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:commentsTextAttachment] atIndex:0];
-    [commentsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [self.todayCommentsButton setAttributedTitle:commentsText forState:UIControlStateNormal];
-    [self.todayCommentsButton setTitleColor:[WPStyleGuide greyDarken20] forState:UIControlStateNormal];
+    [self.todayViewsButton setAttributedTitle:[self viewsAttributedString] forState:UIControlStateNormal];
+    [self.todayVisitorsButton setAttributedTitle:[self visitorsAttributedString] forState:UIControlStateNormal];
+    [self.todayLikesButton setAttributedTitle:[self likesAttributedString] forState:UIControlStateNormal];
+    [self.todayCommentsButton setAttributedTitle:[self commentsAttributedString] forState:UIControlStateNormal];
     
     // Default values for no data
     self.mostPopularDay.text = @"-";
@@ -188,10 +110,10 @@
     self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
     self.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
     self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.todayViewsValueLabel.text = @"-";
-    self.todayViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.todayVisitorsValueLabel.text = @"-";
-    self.todayVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    [self.todayViewsValueButton setTitle:@"-" forState:UIControlStateNormal];
+    [self.todayViewsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+    [self.todayVisitorsValueButton setTitle:@"-" forState:UIControlStateNormal];
+    [self.todayVisitorsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
     [self.todayLikesValueButton setTitle:@"-" forState:UIControlStateNormal];
     [self.todayLikesValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
     [self.todayCommentsValueButton setTitle:@"-" forState:UIControlStateNormal];
@@ -275,10 +197,10 @@
          self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
          self.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
          self.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
-         self.todayViewsValueLabel.text = todaySummary.views;
-         self.todayViewsValueLabel.textColor = todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
-         self.todayVisitorsValueLabel.text = todaySummary.visitors;
-         self.todayVisitorsValueLabel.textColor = todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
+         [self.todayViewsValueButton setTitle:todaySummary.views forState:UIControlStateNormal];
+         [self.todayViewsValueButton setTitleColor:todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+         [self.todayVisitorsValueButton setTitle:todaySummary.visitors forState:UIControlStateNormal];
+         [self.todayVisitorsValueButton setTitleColor:todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
          [self.todayLikesValueButton setTitle:todaySummary.likes forState:UIControlStateNormal];
          [self.todayLikesValueButton setTitleColor:todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
          [self.todayCommentsValueButton setTitle:todaySummary.comments forState:UIControlStateNormal];
@@ -302,6 +224,185 @@
     UIRefreshControl *refreshControl = [UIRefreshControl new];
     [refreshControl addTarget:self action:@selector(refreshCurrentStats:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+}
+
+#pragma mark - Attributed String generation methods
+
+- (NSMutableAttributedString *)postsAttributedString
+{
+    NSMutableAttributedString *postsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *postsTextAttachment = [InlineTextAttachment new];
+    postsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
+    postsTextAttachment.image = [self postsImage];
+    [postsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:postsTextAttachment] atIndex:0];
+    [postsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [postsText appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+    [postsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, postsText.length)];
+
+    return postsText;
+}
+
+- (NSMutableAttributedString *)viewsAttributedString
+{
+    NSMutableAttributedString *viewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *viewsTextAttachment = [InlineTextAttachment new];
+    viewsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
+    viewsTextAttachment.image = [self viewsImage];
+    [viewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:viewsTextAttachment] atIndex:0];
+    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [viewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
+    [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, viewsText.length)];
+
+    return viewsText;
+}
+
+- (NSMutableAttributedString *)visitorsAttributedString
+{
+    
+    NSMutableAttributedString *visitorsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *visitorsTextAttachment = [InlineTextAttachment new];
+    visitorsTextAttachment.fontDescender = self.allTimeVisitorsLabel.font.descender;
+    visitorsTextAttachment.image = [self visitorsImage];
+    [visitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:visitorsTextAttachment] atIndex:0];
+    [visitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [visitorsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
+    [visitorsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, visitorsText.length)];
+
+    return visitorsText;
+}
+
+- (NSMutableAttributedString *)bestViewsAttributedString
+{
+    NSMutableAttributedString *bestViewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Best Views Ever", @"Stats Best Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *bestViewsTextAttachment = [InlineTextAttachment new];
+    bestViewsTextAttachment.fontDescender = self.allTimeBestViewsLabel.font.descender;
+    bestViewsTextAttachment.image = [self bestViewsImage];
+    [bestViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:bestViewsTextAttachment] atIndex:0];
+    [bestViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [bestViewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide warningYellow] range:NSMakeRange(0, bestViewsText.length)];
+
+    return bestViewsText;
+}
+
+- (NSMutableAttributedString *)likesAttributedString
+{
+    NSMutableAttributedString *likesText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *likesTextAttachment = [InlineTextAttachment new];
+    likesTextAttachment.fontDescender = self.todayLikesButton.titleLabel.font.descender;
+    likesTextAttachment.image = [self likesImage];
+    [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
+    [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [likesText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
+    [likesText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, likesText.length)];
+
+    return likesText;
+}
+
+- (NSMutableAttributedString *)commentsAttributedString
+{
+    NSMutableAttributedString *commentsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
+    InlineTextAttachment *commentsTextAttachment = [InlineTextAttachment new];
+    commentsTextAttachment.fontDescender = self.todayCommentsButton.titleLabel.font.descender;
+    commentsTextAttachment.image = [self commentsImage];
+    [commentsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:commentsTextAttachment] atIndex:0];
+    [commentsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [commentsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, commentsText.length)];
+
+    return commentsText;
+}
+
+#pragma mark - Image methods
+
+- (NSBundle *)bundle
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:path];
+
+    return bundle;
+}
+
+- (UIImage *)postsImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *postsImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        postsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-text_normal" ofType:@"png"]];
+    }
+    
+    return postsImage;
+}
+
+- (UIImage *)viewsImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *viewsImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        viewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-eye_normal" ofType:@"png"]];
+    }
+    
+    return viewsImage;
+}
+
+- (UIImage *)visitorsImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *visitorsImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        visitorsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-user_normal" ofType:@"png"]];
+    }
+    
+    return visitorsImage;
+}
+
+- (UIImage *)bestViewsImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *bestViewsImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        bestViewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-trophy_normal" ofType:@"png"]];
+    }
+    
+    return bestViewsImage;
+}
+
+- (UIImage *)likesImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *likesImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        likesImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-star_normal" ofType:@"png"]];
+    }
+    
+    return likesImage;
+}
+
+- (UIImage *)commentsImage
+{
+    NSBundle *bundle = [self bundle];
+    UIImage *commentsImage;
+    
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    } else {
+        commentsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-comment_normal" ofType:@"png"]];
+    }
+    
+    return commentsImage;
 }
 
 @end
