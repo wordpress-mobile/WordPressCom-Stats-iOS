@@ -738,7 +738,7 @@
                                                             </state>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6H5-sV-soQ">
-                                                            <rect key="frame" x="8" y="21" width="129" height="34"/>
+                                                            <rect key="frame" x="8" y="21" width="130" height="34"/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
                                                             <state key="normal" title="0">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -752,9 +752,9 @@
                                                         <constraint firstAttribute="centerX" secondItem="6H5-sV-soQ" secondAttribute="centerX" id="JV4-3c-wB6"/>
                                                         <constraint firstAttribute="bottom" secondItem="AgS-4W-V5O" secondAttribute="bottom" id="Pju-s6-nXU"/>
                                                         <constraint firstAttribute="centerY" secondItem="6H5-sV-soQ" secondAttribute="centerY" constant="-5" id="Q8y-zS-ddH"/>
-                                                        <constraint firstItem="AgS-4W-V5O" firstAttribute="leading" secondItem="6H5-sV-soQ" secondAttribute="trailing" constant="8" id="Unm-aj-MQX"/>
                                                         <constraint firstItem="6H5-sV-soQ" firstAttribute="leading" secondItem="iwI-u2-AsI" secondAttribute="leading" constant="8" id="mw9-2n-KVJ"/>
                                                         <constraint firstAttribute="trailing" secondItem="AgS-4W-V5O" secondAttribute="trailing" id="qqG-8p-P8C"/>
+                                                        <constraint firstAttribute="trailing" secondItem="6H5-sV-soQ" secondAttribute="trailing" constant="8" id="sbJ-Up-jeE"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vap-Tr-7k3">
