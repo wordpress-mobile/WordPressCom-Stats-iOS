@@ -3,7 +3,7 @@
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
 
-@interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsTypeSelectionDelegate, UIActionSheetDelegate>
+@interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsSummaryTypeSelectionDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;

@@ -13,7 +13,7 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 
 @class WPStatsViewController;
 
-@protocol WPStatsTypeSelectionDelegate <NSObject>
+@protocol WPStatsSummaryTypeSelectionDelegate <NSObject>
 
 - (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType;
 
