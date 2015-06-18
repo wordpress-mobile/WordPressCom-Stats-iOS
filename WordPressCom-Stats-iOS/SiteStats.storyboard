@@ -736,6 +736,9 @@
                                                             <state key="normal" title="LIKES">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="kHf-gG-cP6"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6H5-sV-soQ">
                                                             <rect key="frame" x="8" y="21" width="130" height="34"/>
@@ -743,6 +746,9 @@
                                                             <state key="normal" title="0">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="4Qm-FM-g9S"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
@@ -768,6 +774,9 @@
                                                             <state key="normal" title="0">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="KlF-nP-CW5"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUZ-Tg-WTV">
                                                             <rect key="frame" x="45" y="2" width="57" height="26"/>
@@ -775,6 +784,9 @@
                                                             <state key="normal" title="COMMENTS">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="LCB-GE-g5n"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
@@ -805,6 +817,9 @@
                                                             <state key="normal" title="32">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayVisitors:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="tId-3p-i1R"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9y-bc-4NQ">
                                                             <rect key="frame" x="52" y="2" width="43" height="26"/>
@@ -812,6 +827,9 @@
                                                             <state key="normal" title="VISITORS">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayVisitors:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="q2f-xD-KRm"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
@@ -845,6 +863,9 @@
                                                             <state key="normal" title="24">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="38w-UC-aGe"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Zp-vE-uY4">
                                                             <rect key="frame" x="58" y="2" width="30" height="26"/>
@@ -852,6 +873,9 @@
                                                             <state key="normal" title="VIEWS">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="NKu-zg-YtZ"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>

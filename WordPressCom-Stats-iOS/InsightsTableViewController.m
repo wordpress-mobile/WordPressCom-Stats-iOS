@@ -226,6 +226,31 @@
     self.refreshControl = refreshControl;
 }
 
+
+#pragma mark - Actions for today stats
+
+
+- (IBAction)switchToTodayViews:(UIButton *)button
+{
+    
+}
+
+- (IBAction)switchToTodayVisitors:(UIButton *)button
+{
+    
+}
+
+- (IBAction)switchToTodayLikes:(UIButton *)button
+{
+    
+}
+
+- (IBAction)switchToTodayComments:(UIButton *)button
+{
+    
+}
+
+
 #pragma mark - Attributed String generation methods
 
 - (NSMutableAttributedString *)postsAttributedString
