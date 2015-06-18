@@ -123,15 +123,13 @@
 }
 
 
-#pragma mark WPStatsTypeSelectionDelegate methods
+#pragma mark WPStatsSummaryTypeSelectionDelegate methods
 
 - (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType
 {
     self.lastSelectedStatsPeriodType = StatsPeriodTypeDays;
     self.statsPeriodType = StatsPeriodTypeDays;
     
-    // TODO - Select other thing
-
     [self updateSegmentedControlForceUpdate:YES];
 
     self.insightsContainerView.hidden = YES;
@@ -140,6 +138,8 @@
     if (self.statsProgressView.progress > 0.0f) {
         self.statsProgressView.hidden = NO;
     }
+    
+    [self.statsTableViewController switchToSummaryType:statsSummaryType];
 }
 
 #pragma mark StatsTableViewControllerDelegate methods

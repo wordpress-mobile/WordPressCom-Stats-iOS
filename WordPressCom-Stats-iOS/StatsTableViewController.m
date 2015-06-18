@@ -494,6 +494,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [self retrieveStatsSkipGraph:NO];
 }
 
+- (void)switchToSummaryType:(StatsSummaryType)summaryType
+{
+    self.selectedSummaryType = summaryType;
+    [self changeGraphPeriod:StatsPeriodUnitDay];
+}
+
 - (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
 {
     StatsSection statsSection = (StatsSection)control.superview.tag;
