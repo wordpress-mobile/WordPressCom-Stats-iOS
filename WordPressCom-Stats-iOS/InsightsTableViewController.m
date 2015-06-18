@@ -39,8 +39,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *todaySectionHeaderLabel;
 @property (nonatomic, weak) IBOutlet UILabel *todayViewsLabel;
 @property (nonatomic, weak) IBOutlet UILabel *todayVisitorsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayLikesLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayCommentsLabel;
+@property (nonatomic, weak) IBOutlet UIButton *todayLikesButton;
+@property (nonatomic, weak) IBOutlet UIButton *todayCommentsButton;
 
 // Values
 @property (nonatomic, weak) IBOutlet UILabel *mostPopularDay;
@@ -52,8 +52,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsOnValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *todayViewsValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *todayVisitorsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayLikesValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *todayCommentsValueLabel;
+@property (nonatomic, weak) IBOutlet UIButton *todayLikesValueButton;
+@property (nonatomic, weak) IBOutlet UIButton *todayCommentsValueButton;
 
 @end
 
@@ -152,22 +152,22 @@
     
     NSMutableAttributedString *likesText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *likesTextAttachment = [InlineTextAttachment new];
-    likesTextAttachment.fontDescender = self.todayLikesLabel.font.descender;
+    likesTextAttachment.fontDescender = self.todayLikesButton.titleLabel.font.descender;
     likesTextAttachment.image = likesImage;
     [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
     [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
     [likesText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    self.todayLikesLabel.attributedText = likesText;
-    self.todayLikesLabel.textColor = [WPStyleGuide greyDarken20];
+    [self.todayLikesButton setAttributedTitle:likesText forState:UIControlStateNormal];
+    [self.todayLikesButton setTitleColor:[WPStyleGuide greyDarken20] forState:UIControlStateNormal];
     
     NSMutableAttributedString *commentsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *commentsTextAttachment = [InlineTextAttachment new];
-    commentsTextAttachment.fontDescender = self.todayCommentsLabel.font.descender;
+    commentsTextAttachment.fontDescender = self.todayCommentsButton.titleLabel.font.descender;
     commentsTextAttachment.image = commentsImage;
     [commentsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:commentsTextAttachment] atIndex:0];
     [commentsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    self.todayCommentsLabel.attributedText = commentsText;
-    self.todayCommentsLabel.textColor = [WPStyleGuide greyDarken20];
+    [self.todayCommentsButton setAttributedTitle:commentsText forState:UIControlStateNormal];
+    [self.todayCommentsButton setTitleColor:[WPStyleGuide greyDarken20] forState:UIControlStateNormal];
     
     // Default values for no data
     self.mostPopularDay.text = @"-";
@@ -192,10 +192,10 @@
     self.todayViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
     self.todayVisitorsValueLabel.text = @"-";
     self.todayVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.todayLikesValueLabel.text = @"-";
-    self.todayLikesValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.todayCommentsValueLabel.text = @"-";
-    self.todayCommentsValueLabel.textColor = [WPStyleGuide greyLighten20];
+    [self.todayLikesValueButton setTitle:@"-" forState:UIControlStateNormal];
+    [self.todayLikesValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+    [self.todayCommentsValueButton setTitle:@"-" forState:UIControlStateNormal];
+    [self.todayCommentsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
 
     [self retrieveStats];
 }
@@ -208,7 +208,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 2) {
+    if (indexPath.section == 2 && indexPath.row == 0) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsTypeSelection:StatsTypeDays];
         }
@@ -265,10 +265,6 @@
          self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
          self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
          self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
-         self.todayViewsValueLabel.textColor = [WPStyleGuide grey];
-         self.todayVisitorsValueLabel.textColor = [WPStyleGuide grey];
-         self.todayLikesValueLabel.textColor = [WPStyleGuide grey];
-         self.todayCommentsValueLabel.textColor = [WPStyleGuide grey];
 
          self.mostPopularDay.text = statsInsights.highestDayOfWeek;
          self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestDayPercent];
@@ -283,10 +279,10 @@
          self.todayViewsValueLabel.textColor = todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
          self.todayVisitorsValueLabel.text = todaySummary.visitors;
          self.todayVisitorsValueLabel.textColor = todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
-         self.todayLikesValueLabel.text = todaySummary.likes;
-         self.todayLikesValueLabel.textColor = todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
-         self.todayCommentsValueLabel.text = todaySummary.comments;
-         self.todayCommentsValueLabel.textColor = todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue];
+         [self.todayLikesValueButton setTitle:todaySummary.likes forState:UIControlStateNormal];
+         [self.todayLikesValueButton setTitleColor:todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+         [self.todayCommentsValueButton setTitle:todaySummary.comments forState:UIControlStateNormal];
+         [self.todayCommentsValueButton setTitleColor:todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
          
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
