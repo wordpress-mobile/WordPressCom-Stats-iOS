@@ -132,7 +132,7 @@
     
     if (indexPath.section == 2 && indexPath.row == 0) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
-            [self.statsTypeSelectionDelegate viewController:self changeStatsTypeSelection:StatsTypeDays];
+            [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
     }
 }
@@ -232,22 +232,30 @@
 
 - (IBAction)switchToTodayViews:(UIButton *)button
 {
-    
+    if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
+        [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
+    }
 }
 
 - (IBAction)switchToTodayVisitors:(UIButton *)button
 {
-    
+    if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
+        [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeVisitors];
+    }
 }
 
 - (IBAction)switchToTodayLikes:(UIButton *)button
 {
-    
+    if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
+        [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeLikes];
+    }
 }
 
 - (IBAction)switchToTodayComments:(UIButton *)button
 {
-    
+    if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsTypeSelectionDelegate)]) {
+        [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeComments];
+    }
 }
 
 
