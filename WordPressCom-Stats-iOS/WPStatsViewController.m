@@ -3,7 +3,7 @@
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
 
-@interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsTypeSelectionDelegate, UIActionSheetDelegate>
+@interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsSummaryTypeSelectionDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) StatsTableViewController *statsTableViewController;
 @property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;
@@ -14,8 +14,8 @@
 @property (nonatomic, weak) IBOutlet UIView *statsContainerView;
 @property (nonatomic, weak) UIActionSheet *periodActionSheet;
 
-@property (nonatomic, assign) StatsType lastSelectedPeriodStatsType;
-@property (nonatomic, assign) StatsType statsType;
+@property (nonatomic, assign) StatsPeriodType lastSelectedStatsPeriodType;
+@property (nonatomic, assign) StatsPeriodType statsPeriodType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
 
 @end
@@ -26,8 +26,8 @@
 {
     [super viewDidLoad];
     
-    self.statsType = StatsTypeInsights;
-    self.lastSelectedPeriodStatsType = StatsTypeDays;
+    self.statsPeriodType = StatsPeriodTypeInsights;
+    self.lastSelectedStatsPeriodType = StatsPeriodTypeDays;
 
     if (IS_IPAD || UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
         [self showAllSegments];
@@ -37,7 +37,7 @@
         self.showingAbbreviatedSegments = YES;
     }
 
-    self.statsTypeSegmentControl.selectedSegmentIndex = self.statsType;
+    self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
     self.insightsContainerView.hidden = NO;
     self.statsContainerView.hidden = YES;
 }
@@ -78,7 +78,7 @@
 - (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control
 {
     if (control.selectedSegmentIndex == 0) {
-        self.statsType = StatsTypeInsights;
+        self.statsPeriodType = StatsPeriodTypeInsights;
         self.insightsContainerView.hidden = NO;
         if (self.insightsProgressView.progress > 0.0f) {
             self.insightsProgressView.hidden = NO;
@@ -112,23 +112,23 @@
         }
    
         if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
-            self.statsType = self.lastSelectedPeriodStatsType;
+            self.statsPeriodType = self.lastSelectedStatsPeriodType;
         } else {
-            self.statsType = control.selectedSegmentIndex;
-            self.lastSelectedPeriodStatsType = self.statsType;
+            self.statsPeriodType = control.selectedSegmentIndex;
+            self.lastSelectedStatsPeriodType = self.statsPeriodType;
         }
     }
     
 }
 
 
-#pragma mark WPStatsTypeSelectionDelegate methods
+#pragma mark WPStatsSummaryTypeSelectionDelegate methods
 
-- (void)viewController:(UIViewController *)viewController changeStatsTypeSelection:(StatsType)statsType
+- (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType
 {
-    self.lastSelectedPeriodStatsType = statsType;
-    self.statsType = statsType;
-
+    self.lastSelectedStatsPeriodType = StatsPeriodTypeDays;
+    self.statsPeriodType = StatsPeriodTypeDays;
+    
     [self updateSegmentedControlForceUpdate:YES];
 
     self.insightsContainerView.hidden = YES;
@@ -137,6 +137,8 @@
     if (self.statsProgressView.progress > 0.0f) {
         self.statsProgressView.hidden = NO;
     }
+    
+    [self.statsTableViewController switchToSummaryType:statsSummaryType];
 }
 
 #pragma mark StatsTableViewControllerDelegate methods
@@ -148,10 +150,10 @@
     BOOL controllerIsVisible = NO;
     if (controller == self.insightsTableViewController) {
         progressView = self.insightsProgressView;
-        controllerIsVisible = self.statsType == StatsTypeInsights;
+        controllerIsVisible = self.statsPeriodType == StatsPeriodTypeInsights;
     } else if (controller == self.statsTableViewController) {
         progressView = self.statsProgressView;
-        controllerIsVisible = self.statsType != StatsTypeInsights;
+        controllerIsVisible = self.statsPeriodType != StatsPeriodTypeInsights;
     }
     
     if (controllerIsVisible) {
@@ -167,10 +169,10 @@
     BOOL controllerIsVisible = NO;
     if (controller == self.insightsTableViewController) {
         progressView = self.insightsProgressView;
-        controllerIsVisible = self.statsType == StatsTypeInsights;
+        controllerIsVisible = self.statsPeriodType == StatsPeriodTypeInsights;
     } else if (controller == self.statsTableViewController) {
         progressView = self.statsProgressView;
-        controllerIsVisible = self.statsType != StatsTypeInsights;
+        controllerIsVisible = self.statsPeriodType != StatsPeriodTypeInsights;
     }
     
     if (controllerIsVisible) {
@@ -209,12 +211,12 @@
 {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         // If last selected was Insights, reselect it otherwise force segment 1
-        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsType == StatsTypeInsights ? StatsTypeInsights : 1;
+        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeInsights : 1;
         return;
     }
     
-    self.statsType = buttonIndex + 1;
-    self.lastSelectedPeriodStatsType = self.statsType;
+    self.statsPeriodType = buttonIndex + 1;
+    self.lastSelectedStatsPeriodType = self.statsPeriodType;
     [self showAbbreviatedSegments];
 }
 
@@ -244,19 +246,19 @@
     [self.statsTypeSegmentControl removeAllSegments];
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Insights", @"Title of Insights segmented control") atIndex:0 animated:NO];
     
-    if (self.lastSelectedPeriodStatsType == StatsTypeDays) {
+    if (self.lastSelectedStatsPeriodType == StatsPeriodTypeDays) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Days", @"Title of Days segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedPeriodStatsType == StatsTypeWeeks) {
+    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeWeeks) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Weeks", @"Title of Weeks segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedPeriodStatsType == StatsTypeMonths) {
+    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeMonths) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Months", @"Title of Months segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedPeriodStatsType == StatsTypeYears) {
+    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeYears) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:1 animated:NO];
     }
     
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"More…", @"Title of more periods segmented control") atIndex:2 animated:NO];
     
-    if (self.statsType == StatsTypeInsights) {
+    if (self.statsPeriodType == StatsPeriodTypeInsights) {
         self.statsTypeSegmentControl.selectedSegmentIndex = 0;
     } else {
         self.statsTypeSegmentControl.selectedSegmentIndex = 1;
@@ -272,13 +274,13 @@
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Months", @"Title of Months segmented control") atIndex:3 animated:NO];
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:4 animated:NO];
     
-    self.statsTypeSegmentControl.selectedSegmentIndex = self.statsType;
+    self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
 }
 
-- (void)setStatsType:(StatsType)statsType
+- (void)setStatsPeriodType:(StatsPeriodType)statsPeriodType
 {
-    if (statsType != StatsTypeInsights && statsType != _statsType) {
-        StatsPeriodUnit periodUnit = statsType - 1;
+    if (statsPeriodType != StatsPeriodTypeInsights && statsPeriodType != _statsPeriodType) {
+        StatsPeriodUnit periodUnit = statsPeriodType - 1;
         [self.statsTableViewController changeGraphPeriod:periodUnit];
         self.statsContainerView.hidden = NO;
         self.insightsContainerView.hidden = YES;
@@ -287,7 +289,7 @@
         self.insightsContainerView.hidden = NO;
     }
     
-    _statsType = statsType;
+    _statsPeriodType = statsPeriodType;
 }
 
 @end

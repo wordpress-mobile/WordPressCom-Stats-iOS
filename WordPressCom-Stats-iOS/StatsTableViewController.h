@@ -12,5 +12,6 @@
 @property (nonatomic, weak) id<StatsProgressViewDelegate> statsProgressViewDelegate;
 
 - (void)changeGraphPeriod:(StatsPeriodUnit)toPeriod;
+- (void)switchToSummaryType:(StatsSummaryType)summaryType;
 
 @end
