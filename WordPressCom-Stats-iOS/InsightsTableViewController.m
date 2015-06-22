@@ -217,7 +217,7 @@
 
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
-    [self.statsService expireAllItemsInCache];
+    [self.statsService expireAllItemsInCacheForInsights];
     [self retrieveStats];
 }
 

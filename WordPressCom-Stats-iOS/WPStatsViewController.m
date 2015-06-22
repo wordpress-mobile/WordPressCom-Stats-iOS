@@ -18,8 +18,6 @@
 @property (nonatomic, assign) StatsType statsType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
 
-@property (nonatomic, strong) WPStatsService *statsService;
-
 @end
 
 @implementation WPStatsViewController
@@ -53,11 +51,12 @@
         self.statsTableViewController = tableVC;
         tableVC.statsDelegate = self.statsDelegate;
         tableVC.statsProgressViewDelegate = self;
-        tableVC.statsService = self.statsService;
+        tableVC.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
+;
     } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
         InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
         self.insightsTableViewController = insightsTableViewController;
-        insightsTableViewController.statsService = self.statsService;
+        insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
         insightsTableViewController.statsProgressViewDelegate = self;
         insightsTableViewController.statsTypeSelectionDelegate = self;
     }
@@ -81,12 +80,20 @@
     if (control.selectedSegmentIndex == 0) {
         self.statsType = StatsTypeInsights;
         self.insightsContainerView.hidden = NO;
+        if (self.insightsProgressView.progress > 0.0f) {
+            self.insightsProgressView.hidden = NO;
+        }
         self.statsContainerView.hidden = YES;
+        self.statsProgressView.hidden = YES;
         return;
     }
     
     self.insightsContainerView.hidden = YES;
+    self.insightsProgressView.hidden = YES;
     self.statsContainerView.hidden = NO;
+    if (self.statsProgressView.progress > 0.0f) {
+        self.statsProgressView.hidden = NO;
+    }
     
     if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 2) {
 #ifndef AF_APP_EXTENSIONS
@@ -123,7 +130,11 @@
     [self updateSegmentedControlForceUpdate:YES];
 
     self.insightsContainerView.hidden = YES;
+    self.insightsProgressView.hidden = YES;
     self.statsContainerView.hidden = NO;
+    if (self.statsProgressView.progress > 0.0f) {
+        self.statsProgressView.hidden = NO;
+    }
 }
 
 #pragma mark StatsTableViewControllerDelegate methods
@@ -132,35 +143,47 @@
 - (void)statsViewControllerDidBeginLoadingStats:(UIViewController *)controller
 {
     UIProgressView *progressView = nil;
-    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+    BOOL controllerIsVisible = NO;
+    if (controller == self.insightsTableViewController) {
         progressView = self.insightsProgressView;
-    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+        controllerIsVisible = self.statsType == StatsTypeInsights;
+    } else if (controller == self.statsTableViewController) {
         progressView = self.statsProgressView;
+        controllerIsVisible = self.statsType != StatsTypeInsights;
+    }
+    
+    if (controllerIsVisible) {
+        progressView.hidden = NO;
     }
 
     progressView.progress = 0.03f;
-    progressView.hidden = NO;
 }
 
 - (void)statsViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage
 {
     UIProgressView *progressView = nil;
-    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+    BOOL controllerIsVisible = NO;
+    if (controller == self.insightsTableViewController) {
         progressView = self.insightsProgressView;
-    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+        controllerIsVisible = self.statsType == StatsTypeInsights;
+    } else if (controller == self.statsTableViewController) {
         progressView = self.statsProgressView;
+        controllerIsVisible = self.statsType != StatsTypeInsights;
     }
     
-    progressView.hidden = NO;
+    if (controllerIsVisible) {
+        progressView.hidden = NO;
+    }
+    
     [progressView setProgress:(float)percentage animated:YES];
 }
 
 - (void)statsViewControllerDidEndLoadingStats:(UIViewController *)controller
 {
     UIProgressView *progressView = nil;
-    if (controller == self.insightsTableViewController && self.statsType == StatsTypeInsights) {
+    if (controller == self.insightsTableViewController) {
         progressView = self.insightsProgressView;
-    } else if (controller == self.statsTableViewController && self.statsType != StatsTypeInsights) {
+    } else if (controller == self.statsTableViewController) {
         progressView = self.statsProgressView;
     }
 
@@ -171,6 +194,7 @@
                          completion:^(BOOL finished) {
                              progressView.alpha = 1.0f;
                              progressView.hidden = YES;
+                             progressView.progress = 0.0f;
                          }];
     });
 }
@@ -191,18 +215,6 @@
     [self showAbbreviatedSegments];
 }
 
-
-#pragma mark - Property overrides
-
-- (WPStatsService *)statsService
-{
-    if (!_statsService) {
-        NSTimeInterval fiveMinutes = 60 * 5;
-        _statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
-    }
-    
-    return _statsService;
-}
 
 #pragma mark - Private methods
 

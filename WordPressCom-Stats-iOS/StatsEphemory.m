@@ -76,6 +76,19 @@
     [self.cache removeObjectForKey:key];
 }
 
+- (void)removeAllObjectsExceptObjectForKey:(id)key
+{
+    NSParameterAssert(key != nil);
+
+    for (id existingKey in self.cache.allKeys) {
+        if ([existingKey isEqual:key]) {
+            continue;
+        }
+        
+        [self.cache removeObjectForKey:existingKey];
+    }
+}
+
 - (void)removeAllObjects
 {
     [self.cache removeAllObjects];
