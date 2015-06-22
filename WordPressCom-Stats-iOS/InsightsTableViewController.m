@@ -291,7 +291,6 @@
 
 - (NSMutableAttributedString *)visitorsAttributedString
 {
-    
     NSMutableAttributedString *visitorsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *visitorsTextAttachment = [InlineTextAttachment new];
     visitorsTextAttachment.fontDescender = self.allTimeVisitorsLabel.font.descender;
