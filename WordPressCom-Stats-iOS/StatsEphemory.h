@@ -17,6 +17,6 @@
 - (void)setObject:(id)obj forKey:(id)key;
 - (void)removeObjectForKey:(id)key;
 - (void)removeAllObjects;
-- (void)removeAllObjectsExpectObjectForKey:(id)key;
+- (void)removeAllObjectsExceptObjectForKey:(id)key;
 
 @end

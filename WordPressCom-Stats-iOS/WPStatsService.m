@@ -449,7 +449,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 - (void)expireAllItemsInCacheForPeriodStats
 {
     // TODO :: This is hacky. Maybe have a separate cache for period stats.
-    [self.ephemory removeAllObjectsExpectObjectForKey:BatchInsightsCacheKey];
+    [self.ephemory removeAllObjectsExceptObjectForKey:BatchInsightsCacheKey];
 }
 
 
