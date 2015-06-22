@@ -18,8 +18,6 @@
 @property (nonatomic, assign) StatsPeriodType statsPeriodType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
 
-@property (nonatomic, strong) WPStatsService *statsService;
-
 @end
 
 @implementation WPStatsViewController
@@ -53,11 +51,12 @@
         self.statsTableViewController = tableVC;
         tableVC.statsDelegate = self.statsDelegate;
         tableVC.statsProgressViewDelegate = self;
-        tableVC.statsService = self.statsService;
+        tableVC.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
+;
     } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
         InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
         self.insightsTableViewController = insightsTableViewController;
-        insightsTableViewController.statsService = self.statsService;
+        insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
         insightsTableViewController.statsProgressViewDelegate = self;
         insightsTableViewController.statsTypeSelectionDelegate = self;
     }
@@ -221,18 +220,6 @@
     [self showAbbreviatedSegments];
 }
 
-
-#pragma mark - Property overrides
-
-- (WPStatsService *)statsService
-{
-    if (!_statsService) {
-        NSTimeInterval fiveMinutes = 60 * 5;
-        _statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
-    }
-    
-    return _statsService;
-}
 
 #pragma mark - Private methods
 

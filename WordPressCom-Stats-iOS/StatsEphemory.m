@@ -76,7 +76,7 @@
     [self.cache removeObjectForKey:key];
 }
 
-- (void)removeAllObjectsExpectObjectForKey:(id)key
+- (void)removeAllObjectsExceptObjectForKey:(id)key
 {
     NSParameterAssert(key != nil);
 
