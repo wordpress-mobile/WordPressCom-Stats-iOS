@@ -282,6 +282,11 @@
     if (statsPeriodType != StatsPeriodTypeInsights && statsPeriodType != _statsPeriodType) {
         StatsPeriodUnit periodUnit = statsPeriodType - 1;
         [self.statsTableViewController changeGraphPeriod:periodUnit];
+        self.statsContainerView.hidden = NO;
+        self.insightsContainerView.hidden = YES;
+    } else {
+        self.statsContainerView.hidden = YES;
+        self.insightsContainerView.hidden = NO;
     }
     
     _statsPeriodType = statsPeriodType;
