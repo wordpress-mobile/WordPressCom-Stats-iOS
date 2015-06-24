@@ -6,6 +6,7 @@
 #import "StatsItemAction.h"
 #import <NSObject+SafeExpectations.h>
 #import <NSString+XMLExtensions.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 
@@ -649,8 +650,15 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
             periodSummary.likesValue = period[likesIndex];
             periodSummary.comments = [self localizedStringForNumber:period[commentsIndex]];
             periodSummary.commentsValue = period[commentsIndex];
-            [array addObject:periodSummary];
-            dictionary[periodSummary.date] = periodSummary;
+            
+            if (periodSummary.date) {
+                [array addObject:periodSummary];
+                dictionary[periodSummary.date] = periodSummary;
+            } else {
+                DDLogError(@"operationForVisitsForDate resulted in nil date: raw date: %@", period[periodIndex]);
+                [WPAnalytics track:WPAnalyticsStatLogSpecialCondition withProperties:@{@"error_condition" : @"WPStatsServiceRemote operationForVisitsForDate:andUnit:withCompletionHandler",
+                                                                                       @"error_details" : [NSString stringWithFormat:@"Date in raw format: %@", period[periodIndex]] }];
+            }
         }
         
         statsVisits.statsData = array;
