@@ -5,6 +5,7 @@
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 @interface WPStatsServiceRemoteTests : XCTestCase
 
@@ -157,6 +158,43 @@
      }];
     
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testFetchVisitsStatsForDateWithBadSummaryDate
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"fetchVisitsStatsForPeriodUnit completion"];
+    XCTestExpectation *trackerExpectation = [self expectationWithDescription:@"Tracks expectation"];
+
+    id trackerMock = OCMStrictProtocolMock(@protocol(WPAnalyticsTracker));
+    OCMExpect([trackerMock track:WPAnalyticsStatLogSpecialCondition withProperties:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        [trackerExpectation fulfill];
+    });
+    
+    [WPAnalytics registerTracker:trackerMock];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day-bad-date.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchVisitsStatsForDate:[NSDate date]
+                                  andUnit:StatsPeriodUnitDay
+                    withCompletionHandler:^(StatsVisits *visits, NSError *error)
+     {
+         XCTAssertNotNil(visits, @"visits should not be nil.");
+         XCTAssertNotNil(visits.date);
+         XCTAssertEqual(29, visits.statsData.count);
+         XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
+         XCTAssertFalse(visits.errorWhileRetrieving);
+         XCTAssertNil(error);
+         
+         [expectation fulfill];
+     }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    
+    [WPAnalytics clearTrackers];
 }
 
 - (void)testTopPostsDay
