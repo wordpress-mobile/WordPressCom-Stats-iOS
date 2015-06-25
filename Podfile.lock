@@ -38,7 +38,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
-  - CocoaLumberjack (~> 2.0)
+  - CocoaLumberjack (= 2.0.0)
   - NSObject-SafeExpectations (= 0.0.2)
   - OCMock
   - OHHTTPStubs (= 3.1.1)
