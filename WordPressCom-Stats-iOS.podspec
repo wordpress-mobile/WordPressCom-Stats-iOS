@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency 'AFNetworking',	'~> 2.5'
-  s.dependency 'CocoaLumberjack', '~> 2.0'
+  s.dependency 'CocoaLumberjack', '2.0.0'
   s.dependency 'WordPress-iOS-Shared', '~> 0.3'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
   s.dependency 'WordPressCom-Analytics-iOS', '~>0.0.34'
