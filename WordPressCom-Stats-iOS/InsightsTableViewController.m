@@ -3,6 +3,7 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsGaugeView.h"
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -122,6 +123,13 @@
     [self retrieveStats];
 }
 
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [WPAnalytics track:WPAnalyticsStatStatsInsightsAccessed];
+}
 
 
 #pragma mark - UITableViewDelegate methods

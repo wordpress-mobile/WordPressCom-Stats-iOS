@@ -5,6 +5,7 @@ inhibit_all_warnings!
 target "StatsDemo" do
   pod 'WordPressCom-Stats-iOS', :path => '../'
   pod 'HockeySDK'
+  pod 'CocoaLumberjack', '2.0.0'
 end
 
 post_install do |installer_representation|

@@ -112,6 +112,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self trackViewControllerAnalytics];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -492,6 +494,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [self.tableView reloadData];
     
     [self retrieveStatsSkipGraph:NO];
+    
+    [self trackViewControllerAnalytics];
 }
 
 - (void)switchToSummaryType:(StatsSummaryType)summaryType
@@ -1343,6 +1347,28 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     calendar.timeZone = [NSTimeZone localTimeZone];
     NSDate *date = [calendar dateFromComponents:components];
     self.selectedDate = date;
+}
+
+- (void)trackViewControllerAnalytics
+{
+    WPAnalyticsStat stat;
+    
+    switch (self.selectedPeriodUnit) {
+        case StatsPeriodUnitDay:
+            stat = WPAnalyticsStatStatsPeriodDaysAccessed;
+            break;
+        case StatsPeriodUnitWeek:
+            stat = WPAnalyticsStatStatsPeriodWeeksAccessed;
+            break;
+        case StatsPeriodUnitMonth:
+            stat = WPAnalyticsStatStatsPeriodMonthsAccessed;
+            break;
+        case StatsPeriodUnitYear:
+            stat = WPAnalyticsStatStatsPeriodYearsAccessed;
+            break;
+    }
+    
+    [WPAnalytics track:stat];
 }
 
 
