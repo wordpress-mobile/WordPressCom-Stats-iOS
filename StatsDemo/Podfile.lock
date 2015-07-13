@@ -36,14 +36,15 @@ PODS:
     - AFNetworking (~> 2.5)
     - CocoaLumberjack (~> 2.0)
   - WordPressCom-Analytics-iOS (0.0.34)
-  - WordPressCom-Stats-iOS (0.3.5):
+  - WordPressCom-Stats-iOS (0.4.1):
     - AFNetworking (~> 2.5)
     - CocoaLumberjack (= 2.0.0)
     - NSObject-SafeExpectations (= 0.0.2)
     - WordPress-iOS-Shared (~> 0.3)
-    - WordPressCom-Analytics-iOS
+    - WordPressCom-Analytics-iOS (~> 0.0.34)
 
 DEPENDENCIES:
+  - CocoaLumberjack (= 2.0.0)
   - HockeySDK
   - WordPressCom-Stats-iOS (from `../`)
 

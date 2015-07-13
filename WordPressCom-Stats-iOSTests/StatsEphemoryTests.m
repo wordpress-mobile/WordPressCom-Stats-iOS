@@ -80,4 +80,15 @@
     XCTAssertNil([self.subject objectForKey:@"TestKey"]);
 }
 
+- (void)testRemoveAllObjectsExceptObjectForKey
+{
+    [self.subject setObject:@"Test" forKey:@"TestKey"];
+    [self.subject setObject:@"Test2" forKey:@"BatchInsights"];
+    
+    [self.subject removeAllObjectsExceptObjectForKey:@"BatchInsights"];
+    
+    XCTAssertNil([self.subject objectForKey:@"TestKey"]);
+    XCTAssertNotNil([self.subject objectForKey:@"BatchInsights"]);
+}
+
 @end

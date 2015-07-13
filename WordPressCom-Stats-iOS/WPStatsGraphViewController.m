@@ -75,7 +75,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:shouldSelectDate:)]) {
-        StatsSummary *summary = (StatsSummary *)self.visits.statsData[indexPath.row];
+        StatsSummary *summary = (StatsSummary *)self.visits.statsData[(NSUInteger)indexPath.row];
         return [self.graphDelegate statsGraphViewController:self shouldSelectDate:summary.date];
     }
     
@@ -92,7 +92,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     }];
     
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectDate:)]) {
-        StatsSummary *summary = (StatsSummary *)self.visits.statsData[indexPath.row];
+        StatsSummary *summary = (StatsSummary *)self.visits.statsData[(NSUInteger)indexPath.row];
         [self.graphDelegate statsGraphViewController:self didSelectDate:summary.date];
     }
 }
@@ -109,7 +109,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.visits.statsData.count;
+    return (NSInteger)self.visits.statsData.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -121,7 +121,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
-    cell.barName = [self.visits.statsData[indexPath.row] label];
+    cell.barName = [self.visits.statsData[(NSUInteger)indexPath.row] label];
     [cell finishedSettingProperties];
     
     return cell;
@@ -131,7 +131,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 {
     if ([kind isEqualToString:WPStatsCollectionElementKindGraphBackground]) {
         WPStatsGraphBackgroundView *background = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:GraphBackgroundView forIndexPath:indexPath];
-        background.maximumYValue = self.maximumY;
+        background.maximumYValue = (NSUInteger)self.maximumY;
         background.numberOfXValues = self.numberOfXValues;
         background.numberOfYValues = self.numberOfYValues;
         
@@ -146,7 +146,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
-    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
+    CGFloat width = floor((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
     CGFloat height = CGRectGetHeight(rect);
     
     CGSize size = CGSizeMake(width, height);
@@ -157,9 +157,9 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
-    CGFloat width = floorf((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
+    CGFloat width = floor((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
 
-    CGFloat spacing = floorf((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
+    CGFloat spacing = floor((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
 
     return spacing;
 }
@@ -170,7 +170,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 {
     for (StatsSummary *summary in self.visits.statsData) {
         if ([summary.date isEqualToDate:selectedDate]) {
-            NSUInteger index = [self.visits.statsData indexOfObject:summary];
+            NSInteger index = (NSInteger)[self.visits.statsData indexOfObject:summary];
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
             [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         }
@@ -203,10 +203,10 @@ static NSInteger const RecommendedYAxisTicks = 2;
         CGFloat s = (CGFloat)maximumY/(CGFloat)yAxisTicks;
         long len = (long)(double)log10(s);
         long div = (long)(double)pow(10, len);
-        stepValue = ceil(s / div) * div;
+        stepValue = (NSUInteger)(ceil(s / div) * (CGFloat)div);
 
         // Adjust yAxisTicks to accomodate ticks and maximum without too much padding
-        yAxisTicks = ceil( maximumY / stepValue );
+        yAxisTicks = (NSUInteger)ceil( maximumY / stepValue );
         self.maximumY = stepValue * yAxisTicks;
         self.numberOfYValues = yAxisTicks;
     }
@@ -219,7 +219,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     return @[@{ @"color" : [WPStyleGuide wordPressBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"highlightedColor" : [WPStyleGuide statsMediumBlue],
-                @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[indexPath.row]],
+                @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[(NSUInteger)indexPath.row]],
                 @"name" : @"views"
                 },
              ];

@@ -9,6 +9,12 @@
 #import "StatsDateUtilities.h"
 #import "StatsSection.h"
 
+NSString *const BatchInsightsCacheKey = @"BatchInsights";
+NSString *const BatchPeriodStatsCacheKey = @"BatchStats";
+NSString *const AllTimeCacheKey = @"AllTime";
+NSString *const InsightsCacheKey = @"Insights";
+NSString *const TodayCacheKey = @"Today";
+
 @interface WPStatsService ()
 
 @property (nonatomic, strong) NSNumber *siteId;
@@ -76,68 +82,99 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     }
     
     NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
-    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[@"BatchStats", @(unit), endDate]];
-    DDLogVerbose(@"Cache count: %@", @(cacheDictionary.count));
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:@[BatchPeriodStatsCacheKey, @(unit), endDate]];
+    id visitsData = cacheDictionary[@(StatsSectionGraph)];
+    id eventsData = cacheDictionary[@(StatsSectionEvents)];
+    id postsData = cacheDictionary[@(StatsSectionPosts)];
+    id referrersData = cacheDictionary[@(StatsSectionReferrers)];
+    id clicksData = cacheDictionary[@(StatsSectionClicks)];
+    id countryData = cacheDictionary[@(StatsSectionCountry)];
+    id videosData = cacheDictionary[@(StatsSectionVideos)];
+    id authorsData = cacheDictionary[@(StatsSectionAuthors)];
+    id searchTermsData = cacheDictionary[@(StatsSectionSearchTerms)];
+    id commentsAuthorData = cacheDictionary[@(StatsSubSectionCommentsByAuthor)];
+    id commentsPostsData = cacheDictionary[@(StatsSubSectionCommentsByPosts)];
+    id tagsCategoriesData = cacheDictionary[@(StatsSectionTagsCategories)];
+    id followersDotComData = cacheDictionary[@(StatsSubSectionFollowersDotCom)];
+    id followersEmailData = cacheDictionary[@(StatsSubSectionFollowersEmail)];
+    id publicizeData = cacheDictionary[@(StatsSectionPublicize)];
     
-    if (cacheDictionary && cacheDictionary.count == 15) {
+    if (cacheDictionary
+        && (!visitsCompletion || visitsData)
+        && (!eventsCompletion || eventsData)
+        && (!postsCompletion || postsData)
+        && (!referrersCompletion || referrersData)
+        && (!clicksCompletion || clicksData)
+        && (!countryCompletion || countryData)
+        && (!videosCompletion || videosData)
+        && (!authorsCompletion || authorsData)
+        && (!searchTermsCompletion || searchTermsData)
+        && (!commentsAuthorsCompletion || commentsAuthorData)
+        && (!commentsPostsCompletion || commentsPostsData)
+        && (!tagsCategoriesCompletion || tagsCategoriesData)
+        && (!followersDotComCompletion || followersDotComData)
+        && (!followersEmailCompletion || followersEmailData)
+        && (!publicizeCompletion || publicizeData)
+    ) {
+        DDLogVerbose(@"retrieveAllStatsForDate - Cached data exists.");
         if (visitsCompletion) {
-            visitsCompletion(cacheDictionary[@(StatsSectionGraph)], nil);
+            visitsCompletion(visitsData, nil);
         }
 
         if (eventsCompletion) {
-            eventsCompletion(cacheDictionary[@(StatsSectionEvents)], nil);
+            eventsCompletion(eventsData, nil);
         }
 
         if (postsCompletion) {
-            postsCompletion(cacheDictionary[@(StatsSectionPosts)], nil);
+            postsCompletion(postsData, nil);
         }
     
         if (referrersCompletion) {
-            referrersCompletion(cacheDictionary[@(StatsSectionReferrers)], nil);
+            referrersCompletion(referrersData, nil);
         }
     
         if (clicksCompletion) {
-            clicksCompletion(cacheDictionary[@(StatsSectionClicks)], nil);
+            clicksCompletion(clicksData, nil);
         }
     
         if (countryCompletion) {
-            countryCompletion(cacheDictionary[@(StatsSectionCountry)], nil);
+            countryCompletion(countryData, nil);
         }
     
         if (videosCompletion) {
-            videosCompletion(cacheDictionary[@(StatsSectionVideos)], nil);
+            videosCompletion(videosData, nil);
         }
     
         if (authorsCompletion) {
-            authorsCompletion(cacheDictionary[@(StatsSectionAuthors)], nil);
+            authorsCompletion(authorsData, nil);
         }
         
         if (searchTermsCompletion) {
-            searchTermsCompletion(cacheDictionary[@(StatsSectionSearchTerms)], nil);
+            searchTermsCompletion(searchTermsData, nil);
         }
         
         if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(cacheDictionary[@(StatsSubSectionCommentsByAuthor)], nil);
+            commentsAuthorsCompletion(commentsAuthorData, nil);
         }
         
         if (commentsPostsCompletion) {
-            commentsPostsCompletion(cacheDictionary[@(StatsSubSectionCommentsByPosts)], nil);
+            commentsPostsCompletion(commentsPostsData, nil);
         }
     
         if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(cacheDictionary[@(StatsSectionTagsCategories)], nil);
+            tagsCategoriesCompletion(tagsCategoriesData, nil);
         }
     
         if (followersDotComCompletion) {
-            followersDotComCompletion(cacheDictionary[@(StatsSubSectionFollowersDotCom)], nil);
+            followersDotComCompletion(followersDotComData, nil);
         }
     
         if (followersEmailCompletion) {
-            followersEmailCompletion(cacheDictionary[@(StatsSubSectionFollowersEmail)], nil);
+            followersEmailCompletion(followersEmailData, nil);
         }
     
         if (publicizeCompletion) {
-            publicizeCompletion(cacheDictionary[@(StatsSectionPublicize)], nil);
+            publicizeCompletion(publicizeData, nil);
         }
         
         completionHandler();
@@ -145,7 +182,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         return;
     } else {
         cacheDictionary = [NSMutableDictionary new];
-        [self.ephemory setObject:cacheDictionary forKey:@[@"BatchStats", @(unit), endDate]];
+        [self.ephemory setObject:cacheDictionary forKey:@[BatchPeriodStatsCacheKey, @(unit), endDate]];
     }
 
     [self.remote cancelAllRemoteOperations];
@@ -169,6 +206,85 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             andOverallCompletionHandler:^
     {
         completionHandler();
+    }];
+}
+
+
+- (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
+                                     insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
+                                 todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
+                                                 progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
+                                   andOverallCompletionHandler:(void (^)())overallCompletionHandler
+{
+    NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:BatchInsightsCacheKey];
+    if (cacheDictionary.count == 3) {
+        DDLogVerbose(@"retrieveInsightsStats - Cached data exists.");
+        if (allTimeCompletion) {
+            allTimeCompletion(cacheDictionary[AllTimeCacheKey], nil);
+        }
+        if (insightsCompletion) {
+            insightsCompletion(cacheDictionary[InsightsCacheKey], nil);
+        }
+        if (todaySummaryCompletion) {
+            todaySummaryCompletion(cacheDictionary[TodayCacheKey], nil);
+        }
+        
+        if (overallCompletionHandler) {
+            overallCompletionHandler();
+        }
+        
+        return;
+    }
+
+    [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
+    {
+        StatsAllTime *allTime = [StatsAllTime new];
+        allTime.numberOfPosts = posts;
+        allTime.numberOfPostsValue = postsValue;
+        allTime.numberOfViews = views;
+        allTime.numberOfViewsValue = viewsValue;
+        allTime.numberOfVisitors = visitors;
+        allTime.numberOfVisitorsValue = visitorsValue;
+        allTime.bestNumberOfViews = bestViews;
+        allTime.bestNumberOfViewsValue = bestViewsValue;
+        allTime.bestViewsOn = bestViewsOn;
+        
+        cacheDictionary[AllTimeCacheKey] = allTime;
+        
+        if (allTimeCompletion) {
+            allTimeCompletion(allTime, error);
+        }
+    }
+                                           insightsCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue,NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
+    {
+        StatsInsights *insights = [StatsInsights new];
+        insights.highestHour = highestHour;
+        insights.highestHourPercent = highestHourPercent;
+        insights.highestHourPercentValue = highestHourPercentValue;
+        insights.highestDayOfWeek = highestDayOfWeek;
+        insights.highestDayPercent = highestDayPercent;
+        insights.highestDayPercentValue = highestDayPercentValue;
+        
+        cacheDictionary[InsightsCacheKey] = insights;
+        
+        if (insightsCompletion) {
+            insightsCompletion(insights, error);
+        }
+    }
+                                       todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+    {
+        cacheDictionary[TodayCacheKey] = summary;
+        
+        if (todaySummaryCompletion) {
+            todaySummaryCompletion(summary, error);
+        }
+    }
+                                                       progressBlock:progressBlock
+                                         andOverallCompletionHandler:^
+    {
+        if (overallCompletionHandler) {
+            overallCompletionHandler();
+        }
     }];
 }
 
@@ -297,19 +413,19 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     
     StatsSummary *summary = [self.ephemory objectForKey:@"TodayStats"];
     if (summary) {
-        completion(summary);
+        completion(summary, nil);
     }
     
     [self.remote fetchSummaryStatsForDate:[NSDate date]
-                    withCompletionHandler:^(StatsSummary *summary, NSError *error) {
+                    withCompletionHandler:^(StatsSummary *statsSummary, NSError *error) {
                         if (error) {
                             failure(error);
                             return;
                         }
 
-                        [self.ephemory setObject:summary forKey:@"TodayStats"];
+                        [self.ephemory setObject:statsSummary forKey:@"TodayStats"];
 
-                        completion(summary);
+                        completion(statsSummary, nil);
                     }];
 }
 
@@ -324,9 +440,16 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 }
 
 
-- (void)expireAllItemsInCache
+- (void)expireAllItemsInCacheForInsights
 {
-    [self.ephemory removeAllObjects];
+    [self.ephemory removeObjectForKey:BatchInsightsCacheKey];
+}
+
+
+- (void)expireAllItemsInCacheForPeriodStats
+{
+    // TODO :: This is hacky. Maybe have a separate cache for period stats.
+    [self.ephemory removeAllObjectsExceptObjectForKey:BatchInsightsCacheKey];
 }
 
 
