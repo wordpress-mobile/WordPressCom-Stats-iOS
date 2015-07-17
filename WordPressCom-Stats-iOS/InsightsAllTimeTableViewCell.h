@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
+#import "StatsStandardBorderedTableViewCell.h"
 
-@interface InsightsAllTimeTableViewCell : UITableViewCell
+@interface InsightsAllTimeTableViewCell : StatsStandardBorderedTableViewCell
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *heightConstraint;
 

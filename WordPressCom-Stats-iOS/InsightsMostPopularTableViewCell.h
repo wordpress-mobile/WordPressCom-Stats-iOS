@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
+#import "StatsStandardBorderedTableViewCell.h"
 
-@interface InsightsMostPopularTableViewCell : UITableViewCell
+@interface InsightsMostPopularTableViewCell : StatsStandardBorderedTableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *popularSectionHeaderLabel;
 @property (nonatomic, weak) IBOutlet UILabel *mostPopularDayLabel;

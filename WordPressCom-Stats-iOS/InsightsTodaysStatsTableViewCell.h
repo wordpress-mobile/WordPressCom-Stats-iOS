@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
+#import "StatsStandardBorderedTableViewCell.h"
 
-@interface InsightsTodaysStatsTableViewCell : UITableViewCell
+@interface InsightsTodaysStatsTableViewCell : StatsStandardBorderedTableViewCell
 
 @property (nonatomic, weak) IBOutlet UIButton *todayViewsButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayVisitorsButton;

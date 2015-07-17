@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
+#import "StatsStandardBorderedTableViewCell.h"
 
-@interface InsightsSectionHeaderTableViewCell : UITableViewCell
+@interface InsightsSectionHeaderTableViewCell : StatsStandardBorderedTableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *sectionHeaderLabel;
 
