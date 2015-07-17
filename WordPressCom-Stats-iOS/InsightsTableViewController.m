@@ -241,6 +241,12 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
         [self configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:indexPath.section];
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+        [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
+    } else {
+        DDLogWarn(@"ConfigureCell called with unknown cell identifier: %@", identifier);
     }
 }
 

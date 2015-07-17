@@ -407,6 +407,9 @@
                                         <constraint firstAttribute="centerY" secondItem="U94-Ix-7EC" secondAttribute="centerY" id="yxW-O8-hnK"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="sectionHeaderLabel" destination="U94-Ix-7EC" id="p7k-5V-KrH"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MostPopularDetails" rowHeight="150" id="qq2-Vb-czH" userLabel="Most Popular Details" customClass="InsightsMostPopularTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -491,6 +494,14 @@
                                         <constraint firstItem="voB-PG-oGO" firstAttribute="leading" secondItem="csy-iV-Ucm" secondAttribute="trailing" id="oEx-Lh-kER"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="mostPopularDay" destination="dPU-t1-atl" id="xgs-Zq-cPF"/>
+                                    <outlet property="mostPopularDayLabel" destination="LqR-Vc-rtl" id="VQY-ID-neR"/>
+                                    <outlet property="mostPopularDayPercentWeeklyViews" destination="yKD-YK-Mra" id="SFC-T6-nVW"/>
+                                    <outlet property="mostPopularHour" destination="xx2-Ii-OSN" id="Gya-lV-1Fc"/>
+                                    <outlet property="mostPopularHourLabel" destination="owa-7G-DL9" id="EfF-83-rjc"/>
+                                    <outlet property="mostPopularHourPercentDailyViews" destination="txh-pI-huu" id="WYQ-lm-j1c"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetails" rowHeight="100" id="3Mz-H6-0pu" userLabel="All Time Details" customClass="InsightsAllTimeTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -665,6 +676,17 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="cPN-KE-hdr" secondAttribute="bottom" constant="-8" id="sun-Ek-hFD"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="allTimeBestViewsLabel" destination="Ml6-Iu-wKc" id="YFc-nz-OAu"/>
+                                    <outlet property="allTimeBestViewsOnValueLabel" destination="p0T-y9-dQS" id="AYH-l7-dvy"/>
+                                    <outlet property="allTimeBestViewsValueLabel" destination="bhJ-yf-eeg" id="5FG-93-8On"/>
+                                    <outlet property="allTimePostsLabel" destination="qTg-V3-QrG" id="t5s-jm-luq"/>
+                                    <outlet property="allTimePostsValueLabel" destination="kyf-cc-9Pz" id="43E-YK-fx6"/>
+                                    <outlet property="allTimeViewsLabel" destination="SnZ-To-N2p" id="ztA-C7-hUE"/>
+                                    <outlet property="allTimeViewsValueLabel" destination="qJ0-wu-bhs" id="aMi-ko-LQz"/>
+                                    <outlet property="allTimeVisitorsLabel" destination="Ixp-TF-kKn" id="WHS-wX-1SJ"/>
+                                    <outlet property="allTimeVisitorsValueLabel" destination="RsC-iV-YWj" id="6G5-A0-BNc"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodaysStatsDetails" rowHeight="66" id="dRE-rs-NGi" userLabel="Today's Stats Details" customClass="InsightsTodaysStatsTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -867,6 +889,16 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="iwI-u2-AsI" secondAttribute="bottom" constant="-8" id="xGZ-oC-qDY"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="todayCommentsButton" destination="nUZ-Tg-WTV" id="60h-3p-XDh"/>
+                                    <outlet property="todayCommentsValueButton" destination="5Xj-XK-eQ8" id="5oJ-RS-bRZ"/>
+                                    <outlet property="todayLikesButton" destination="ab2-8S-y1h" id="Zgk-G4-bDj"/>
+                                    <outlet property="todayLikesValueButton" destination="6H5-sV-soQ" id="YHx-y4-zcu"/>
+                                    <outlet property="todayViewsButton" destination="4Zp-vE-uY4" id="Shf-ZI-AQQ"/>
+                                    <outlet property="todayViewsValueButton" destination="nWH-aO-4eO" id="VYR-Xl-FjA"/>
+                                    <outlet property="todayVisitorsButton" destination="g9y-bc-4NQ" id="4JU-4J-3cM"/>
+                                    <outlet property="todayVisitorsValueButton" destination="g6C-KQ-1fr" id="4NS-Qd-PKg"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>

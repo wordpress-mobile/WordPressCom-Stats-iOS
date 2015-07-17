@@ -3,7 +3,6 @@
 
 @interface InsightsMostPopularTableViewCell : StatsStandardBorderedTableViewCell
 
-@property (nonatomic, weak) IBOutlet UILabel *popularSectionHeaderLabel;
 @property (nonatomic, weak) IBOutlet UILabel *mostPopularDayLabel;
 @property (nonatomic, weak) IBOutlet UILabel *mostPopularDayPercentWeeklyViews;
 @property (nonatomic, weak) IBOutlet UILabel *mostPopularHourLabel;
