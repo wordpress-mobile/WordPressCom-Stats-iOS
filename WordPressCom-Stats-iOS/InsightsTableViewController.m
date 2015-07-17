@@ -3,6 +3,7 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsGaugeView.h"
+#import "InsightsSectionHeaderTableViewCell.h"
 #import "InsightsAllTimeTableViewCell.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsSection.h"
@@ -55,23 +56,17 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
 
     [self setupRefreshControl];
 
-//    self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
-//    self.popularSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
 //    self.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
 //    self.mostPopularDayLabel.textColor = [WPStyleGuide greyDarken10];
 //    self.mostPopularHourLabel.text = [NSLocalizedString(@"Most popular hour", @"Insights most popular hour section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
 //    self.mostPopularHourLabel.textColor = [WPStyleGuide greyDarken10];
-//    self.allTimeSectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
-//    self.allTimeSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
-//    
+//
 //    self.allTimePostsLabel.attributedText = [self postsAttributedString];
 //    self.allTimeViewsLabel.attributedText = [self viewsAttributedString];
 //    self.allTimeVisitorsLabel.attributedText = [self visitorsAttributedString];
 //    
 //    self.allTimeBestViewsLabel.attributedText = [self bestViewsAttributedString];
 //
-//    self.todaySectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
-//    self.todaySectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
 //
 //    [self.todayViewsButton setAttributedTitle:[self viewsAttributedString] forState:UIControlStateNormal];
 //    [self.todayVisitorsButton setAttributedTitle:[self visitorsAttributedString] forState:UIControlStateNormal];
@@ -118,27 +113,40 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
 }
 
 
+#pragma mark - UITableViewDataSource methods
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    
+    [self configureCell:cell forIndexPath:indexPath];
+    
+    return cell;
+}
+
+
 #pragma mark - UITableViewDelegate methods
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 1 && indexPath.row == 2) {
-        return 100;
-    }
-    
-    return tableView.rowHeight;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 1 && indexPath.row == 2) {
-        InsightsAllTimeTableViewCell *insightsCell = (InsightsAllTimeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-        
-        return insightsCell.heightConstraint.constant + 1.0;
-    }
-    
-    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
-}
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (indexPath.section == 1 && indexPath.row == 2) {
+//        return 100;
+//    }
+//    
+//    return tableView.rowHeight;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (indexPath.section == 1 && indexPath.row == 2) {
+//        InsightsAllTimeTableViewCell *insightsCell = (InsightsAllTimeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+//        
+//        return insightsCell.heightConstraint.constant + 1.0;
+//    }
+//    
+//    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -150,6 +158,102 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
         }
     }
 }
+
+
+#pragma mark - Private cell configuration methods
+
+- (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = @"";
+    
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    
+    switch (statsSection) {
+        case StatsSectionInsightsAllTime:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = InsightsTableAllTimeDetailsCellIdentifier;
+            }
+            break;
+            
+        case StatsSectionInsightsMostPopular:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = InsightsTableMostPopularDetailsCellIdentifier;
+            }
+            break;
+
+        case StatsSectionInsightsTodaysStats:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = InsightsTableTodaysStatsDetailsCellIdentifier;
+            }
+            break;
+
+        case StatsSectionGraph:
+        case StatsSectionPeriodHeader:
+        case StatsSectionEvents:
+        case StatsSectionPosts:
+        case StatsSectionReferrers:
+        case StatsSectionClicks:
+        case StatsSectionCountry:
+        case StatsSectionVideos:
+        case StatsSectionAuthors:
+        case StatsSectionSearchTerms:
+        case StatsSectionTagsCategories:
+        case StatsSectionPublicize:
+        case StatsSectionFollowers:
+        case StatsSectionComments:
+        case StatsSectionWebVersion:
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
+            break;
+    }
+    
+    return identifier;
+}
+
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = cell.reuseIdentifier;
+    
+    if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+        [self configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:indexPath.section];
+    }
+}
+
+
+- (void)configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:(NSInteger)section
+{
+    StatsSection statsSection = [self statsSectionForTableViewSection:section];
+
+    cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    
+    switch (statsSection) {
+        case StatsSectionInsightsAllTime:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
+            break;
+        case StatsSectionInsightsMostPopular:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
+            break;
+        case StatsSectionInsightsTodaysStats:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
+            break;
+        default:
+            break;
+    }
+}
+
+
+#pragma mark - Private methods
+
 
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
