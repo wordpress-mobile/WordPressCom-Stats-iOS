@@ -32,6 +32,8 @@ static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysStatsDetails";
+static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
+static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
 
 @interface InsightsTableViewController ()
 
@@ -48,8 +50,9 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
 
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
+    
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
                       @(StatsSectionInsightsTodaysStats)];
@@ -124,20 +127,35 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
     return 1.0f;
 }
 
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 10.0f;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (indexPath.section == 1 && indexPath.row == 2) {
-//        return 100;
-//    }
-//    
-//    return tableView.rowHeight;
-//}
-//
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+        return 44.0f;
+    } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        return 150.0f;
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
+      return 200.0f;
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
+      return 100.0f;
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+        return 66.0f;
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+        return 132.0f;
+    }
+  
+    return tableView.rowHeight;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
@@ -147,19 +165,18 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         return 150.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
+        return 200.0f;
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
         return 100.0f;
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         return 66.0f;
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+        return 132.0f;
     }
-    
-//    if (indexPath.section == 1 && indexPath.row == 2) {
-//        InsightsAllTimeTableViewCell *insightsCell = (InsightsAllTimeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-//        
-//        return insightsCell.heightConstraint.constant + 1.0;
-//    }
-//    
+
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -186,10 +203,10 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = InsightsTableAllTimeDetailsCellIdentifier;
+                identifier = IS_IPAD ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
             }
             break;
-            
+    
         case StatsSectionInsightsMostPopular:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
@@ -202,7 +219,7 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = InsightsTableTodaysStatsDetailsCellIdentifier;
+                identifier = IS_IPAD ? InsightsTableTodaysStatsDetailsiPadCellIdentifier : InsightsTableTodaysStatsDetailsCellIdentifier;
             }
             break;
 
@@ -239,11 +256,11 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
     
     if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
         [self configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:indexPath.section];
-    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
     } else {
         DDLogWarn(@"ConfigureCell called with unknown cell identifier: %@", identifier);
