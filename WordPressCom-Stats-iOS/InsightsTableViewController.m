@@ -203,7 +203,7 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
+                identifier = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
             }
             break;
     
@@ -219,7 +219,7 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableTodaysStatsDetailsiPadCellIdentifier : InsightsTableTodaysStatsDetailsCellIdentifier;
+                identifier = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad ? InsightsTableTodaysStatsDetailsiPadCellIdentifier : InsightsTableTodaysStatsDetailsCellIdentifier;
             }
             break;
 
