@@ -3,4 +3,5 @@ language: objective-c
 xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
 xcode_scheme: WordPressCom-Stats-iOS
 xcode_sdk: iphonesimulator8.1
-
+install:
+- gem install cocoapods && pod install
