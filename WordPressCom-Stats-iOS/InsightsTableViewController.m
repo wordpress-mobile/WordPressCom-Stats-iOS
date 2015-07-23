@@ -143,7 +143,7 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         return 150.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
-        return 200.0f;
+        return 185.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
         return 100.0f;
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
