@@ -134,28 +134,6 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
 }
 
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
-    
-    if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
-        return 44.0f;
-    } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
-        return 150.0f;
-    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
-      return 200.0f;
-    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
-      return 100.0f;
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
-        return 66.0f;
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
-        return 132.0f;
-    }
-  
-    return tableView.rowHeight;
-}
-
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
