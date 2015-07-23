@@ -660,14 +660,6 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
 }
 
 
-- (id)statsDataForStatsSection:(StatsSection)statsSection
-{
-    id data = self.sectionData[@(statsSection)];
-    
-    return data;
-}
-
-
 - (void)wipeDataAndSeedGroups
 {
     if (self.sectionData) {
