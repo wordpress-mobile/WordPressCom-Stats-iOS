@@ -497,7 +497,7 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
     viewsTextAttachment.fontDescender = font.descender;
     viewsTextAttachment.image = [self viewsImage];
     [viewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:viewsTextAttachment] atIndex:0];
-    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@"  "] atIndex:1];
     [viewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
     [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, viewsText.length)];
 
