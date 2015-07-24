@@ -35,6 +35,9 @@ static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysS
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
 
+static CGFloat const InsightsTableSectionHeaderHeight = 1.0f;
+static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
+
 @interface InsightsTableViewController ()
 
 @property (nonatomic, strong) NSArray *sections;
@@ -124,13 +127,13 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 1.0f;
+    return InsightsTableSectionHeaderHeight;
 }
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 10.0f;
+    return InsightsTableSectionFooterHeight;
 }
 
 
@@ -160,7 +163,9 @@ static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"Tod
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 2 && indexPath.row == 0) {
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
