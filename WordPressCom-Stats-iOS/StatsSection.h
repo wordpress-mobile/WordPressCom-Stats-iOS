@@ -18,7 +18,10 @@ typedef NS_ENUM(NSInteger, StatsSection) {
     StatsSectionPostDetailsGraph,
     StatsSectionPostDetailsMonthsYears,
     StatsSectionPostDetailsAveragePerDay,
-    StatsSectionPostDetailsRecentWeeks
+    StatsSectionPostDetailsRecentWeeks,
+    StatsSectionInsightsMostPopular,
+    StatsSectionInsightsAllTime,
+    StatsSectionInsightsTodaysStats
 };
 
 typedef NS_ENUM(NSInteger, StatsSubSection) {

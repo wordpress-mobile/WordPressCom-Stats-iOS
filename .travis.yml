@@ -4,4 +4,3 @@ xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
 xcode_scheme: WordPressCom-Stats-iOS
 xcode_sdk: iphonesimulator8.4
 sudo: false
-

@@ -910,6 +910,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             break;
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
+        case StatsSectionInsightsAllTime:
+        case StatsSectionInsightsMostPopular:
+        case StatsSectionInsightsTodaysStats:
         case StatsSectionPostDetailsLoadingIndicator:
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
@@ -1210,6 +1213,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 text = NSLocalizedString(@"No videos played", @"");
                 break;
             case StatsSectionGraph:
+            case StatsSectionInsightsAllTime:
+            case StatsSectionInsightsMostPopular:
+            case StatsSectionInsightsTodaysStats:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
             case StatsSectionPostDetailsAveragePerDay:

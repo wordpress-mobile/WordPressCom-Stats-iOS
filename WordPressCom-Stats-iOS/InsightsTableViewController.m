@@ -3,6 +3,12 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsGaugeView.h"
+#import "InsightsSectionHeaderTableViewCell.h"
+#import "InsightsAllTimeTableViewCell.h"
+#import "InsightsMostPopularTableViewCell.h"
+#import "InsightsTodaysStatsTableViewCell.h"
+#import "StatsTableSectionHeaderView.h"
+#import "StatsSection.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 @interface InlineTextAttachment : NSTextAttachment
@@ -21,40 +27,21 @@
 
 @end
 
+static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
+static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
+static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
+static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
+static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysStatsDetails";
+static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
+static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
+
+static CGFloat const InsightsTableSectionHeaderHeight = 1.0f;
+static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 @interface InsightsTableViewController ()
 
-// Most popular section
-@property (nonatomic, weak) IBOutlet UILabel *popularSectionHeaderLabel;
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularDayLabel;
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularDayPercentWeeklyViews;
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularHourLabel;
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularHourPercentDailyViews;
-// All time section
-@property (nonatomic, weak) IBOutlet UILabel *allTimeSectionHeaderLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimePostsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeViewsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsLabel;
-// Today section
-@property (nonatomic, weak) IBOutlet UILabel *todaySectionHeaderLabel;
-@property (nonatomic, weak) IBOutlet UIButton *todayViewsButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayVisitorsButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayLikesButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayCommentsButton;
-
-// Values
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularDay;
-@property (nonatomic, weak) IBOutlet UILabel *mostPopularHour;
-@property (nonatomic, weak) IBOutlet UILabel *allTimePostsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeViewsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsValueLabel;
-@property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsOnValueLabel;
-@property (nonatomic, weak) IBOutlet UIButton *todayViewsValueButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayVisitorsValueButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayLikesValueButton;
-@property (nonatomic, weak) IBOutlet UIButton *todayCommentsValueButton;
+@property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSMutableDictionary *sectionData;
 
 @end
 
@@ -66,59 +53,16 @@
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     
+    self.sections = @[@(StatsSectionInsightsMostPopular),
+                      @(StatsSectionInsightsAllTime),
+                      @(StatsSectionInsightsTodaysStats)];
+    
+    [self wipeDataAndSeedGroups];
+
     [self setupRefreshControl];
-
-    self.popularSectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
-    self.popularSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
-    self.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    self.mostPopularDayLabel.textColor = [WPStyleGuide greyDarken10];
-    self.mostPopularHourLabel.text = [NSLocalizedString(@"Most popular hour", @"Insights most popular hour section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    self.mostPopularHourLabel.textColor = [WPStyleGuide greyDarken10];
-    self.allTimeSectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
-    self.allTimeSectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
-    
-    self.allTimePostsLabel.attributedText = [self postsAttributedString];
-    self.allTimeViewsLabel.attributedText = [self viewsAttributedString];
-    self.allTimeVisitorsLabel.attributedText = [self visitorsAttributedString];
-    
-    self.allTimeBestViewsLabel.attributedText = [self bestViewsAttributedString];
-
-    self.todaySectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
-    self.todaySectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
-
-    [self.todayViewsButton setAttributedTitle:[self viewsAttributedString] forState:UIControlStateNormal];
-    [self.todayVisitorsButton setAttributedTitle:[self visitorsAttributedString] forState:UIControlStateNormal];
-    [self.todayLikesButton setAttributedTitle:[self likesAttributedString] forState:UIControlStateNormal];
-    [self.todayCommentsButton setAttributedTitle:[self commentsAttributedString] forState:UIControlStateNormal];
-    
-    // Default values for no data
-    self.mostPopularDay.text = @"-";
-    self.mostPopularDay.textColor = [WPStyleGuide greyLighten20];
-    self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
-    self.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide greyDarken10];
-    self.mostPopularHour.text = @"-";
-    self.mostPopularHour.textColor = [WPStyleGuide greyLighten20];
-    self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
-    self.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide greyDarken10];
-    self.allTimePostsValueLabel.text = @"-";
-    self.allTimePostsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.allTimeViewsValueLabel.text = @"-";
-    self.allTimeViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.allTimeVisitorsValueLabel.text = @"-";
-    self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.allTimeBestViewsValueLabel.text = @"-";
-    self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
-    self.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
-    self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyLighten20];
-    [self.todayViewsValueButton setTitle:@"-" forState:UIControlStateNormal];
-    [self.todayViewsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
-    [self.todayVisitorsValueButton setTitle:@"-" forState:UIControlStateNormal];
-    [self.todayVisitorsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
-    [self.todayLikesValueButton setTitle:@"-" forState:UIControlStateNormal];
-    [self.todayLikesValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
-    [self.todayCommentsValueButton setTitle:@"-" forState:UIControlStateNormal];
-    [self.todayCommentsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
 
     [self retrieveStats];
 }
@@ -132,18 +76,304 @@
 }
 
 
+#pragma mark - UITableViewDataSource methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return (NSInteger)self.sections.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    
+    [self configureCell:cell forIndexPath:indexPath];
+    
+    return cell;
+}
+
+
 #pragma mark - UITableViewDelegate methods
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPeriodHeader) {
+        StatsTableSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        
+        return headerView;
+    }
+    
+    return nil;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if ([self statsSectionForTableViewSection:section] != StatsSectionPeriodHeader) {
+        StatsTableSectionHeaderView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:StatsTableSectionHeaderSimpleBorder];
+        footerView.footer = YES;
+        
+        return footerView;
+    }
+    
+    return nil;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return InsightsTableSectionHeaderHeight;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return InsightsTableSectionFooterHeight;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+        return 44.0f;
+    } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        return 150.0f;
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
+        return 185.0f;
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
+        return 100.0f;
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+        return 66.0f;
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
+        return 132.0f;
+    }
+
+    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+}
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 2 && indexPath.row == 0) {
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
+    
+    if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
     }
 }
+
+
+#pragma mark - Private cell configuration methods
+
+- (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = @"";
+    
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    
+    switch (statsSection) {
+        case StatsSectionInsightsAllTime:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = IS_IPAD ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
+            }
+            break;
+    
+        case StatsSectionInsightsMostPopular:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = InsightsTableMostPopularDetailsCellIdentifier;
+            }
+            break;
+
+        case StatsSectionInsightsTodaysStats:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = IS_IPAD ? InsightsTableTodaysStatsDetailsiPadCellIdentifier : InsightsTableTodaysStatsDetailsCellIdentifier;
+            }
+            break;
+
+        case StatsSectionGraph:
+        case StatsSectionPeriodHeader:
+        case StatsSectionEvents:
+        case StatsSectionPosts:
+        case StatsSectionReferrers:
+        case StatsSectionClicks:
+        case StatsSectionCountry:
+        case StatsSectionVideos:
+        case StatsSectionAuthors:
+        case StatsSectionSearchTerms:
+        case StatsSectionTagsCategories:
+        case StatsSectionPublicize:
+        case StatsSectionFollowers:
+        case StatsSectionComments:
+        case StatsSectionWebVersion:
+        case StatsSectionPostDetailsAveragePerDay:
+        case StatsSectionPostDetailsGraph:
+        case StatsSectionPostDetailsLoadingIndicator:
+        case StatsSectionPostDetailsMonthsYears:
+        case StatsSectionPostDetailsRecentWeeks:
+            break;
+    }
+    
+    return identifier;
+}
+
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = cell.reuseIdentifier;
+    
+    if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+        [self configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:indexPath.section];
+    } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
+        [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+        [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
+    } else {
+        DDLogWarn(@"ConfigureCell called with unknown cell identifier: %@", identifier);
+    }
+}
+
+
+- (void)configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:(NSInteger)section
+{
+    StatsSection statsSection = [self statsSectionForTableViewSection:section];
+
+    cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    
+    switch (statsSection) {
+        case StatsSectionInsightsAllTime:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"All-time posts, views, and visitors", @"Insights all time section header");
+            break;
+        case StatsSectionInsightsMostPopular:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
+            break;
+        case StatsSectionInsightsTodaysStats:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
+            break;
+        default:
+            break;
+    }
+}
+
+
+- (void)configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell
+{
+    cell.allTimePostsLabel.attributedText = [self postsAttributedStringWithFont:cell.allTimePostsLabel.font];
+    cell.allTimeViewsLabel.attributedText = [self viewsAttributedStringWithFont:cell.allTimeViewsLabel.font];
+    cell.allTimeVisitorsLabel.attributedText = [self visitorsAttributedStringWithFont:cell.allTimeVisitorsLabel.font];
+    cell.allTimeBestViewsLabel.attributedText = [self bestViewsAttributedStringWithFont:cell.allTimeBestViewsLabel.font];
+
+    StatsAllTime *statsAllTime = self.sectionData[@(StatsSectionInsightsAllTime)];
+    
+    if (!statsAllTime) {
+        cell.allTimePostsValueLabel.text = @"-";
+        cell.allTimePostsValueLabel.textColor = [WPStyleGuide greyLighten20];
+        cell.allTimeViewsValueLabel.text = @"-";
+        cell.allTimeViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
+        cell.allTimeVisitorsValueLabel.text = @"-";
+        cell.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyLighten20];
+        cell.allTimeBestViewsValueLabel.text = @"-";
+        cell.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyLighten20];
+        cell.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
+        cell.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyLighten20];
+    } else {
+        cell.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
+        cell.allTimeViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
+        cell.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
+        cell.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
+        cell.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
+        cell.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
+    }
+}
+
+
+- (void)configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell
+{
+    cell.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    cell.mostPopularDayLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.mostPopularHourLabel.text = [NSLocalizedString(@"Most popular hour", @"Insights most popular hour section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    cell.mostPopularHourLabel.textColor = [WPStyleGuide greyDarken10];
+
+    StatsInsights *statsInsights = self.sectionData[@(StatsSectionInsightsMostPopular)];
+    
+    cell.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide greyDarken10];
+    cell.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide greyDarken10];
+
+    if (!statsInsights) {
+        cell.mostPopularDay.text = @"-";
+        cell.mostPopularDay.textColor = [WPStyleGuide greyLighten20];
+        cell.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
+        cell.mostPopularHour.text = @"-";
+        cell.mostPopularHour.textColor = [WPStyleGuide greyLighten20];
+        cell.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), @"-"];
+    } else {
+        cell.mostPopularDay.text = statsInsights.highestDayOfWeek;
+        cell.mostPopularDay.textColor = [WPStyleGuide greyDarken30];
+        cell.mostPopularHour.text = statsInsights.highestHour;
+        cell.mostPopularHour.textColor = [WPStyleGuide greyDarken30];
+        cell.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestDayPercent];
+        cell.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestHourPercent];
+    }
+    
+}
+
+
+- (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell
+{
+    [cell.todayViewsButton setAttributedTitle:[self viewsAttributedStringWithFont:cell.todayViewsButton.titleLabel.font] forState:UIControlStateNormal];
+    [cell.todayVisitorsButton setAttributedTitle:[self visitorsAttributedStringWithFont:cell.todayVisitorsButton.titleLabel.font] forState:UIControlStateNormal];
+    [cell.todayLikesButton setAttributedTitle:[self likesAttributedStringWithFont:cell.todayLikesButton.titleLabel.font] forState:UIControlStateNormal];
+    [cell.todayCommentsButton setAttributedTitle:[self commentsAttributedStringWithFont:cell.todayCommentsButton.titleLabel.font] forState:UIControlStateNormal];
+    
+    StatsSummary *todaySummary = self.sectionData[@(StatsSectionInsightsTodaysStats)];
+    
+    if (!todaySummary) {
+        // Default values for no data
+        [cell.todayViewsValueButton setTitle:@"-" forState:UIControlStateNormal];
+        [cell.todayViewsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+        [cell.todayVisitorsValueButton setTitle:@"-" forState:UIControlStateNormal];
+        [cell.todayVisitorsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitle:@"-" forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitle:@"-" forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
+    } else {
+        [cell.todayViewsValueButton setTitle:todaySummary.views forState:UIControlStateNormal];
+        [cell.todayViewsValueButton setTitleColor:todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+        [cell.todayVisitorsValueButton setTitle:todaySummary.visitors forState:UIControlStateNormal];
+        [cell.todayVisitorsValueButton setTitleColor:todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitle:todaySummary.likes forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitleColor:todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitle:todaySummary.comments forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitleColor:todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+    }
+
+}
+
+
+#pragma mark - Private methods
+
 
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
@@ -159,20 +389,23 @@
         self.refreshControl = nil;
     }
     
-    __block StatsAllTime *statsAllTime;
-    __block StatsInsights *statsInsights;
-    __block StatsSummary *todaySummary;
     [self.statsService retrieveInsightsStatsWithAllTimeStatsCompletionHandler:^(StatsAllTime *allTime, NSError *error)
      {
-         statsAllTime = allTime;
+         if (allTime) {
+             self.sectionData[@(StatsSectionInsightsAllTime)] = allTime;
+         }
      }
                                                     insightsCompletionHandler:^(StatsInsights *insights, NSError *error)
      {
-         statsInsights = insights;
+         if (insights) {
+             self.sectionData[@(StatsSectionInsightsMostPopular)] = insights;
+         }
      }
                                                 todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
      {
-         todaySummary = summary;
+         if (summary) {
+             self.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
+         }
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
@@ -188,34 +421,13 @@
                                                   andOverallCompletionHandler:^
      {
          // Set the colors to what they should be (previous color for unknown data)
-         self.mostPopularDay.textColor = [WPStyleGuide greyDarken30];
-         self.mostPopularHour.textColor = [WPStyleGuide greyDarken30];
-         self.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
-         self.allTimeViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
-         self.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
-         self.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
-         self.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
-
-         self.mostPopularDay.text = statsInsights.highestDayOfWeek;
-         self.mostPopularDayPercentWeeklyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestDayPercent];
-         self.mostPopularHour.text = statsInsights.highestHour;
-         self.mostPopularHourPercentDailyViews.text = [NSString stringWithFormat:NSLocalizedString(@"%@ of views", @"Insights Percent of views label with value"), statsInsights.highestHourPercent];
-         self.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
-         self.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
-         self.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
-         self.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
-         self.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
-         [self.todayViewsValueButton setTitle:todaySummary.views forState:UIControlStateNormal];
-         [self.todayViewsValueButton setTitleColor:todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
-         [self.todayVisitorsValueButton setTitle:todaySummary.visitors forState:UIControlStateNormal];
-         [self.todayVisitorsValueButton setTitleColor:todaySummary.visitorsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
-         [self.todayLikesValueButton setTitle:todaySummary.likes forState:UIControlStateNormal];
-         [self.todayLikesValueButton setTitleColor:todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
-         [self.todayCommentsValueButton setTitle:todaySummary.comments forState:UIControlStateNormal];
-         [self.todayCommentsValueButton setTitleColor:todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
          
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
+         
+         
+         // FIXME - Do something elegant possibly
+         [self.tableView reloadData];
          
          if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
              [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
@@ -269,11 +481,11 @@
 
 #pragma mark - Attributed String generation methods
 
-- (NSMutableAttributedString *)postsAttributedString
+- (NSMutableAttributedString *)postsAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *postsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *postsTextAttachment = [InlineTextAttachment new];
-    postsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
+    postsTextAttachment.fontDescender = font.descender;
     postsTextAttachment.image = [self postsImage];
     [postsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:postsTextAttachment] atIndex:0];
     [postsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
@@ -283,25 +495,25 @@
     return postsText;
 }
 
-- (NSMutableAttributedString *)viewsAttributedString
+- (NSMutableAttributedString *)viewsAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *viewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *viewsTextAttachment = [InlineTextAttachment new];
-    viewsTextAttachment.fontDescender = self.allTimeViewsLabel.font.descender;
+    viewsTextAttachment.fontDescender = font.descender;
     viewsTextAttachment.image = [self viewsImage];
     [viewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:viewsTextAttachment] atIndex:0];
-    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
+    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@"  "] atIndex:1];
     [viewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
     [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, viewsText.length)];
 
     return viewsText;
 }
 
-- (NSMutableAttributedString *)visitorsAttributedString
+- (NSMutableAttributedString *)visitorsAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *visitorsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *visitorsTextAttachment = [InlineTextAttachment new];
-    visitorsTextAttachment.fontDescender = self.allTimeVisitorsLabel.font.descender;
+    visitorsTextAttachment.fontDescender = font.descender;
     visitorsTextAttachment.image = [self visitorsImage];
     [visitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:visitorsTextAttachment] atIndex:0];
     [visitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
@@ -311,11 +523,11 @@
     return visitorsText;
 }
 
-- (NSMutableAttributedString *)bestViewsAttributedString
+- (NSMutableAttributedString *)bestViewsAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *bestViewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Best Views Ever", @"Stats Best Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *bestViewsTextAttachment = [InlineTextAttachment new];
-    bestViewsTextAttachment.fontDescender = self.allTimeBestViewsLabel.font.descender;
+    bestViewsTextAttachment.fontDescender = font.descender;
     bestViewsTextAttachment.image = [self bestViewsImage];
     [bestViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:bestViewsTextAttachment] atIndex:0];
     [bestViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
@@ -324,11 +536,11 @@
     return bestViewsText;
 }
 
-- (NSMutableAttributedString *)likesAttributedString
+- (NSMutableAttributedString *)likesAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *likesText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *likesTextAttachment = [InlineTextAttachment new];
-    likesTextAttachment.fontDescender = self.todayLikesButton.titleLabel.font.descender;
+    likesTextAttachment.fontDescender = font.descender;
     likesTextAttachment.image = [self likesImage];
     [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
     [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
@@ -338,11 +550,11 @@
     return likesText;
 }
 
-- (NSMutableAttributedString *)commentsAttributedString
+- (NSMutableAttributedString *)commentsAttributedStringWithFont:(UIFont *)font
 {
     NSMutableAttributedString *commentsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
     InlineTextAttachment *commentsTextAttachment = [InlineTextAttachment new];
-    commentsTextAttachment.fontDescender = self.todayCommentsButton.titleLabel.font.descender;
+    commentsTextAttachment.fontDescender = font.descender;
     commentsTextAttachment.image = [self commentsImage];
     [commentsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:commentsTextAttachment] atIndex:0];
     [commentsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
@@ -444,5 +656,26 @@
     
     return commentsImage;
 }
+
+#pragma mark - Row and section calculation methods
+
+- (StatsSection)statsSectionForTableViewSection:(NSInteger)section
+{
+    return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
+}
+
+
+- (void)wipeDataAndSeedGroups
+{
+    if (self.sectionData) {
+        [self.sectionData removeAllObjects];
+    } else {
+        self.sectionData = [NSMutableDictionary new];
+    }
+    
+    self.sectionData[@(StatsSectionComments)] = [NSMutableDictionary new];
+    self.sectionData[@(StatsSectionFollowers)] = [NSMutableDictionary new];
+}
+
 
 @end
