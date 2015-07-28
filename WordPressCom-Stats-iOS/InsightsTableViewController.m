@@ -376,6 +376,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     NSString *identifier = cell.reuseIdentifier;
     
     if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
@@ -386,6 +387,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
+    } else if ([identifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
+        cell.backgroundColor = self.tableView.backgroundColor;
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.text = NSLocalizedString(@"Other Recent Stats", @"Non-periodic stats module header in Insights");
     } else {
         DDLogWarn(@"ConfigureCell called with unknown cell identifier: %@", identifier);
     }
