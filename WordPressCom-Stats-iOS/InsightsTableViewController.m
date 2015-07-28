@@ -27,6 +27,13 @@
 
 @end
 
+static CGFloat const StatsTableNoResultsHeight = 100.0f;
+static CGFloat const StatsTableGroupHeaderHeight = 30.0f;
+static NSInteger const StatsTableRowDataOffsetStandard = 2;
+static NSInteger const StatsTableRowDataOffsetWithoutGroupHeader = 1;
+static NSInteger const StatsTableRowDataOffsetWithGroupSelector = 3;
+static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
+
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
@@ -34,6 +41,14 @@ static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDeta
 static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysStatsDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
+static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
+static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
+static NSString *const StatsTableGroupTotalsCellIdentifier = @"GroupTotalsRow";
+static NSString *const StatsTableTwoColumnHeaderCellIdentifier = @"TwoColumnHeader";
+static NSString *const StatsTableTwoColumnCellIdentifier = @"TwoColumnRow";
+static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
+static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
+static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 
 static CGFloat const InsightsTableSectionHeaderHeight = 1.0f;
 static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
@@ -41,7 +56,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 @interface InsightsTableViewController ()
 
 @property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSDictionary *subSections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
+@property (nonatomic, strong) NSMutableDictionary *selectedSubsections;
 
 @end
 
@@ -58,8 +75,17 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
-                      @(StatsSectionInsightsTodaysStats)];
-    
+                      @(StatsSectionInsightsTodaysStats),
+                      @(StatsSectionPeriodHeader),
+                      @(StatsSectionComments),
+                      @(StatsSectionTagsCategories),
+                      @(StatsSectionFollowers),
+                      @(StatsSectionPublicize)];
+    self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
+                           @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
+    self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
+                                   @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
+
     [self wipeDataAndSeedGroups];
 
     [self setupRefreshControl];
@@ -85,7 +111,50 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    StatsSection statsSection = [self statsSectionForTableViewSection:section];
+    id data = [self statsDataForStatsSection:statsSection];
+    
+    switch (statsSection) {
+        case StatsSectionInsightsAllTime:
+        case StatsSectionInsightsMostPopular:
+        case StatsSectionInsightsTodaysStats:
+            return 2;
+        case StatsSectionPeriodHeader:
+            return 1;
+            
+            // TODO :: Pull offset from StatsGroup
+        default:
+        {
+            StatsGroup *group = (StatsGroup *)data;
+            NSInteger count = (NSInteger)group.numberOfRows;
+            
+            if (statsSection == StatsSectionComments) {
+                count += StatsTableRowDataOffsetWithGroupSelector;
+            } else if (statsSection == StatsSectionFollowers) {
+                count += StatsTableRowDataOffsetWithGroupSelectorAndTotal;
+                
+                if (group.errorWhileRetrieving) {
+                    count--;
+                }
+            } else if (statsSection == StatsSectionEvents) {
+                if (count == 0) {
+                    count = StatsTableRowDataOffsetStandard;
+                } else {
+                    count += StatsTableRowDataOffsetWithoutGroupHeader;
+                }
+            } else {
+                count += StatsTableRowDataOffsetStandard;
+            }
+            
+            if (group.moreItemsExist) {
+                count++;
+            }
+            
+            return count;
+        }
+    }
+    
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,6 +222,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return 66.0f;
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
         return 132.0f;
+    } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
+        return StatsTableGroupHeaderHeight;
+    } else if ([identifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
+        return StatsTableNoResultsHeight;
     }
 
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
@@ -206,8 +279,80 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
             break;
 
-        case StatsSectionGraph:
         case StatsSectionPeriodHeader:
+            return StatsTablePeriodHeaderCellIdentifier;
+
+        case StatsSectionTagsCategories:
+        case StatsSectionPublicize:
+        {
+            StatsGroup *group = (StatsGroup *)[self statsDataForStatsSection:statsSection];
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1 && group.numberOfRows > 0) {
+                identifier = StatsTableTwoColumnHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = StatsTableNoResultsCellIdentifier;
+            } else if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetStandard)) {
+                identifier = StatsTableViewAllCellIdentifier;
+            } else {
+                identifier = StatsTableTwoColumnCellIdentifier;
+            }
+            break;
+        }
+            
+        case StatsSectionFollowers:
+        {
+            StatsGroup *group = [self statsDataForStatsSection:statsSection];
+            
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = StatsTableGroupSelectorCellIdentifier;
+            } else if (indexPath.row == 2) {
+                if (group.numberOfRows > 0) {
+                    identifier = StatsTableGroupTotalsCellIdentifier;
+                } else {
+                    identifier = StatsTableNoResultsCellIdentifier;
+                }
+            } else if (indexPath.row == 3) {
+                identifier = StatsTableTwoColumnHeaderCellIdentifier;
+            } else {
+                if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetWithGroupSelectorAndTotal)) {
+                    identifier = StatsTableViewAllCellIdentifier;
+                } else {
+                    identifier = StatsTableTwoColumnCellIdentifier;
+                }
+            }
+            
+            break;
+        }
+            
+        case StatsSectionComments:
+        {
+            StatsGroup *group = [self statsDataForStatsSection:statsSection];
+            
+            if (indexPath.row == 0) {
+                identifier = StatsTableGroupHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = StatsTableGroupSelectorCellIdentifier;
+            } else if (indexPath.row == 2) {
+                if (group.numberOfRows > 0) {
+                    identifier = StatsTableTwoColumnHeaderCellIdentifier;
+                } else {
+                    identifier = StatsTableNoResultsCellIdentifier;
+                }
+            } else {
+                if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetWithGroupSelector)) {
+                    identifier = StatsTableViewAllCellIdentifier;
+                } else {
+                    identifier = StatsTableTwoColumnCellIdentifier;
+                }
+            }
+            
+            break;
+        }
+            
+        case StatsSectionGraph:
         case StatsSectionEvents:
         case StatsSectionPosts:
         case StatsSectionReferrers:
@@ -216,10 +361,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionVideos:
         case StatsSectionAuthors:
         case StatsSectionSearchTerms:
-        case StatsSectionTagsCategories:
-        case StatsSectionPublicize:
-        case StatsSectionFollowers:
-        case StatsSectionComments:
         case StatsSectionWebVersion:
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
@@ -659,9 +800,36 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 #pragma mark - Row and section calculation methods
 
+- (id)statsDataForStatsSection:(StatsSection)statsSection
+{
+    id data;
+    
+    if ( statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
+        StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
+        data = self.sectionData[@(statsSection)][@(selectedSubsection)];
+    } else {
+        data = self.sectionData[@(statsSection)];
+    }
+    
+    return data;
+}
+
+
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
     return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
+}
+
+
+- (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
+{
+    NSNumber *subSectionValue = self.selectedSubsections[@(statsSection)];
+    
+    if (!subSectionValue) {
+        return StatsSubSectionNone;
+    }
+    
+    return (StatsSubSection)[subSectionValue integerValue];
 }
 
 
