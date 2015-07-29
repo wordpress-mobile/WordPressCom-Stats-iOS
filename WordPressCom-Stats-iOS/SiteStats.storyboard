@@ -209,9 +209,6 @@
                                                 <segment title="First"/>
                                                 <segment title="Second"/>
                                             </segments>
-                                            <connections>
-                                                <action selector="sectionGroupSelectorDidChange:" destination="Tay-X0-ceG" eventType="valueChanged" id="9Da-Rh-jsk"/>
-                                            </connections>
                                         </segmentedControl>
                                     </subviews>
                                     <constraints>
@@ -1391,7 +1388,7 @@
                                                 <segment title="Second"/>
                                             </segments>
                                             <connections>
-                                                <action selector="sectionGroupSelectorDidChange:" destination="Tay-X0-ceG" eventType="valueChanged" id="0rW-1G-Byw"/>
+                                                <action selector="sectionGroupSelectorDidChange:" destination="Pq6-gc-ScC" eventType="valueChanged" id="gAO-Z2-QDa"/>
                                             </connections>
                                         </segmentedControl>
                                     </subviews>

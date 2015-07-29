@@ -893,6 +893,48 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
+- (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
+{
+    StatsSection statsSection = (StatsSection)control.superview.tag;
+    NSInteger section = (NSInteger)[self.sections indexOfObject:@(statsSection)];
+    
+    NSInteger oldSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
+    StatsSubSection subSection;
+    
+    switch (statsSection) {
+        case StatsSectionComments:
+            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionCommentsByAuthor : StatsSubSectionCommentsByPosts;
+            break;
+        case StatsSectionFollowers:
+            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
+            break;
+        default:
+            subSection = StatsSubSectionNone;
+            break;
+    }
+    
+    self.selectedSubsections[@(statsSection)] = @(subSection);
+    NSInteger newSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
+    
+    NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(statsSection)];
+    NSMutableArray *oldIndexPaths = [NSMutableArray new];
+    NSMutableArray *newIndexPaths = [NSMutableArray new];
+    
+    for (NSInteger row = StatsTableRowDataOffsetWithGroupSelector; row < oldSectionCount; ++row) {
+        [oldIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
+    }
+    for (NSInteger row = StatsTableRowDataOffsetWithGroupSelector; row < newSectionCount; ++row) {
+        [newIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
+    }
+    
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:section]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView deleteRowsAtIndexPaths:oldIndexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+    [self.tableView endUpdates];
+}
+
+
 #pragma mark - Actions for today stats
 
 
