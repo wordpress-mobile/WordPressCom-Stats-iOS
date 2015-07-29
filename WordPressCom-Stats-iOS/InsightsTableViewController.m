@@ -687,6 +687,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
+    label.textColor = [WPStyleGuide greyDarken10];
     
     cell.bottomBorderEnabled = NO;
 }
