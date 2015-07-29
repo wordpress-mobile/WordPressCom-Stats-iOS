@@ -164,7 +164,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         BOOL hasChildItems = item.children.count > 0;
         // TODO :: Look for default action boolean
         BOOL hasDefaultAction = item.actions.count > 0;
-        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
+        NSIndexPath *newIndexPath = (hasChildItems || hasDefaultAction) ? indexPath : nil;
         
         return newIndexPath;
     }
