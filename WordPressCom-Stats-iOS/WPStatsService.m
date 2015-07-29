@@ -68,12 +68,6 @@ NSString *const TodayCacheKey = @"Today";
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
        authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
    searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletion
-commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
- commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
-tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
- followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
-      publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                   progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
      andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -92,12 +86,6 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
     id videosData = cacheDictionary[@(StatsSectionVideos)];
     id authorsData = cacheDictionary[@(StatsSectionAuthors)];
     id searchTermsData = cacheDictionary[@(StatsSectionSearchTerms)];
-    id commentsAuthorData = cacheDictionary[@(StatsSubSectionCommentsByAuthor)];
-    id commentsPostsData = cacheDictionary[@(StatsSubSectionCommentsByPosts)];
-    id tagsCategoriesData = cacheDictionary[@(StatsSectionTagsCategories)];
-    id followersDotComData = cacheDictionary[@(StatsSubSectionFollowersDotCom)];
-    id followersEmailData = cacheDictionary[@(StatsSubSectionFollowersEmail)];
-    id publicizeData = cacheDictionary[@(StatsSectionPublicize)];
     
     if (cacheDictionary
         && (!visitsCompletion || visitsData)
@@ -109,12 +97,6 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         && (!videosCompletion || videosData)
         && (!authorsCompletion || authorsData)
         && (!searchTermsCompletion || searchTermsData)
-        && (!commentsAuthorsCompletion || commentsAuthorData)
-        && (!commentsPostsCompletion || commentsPostsData)
-        && (!tagsCategoriesCompletion || tagsCategoriesData)
-        && (!followersDotComCompletion || followersDotComData)
-        && (!followersEmailCompletion || followersEmailData)
-        && (!publicizeCompletion || publicizeData)
     ) {
         DDLogVerbose(@"retrieveAllStatsForDate - Cached data exists.");
         if (visitsCompletion) {
@@ -153,30 +135,6 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             searchTermsCompletion(searchTermsData, nil);
         }
         
-        if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(commentsAuthorData, nil);
-        }
-        
-        if (commentsPostsCompletion) {
-            commentsPostsCompletion(commentsPostsData, nil);
-        }
-    
-        if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(tagsCategoriesData, nil);
-        }
-    
-        if (followersDotComCompletion) {
-            followersDotComCompletion(followersDotComData, nil);
-        }
-    
-        if (followersEmailCompletion) {
-            followersEmailCompletion(followersEmailData, nil);
-        }
-    
-        if (publicizeCompletion) {
-            publicizeCompletion(publicizeData, nil);
-        }
-        
         completionHandler();
         
         return;
@@ -197,11 +155,6 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                 videosCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionVideos andCompletionHandler:videosCompletion]
                authorsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionAuthors andCompletionHandler:authorsCompletion]
            searchTermsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionSearchTerms andCompletionHandler:searchTermsCompletion]
-              commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
-        tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
-       followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
-        followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
-             publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
                           progressBlock:progressBlock
             andOverallCompletionHandler:^
     {
@@ -213,12 +166,62 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
+                               commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
+                                commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
+                               tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
+                              followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
+                               followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
+                                    publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
     NSMutableDictionary *cacheDictionary = [self.ephemory objectForKey:BatchInsightsCacheKey];
-    if (cacheDictionary.count == 3) {
-        DDLogVerbose(@"retrieveInsightsStats - Cached data exists.");
+    id allTimeData = cacheDictionary[@(StatsSectionInsightsAllTime)];
+    id insightsData = cacheDictionary[@(StatsSectionInsightsMostPopular)];
+    id todayData = cacheDictionary[@(StatsSectionInsightsTodaysStats)];
+    id commentsAuthorData = cacheDictionary[@(StatsSubSectionCommentsByAuthor)];
+    id commentsPostsData = cacheDictionary[@(StatsSubSectionCommentsByPosts)];
+    id tagsCategoriesData = cacheDictionary[@(StatsSectionTagsCategories)];
+    id followersDotComData = cacheDictionary[@(StatsSubSectionFollowersDotCom)];
+    id followersEmailData = cacheDictionary[@(StatsSubSectionFollowersEmail)];
+    id publicizeData = cacheDictionary[@(StatsSectionPublicize)];
+
+    if (cacheDictionary
+        && (!allTimeCompletion || allTimeData)
+        && (!insightsCompletion || insightsData)
+        && (!todaySummaryCompletion || todayData)
+        && (!commentsAuthorsCompletion || commentsAuthorData)
+        && (!commentsPostsCompletion || commentsPostsData)
+        && (!tagsCategoriesCompletion || tagsCategoriesData)
+        && (!followersDotComCompletion || followersDotComData)
+        && (!followersEmailCompletion || followersEmailData)
+        && (!publicizeCompletion || publicizeData)
+        )
+    {
+        if (commentsAuthorsCompletion) {
+            commentsAuthorsCompletion(commentsAuthorData, nil);
+        }
+        
+        if (commentsPostsCompletion) {
+            commentsPostsCompletion(commentsPostsData, nil);
+        }
+        
+        if (tagsCategoriesCompletion) {
+            tagsCategoriesCompletion(tagsCategoriesData, nil);
+        }
+        
+        if (followersDotComCompletion) {
+            followersDotComCompletion(followersDotComData, nil);
+        }
+        
+        if (followersEmailCompletion) {
+            followersEmailCompletion(followersEmailData, nil);
+        }
+        
+        if (publicizeCompletion) {
+            publicizeCompletion(publicizeData, nil);
+        }
+
         if (allTimeCompletion) {
             allTimeCompletion(cacheDictionary[AllTimeCacheKey], nil);
         }
@@ -232,7 +235,7 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
         if (overallCompletionHandler) {
             overallCompletionHandler();
         }
-        
+
         return;
     }
 
@@ -279,6 +282,11 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
             todaySummaryCompletion(summary, error);
         }
     }
+                                           commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
+                                     tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
+                                    followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
+                                     followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
+                                          publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
                                                        progressBlock:progressBlock
                                          andOverallCompletionHandler:^
     {

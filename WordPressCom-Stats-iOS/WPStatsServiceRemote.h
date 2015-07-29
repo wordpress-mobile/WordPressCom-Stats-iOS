@@ -44,17 +44,17 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
       authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
   searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
-     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
-tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
-followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                                  commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+                            tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+                           followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
+                            followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
+                                 publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler;
 

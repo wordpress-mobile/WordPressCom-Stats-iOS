@@ -767,6 +767,92 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
              self.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
          }
      }
+                                              commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
+         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
+         
+         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                                               commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
+         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
+         
+         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                                              tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionTagsCategories)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionTagsCategories)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
+                                             followersDotComCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
+         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
+         
+         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                                              followersEmailCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
+         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
+         
+         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
+             [self.tableView beginUpdates];
+             
+             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             
+             [self.tableView endUpdates];
+         }
+     }
+                                                   publicizeCompletionHandler:^(StatsGroup *group, NSError *error)
+     {
+         group.offsetRows = StatsTableRowDataOffsetStandard;
+         self.sectionData[@(StatsSectionPublicize)] = group;
+         
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPublicize)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+     }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
          if (numberOfFinishedOperations == 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {

@@ -78,11 +78,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
       authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
   searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
-     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
-tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
-followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
     andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -115,21 +110,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     if (searchTermsCompletion) {
         [mutableOperations addObject:[self operationForSearchTermsForDate:date andUnit:unit viewAll:NO withCompletionHandler:searchTermsCompletion]];
     }
-    if (commentsCompletion) {
-        [mutableOperations addObject:[self operationForCommentsForDate:date andUnit:unit withCompletionHandler:commentsCompletion]];
-    }
-    if (tagsCategoriesCompletion) {
-        [mutableOperations addObject:[self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:tagsCategoriesCompletion]];
-    }
-    if (followersDotComCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom forDate:date andUnit:unit viewAll:NO withCompletionHandler:followersDotComCompletion]];
-    }
-    if (followersEmailCompletion) {
-        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail forDate:date andUnit:unit viewAll:NO withCompletionHandler:followersEmailCompletion]];
-    }
-    if (publicizeCompletion) {
-        [mutableOperations addObject:[self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:publicizeCompletion]];
-    }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
                                                                progressBlock:progressBlock
@@ -156,6 +136,11 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                                  commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
+                            tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
+                           followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
+                            followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
+                                 publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -169,6 +154,21 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (todaySummaryCompletion) {
         [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:todaySummaryCompletion]];
+    }
+    if (commentsCompletion) {
+        [mutableOperations addObject:[self operationForCommentsWithCompletionHandler:commentsCompletion]];
+    }
+    if (tagsCategoriesCompletion) {
+        [mutableOperations addObject:[self operationForTagsCategoriesWithCompletionHandler:tagsCategoriesCompletion]];
+    }
+    if (followersDotComCompletion) {
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeDotCom viewAll:NO withCompletionHandler:followersDotComCompletion]];
+    }
+    if (followersEmailCompletion) {
+        [mutableOperations addObject:[self operationForFollowersOfType:StatsFollowerTypeEmail viewAll:NO withCompletionHandler:followersEmailCompletion]];
+    }
+    if (publicizeCompletion) {
+        [mutableOperations addObject:[self operationForPublicizeWithCompletionHandler:publicizeCompletion]];
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
@@ -434,7 +434,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForCommentsForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForCommentsWithCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -445,7 +445,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesWithCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -457,7 +457,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType forDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -468,7 +468,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForPublicizeForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForPublicizeWithCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -1160,9 +1160,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (AFHTTPRequestOperation *)operationForCommentsForDate:(NSDate *)date
-                                                andUnit:(StatsPeriodUnit)unit
-                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForCommentsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -1211,11 +1209,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self deviceLocalStringForDate:date]};
-    
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
-                                                                parameters:parameters
+                                                                parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
@@ -1223,9 +1218,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (AFHTTPRequestOperation *)operationForTagsCategoriesForDate:(NSDate *)date
-                                                      andUnit:(StatsPeriodUnit)unit
-                                        withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForTagsCategoriesWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -1289,19 +1282,14 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self deviceLocalStringForDate:date]};
-    
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
-                                                                parameters:parameters
+                                                                parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     return operation;}
 
 
 - (AFHTTPRequestOperation *)operationForFollowersOfType:(StatsFollowerType)followerType
-                                                forDate:(NSDate *)date
-                                                andUnit:(StatsPeriodUnit)unit
                                                 viewAll:(BOOL)viewAll
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
@@ -1340,9 +1328,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self deviceLocalStringForDate:date],
-                                 @"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
+    NSDictionary *parameters = @{@"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
                                  @"max"    : (viewAll ? @0 : @7) };
     
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
@@ -1354,9 +1340,7 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
 }
 
 
-- (AFHTTPRequestOperation *)operationForPublicizeForDate:(NSDate *)date
-                                                 andUnit:(StatsPeriodUnit)unit
-                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (AFHTTPRequestOperation *)operationForPublicizeWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
@@ -1403,11 +1387,8 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
         }
     };
     
-    NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
-                                 @"date"   : [self deviceLocalStringForDate:date]};
-    
     AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
-                                                                parameters:parameters
+                                                                parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
