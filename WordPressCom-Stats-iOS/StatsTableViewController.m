@@ -1317,13 +1317,14 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         StatsSubSection statsSubSection = StatsSubSectionNone;
         
         if ([self.subSections objectForKey:statsSectionNumber] != nil) {
-            for (NSNumber *statsSubSectionNumber in self.subSections) {
+            for (NSNumber *statsSubSectionNumber in self.subSections[statsSectionNumber]) {
                 statsSubSection = (StatsSubSection)statsSubSectionNumber.integerValue;
                 StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:statsSubSection];
                 self.sectionData[statsSectionNumber][statsSubSectionNumber] = group;
             }
-        } else {
-            
+        } else if (statsSection != StatsSectionGraph) {
+            StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
+            self.sectionData[statsSectionNumber] = group;
         }
     }
 }
