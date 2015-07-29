@@ -974,7 +974,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     id data = [self statsDataForStatsSection:statsSection];
     
     if (!data) {
-        text = NSLocalizedString(@"Waiting for data...", @"");
+        text = NSLocalizedString(@"Waiting for data...", @"Message displayed in stats while waiting for remote operations to finish.");
     } else if ([data errorWhileRetrieving] == YES) {
         text = NSLocalizedString(@"An error occurred while retrieving data. Retry in a bit!", @"Error message in section when data failed.");
     } else {
