@@ -678,9 +678,7 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-comments-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchCommentsStatsForDate:[NSDate date]
-                                    andUnit:StatsPeriodUnitDay
-                      withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
+    [self.subject fetchCommentsStatsWithCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
@@ -724,9 +722,7 @@
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-tags-categories-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
-    [self.subject fetchTagsCategoriesStatsForDate:[NSDate date]
-                                          andUnit:StatsPeriodUnitDay
-                            withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
+    [self.subject fetchTagsCategoriesStatsWithCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
          XCTAssertNil(totalViews);
@@ -768,8 +764,6 @@
     }];
     
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeDotCom
-                                                date:[NSDate date]
-                                             andUnit:StatsPeriodUnitDay
                                withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);
@@ -804,8 +798,6 @@
     }];
     
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeEmail
-                                                date:[NSDate date]
-                                             andUnit:StatsPeriodUnitDay
                                withCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
      {
          XCTAssertNotNil(items);

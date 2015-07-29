@@ -428,46 +428,30 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
-- (void)fetchCommentsStatsForDate:(NSDate *)date
-                          andUnit:(StatsPeriodUnit)unit
-            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (void)fetchCommentsStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    NSParameterAssert(date != nil);
-    
     AFHTTPRequestOperation *operation = [self operationForCommentsWithCompletionHandler:completionHandler];
     [operation start];
 }
 
 
-- (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
-                                andUnit:(StatsPeriodUnit)unit
-                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (void)fetchTagsCategoriesStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    NSParameterAssert(date != nil);
-    
     AFHTTPRequestOperation *operation = [self operationForTagsCategoriesWithCompletionHandler:completionHandler];
     [operation start];
 }
 
 
 - (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
-                                      date:(NSDate *)date
-                                   andUnit:(StatsPeriodUnit)unit
                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    NSParameterAssert(date != nil);
-    
     AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType viewAll:YES withCompletionHandler:completionHandler];
     [operation start];
 }
 
 
-- (void)fetchPublicizeStatsForDate:(NSDate *)date
-                           andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (void)fetchPublicizeStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    NSParameterAssert(date != nil);
-    
     AFHTTPRequestOperation *operation = [self operationForPublicizeWithCompletionHandler:completionHandler];
     [operation start];
 }

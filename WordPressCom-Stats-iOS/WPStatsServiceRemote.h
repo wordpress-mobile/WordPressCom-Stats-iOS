@@ -100,22 +100,14 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
                              andUnit:(StatsPeriodUnit)unit
                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
-- (void)fetchCommentsStatsForDate:(NSDate *)date
-                          andUnit:(StatsPeriodUnit)unit
-            withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+- (void)fetchCommentsStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
-- (void)fetchTagsCategoriesStatsForDate:(NSDate *)date
-                                andUnit:(StatsPeriodUnit)unit
-                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+- (void)fetchTagsCategoriesStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
-                                      date:(NSDate *)date
-                                   andUnit:(StatsPeriodUnit)unit
                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
-- (void)fetchPublicizeStatsForDate:(NSDate *)date
-                           andUnit:(StatsPeriodUnit)unit
-             withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
+- (void)fetchPublicizeStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler;
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler;
 

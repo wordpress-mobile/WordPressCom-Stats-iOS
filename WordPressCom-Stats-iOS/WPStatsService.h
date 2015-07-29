@@ -73,8 +73,6 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
              withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
 - (void)retrieveFollowersOfType:(StatsFollowerType)followersType
-                        forDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion

@@ -374,13 +374,9 @@ NSString *const TodayCacheKey = @"Today";
 
 
 - (void)retrieveFollowersOfType:(StatsFollowerType)followersType
-                        forDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler
 {
-    NSDate *endDate = [self.dateUtilities calculateEndDateForPeriodUnit:unit withDateWithinPeriod:date];
-    
-    [self.remote fetchFollowersStatsForFollowerType:followersType date:endDate andUnit:unit withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
+    [self.remote fetchFollowersStatsForFollowerType:followersType withCompletionHandler:[self remoteFollowersCompletionWithCache:nil followerType:followersType andCompletionHandler:completionHandler]];
 }
 
 
