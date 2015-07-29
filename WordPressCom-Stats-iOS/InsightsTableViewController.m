@@ -12,6 +12,8 @@
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsItemAction.h"
+#import "StatsViewAllTableViewController.h"
+#import "StatsPostDetailsTableViewController.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -326,6 +328,59 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
     }
+}
+
+
+#pragma mark - Segue methods
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(UITableViewCell *)sender
+{
+    if ([identifier isEqualToString:@"PostDetails"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        // Only fire the segue for the posts section or authors if a nested row
+        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
+    }
+    
+    return YES;
+}
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
+{
+    [super prepareForSegue:segue sender:sender];
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
+    
+    if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
+        
+        StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
+        viewAllVC.selectedDate = nil;
+        viewAllVC.periodUnit = StatsPeriodUnitDay;
+        viewAllVC.statsSection = statsSection;
+        viewAllVC.statsSubSection = statsSubSection;
+        viewAllVC.statsService = self.statsService;
+        viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
+        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+        
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
+        postVC.postID = statsItem.itemID;
+        postVC.postTitle = statsItem.label;
+        postVC.statsService = self.statsService;
+        postVC.statsDelegate = self.statsDelegate;
+    }
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 

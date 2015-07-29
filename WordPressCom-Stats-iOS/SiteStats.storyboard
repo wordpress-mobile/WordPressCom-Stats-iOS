@@ -1454,6 +1454,7 @@
                                     <outlet property="rightLabel" destination="oJe-90-Ti5" id="wyD-3V-S6k"/>
                                     <outlet property="spaceConstraint" destination="sdb-cx-Jlo" id="AeF-sH-ltA"/>
                                     <outlet property="widthConstraint" destination="3ou-0B-HUE" id="lax-IW-Nsv"/>
+                                    <segue destination="NsQ-9F-hsi" kind="show" identifier="PostDetails" id="Qh5-9Z-1Vu"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="l7t-bZ-H6F" userLabel="MoreRow" customClass="StatsStandardBorderedTableViewCell">
@@ -1474,6 +1475,9 @@
                                         <constraint firstItem="tpw-Le-5cp" firstAttribute="leading" secondItem="CGe-wg-emt" secondAttribute="leading" constant="23" id="Skx-yy-xo8"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="uuT-Sq-uB0" kind="show" identifier="ViewAll" id="XMM-0q-yqN"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="XeI-oH-BNJ" userLabel="NoResultsRow" customClass="StatsStandardBorderedTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -1968,4 +1972,8 @@
             <point key="canvasLocation" x="1669" y="98"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="XMM-0q-yqN"/>
+        <segue reference="Qh5-9Z-1Vu"/>
+    </inferredMetricsTieBreakers>
 </document>
