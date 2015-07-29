@@ -116,7 +116,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
-    id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
@@ -129,7 +128,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             // TODO :: Pull offset from StatsGroup
         default:
         {
-            StatsGroup *group = (StatsGroup *)data;
+            StatsGroup *group = (StatsGroup *)[self statsDataForStatsSection:statsSection];
             NSInteger count = (NSInteger)group.numberOfRows;
             
             if (statsSection == StatsSectionComments) {
