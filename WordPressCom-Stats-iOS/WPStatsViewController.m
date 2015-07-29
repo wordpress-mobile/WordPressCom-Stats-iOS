@@ -59,6 +59,7 @@
         insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
         insightsTableViewController.statsProgressViewDelegate = self;
         insightsTableViewController.statsTypeSelectionDelegate = self;
+        insightsTableViewController.statsDelegate = self.statsDelegate;
     }
 }
 

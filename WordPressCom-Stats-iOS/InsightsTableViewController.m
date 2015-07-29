@@ -11,6 +11,7 @@
 #import "StatsSection.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "StatsTwoColumnTableViewCell.h"
+#import "StatsItemAction.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -233,13 +234,94 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
+        return indexPath;
+    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        // Disable taps on rows without children
+        StatsGroup *group = [self statsDataForStatsSection:statsSection];
+        StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
+        
+        BOOL hasChildItems = item.children.count > 0;
+        // TODO :: Look for default action boolean
+        BOOL hasDefaultAction = item.actions.count > 0;
+        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
+        
+        return newIndexPath;
+    }
+    
+    return nil;
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        
+        // Do nothing for posts - handled by segue to show post details
+        if (statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil)) {
+            return;
+        }
+        
+        if (statsItem.children.count > 0) {
+            BOOL insert = !statsItem.isExpanded;
+            NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
+            statsItem.expanded = !statsItem.isExpanded;
+            NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
+            
+            StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            cell.expanded = statsItem.isExpanded;
+            [cell doneSettingProperties];
+            
+            NSMutableArray *indexPaths = [NSMutableArray new];
+            
+            NSInteger numberOfRows = insert ? numberOfRowsAfter : numberOfRowsBefore;
+            for (NSInteger row = 1; row <= numberOfRows; ++row) {
+                [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
+            }
+            
+            // Reload row one above to get rid of the double border
+            NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            
+            [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if (insert) {
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationMiddle];
+            } else {
+                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+            }
+            
+            [self.tableView endUpdates];
+        } else if (statsItem.actions.count > 0) {
+            for (StatsItemAction *action in statsItem.actions) {
+                if (action.defaultAction) {
+                    if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+                        WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+                        [self.statsDelegate statsViewController:statsViewController openURL:action.url];
+                    } else {
+#ifndef AF_APP_EXTENSIONS
+                        [[UIApplication sharedApplication] openURL:action.url];
+#endif
+                    }
+                    break;
+                }
+            }
+        }
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
