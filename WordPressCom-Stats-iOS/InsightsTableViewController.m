@@ -85,9 +85,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                       @(StatsSectionTagsCategories),
                       @(StatsSectionFollowers),
                       @(StatsSectionPublicize)];
-    self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
-                           @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
-    self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
+    self.subSections =  @{ @(StatsSectionComments)  : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
+                           @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom),  @(StatsSubSectionFollowersEmail)]};
+    self.selectedSubsections = [@{ @(StatsSectionComments)  : @(StatsSubSectionCommentsByAuthor),
                                    @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
 
     [self wipeDataAndSeedGroups];
