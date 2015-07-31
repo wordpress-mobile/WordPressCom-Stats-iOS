@@ -249,7 +249,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.statsService retrieveSearchTermsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     } else if (self.statsSection == StatsSectionFollowers) {
         StatsFollowerType followerType = self.statsSubSection == StatsSubSectionFollowersDotCom ? StatsFollowerTypeDotCom : StatsFollowerTypeEmail;
-        [self.statsService retrieveFollowersOfType:followerType forDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+        [self.statsService retrieveFollowersOfType:followerType withCompletionHandler:completion];
     }
 }
 

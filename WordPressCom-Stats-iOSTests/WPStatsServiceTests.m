@@ -40,14 +40,8 @@
     XCTestExpectation *clicksExpectation = [self expectationWithDescription:@"clicksExpectation"];
     XCTestExpectation *countryExpectation = [self expectationWithDescription:@"countryExpectation"];
     XCTestExpectation *videosExpectation = [self expectationWithDescription:@"videosExpectation"];
-    XCTestExpectation *commentsAuthorExpectation = [self expectationWithDescription:@"commentsAuthorExpectation"];
     XCTestExpectation *authorsExpectation = [self expectationWithDescription:@"authorsExpectation"];
     XCTestExpectation *searchTermsExpectation = [self expectationWithDescription:@"searchTermsExpectation"];
-    XCTestExpectation *commentsPostsExpectation = [self expectationWithDescription:@"commentsPostsExpectation"];
-    XCTestExpectation *tagsExpectation = [self expectationWithDescription:@"tagsExpectation"];
-    XCTestExpectation *followersDotComExpectation = [self expectationWithDescription:@"followersDotComExpectation"];
-    XCTestExpectation *followersEmailExpectation = [self expectationWithDescription:@"followersEmailExpectation"];
-    XCTestExpectation *publicizeExpectation = [self expectationWithDescription:@"publicizeExpectation"];
     XCTestExpectation *overallExpectation = [self expectationWithDescription:@"overallExpectation"];
     
     [self.subject retrieveAllStatsForDate:[NSDate date]
@@ -79,24 +73,6 @@
              searchTermsCompletionHandler:^(StatsGroup *group, NSError *error) {
                  [searchTermsExpectation fulfill];
              }
-          commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [commentsAuthorExpectation fulfill];
-          }
-           commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error) {
-               [commentsPostsExpectation fulfill];
-           }
-          tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [tagsExpectation fulfill];
-          }
-         followersDotComCompletionHandler:^(StatsGroup *group, NSError *error) {
-             [followersDotComExpectation fulfill];
-         }
-          followersEmailCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [followersEmailExpectation fulfill];
-          }
-               publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
-                   [publicizeExpectation fulfill];
-               }
                             progressBlock:nil
               andOverallCompletionHandler:^{
                   [overallExpectation fulfill];
@@ -351,11 +327,6 @@
                      videosCompletionHandler:[OCMArg any]
                     authorsCompletionHandler:[OCMArg any]
                 searchTermsCompletionHandler:[OCMArg any]
-                   commentsCompletionHandler:[OCMArg any]
-             tagsCategoriesCompletionHandler:[OCMArg any]
-            followersDotComCompletionHandler:[OCMArg any]
-             followersEmailCompletionHandler:[OCMArg any]
-                  publicizeCompletionHandler:[OCMArg any]
                                progressBlock:[OCMArg any]
                  andOverallCompletionHandler:[OCMArg any]]);
     
@@ -372,12 +343,6 @@
                   videosCompletionHandler:nil
                  authorsCompletionHandler:nil
              searchTermsCompletionHandler:nil
-          commentsAuthorCompletionHandler:nil
-           commentsPostsCompletionHandler:nil
-          tagsCategoriesCompletionHandler:nil
-         followersDotComCompletionHandler:nil
-          followersEmailCompletionHandler:nil
-               publicizeCompletionHandler:nil
                             progressBlock:nil
                andOverallCompletionHandler:^{
                    // Don't do anything
@@ -402,11 +367,6 @@
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
       authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
   searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
-     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
-tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
-followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
                  progressBlock:(void (^)(NSUInteger, NSUInteger))progressBlock
    andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -436,21 +396,6 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     }
     if (searchTermsCompletion) {
         searchTermsCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (commentsCompletion) {
-        commentsCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (tagsCategoriesCompletion) {
-        tagsCategoriesCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (followersDotComCompletion) {
-        followersDotComCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (followersEmailCompletion) {
-        followersEmailCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (publicizeCompletion) {
-        publicizeCompletion(@[[StatsItem new]], nil, false, nil);
     }
     
     if (progressBlock) {

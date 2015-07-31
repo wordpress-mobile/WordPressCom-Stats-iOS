@@ -38,12 +38,6 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
         videosCompletionHandler:(StatsGroupCompletion)videosCompletion
        authorsCompletionHandler:(StatsGroupCompletion)authorsCompletion
    searchTermsCompletionHandler:(StatsGroupCompletion)searchTermsCompletionHandler
-commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
- commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
-tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
- followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
-     publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                   progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
      andOverallCompletionHandler:(void (^)())completionHandler;
 
@@ -79,13 +73,17 @@ followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
              withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
 - (void)retrieveFollowersOfType:(StatsFollowerType)followersType
-                        forDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
           withCompletionHandler:(StatsGroupCompletion)completionHandler;
 
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
+                               commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
+                                commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
+                               tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
+                              followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
+                               followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
+                                    publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())completionHandler;
 
