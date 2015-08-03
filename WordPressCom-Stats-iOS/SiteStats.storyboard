@@ -1309,7 +1309,7 @@
                                     <outlet property="todayViewsButton" destination="LLy-Md-Bib" id="mhx-hJ-QEc"/>
                                     <outlet property="todayViewsValueButton" destination="9qf-7T-T32" id="t3A-Ov-RzQ"/>
                                     <outlet property="todayVisitorsButton" destination="nsE-Pg-YZQ" id="M4c-IB-1lI"/>
-                                    <outlet property="todayVisitorsValueButton" destination="l3c-1d-9Zr" id="XM9-5u-AKA"/>
+                                    <outlet property="todayVisitorsValueButton" destination="pgb-E0-bmm" id="4N5-bf-hQb"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodHeader" id="oCI-Df-0ns" userLabel="PeriodHeader">
