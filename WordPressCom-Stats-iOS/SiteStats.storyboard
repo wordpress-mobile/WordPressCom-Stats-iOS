@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PF0-fe-QqW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PF0-fe-QqW">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -212,6 +212,8 @@
                                         </segmentedControl>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="FiO-kr-2NM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0qW-oh-xTV" secondAttribute="leadingMargin" constant="4" id="3GE-9H-Vb1"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="FiO-kr-2NM" secondAttribute="trailing" constant="4" id="Cfn-qr-SQF"/>
                                         <constraint firstAttribute="centerY" secondItem="FiO-kr-2NM" secondAttribute="centerY" id="TNN-zq-wRQ"/>
                                         <constraint firstAttribute="centerX" secondItem="FiO-kr-2NM" secondAttribute="centerX" id="bzP-l1-8XK"/>
                                     </constraints>
@@ -1376,28 +1378,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="0dT-sZ-88r" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0dT-sZ-88r" id="n06-Xv-bOb">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <segmentedControl opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="LUo-bk-rCI">
-                                            <rect key="frame" x="239" y="8" width="123" height="29"/>
-                                            <segments>
-                                                <segment title="First"/>
-                                                <segment title="Second"/>
-                                            </segments>
-                                            <connections>
-                                                <action selector="sectionGroupSelectorDidChange:" destination="Pq6-gc-ScC" eventType="valueChanged" id="gAO-Z2-QDa"/>
-                                            </connections>
-                                        </segmentedControl>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="centerX" secondItem="LUo-bk-rCI" secondAttribute="centerX" id="qJO-NY-tVs"/>
-                                        <constraint firstAttribute="centerY" secondItem="LUo-bk-rCI" secondAttribute="centerY" id="xID-Pj-T8q"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="QMK-Mb-gNa" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QMK-Mb-gNa" id="byc-bZ-DLX">
@@ -1521,6 +1501,27 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="BP8-az-Pv4" secondAttribute="trailing" constant="15" id="hut-XT-f8B"/>
                                         <constraint firstAttribute="centerY" secondItem="BP8-az-Pv4" secondAttribute="centerY" id="tFq-Jz-Ts9"/>
                                         <constraint firstItem="BP8-az-Pv4" firstAttribute="leading" secondItem="lvD-ZL-QyN" secondAttribute="leadingMargin" constant="15" id="x6Y-Ep-ZlD"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="TfQ-TA-Dg5" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TfQ-TA-Dg5" id="a71-bu-hBO">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <segmentedControl opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vxQ-PB-vcb">
+                                            <rect key="frame" x="239" y="8" width="123" height="29"/>
+                                            <segments>
+                                                <segment title="First"/>
+                                                <segment title="Second"/>
+                                            </segments>
+                                        </segmentedControl>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="vxQ-PB-vcb" secondAttribute="centerY" id="Iuo-hN-lze"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="vxQ-PB-vcb" secondAttribute="trailing" constant="4" id="NUY-HG-dbA"/>
+                                        <constraint firstItem="vxQ-PB-vcb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="a71-bu-hBO" secondAttribute="leadingMargin" constant="4" id="PwD-4L-fz5"/>
+                                        <constraint firstAttribute="centerX" secondItem="vxQ-PB-vcb" secondAttribute="centerX" id="X9V-Wf-Stb"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1990,7 +1991,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="XMM-0q-yqN"/>
-        <segue reference="Qh5-9Z-1Vu"/>
+        <segue reference="ljy-WF-WHT"/>
+        <segue reference="Xfd-Vy-gvK"/>
     </inferredMetricsTieBreakers>
 </document>
