@@ -13,7 +13,7 @@
 
 @interface StatsEphemory ()
 
-@property (nonatomic, strong) NSCache *cache;
+@property (nonatomic, strong) NSMutableDictionary *cache;
 @property (nonatomic, assign, readwrite) NSTimeInterval expiryInterval;
 
 @end
@@ -24,7 +24,7 @@
 {
     self = [super init];
     if (self) {
-        _cache = [NSCache new];
+        _cache = [NSMutableDictionary new];
         _expiryInterval = NSTimeIntervalSince1970;
     }
     return self;
@@ -74,6 +74,19 @@
     NSParameterAssert(key != nil);
     
     [self.cache removeObjectForKey:key];
+}
+
+- (void)removeAllObjectsExceptObjectForKey:(id)key
+{
+    NSParameterAssert(key != nil);
+
+    for (id existingKey in self.cache.allKeys) {
+        if ([existingKey isEqual:key]) {
+            continue;
+        }
+        
+        [self.cache removeObjectForKey:existingKey];
+    }
 }
 
 - (void)removeAllObjects

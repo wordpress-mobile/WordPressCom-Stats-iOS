@@ -40,14 +40,8 @@
     XCTestExpectation *clicksExpectation = [self expectationWithDescription:@"clicksExpectation"];
     XCTestExpectation *countryExpectation = [self expectationWithDescription:@"countryExpectation"];
     XCTestExpectation *videosExpectation = [self expectationWithDescription:@"videosExpectation"];
-    XCTestExpectation *commentsAuthorExpectation = [self expectationWithDescription:@"commentsAuthorExpectation"];
     XCTestExpectation *authorsExpectation = [self expectationWithDescription:@"authorsExpectation"];
     XCTestExpectation *searchTermsExpectation = [self expectationWithDescription:@"searchTermsExpectation"];
-    XCTestExpectation *commentsPostsExpectation = [self expectationWithDescription:@"commentsPostsExpectation"];
-    XCTestExpectation *tagsExpectation = [self expectationWithDescription:@"tagsExpectation"];
-    XCTestExpectation *followersDotComExpectation = [self expectationWithDescription:@"followersDotComExpectation"];
-    XCTestExpectation *followersEmailExpectation = [self expectationWithDescription:@"followersEmailExpectation"];
-    XCTestExpectation *publicizeExpectation = [self expectationWithDescription:@"publicizeExpectation"];
     XCTestExpectation *overallExpectation = [self expectationWithDescription:@"overallExpectation"];
     
     [self.subject retrieveAllStatsForDate:[NSDate date]
@@ -79,24 +73,7 @@
              searchTermsCompletionHandler:^(StatsGroup *group, NSError *error) {
                  [searchTermsExpectation fulfill];
              }
-          commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [commentsAuthorExpectation fulfill];
-          }
-           commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error) {
-               [commentsPostsExpectation fulfill];
-           }
-          tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [tagsExpectation fulfill];
-          }
-         followersDotComCompletionHandler:^(StatsGroup *group, NSError *error) {
-             [followersDotComExpectation fulfill];
-         }
-          followersEmailCompletionHandler:^(StatsGroup *group, NSError *error) {
-              [followersEmailExpectation fulfill];
-          }
-               publicizeCompletionHandler:^(StatsGroup *group, NSError *error) {
-                   [publicizeExpectation fulfill];
-               }
+                            progressBlock:nil
               andOverallCompletionHandler:^{
                   [overallExpectation fulfill];
               }];
@@ -106,7 +83,7 @@
 
 - (void)testDateSanitizationDay
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -126,7 +103,7 @@
 
 - (void)testDateSanitizationWeek
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -146,7 +123,7 @@
 
 - (void)testDateSanitizationWeek2
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -166,7 +143,7 @@
 
 - (void)testDateSanitizationWeek3
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2015;
     dateComponents.month = 1;
@@ -186,7 +163,7 @@
 
 - (void)testDateSanitizationAlreadySunday
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -206,7 +183,7 @@
 
 - (void)testDateSanitizationWeekCrossesYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -226,7 +203,7 @@
 
 - (void)testDateSanitizationMonth
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -246,7 +223,7 @@
 
 - (void)testDateSanitizationMonthLeapYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2016;
     dateComponents.month = 2;
@@ -266,7 +243,7 @@
 
 - (void)testDateSanitizationYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 2;
@@ -286,7 +263,7 @@
 
 - (void)testDateSanitizationYearFirstOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 1;
@@ -306,7 +283,7 @@
 
 - (void)testDateSanitizationYearLastOfYear
 {
-    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.year = 2014;
     dateComponents.month = 12;
@@ -332,7 +309,7 @@
     
     id dateCheckBlock = [OCMArg checkWithBlock:^BOOL(id obj) {
         NSDate *date = obj;
-        NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         BOOL isOkay = dateComponents.year == year && dateComponents.month == month && dateComponents.day == day;
         
@@ -350,11 +327,7 @@
                      videosCompletionHandler:[OCMArg any]
                     authorsCompletionHandler:[OCMArg any]
                 searchTermsCompletionHandler:[OCMArg any]
-                   commentsCompletionHandler:[OCMArg any]
-             tagsCategoriesCompletionHandler:[OCMArg any]
-            followersDotComCompletionHandler:[OCMArg any]
-             followersEmailCompletionHandler:[OCMArg any]
-                  publicizeCompletionHandler:[OCMArg any]
+                               progressBlock:[OCMArg any]
                  andOverallCompletionHandler:[OCMArg any]]);
     
     self.subject.remote = remote;
@@ -370,12 +343,7 @@
                   videosCompletionHandler:nil
                  authorsCompletionHandler:nil
              searchTermsCompletionHandler:nil
-          commentsAuthorCompletionHandler:nil
-           commentsPostsCompletionHandler:nil
-          tagsCategoriesCompletionHandler:nil
-         followersDotComCompletionHandler:nil
-          followersEmailCompletionHandler:nil
-               publicizeCompletionHandler:nil
+                            progressBlock:nil
                andOverallCompletionHandler:^{
                    // Don't do anything
                }];
@@ -399,11 +367,7 @@
        videosCompletionHandler:(StatsRemoteItemsCompletion)videosCompletion
       authorsCompletionHandler:(StatsRemoteItemsCompletion)authorsCompletion
   searchTermsCompletionHandler:(StatsRemoteItemsCompletion)searchTermsCompletion
-     commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
-tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
-followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
-followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
-    publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                 progressBlock:(void (^)(NSUInteger, NSUInteger))progressBlock
    andOverallCompletionHandler:(void (^)())completionHandler
 {
     if (visitsCompletion) {
@@ -433,20 +397,9 @@ followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailComple
     if (searchTermsCompletion) {
         searchTermsCompletion(@[[StatsItem new]], nil, false, nil);
     }
-    if (commentsCompletion) {
-        commentsCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (tagsCategoriesCompletion) {
-        tagsCategoriesCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (followersDotComCompletion) {
-        followersDotComCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (followersEmailCompletion) {
-        followersEmailCompletion(@[[StatsItem new]], nil, false, nil);
-    }
-    if (publicizeCompletion) {
-        publicizeCompletion(@[[StatsItem new]], nil, false, nil);
+    
+    if (progressBlock) {
+        progressBlock(1, 1);
     }
     
     if (completionHandler) {

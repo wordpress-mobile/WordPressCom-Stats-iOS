@@ -70,5 +70,12 @@
     self.topDividerView.hidden = !topBorderDarkEnabled;
 }
 
+- (void)setBottomBorderEnabled:(BOOL)bottomBorderEnabled
+{
+    _bottomBorderEnabled = bottomBorderEnabled;
+    
+    [self setNeedsLayout];
+}
+
 
 @end

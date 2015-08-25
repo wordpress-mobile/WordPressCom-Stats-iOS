@@ -1,5 +1,5 @@
 #import "WPStatsGraphLegendView.h"
-#import <WPStyleGuide.h>
+#import "WPStyleGuide+Stats.h"
 
 @interface WPStatsGraphLegendView ()
 

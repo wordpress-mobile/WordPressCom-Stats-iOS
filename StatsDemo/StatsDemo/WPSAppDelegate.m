@@ -1,22 +1,11 @@
-//
-//  WPSAppDelegate.m
-//  StatsDemo
-//
-//  Created by Aaron Douglas on 6/16/14.
-//  Copyright (c) 2014 Automattic Inc. All rights reserved.
-//
-
 #import "WPSAppDelegate.h"
-#import <DDLog.h>
-#import "DDTTYLogger.h"
-#import "DDASLLogger.h"
 #import <HockeySDK/HockeySDK.h>
 #import <WPStyleGuide.h>
 #import <WPFontManager.h>
 #import <UIImage+Util.h>
 #import <UIColor+Helpers.h>
 
-int ddLogLevel = LOG_LEVEL_VERBOSE;
+int ddLogLevel = DDLogLevelVerbose;
 
 @interface WPSAppDelegate () <BITHockeyManagerDelegate>
 

@@ -67,7 +67,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     BOOL isDataLoaded = self.statsGroup.items != nil;
-    NSInteger numberOfRows = 1 + (isDataLoaded ? self.statsGroup.numberOfRows : 1);
+    NSInteger numberOfRows = 1 + (isDataLoaded ? (NSInteger)self.statsGroup.numberOfRows : 1);
     
     return numberOfRows;
 }
@@ -93,22 +93,17 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsItem *item = [self.statsGroup statsItemForTableViewRow:indexPath.row];
-        
+        StatsItem *nextItem = [self.statsGroup statsItemForTableViewRow:indexPath.row + 1];
+       
         [self configureTwoColumnRowCell:cell
-                           withLeftText:item.label
-                              rightText:item.value
-                            andImageURL:item.iconURL
-                            indentLevel:item.depth
-                             indentable:NO
-                             expandable:item.children.count > 0
-                               expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0
-                        forStatsSection:self.statsSection];
+                        forStatsSection:self.statsSection
+                          withStatsItem:item
+                       andNextStatsItem:nextItem];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
         [indicator startAnimating];
     } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell];
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell];
     }
     
     return cell;
@@ -123,9 +118,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     if (statsItem.children.count > 0) {
         BOOL insert = !statsItem.isExpanded;
-        NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+        NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
         statsItem.expanded = !statsItem.isExpanded;
-        NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+        NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
         
         StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.expanded = statsItem.isExpanded;
@@ -138,7 +133,11 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
             [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
         }
         
+        // Reload row one above to get rid of the double border
+        NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+        
         [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         if (insert) {
@@ -155,7 +154,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                     WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                     [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                 } else {
+#ifndef AF_APP_EXTENSIONS
                     [[UIApplication sharedApplication] openURL:action.url];
+#endif
                 }
                 break;
             }
@@ -203,7 +204,9 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (void)retrieveStats
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if (self.statsGroup) {
         self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
@@ -211,14 +214,16 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     }
     
     StatsGroupCompletion completion = ^(StatsGroup *group, NSError *error) {
+#ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
         [self.refreshControl endRefreshing];
 
         self.statsGroup = group;
         self.statsGroup.offsetRows = 1;
         
         NSMutableArray *indexPaths = [NSMutableArray new];
-        for (int row = 1; row < (1 + self.statsGroup.items.count); ++row) {
+        for (NSInteger row = 1; row < (NSInteger)(1 + self.statsGroup.items.count); ++row) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
         }
         
@@ -244,7 +249,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.statsService retrieveSearchTermsForDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
     } else if (self.statsSection == StatsSectionFollowers) {
         StatsFollowerType followerType = self.statsSubSection == StatsSubSectionFollowersDotCom ? StatsFollowerTypeDotCom : StatsFollowerTypeEmail;
-        [self.statsService retrieveFollowersOfType:followerType forDate:self.selectedDate andUnit:self.periodUnit withCompletionHandler:completion];
+        [self.statsService retrieveFollowersOfType:followerType withCompletionHandler:completion];
     }
 }
 
@@ -252,41 +257,56 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
 }
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
-    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers);
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    
+    StatsTwoColumnTableViewCellSelectType selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
+    if (statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks)) {
+        selectType = StatsTwoColumnTableViewCellSelectTypeURL;
+    } else if (statsSection == StatsSectionTagsCategories) {
+        if ([statsItem.alternateIconValue isEqualToString:@"category"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeCategory;
+        } else if ([statsItem.alternateIconValue isEqualToString:@"tag"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeTag;
+        }
+    }
     
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
     statsCell.showCircularIcon = showCircularIcon;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = selectType;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
 {
+    StatsItem *statsItem = [self.statsGroup statsItemForTableViewRow:1];
+    
     NSString *leftText = self.statsGroup.titlePrimary;
     NSString *rightText = self.statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;

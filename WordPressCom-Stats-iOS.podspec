@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "WordPressCom-Stats-iOS"
-  s.version      = "0.3.1"
+  s.version      = "0.4.6"
   s.summary      = "Reusable component for displaying WordPress.com site stats in an iOS application."
 
   s.description  = <<-DESC
@@ -19,12 +19,13 @@ Pod::Spec.new do |s|
   s.source_files  = "WordPressCom-Stats-iOS", "WordPressCom-Stats-iOS/**/*.{h,m,swift}"
   s.exclude_files = "WordPressCom-Stats-iOS/Exclude"
   s.prefix_header_file = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Prefix.pch"
-  s.resources = ['WordPressCom-Stats-iOS/**/*.storyboard', 'WordPressCom-Stats-iOS/**/*.otf']
+
+  s.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/**/*.storyboard', 'WordPressCom-Stats-iOS/**/*.xib', 'WordPressCom-Stats-iOS/**/*.otf', 'WordPressCom-Stats-iOS/**/*.png'] }
   s.requires_arc = true
 
-  s.dependency 'AFNetworking',	'~> 2.5.1'
-  s.dependency 'CocoaLumberjack', '~> 1.9'
+  s.dependency 'AFNetworking',	'~> 2.5'
+  s.dependency 'CocoaLumberjack', '2.0.0'
   s.dependency 'WordPress-iOS-Shared', '~> 0.3'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
-  s.dependency 'WordPressCom-Analytics-iOS'
+  s.dependency 'WordPressCom-Analytics-iOS', '~>0.0.34'
 end

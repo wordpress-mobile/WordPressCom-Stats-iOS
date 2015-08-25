@@ -4,16 +4,16 @@
 #import "StatsGroup.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <WPFontManager.h>
 #import "WPStyleGuide+Stats.h"
-#import <WPImageSource.h>
+#import <WordPress-iOS-Shared/WPImageSource.h>
 #import "StatsTableSectionHeaderView.h"
 #import "StatsDateUtilities.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
-#import <WPAnalytics.h>
+#import "WPFontManager+Stats.h"
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -38,18 +38,25 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *sections;
-@property (nonatomic, strong) NSDictionary *subSections;
 @property (nonatomic, strong) NSMutableDictionary *sectionData;
 @property (nonatomic, strong) WPStatsGraphViewController *graphViewController;
-@property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, assign) StatsPeriodUnit selectedPeriodUnit;
 @property (nonatomic, assign) StatsSummaryType selectedSummaryType;
-@property (nonatomic, strong) NSMutableDictionary *selectedSubsections;
 @property (nonatomic, strong) NSDate *selectedDate;
 
 @end
 
 @implementation StatsTableViewController
+
+- (void)awakeFromNib
+{
+    // Force load fonts from bundle
+    [WPFontManager openSansBoldFontOfSize:1.0f];
+    [WPFontManager openSansRegularFontOfSize:1.0f];
+    [WPFontManager noticonsReguarFontOfSize:1.0f];
+
+    [super awakeFromNib];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -58,10 +65,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
-    
-    // Force load fonts from bundle
-    [WPFontManager openSansBoldFontOfSize:1.0f];
-    [WPFontManager openSansRegularFontOfSize:1.0f];
     
     [self setupRefreshControl];
     
@@ -76,15 +79,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                            @(StatsSectionSearchTerms),
                            @(StatsSectionEvents),
                            @(StatsSectionVideos),
-                           @(StatsSectionComments),
-                           @(StatsSectionTagsCategories),
-                           @(StatsSectionFollowers),
-                           @(StatsSectionPublicize),
                            @(StatsSectionWebVersion)];
-    self.subSections =  @{ @(StatsSectionComments) : @[@(StatsSubSectionCommentsByAuthor), @(StatsSubSectionCommentsByPosts)],
-                           @(StatsSectionFollowers) : @[@(StatsSubSectionFollowersDotCom), @(StatsSubSectionFollowersEmail)]};
-    self.selectedSubsections = [@{ @(StatsSectionComments) : @(StatsSubSectionCommentsByAuthor),
-                                   @(StatsSectionFollowers) : @(StatsSubSectionFollowersDotCom)} mutableCopy];
     
     [self wipeDataAndSeedGroups];
     
@@ -98,9 +93,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [self addChildViewController:self.graphViewController];
     [self.graphViewController didMoveToParentViewController:self];
     
-    NSTimeInterval fiveMinutes = 60 * 5;
-    self.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:fiveMinutes];
-    
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
@@ -110,6 +102,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self trackViewControllerAnalytics];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -128,7 +122,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
+    return (NSInteger)self.sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -146,7 +140,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         default:
         {
             StatsGroup *group = (StatsGroup *)data;
-            NSUInteger count = group.numberOfRows;
+            NSInteger count = (NSInteger)group.numberOfRows;
             
             if (statsSection == StatsSectionComments) {
                 count += StatsTableRowDataOffsetWithGroupSelector;
@@ -270,7 +264,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         BOOL hasChildItems = item.children.count > 0;
         // TODO :: Look for default action boolean
         BOOL hasDefaultAction = item.actions.count > 0;
-        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
+        NSIndexPath *newIndexPath = (hasChildItems || hasDefaultAction) ? indexPath : nil;
         
         return newIndexPath;
     }
@@ -312,9 +306,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
-            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
-            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
 
             StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             cell.expanded = statsItem.isExpanded;
@@ -327,7 +321,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
             }
             
+            // Reload row one above to get rid of the double border
+            NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            
             [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             if (insert) {
@@ -344,7 +342,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
+#endif
                     }
                     break;
                 }
@@ -356,10 +356,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
         if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
-            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.siteID];
+            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.statsService.siteId];
         } else {
-            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.siteID]];
+#ifndef AF_APP_EXTENSIONS
+            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.statsService.siteId]];
             [[UIApplication sharedApplication] openURL:webURL];
+#endif
         }
     }
 }
@@ -399,7 +401,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
-    StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
         [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
@@ -408,14 +409,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         viewAllVC.selectedDate = self.selectedDate;
         viewAllVC.periodUnit = self.selectedPeriodUnit;
         viewAllVC.statsSection = statsSection;
-        viewAllVC.statsSubSection = statsSubSection;
+        viewAllVC.statsSubSection = StatsSubSectionNone;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
     } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
         [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
         
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
 
@@ -439,9 +438,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
     self.selectedDate = date;
 
-    NSUInteger section = [self.sections indexOfObject:@(StatsSectionPeriodHeader)];
+    NSInteger section = (NSInteger)[self.sections indexOfObject:@(StatsSectionPeriodHeader)];
     if (section != NSNotFound) {
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:section];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:(NSUInteger)section];
         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
     }
     
@@ -452,7 +451,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
     [self.tableView reloadData];
     
-    section = [self.sections indexOfObject:@(StatsSectionGraph)];
+    section = (NSInteger)[self.sections indexOfObject:@(StatsSectionGraph)];
     if (section != NSNotFound) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:section];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -468,15 +467,14 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (IBAction)refreshCurrentStats:(UIRefreshControl *)sender
 {
     [self resetDateToTodayForSite];
-    [self.statsService expireAllItemsInCache];
+    [self.statsService expireAllItemsInCacheForPeriodStats];
     [self retrieveStatsSkipGraph:NO];
 }
 
 
-- (IBAction)periodUnitControlDidChange:(UISegmentedControl *)control
+- (void)changeGraphPeriod:(StatsPeriodUnit)toPeriod
 {
-    StatsPeriodUnit unit = (StatsPeriodUnit)control.selectedSegmentIndex;
-    self.selectedPeriodUnit = unit;
+    self.selectedPeriodUnit = toPeriod;
     [self resetDateToTodayForSite];
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.sections indexOfObject:@(StatsSectionPeriodHeader)]];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
@@ -485,56 +483,27 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     [self.tableView reloadData];
     
     [self retrieveStatsSkipGraph:NO];
+    
+    [self trackViewControllerAnalytics];
 }
 
-- (IBAction)sectionGroupSelectorDidChange:(UISegmentedControl *)control
+
+- (void)switchToSummaryType:(StatsSummaryType)summaryType
 {
-    StatsSection statsSection = (StatsSection)control.superview.tag;
-    NSInteger section = [self.sections indexOfObject:@(statsSection)];
-    
-    NSInteger oldSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
-    StatsSubSection subSection;
-    
-    switch (statsSection) {
-        case StatsSectionComments:
-            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionCommentsByAuthor : StatsSubSectionCommentsByPosts;
-            break;
-        case StatsSectionFollowers:
-            subSection = control.selectedSegmentIndex == 0 ? StatsSubSectionFollowersDotCom : StatsSubSectionFollowersEmail;
-            break;
-        default:
-            break;
-    }
-    
-    self.selectedSubsections[@(statsSection)] = @(subSection);
-    NSInteger newSectionCount = [self tableView:self.tableView numberOfRowsInSection:section];
-    
-    NSUInteger sectionNumber = [self.sections indexOfObject:@(statsSection)];
-    NSMutableArray *oldIndexPaths = [NSMutableArray new];
-    NSMutableArray *newIndexPaths = [NSMutableArray new];
-    
-    for (NSInteger row = StatsTableRowDataOffsetWithGroupSelector; row < oldSectionCount; ++row) {
-        [oldIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
-    }
-    for (NSInteger row = StatsTableRowDataOffsetWithGroupSelector; row < newSectionCount; ++row) {
-        [newIndexPaths addObject:[NSIndexPath indexPathForRow:row inSection:sectionNumber]];
-    }
-    
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:section]] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView deleteRowsAtIndexPaths:oldIndexPaths withRowAnimation:UITableViewRowAnimationTop];
-    [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationMiddle];
-    [self.tableView endUpdates];
+    self.selectedSummaryType = summaryType;
+    [self changeGraphPeriod:StatsPeriodUnitDay];
 }
+
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
-    if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidBeginLoadingStats:)]
+    if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
-        [self.statsTableDelegate statsTableViewControllerDidBeginLoadingStats:self];
     }
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
@@ -553,7 +522,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          
          [self.tableView reloadData];
          
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionGraph)];
+         NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionGraph)];
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(self.selectedSummaryType + 1) inSection:sectionNumber];
          [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
      }
@@ -661,101 +630,28 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
          
          [self.tableView endUpdates];
      }
-                commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
-         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
-         
-         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
-             [self.tableView beginUpdates];
-             
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
-             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-             
-             [self.tableView endUpdates];
-         }
+                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
+    {
+        if (numberOfFinishedOperations == 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {
+            [self.statsProgressViewDelegate statsViewControllerDidBeginLoadingStats:self];
+        }
+        
+        if (numberOfFinishedOperations > 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewController:loadingProgressPercentage:)]) {
+            CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
+            [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
+        }
      }
-                commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error)
+                   andOverallCompletionHandler:^
      {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
-         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
-         
-         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
-             [self.tableView beginUpdates];
-             
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
-             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-             
-             [self.tableView endUpdates];
-         }
-     }
-                tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-         group.offsetRows = StatsTableRowDataOffsetStandard;
-         self.sectionData[@(StatsSectionTagsCategories)] = group;
-         
-         [self.tableView beginUpdates];
-         
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionTagsCategories)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
-     }
-               followersDotComCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
-         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
-         
-         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
-             [self.tableView beginUpdates];
-             
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
-             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-             
-             [self.tableView endUpdates];
-         }
-     }
-                followersEmailCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-         group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
-         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
-
-         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
-             [self.tableView beginUpdates];
-             
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
-             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-             
-             [self.tableView endUpdates];
-         }
-     }
-                     publicizeCompletionHandler:^(StatsGroup *group, NSError *error)
-     {
-         group.offsetRows = StatsTableRowDataOffsetStandard;
-         self.sectionData[@(StatsSectionPublicize)] = group;
-         
-         [self.tableView beginUpdates];
-         
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPublicize)];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-         
-         [self.tableView endUpdates];
-     }
-                    andOverallCompletionHandler:^
-     {
+#ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
+#endif
+         
          [self setupRefreshControl];
          [self.refreshControl endRefreshing];
          
-         if ([self.statsTableDelegate respondsToSelector:@selector(statsTableViewControllerDidEndLoadingStats:)]) {
-             [self.statsTableDelegate statsTableViewControllerDidEndLoadingStats:self];
+         if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
+             [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
          }
      }];
 }
@@ -789,7 +685,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 identifier = StatsTableGroupHeaderCellIdentifier;
             } else if (indexPath.row == 1 && group.numberOfRows == 0) {
                 identifier = StatsTableNoResultsCellIdentifier;
-            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithoutGroupHeader)) {
+            } else if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetWithoutGroupHeader)) {
                 identifier = StatsTableViewAllCellIdentifier;
             } else {
                 identifier = StatsTableTwoColumnCellIdentifier;
@@ -814,7 +710,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 identifier = StatsTableTwoColumnHeaderCellIdentifier;
             } else if (indexPath.row == 1) {
                 identifier = StatsTableNoResultsCellIdentifier;
-            } else if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetStandard)) {
+            } else if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetStandard)) {
                 identifier = StatsTableViewAllCellIdentifier;
             } else {
                 identifier = StatsTableTwoColumnCellIdentifier;
@@ -839,7 +735,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             } else if (indexPath.row == 3) {
                 identifier = StatsTableTwoColumnHeaderCellIdentifier;
             } else {
-                if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithGroupSelectorAndTotal)) {
+                if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetWithGroupSelectorAndTotal)) {
                     identifier = StatsTableViewAllCellIdentifier;
                 } else {
                     identifier = StatsTableTwoColumnCellIdentifier;
@@ -864,7 +760,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                     identifier = StatsTableNoResultsCellIdentifier;
                 }
             } else {
-                if (group.moreItemsExist && indexPath.row == (group.numberOfRows + StatsTableRowDataOffsetWithGroupSelector)) {
+                if (group.moreItemsExist && indexPath.row == (NSInteger)(group.numberOfRows + StatsTableRowDataOffsetWithGroupSelector)) {
                     identifier = StatsTableViewAllCellIdentifier;
                 } else {
                     identifier = StatsTableTwoColumnCellIdentifier;
@@ -878,6 +774,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             break;
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
+        case StatsSectionInsightsAllTime:
+        case StatsSectionInsightsMostPopular:
+        case StatsSectionInsightsTodaysStats:
         case StatsSectionPostDetailsLoadingIndicator:
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
@@ -893,7 +792,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     
     if (       [cellIdentifier isEqualToString:StatsTableGraphCellIdentifier]) {
-        [self configureSectionGraphCell:cell];
+        [self configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell];
     
     } else if ([cellIdentifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
         [self configurePeriodHeaderCell:cell];
@@ -905,16 +804,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                              withStatsSection:statsSection];
         
-    } else if ([cellIdentifier isEqualToString:StatsTableGroupSelectorCellIdentifier]) {
-        [self configureSectionGroupSelectorCell:cell withStatsSection:statsSection];
-        
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
-        [self configureSectionTwoColumnHeaderCell:cell
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                                  withStatsSection:statsSection];
-        
-    } else if ([cellIdentifier isEqualToString:StatsTableGroupTotalsCellIdentifier]) {
-        StatsGroup *group = [self statsDataForStatsSection:statsSection];
-        [self configureSectionGroupTotalCell:cell withStatsSection:statsSection andTotal:group.totalCount];
         
     } else if ([cellIdentifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         [self configureNoResultsCell:cell withStatsSection:statsSection];
@@ -926,17 +818,12 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
-        
+        StatsItem *nextItem = [group statsItemForTableViewRow:indexPath.row + 1];
+
         [self configureTwoColumnRowCell:cell
-                           withLeftText:item.label
-                              rightText:item.value
-                            andImageURL:item.iconURL
-                            indentLevel:item.depth
-                             indentable:NO
-                             expandable:item.children.count > 0
-                               expanded:item.expanded
-                             selectable:item.actions.count > 0 || item.children.count > 0
-                        forStatsSection:statsSection];
+                        forStatsSection:statsSection
+                          withStatsItem:item
+                       andNextStatsItem:nextItem];
     } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
@@ -945,7 +832,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGraphCell:(UITableViewCell *)cell
+- (void)configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell
 {
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
 
@@ -956,6 +843,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         graphView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:graphView];
     }
+    
+    cell.bottomBorderEnabled = NO;
     
     self.graphViewController.currentSummaryType = self.selectedSummaryType;
     self.graphViewController.visits = visits;
@@ -1055,16 +944,22 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
-    
+    label.textColor = [WPStyleGuide greyDarken10];
+
     cell.bottomBorderEnabled = NO;
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
+    StatsItem *statsItem = [statsGroup statsItemForTableViewRow:2];
+    
     NSString *leftText = statsGroup.titlePrimary;
     NSString *rightText = statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -1074,68 +969,13 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGroupTotalCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection andTotal:(NSString *)total
-{
-    NSString *title;
-    StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-    
-    switch (selectedSubsection) {
-        case StatsSubSectionFollowersDotCom:
-            title = [NSString stringWithFormat:NSLocalizedString(@"Total WordPress.com Followers: %@", @"Label of Total count of WordPress.com followers with value"), total];
-            break;
-        case StatsSubSectionFollowersEmail:
-            title = [NSString stringWithFormat:NSLocalizedString(@"Total Email Followers: %@", @"Label of Total count of email followers with value"), total];
-            break;
-        default:
-            break;
-    }
-
-    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-    label.text = title;
-}
-
-
-- (void)configureSectionGroupSelectorCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
-{
-    NSArray *titles;
-    NSInteger selectedIndex = 0;
-    StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-    
-    switch (statsSection) {
-        case StatsSectionComments:
-            titles = @[NSLocalizedString(@"By Authors", @"Authors segmented control for stats"),
-                       NSLocalizedString(@"By Posts & Pages", @"Posts & Pages segmented control for stats")];
-            selectedIndex = selectedSubsection == StatsSubSectionCommentsByAuthor ? 0 : 1;
-            break;
-        case StatsSectionFollowers:
-            titles = @[NSLocalizedString(@"WordPress.com", @"WordPress.com segmented control for stats"),
-                       NSLocalizedString(@"Email", @"Email segmented control for stats")];
-            selectedIndex = selectedSubsection == StatsSubSectionFollowersDotCom ? 0 : 1;
-            break;
-        default:
-            break;
-    }
-    
-    UISegmentedControl *control = (UISegmentedControl *)[cell.contentView viewWithTag:100];
-    cell.contentView.tag = statsSection;
-    
-    [control removeAllSegments];
-    
-    for (NSString *title in [titles reverseObjectEnumerator]) {
-        [control insertSegmentWithTitle:title atIndex:0 animated:NO];
-    }
-    
-    control.selectedSegmentIndex = selectedIndex;
-}
-
-
 - (void)configureNoResultsCell:(UITableViewCell *)cell withStatsSection:(StatsSection)statsSection
 {
     NSString *text;
     id data = [self statsDataForStatsSection:statsSection];
     
     if (!data) {
-        text = NSLocalizedString(@"Waiting for data...", @"");
+        text = NSLocalizedString(@"Waiting for data...", @"Message displayed in stats while waiting for remote operations to finish.");
     } else if ([data errorWhileRetrieving] == YES) {
         text = NSLocalizedString(@"An error occurred while retrieving data. Retry in a bit!", @"Error message in section when data failed.");
     } else {
@@ -1175,6 +1015,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                 text = NSLocalizedString(@"No videos played", @"");
                 break;
             case StatsSectionGraph:
+            case StatsSectionInsightsAllTime:
+            case StatsSectionInsightsMostPopular:
+            case StatsSectionInsightsTodaysStats:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
             case StatsSectionPostDetailsAveragePerDay:
@@ -1192,28 +1035,36 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
     BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    
+    StatsTwoColumnTableViewCellSelectType selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
+    if (statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks)) {
+        selectType = StatsTwoColumnTableViewCellSelectTypeURL;
+    } else if (statsSection == StatsSectionTagsCategories) {
+        if ([statsItem.alternateIconValue isEqualToString:@"category"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeCategory;
+        } else if ([statsItem.alternateIconValue isEqualToString:@"tag"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeTag;
+        }
+    }
 
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
     statsCell.showCircularIcon = showCircularIcon;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = selectType;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 
@@ -1221,32 +1072,13 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
-    return (StatsSection)[self.sections[section] integerValue];
-}
-
-
-- (StatsSubSection)statsSubSectionForStatsSection:(StatsSection)statsSection
-{
-    NSNumber *subSectionValue = self.selectedSubsections[@(statsSection)];
-    
-    if (!subSectionValue) {
-        return StatsSubSectionNone;
-    }
-    
-    return (StatsSubSection)[subSectionValue integerValue];
+    return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
 }
 
 
 - (id)statsDataForStatsSection:(StatsSection)statsSection
 {
-    id data;
-    
-    if ( statsSection == StatsSectionComments || statsSection == StatsSectionFollowers) {
-        StatsSubSection selectedSubsection = [self statsSubSectionForStatsSection:statsSection];
-        data = self.sectionData[@(statsSection)][@(selectedSubsection)];
-    } else {
-        data = self.sectionData[@(statsSection)];
-    }
+    id data = self.sectionData[@(statsSection)];
     
     return data;
 }
@@ -1265,16 +1097,9 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
     for (NSNumber *statsSectionNumber in self.sections) {
         StatsSection statsSection = (StatsSection)statsSectionNumber.integerValue;
-        StatsSubSection statsSubSection = StatsSubSectionNone;
-        
-        if ([self.subSections objectForKey:statsSectionNumber] != nil) {
-            for (NSNumber *statsSubSectionNumber in self.subSections) {
-                statsSubSection = (StatsSubSection)statsSubSectionNumber.integerValue;
-                StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:statsSubSection];
-                self.sectionData[statsSectionNumber][statsSubSectionNumber] = group;
-            }
-        } else {
-            
+        if (statsSection != StatsSectionGraph) {
+            StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
+            self.sectionData[statsSectionNumber] = group;
         }
     }
 }
@@ -1297,13 +1122,35 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 - (void)resetDateToTodayForSite
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    calendar.timeZone = self.siteTimeZone;
+    calendar.timeZone = self.statsService.siteTimeZone;
     
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
     
     calendar.timeZone = [NSTimeZone localTimeZone];
     NSDate *date = [calendar dateFromComponents:components];
     self.selectedDate = date;
+}
+
+- (void)trackViewControllerAnalytics
+{
+    WPAnalyticsStat stat;
+    
+    switch (self.selectedPeriodUnit) {
+        case StatsPeriodUnitDay:
+            stat = WPAnalyticsStatStatsPeriodDaysAccessed;
+            break;
+        case StatsPeriodUnitWeek:
+            stat = WPAnalyticsStatStatsPeriodWeeksAccessed;
+            break;
+        case StatsPeriodUnitMonth:
+            stat = WPAnalyticsStatStatsPeriodMonthsAccessed;
+            break;
+        case StatsPeriodUnitYear:
+            stat = WPAnalyticsStatStatsPeriodYearsAccessed;
+            break;
+    }
+    
+    [WPAnalytics track:stat];
 }
 
 

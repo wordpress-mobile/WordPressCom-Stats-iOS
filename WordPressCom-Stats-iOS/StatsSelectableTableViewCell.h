@@ -1,7 +1,6 @@
 #import <UIKit/UIKit.h>
-#import <WPTableViewCell.h>
 
-@interface StatsSelectableTableViewCell : WPTableViewCell
+@interface StatsSelectableTableViewCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *categoryIconLabel;
 @property (nonatomic, weak) IBOutlet UILabel *categoryLabel;

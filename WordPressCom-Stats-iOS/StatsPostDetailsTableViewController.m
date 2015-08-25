@@ -6,7 +6,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
-#import <WPAnalytics.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -84,7 +84,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
+    return (NSInteger)self.sections.count;
 }
 
 
@@ -100,9 +100,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
         {
-            StatsSection statsSection = [self statsSectionForTableViewSection:section];
             StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-            NSUInteger numberOfRows = [statsGroup numberOfRows];
+            NSInteger numberOfRows = (NSInteger)statsGroup.numberOfRows;
             return 2 + numberOfRows + (numberOfRows == 0 ? 1 : 0);
         }
         default:
@@ -130,20 +129,15 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
+        StatsItem *nextStatsItem = [statsGroup statsItemForTableViewRow:indexPath.row + 1];
         
         [self configureTwoColumnRowCell:cell
-                           withLeftText:statsItem.label
-                              rightText:statsItem.value
-                            andImageURL:statsItem.iconURL
-                            indentLevel:statsItem.depth
-                             indentable:NO
-                             expandable:statsItem.children.count > 0
-                               expanded:statsItem.expanded
-                             selectable:statsItem.actions.count > 0 || statsItem.children.count > 0
-                        forStatsSection:statsSection];
+                        forStatsSection:statsSection
+                          withStatsItem:statsItem
+                       andNextStatsItem:nextStatsItem];
     } else if ([identifier isEqualToString:StatsTableTwoColumnHeaderCellIdentifier]) {
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-        [self configureSectionTwoColumnHeaderCell:cell withStatsGroup:statsGroup];
+        [self configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsGroup:statsGroup];
     } else if ([identifier isEqualToString:StatsTableLoadingIndicatorCellIdentifier]) {
         cell.backgroundColor = self.tableView.backgroundColor;
     }
@@ -170,7 +164,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         BOOL hasChildItems = item.children.count > 0;
         // TODO :: Look for default action boolean
         BOOL hasDefaultAction = item.actions.count > 0;
-        NSIndexPath *newIndexPath = hasChildItems || hasDefaultAction ? indexPath : nil;
+        NSIndexPath *newIndexPath = (hasChildItems || hasDefaultAction) ? indexPath : nil;
         
         return newIndexPath;
     }
@@ -205,9 +199,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         
         if (statsItem.children.count > 0) {
             BOOL insert = !statsItem.isExpanded;
-            NSInteger numberOfRowsBefore = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsBefore = (NSInteger)statsItem.numberOfRows - 1;
             statsItem.expanded = !statsItem.isExpanded;
-            NSInteger numberOfRowsAfter = statsItem.numberOfRows - 1;
+            NSInteger numberOfRowsAfter = (NSInteger)statsItem.numberOfRows - 1;
             
             StatsTwoColumnTableViewCell *cell = (StatsTwoColumnTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             cell.expanded = statsItem.isExpanded;
@@ -220,7 +214,11 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                 [indexPaths addObject:[NSIndexPath indexPathForRow:(row + indexPath.row) inSection:indexPath.section]];
             }
             
+            // Reload row one above to get rid of the double border
+            NSIndexPath *previousRowIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            
             [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[previousRowIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             if (insert) {
@@ -237,7 +235,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
+#endif
                     }
                     break;
                 }
@@ -301,7 +301,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStats
 {
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if (self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
@@ -312,8 +314,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
+#ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
+#endif
         [self setupRefreshControl];
         [self.refreshControl endRefreshing];
 
@@ -332,7 +335,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         [self.tableView reloadData];
         
         
-        NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+        NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }];
@@ -343,7 +346,9 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
+#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
 }
 
 
@@ -424,40 +429,56 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
-    
+    label.textColor = [WPStyleGuide greyDarken10];
+
     cell.bottomBorderEnabled = NO;
 }
 
 
 - (void)configureTwoColumnRowCell:(UITableViewCell *)cell
-                     withLeftText:(NSString *)leftText
-                        rightText:(NSString *)rightText
-                      andImageURL:(NSURL *)imageURL
-                      indentLevel:(NSUInteger)indentLevel
-                       indentable:(BOOL)indentable
-                       expandable:(BOOL)expandable
-                         expanded:(BOOL)expanded
-                       selectable:(BOOL)selectable
                   forStatsSection:(StatsSection)statsSection
+                    withStatsItem:(StatsItem *)statsItem
+                 andNextStatsItem:(StatsItem *)nextStatsItem
 {
+    BOOL showCircularIcon = (statsSection == StatsSectionComments || statsSection == StatsSectionFollowers || statsSection == StatsSectionAuthors);
+    
+    StatsTwoColumnTableViewCellSelectType selectType = StatsTwoColumnTableViewCellSelectTypeDetail;
+    if (statsItem.actions.count > 0 && (statsSection == StatsSectionReferrers || statsSection == StatsSectionClicks)) {
+        selectType = StatsTwoColumnTableViewCellSelectTypeURL;
+    } else if (statsSection == StatsSectionTagsCategories) {
+        if ([statsItem.alternateIconValue isEqualToString:@"category"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeCategory;
+        } else if ([statsItem.alternateIconValue isEqualToString:@"tag"]) {
+            selectType = StatsTwoColumnTableViewCellSelectTypeTag;
+        }
+    }
+    
     StatsTwoColumnTableViewCell *statsCell = (StatsTwoColumnTableViewCell *)cell;
-    statsCell.leftText = leftText;
-    statsCell.rightText = rightText;
-    statsCell.imageURL = imageURL;
-    statsCell.showCircularIcon = NO;
-    statsCell.indentLevel = indentLevel;
-    statsCell.indentable = indentable;
-    statsCell.expandable = expandable;
-    statsCell.expanded = expanded;
-    statsCell.selectable = selectable;
+    statsCell.leftText = statsItem.label;
+    statsCell.rightText = statsItem.value;
+    statsCell.imageURL = statsItem.iconURL;
+    statsCell.showCircularIcon = showCircularIcon;
+    statsCell.indentLevel = statsItem.depth;
+    statsCell.indentable = NO;
+    statsCell.expandable = statsItem.children.count > 0;
+    statsCell.expanded = statsItem.expanded;
+    statsCell.selectable = statsItem.actions.count > 0 || statsItem.children.count > 0;
+    statsCell.selectType = selectType;
+    statsCell.bottomBorderEnabled = !(nextStatsItem.isExpanded);
+    
     [statsCell doneSettingProperties];
 }
 
 
-- (void)configureSectionTwoColumnHeaderCell:(UITableViewCell *)cell withStatsGroup:(StatsGroup *)statsGroup
+- (void)configureSectionTwoColumnHeaderCell:(StatsStandardBorderedTableViewCell *)cell withStatsGroup:(StatsGroup *)statsGroup
 {
+    StatsItem *statsItem = [statsGroup statsItemForTableViewRow:2];
+    
     NSString *leftText = statsGroup.titlePrimary;
     NSString *rightText = statsGroup.titleSecondary;
+    
+    // Hide the bottom border if the first row is expanded
+    cell.bottomBorderEnabled = !statsItem.isExpanded;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
@@ -469,7 +490,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (StatsSection)statsSectionForTableViewSection:(NSInteger)section
 {
-    return (StatsSection)[self.sections[section] integerValue];
+    return (StatsSection)[self.sections[(NSUInteger)section] integerValue];
 }
 
 
@@ -503,7 +524,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     NSUInteger section = [self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
     if (section != NSNotFound) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:section];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:(NSInteger)section];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
