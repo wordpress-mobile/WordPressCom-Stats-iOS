@@ -2,7 +2,6 @@
 #import "WPFontManager+Stats.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
-#import "StatsGaugeView.h"
 #import "InsightsSectionHeaderTableViewCell.h"
 #import "InsightsAllTimeTableViewCell.h"
 #import "InsightsMostPopularTableViewCell.h"
