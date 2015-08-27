@@ -13,6 +13,7 @@
             <string>Noticons-Regular</string>
             <string>Noticons-Regular</string>
             <string>Noticons-Regular</string>
+            <string>Noticons-Regular</string>
         </mutableArray>
         <mutableArray key="OpenSans-Bold.ttf">
             <string>OpenSans-Bold</string>
@@ -30,6 +31,8 @@
             <string>OpenSans-Bold</string>
         </mutableArray>
         <mutableArray key="OpenSans-Regular.ttf">
+            <string>OpenSans</string>
+            <string>OpenSans</string>
             <string>OpenSans</string>
             <string>OpenSans</string>
             <string>OpenSans</string>
@@ -1523,6 +1526,55 @@
                                         <constraint firstItem="BP8-az-Pv4" firstAttribute="leading" secondItem="lvD-ZL-QyN" secondAttribute="leadingMargin" constant="15" id="x6Y-Ep-ZlD"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectableRow" id="Z3o-3O-RMY" customClass="StatsSelectableTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z3o-3O-RMY" id="3gx-4d-A4A">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNH-G7-q6x">
+                                            <rect key="frame" x="23" y="3" width="25" height="44"/>
+                                            <fontDescription key="fontDescription" name="Noticons-Regular" family="Noticons" pointSize="25"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIEWS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AVk-Bx-TWa">
+                                            <rect key="frame" x="56" y="10" width="50" height="24"/>
+                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
+                                            <color key="textColor" red="0.1960784314" green="0.25490196079999999" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGn-zl-G6q">
+                                            <rect key="frame" x="538" y="10" width="39" height="24"/>
+                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="NGn-zl-G6q" secondAttribute="centerY" id="7H5-Ii-vcc"/>
+                                        <constraint firstAttribute="trailing" secondItem="NGn-zl-G6q" secondAttribute="trailing" constant="23" id="9ZW-Uc-Fbe"/>
+                                        <constraint firstItem="JNH-G7-q6x" firstAttribute="leading" secondItem="3gx-4d-A4A" secondAttribute="leading" constant="23" id="ACw-Ho-dP8"/>
+                                        <constraint firstAttribute="centerY" secondItem="AVk-Bx-TWa" secondAttribute="centerY" id="HzF-2N-prs"/>
+                                        <constraint firstAttribute="centerY" secondItem="JNH-G7-q6x" secondAttribute="centerY" constant="-3" id="lgQ-RB-Pun"/>
+                                        <constraint firstItem="JNH-G7-q6x" firstAttribute="baseline" secondItem="AVk-Bx-TWa" secondAttribute="baseline" id="qld-Tg-jyM"/>
+                                        <constraint firstItem="JNH-G7-q6x" firstAttribute="top" secondItem="3gx-4d-A4A" secondAttribute="topMargin" constant="-10" id="rNb-vr-TDT"/>
+                                        <constraint firstItem="AVk-Bx-TWa" firstAttribute="leading" secondItem="JNH-G7-q6x" secondAttribute="trailing" constant="8" id="sw8-mp-MXI"/>
+                                        <constraint firstItem="JNH-G7-q6x" firstAttribute="baseline" secondItem="NGn-zl-G6q" secondAttribute="baseline" id="uNW-Gl-wec"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="qld-Tg-jyM"/>
+                                            <exclude reference="rNb-vr-TDT"/>
+                                            <exclude reference="uNW-Gl-wec"/>
+                                        </mask>
+                                    </variation>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="categoryIconLabel" destination="JNH-G7-q6x" id="Zow-wz-u9Q"/>
+                                    <outlet property="categoryLabel" destination="AVk-Bx-TWa" id="R89-fW-FBz"/>
+                                    <outlet property="valueLabel" destination="NGn-zl-G6q" id="ZXW-Uz-Xxl"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
