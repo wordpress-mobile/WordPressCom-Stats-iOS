@@ -237,7 +237,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
+        (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO)) {
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
@@ -323,6 +324,24 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
+        }
+    } else if (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
+        switch (indexPath.row) {
+            case 0:
+            case 1:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
+                break;
+            case 2:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeVisitors];
+                break;
+            case 3:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeLikes];
+                break;
+            case 4:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeComments];
+                break;
+            default:
+                break;
         }
     }
 }
