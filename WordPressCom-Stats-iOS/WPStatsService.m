@@ -241,18 +241,22 @@ NSString *const TodayCacheKey = @"Today";
 
     [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
     {
-        StatsAllTime *allTime = [StatsAllTime new];
-        allTime.numberOfPosts = posts;
-        allTime.numberOfPostsValue = postsValue;
-        allTime.numberOfViews = views;
-        allTime.numberOfViewsValue = viewsValue;
-        allTime.numberOfVisitors = visitors;
-        allTime.numberOfVisitorsValue = visitorsValue;
-        allTime.bestNumberOfViews = bestViews;
-        allTime.bestNumberOfViewsValue = bestViewsValue;
-        allTime.bestViewsOn = bestViewsOn;
+        StatsAllTime *allTime;
         
-        cacheDictionary[AllTimeCacheKey] = allTime;
+        if (!error) {
+            allTime = [StatsAllTime new];
+            allTime.numberOfPosts = posts;
+            allTime.numberOfPostsValue = postsValue;
+            allTime.numberOfViews = views;
+            allTime.numberOfViewsValue = viewsValue;
+            allTime.numberOfVisitors = visitors;
+            allTime.numberOfVisitorsValue = visitorsValue;
+            allTime.bestNumberOfViews = bestViews;
+            allTime.bestNumberOfViewsValue = bestViewsValue;
+            allTime.bestViewsOn = bestViewsOn;
+            
+            cacheDictionary[AllTimeCacheKey] = allTime;
+        }
         
         if (allTimeCompletion) {
             allTimeCompletion(allTime, error);
@@ -260,15 +264,19 @@ NSString *const TodayCacheKey = @"Today";
     }
                                            insightsCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue,NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
     {
-        StatsInsights *insights = [StatsInsights new];
-        insights.highestHour = highestHour;
-        insights.highestHourPercent = highestHourPercent;
-        insights.highestHourPercentValue = highestHourPercentValue;
-        insights.highestDayOfWeek = highestDayOfWeek;
-        insights.highestDayPercent = highestDayPercent;
-        insights.highestDayPercentValue = highestDayPercentValue;
+        StatsInsights *insights;
         
-        cacheDictionary[InsightsCacheKey] = insights;
+        if (!error) {
+            insights = [StatsInsights new];
+            insights.highestHour = highestHour;
+            insights.highestHourPercent = highestHourPercent;
+            insights.highestHourPercentValue = highestHourPercentValue;
+            insights.highestDayOfWeek = highestDayOfWeek;
+            insights.highestDayPercent = highestDayPercent;
+            insights.highestDayPercentValue = highestDayPercentValue;
+            
+            cacheDictionary[InsightsCacheKey] = insights;
+        }
         
         if (insightsCompletion) {
             insightsCompletion(insights, error);
