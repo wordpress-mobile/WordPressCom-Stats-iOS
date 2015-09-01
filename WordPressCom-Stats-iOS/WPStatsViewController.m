@@ -63,7 +63,7 @@
     }
 }
 
-#pragma mark UIViewController overrides
+#pragma mark - UIViewController overrides
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
@@ -74,7 +74,7 @@
 }
 
 
-#pragma mark Actions
+#pragma mark - Actions
 
 - (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control
 {
@@ -123,7 +123,7 @@
 }
 
 
-#pragma mark WPStatsSummaryTypeSelectionDelegate methods
+#pragma mark - WPStatsSummaryTypeSelectionDelegate methods
 
 - (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType
 {
@@ -142,7 +142,7 @@
     [self.statsTableViewController switchToSummaryType:statsSummaryType];
 }
 
-#pragma mark StatsTableViewControllerDelegate methods
+#pragma mark - StatsTableViewControllerDelegate methods
 
 
 - (void)statsViewControllerDidBeginLoadingStats:(UIViewController *)controller
@@ -226,7 +226,8 @@
 
 - (void)updateSegmentedControlForceUpdate:(BOOL)forceUpdate
 {
-    if (IS_IPHONE == NO) {
+    if (IS_IPAD) {
+        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
         return;
     }
     
