@@ -585,6 +585,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
 
     cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
@@ -596,6 +597,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsTodaysStats:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
             cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         default:
             break;
