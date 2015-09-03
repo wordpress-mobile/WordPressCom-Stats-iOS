@@ -43,6 +43,7 @@ static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPop
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
+static NSString *const InsightsTableWrappingTextCellIdentifier = @"WrappingText";
 static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
@@ -79,6 +80,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
                       @(StatsSectionInsightsTodaysStats),
+                      @(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionPeriodHeader),
                       @(StatsSectionComments),
                       @(StatsSectionTagsCategories),
@@ -124,6 +126,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             return IS_IPAD ? 2 : 5;
         case StatsSectionPeriodHeader:
             return 1;
+        case StatsSectionInsightsLatestPostSummary:
+            return 5;
             
             // TODO :: Pull offset from StatsGroup
         default:
@@ -227,6 +231,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return StatsTableGroupHeaderHeight;
     } else if ([identifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         return StatsTableNoResultsHeight;
+    } else if ([identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
+        StatsSelectableTableViewCell *cell = (StatsSelectableTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+        NSLog(@"Cell: %@", cell);
+        
+        return 200.0f;
     }
 
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
@@ -435,6 +444,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
             break;
 
+        case StatsSectionInsightsLatestPostSummary:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else if (indexPath.row == 1) {
+                identifier = InsightsTableWrappingTextCellIdentifier;
+            } else {
+                identifier = StatsTableSelectableCellIdentifier;
+            }
+            break;
+            
         case StatsSectionPeriodHeader:
             return StatsTablePeriodHeaderCellIdentifier;
 
@@ -544,7 +563,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
     } else if ([identifier isEqualToString:StatsTableSelectableCellIdentifier]) {
-        [self configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forRow:indexPath.row];
+        [self configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forIndexPath:indexPath];
     } else if ([identifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
         cell.backgroundColor = self.tableView.backgroundColor;
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
@@ -586,6 +605,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
     cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.bottomBorderEnabled = YES;
     
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
@@ -598,6 +618,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
             cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            break;
+        case StatsSectionInsightsLatestPostSummary:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Latest Post Summary", @"Insights latest post summary section header");
+            cell.bottomBorderEnabled = NO;
             break;
         default:
             break;
@@ -703,48 +727,81 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 }
 
-- (void)configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forRow:(NSInteger)row
+- (void)configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     cell.selectedIsLighter = NO;
     cell.unselectedCellValueColor = [WPStyleGuide wordPressBlue];
     
-    StatsSummary *todaySummary = self.sectionData[@(StatsSectionInsightsTodaysStats)];
-    
-    switch (row) {
-        case 1: // Views
-        {
-            cell.categoryIconLabel.text = @"";
-            cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            cell.valueLabel.text = todaySummary.views;
-            break;
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+
+    if (statsSection == StatsSectionInsightsTodaysStats) {
+        StatsSummary *todaySummary = self.sectionData[@(statsSection)];
+        
+        switch (indexPath.row) {
+            case 1: // Views
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.valueLabel.text = todaySummary.views;
+                break;
+            }
+                
+            case 2: // Visitors
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.valueLabel.text = todaySummary.visitors;
+                break;
+            }
+                
+            case 3: // Likes
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.valueLabel.text = todaySummary.likes;
+                break;
+            }
+                
+            case 4: // Comments
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.valueLabel.text = todaySummary.comments;
+                break;
+            }
+                
+            default:
+                break;
         }
-            
-        case 2: // Visitors
-        {
-            cell.categoryIconLabel.text = @"";
-            cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            cell.valueLabel.text = todaySummary.visitors;
-            break;
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary) {
+        switch (indexPath.row) {
+            case 1: // Views
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+//                cell.valueLabel.text = todaySummary.views;
+                break;
+            }
+                
+            case 2: // Likes
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+//                cell.valueLabel.text = todaySummary.likes;
+                break;
+            }
+                
+            case 3: // Comments
+            {
+                cell.categoryIconLabel.text = @"";
+                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+//                cell.valueLabel.text = todaySummary.comments;
+                break;
+            }
+                
+            default:
+                break;
         }
-            
-        case 3: // Likes
-        {
-            cell.categoryIconLabel.text = @"";
-            cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            cell.valueLabel.text = todaySummary.likes;
-            break;
-        }
-            
-        case 4: // Comments
-        {
-            cell.categoryIconLabel.text = @"";
-            cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            cell.valueLabel.text = todaySummary.comments;
-            break;
-        }
-            
-        default:
-            break;
     }
 }
 
@@ -1255,6 +1312,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [commentsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, commentsText.length)];
 
     return commentsText;
+}
+
+- (NSAttributedString *)latestPostSummaryAttributedString
+{
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"It's been 6 days since iPhone 6 Plus Screen Backlight Issue was published. Here's how the post has performed so far...", @"") attributes:@{NSFontAttributeName : [WPFontManager openSansLightFontOfSize:13.0]}];
+    
+    return text;
 }
 
 #pragma mark - Image methods

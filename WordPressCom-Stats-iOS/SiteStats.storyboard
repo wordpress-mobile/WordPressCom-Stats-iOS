@@ -1577,6 +1577,52 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="WrappingText" id="ddM-dM-GIY" userLabel="WrappingText" customClass="StatsStandardBorderedTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ddM-dM-GIY" id="Wta-YU-xiN">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLV-9J-Bne">
+                                            <rect key="frame" x="23" y="14" width="554" height="16"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="9uP-r7-OBd"/>
+                                            </constraints>
+                                            <attributedString key="attributedText">
+                                                <fragment content="It's been 6 days since ">
+                                                    <attributes>
+                                                        <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <font key="NSFont" size="13" name="HelveticaNeue"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="iPhone 6 Plus Screen Longer Moo Cow Backlight ">
+                                                    <attributes>
+                                                        <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <font key="NSFont" size="13" name="HelveticaNeue-Bold"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="Issue">
+                                                    <attributes>
+                                                        <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <font key="NSFont" size="13" name="HelveticaNeue-Bold"/>
+                                                        <font key="NSOriginalFont" size="13" name="HelveticaNeue-Bold"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="aLV-9J-Bne" secondAttribute="centerY" id="BjG-NF-41p"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="aLV-9J-Bne" secondAttribute="bottom" id="QbL-QG-6Vf"/>
+                                        <constraint firstItem="aLV-9J-Bne" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wta-YU-xiN" secondAttribute="topMargin" id="ggM-QV-bCP"/>
+                                        <constraint firstAttribute="trailing" secondItem="aLV-9J-Bne" secondAttribute="trailing" constant="23" id="jGD-dv-UK2"/>
+                                        <constraint firstItem="aLV-9J-Bne" firstAttribute="leading" secondItem="Wta-YU-xiN" secondAttribute="leading" constant="23" id="n8l-Bq-mCc"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
