@@ -75,7 +75,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:path];
+    
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
+    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
     
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
