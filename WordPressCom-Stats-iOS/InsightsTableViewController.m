@@ -44,6 +44,7 @@ static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDeta
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
 static NSString *const InsightsTableWrappingTextCellIdentifier = @"WrappingText";
+static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingText";
 static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
@@ -80,6 +81,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
+    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
     
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
@@ -236,10 +238,18 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     } else if ([identifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
         return StatsTableNoResultsHeight;
     } else if ([identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
-        StatsSelectableTableViewCell *cell = (StatsSelectableTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-        NSLog(@"Cell: %@", cell);
+        StatsStandardBorderedTableViewCell *cell = (StatsStandardBorderedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
+        cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));
         
-        return 200.0f;
+        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+        label.attributedText = [self latestPostSummaryAttributedString];
+        [cell setNeedsLayout];
+        [cell layoutIfNeeded];
+        
+        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        NSLog(@"Cell height: %@", @(size.height));
+        
+        return size.height;
     }
 
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];

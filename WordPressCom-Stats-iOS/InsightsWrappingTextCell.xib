@@ -53,6 +53,7 @@
                     <constraint firstAttribute="centerY" secondItem="RoT-N4-Fa0" secondAttribute="centerY" id="yBV-SQ-gql"/>
                 </constraints>
             </tableViewCellContentView>
+            <point key="canvasLocation" x="628" y="590"/>
         </tableViewCell>
     </objects>
 </document>
