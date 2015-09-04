@@ -243,6 +243,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.attributedText = [self latestPostSummaryAttributedString];
+        label.preferredMaxLayoutWidth = CGRectGetWidth(tableView.bounds) - 46.0f;
         [cell setNeedsLayout];
         [cell layoutIfNeeded];
         
