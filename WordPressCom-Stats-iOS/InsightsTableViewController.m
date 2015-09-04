@@ -757,7 +757,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-                cell.valueLabel.text = todaySummary.views;
+                cell.valueLabel.text = todaySummary.views ?: @"-";
                 break;
             }
                 
@@ -765,7 +765,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-                cell.valueLabel.text = todaySummary.visitors;
+                cell.valueLabel.text = todaySummary.visitors ?: @"-";
                 break;
             }
                 
@@ -773,7 +773,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-                cell.valueLabel.text = todaySummary.likes;
+                cell.valueLabel.text = todaySummary.likes ?: @"-";
                 break;
             }
                 
@@ -781,7 +781,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-                cell.valueLabel.text = todaySummary.comments;
+                cell.valueLabel.text = todaySummary.comments ?: @"-";
                 break;
             }
                 
@@ -794,7 +794,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.views;
+//                cell.valueLabel.text = todaySummary.views ?: @"-";
                 break;
             }
                 
@@ -802,7 +802,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.likes;
+//                cell.valueLabel.text = todaySummary.likes ?: @"-";
                 break;
             }
                 
@@ -810,7 +810,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.comments;
+//                cell.valueLabel.text = todaySummary.comments ?: @"-";
                 break;
             }
                 

@@ -1567,6 +1567,9 @@
                                                 <segment title="First"/>
                                                 <segment title="Second"/>
                                             </segments>
+                                            <connections>
+                                                <action selector="sectionGroupSelectorDidChange:" destination="Pq6-gc-ScC" eventType="valueChanged" id="ryC-1d-nNt"/>
+                                            </connections>
                                         </segmentedControl>
                                     </subviews>
                                     <constraints>
