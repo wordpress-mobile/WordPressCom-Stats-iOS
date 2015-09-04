@@ -75,7 +75,6 @@
 		93C3D5681B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json in Resources */ = {isa = PBXBuildFile; fileRef = 93C3D5671B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json */; };
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
 		93FABB831A126DC5000C15ED /* StatsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FABB821A126DC5000C15ED /* StatsTableViewController.m */; };
-		93FE886F1B0513820096F187 /* StatsGaugeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FE886E1B0513820096F187 /* StatsGaugeView.m */; };
 		93FE88721B05307D0096F187 /* StatsInsights.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FE88711B05307D0096F187 /* StatsInsights.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
 /* End PBXBuildFile section */
@@ -252,8 +251,6 @@
 		93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Noticons-Regular.otf"; sourceTree = "<group>"; };
 		93FABB811A126DC5000C15ED /* StatsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTableViewController.h; sourceTree = "<group>"; };
 		93FABB821A126DC5000C15ED /* StatsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableViewController.m; sourceTree = "<group>"; };
-		93FE886D1B0513820096F187 /* StatsGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsGaugeView.h; sourceTree = "<group>"; };
-		93FE886E1B0513820096F187 /* StatsGaugeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsGaugeView.m; sourceTree = "<group>"; };
 		93FE88701B05307D0096F187 /* StatsInsights.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsInsights.h; sourceTree = "<group>"; };
 		93FE88711B05307D0096F187 /* StatsInsights.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsInsights.m; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -507,8 +504,6 @@
 				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
 				93035C391AE97B6300F6FF5C /* WPFontManager+Stats.h */,
 				93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */,
-				93FE886D1B0513820096F187 /* StatsGaugeView.h */,
-				93FE886E1B0513820096F187 /* StatsGaugeView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -734,7 +729,6 @@
 				93FE88721B05307D0096F187 /* StatsInsights.m in Sources */,
 				93274AE41A07C7EA0017238F /* StatsVisits.m in Sources */,
 				93A379E419FEAB8100415023 /* StatsGroup.m in Sources */,
-				93FE886F1B0513820096F187 /* StatsGaugeView.m in Sources */,
 				9389C94E197EBBAF0036D437 /* WPStatsGraphToastView.m in Sources */,
 				93A379E119FEAB1C00415023 /* StatsItemAction.m in Sources */,
 				930C2EEB195DB4D300C6964D /* WPStatsGraphBackgroundView.m in Sources */,

@@ -2,7 +2,6 @@
 #import "WPFontManager+Stats.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
-#import "StatsGaugeView.h"
 #import "InsightsSectionHeaderTableViewCell.h"
 #import "InsightsAllTimeTableViewCell.h"
 #import "InsightsMostPopularTableViewCell.h"
@@ -42,9 +41,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
-static NSString *const InsightsTableTodaysStatsDetailsCellIdentifier = @"TodaysStatsDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
+static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
 static NSString *const StatsTableGroupTotalsCellIdentifier = @"GroupTotalsRow";
@@ -120,8 +119,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
-        case StatsSectionInsightsTodaysStats:
             return 2;
+        case StatsSectionInsightsTodaysStats:
+            return IS_IPAD ? 2 : 5;
         case StatsSectionPeriodHeader:
             return 1;
             
@@ -223,8 +223,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return 100.0f;
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         return 66.0f;
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier]) {
-        return 132.0f;
     } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         return StatsTableGroupHeaderHeight;
     } else if ([identifier isEqualToString:StatsTableNoResultsCellIdentifier]) {
@@ -239,7 +237,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
+    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
+        (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO)) {
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
@@ -322,9 +321,27 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 }
             }
         }
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
+        }
+    } else if (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
+        switch (indexPath.row) {
+            case 0:
+            case 1:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
+                break;
+            case 2:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeVisitors];
+                break;
+            case 3:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeLikes];
+                break;
+            case 4:
+                [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeComments];
+                break;
+            default:
+                break;
         }
     }
 }
@@ -411,8 +428,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else if (IS_IPAD) {
+                identifier = InsightsTableTodaysStatsDetailsiPadCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableTodaysStatsDetailsiPadCellIdentifier : InsightsTableTodaysStatsDetailsCellIdentifier;
+                identifier = StatsTableSelectableCellIdentifier;
             }
             break;
 
@@ -522,8 +541,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
+    } else if ([identifier isEqualToString:StatsTableSelectableCellIdentifier]) {
+        [self configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forRow:indexPath.row];
     } else if ([identifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
         cell.backgroundColor = self.tableView.backgroundColor;
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
@@ -564,6 +585,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
 
     cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
@@ -574,6 +596,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
         case StatsSectionInsightsTodaysStats:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
+            cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         default:
             break;
@@ -677,6 +701,51 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [cell.todayCommentsValueButton setTitleColor:todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
     }
 
+}
+
+- (void)configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forRow:(NSInteger)row
+{
+    cell.selectedIsLighter = NO;
+    cell.unselectedCellValueColor = [WPStyleGuide wordPressBlue];
+    
+    StatsSummary *todaySummary = self.sectionData[@(StatsSectionInsightsTodaysStats)];
+    
+    switch (row) {
+        case 1: // Views
+        {
+            cell.categoryIconLabel.text = @"";
+            cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            cell.valueLabel.text = todaySummary.views ?: @"-";
+            break;
+        }
+            
+        case 2: // Visitors
+        {
+            cell.categoryIconLabel.text = @"";
+            cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            cell.valueLabel.text = todaySummary.visitors ?: @"-";
+            break;
+        }
+            
+        case 3: // Likes
+        {
+            cell.categoryIconLabel.text = @"";
+            cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            cell.valueLabel.text = todaySummary.likes ?: @"-";
+            break;
+        }
+            
+        case 4: // Comments
+        {
+            cell.categoryIconLabel.text = @"";
+            cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            cell.valueLabel.text = todaySummary.comments ?: @"-";
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 
