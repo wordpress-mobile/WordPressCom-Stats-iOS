@@ -136,6 +136,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                         latestPostSummaryCompletionHandler:(StatsRemoteSummaryCompletion)latestPostCompletion
                                   commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
                             tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -154,6 +155,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     }
     if (todaySummaryCompletion) {
         [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:todaySummaryCompletion]];
+    }
+    if (latestPostCompletion) {
+        // TODO :: Add remote operations
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsWithCompletionHandler:commentsCompletion]];

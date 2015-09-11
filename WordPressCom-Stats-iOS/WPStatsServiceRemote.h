@@ -50,6 +50,7 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                         latestPostSummaryCompletionHandler:(StatsRemoteSummaryCompletion)latestPostCompletion
                                   commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
                             tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion

@@ -25,7 +25,10 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 @property (nonatomic, readonly) NSNumber *siteId;
 @property (nonatomic, readonly) NSTimeZone *siteTimeZone;
 
-- (instancetype)initWithSiteId:(NSNumber *)siteId siteTimeZone:(NSTimeZone *)timeZone oauth2Token:(NSString *)oauth2Token andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval;
+- (instancetype)initWithSiteId:(NSNumber *)siteId
+                  siteTimeZone:(NSTimeZone *)timeZone
+                   oauth2Token:(NSString *)oauth2Token
+    andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval;
 
 - (void)retrieveAllStatsForDate:(NSDate *)date
                         andUnit:(StatsPeriodUnit)unit
@@ -78,6 +81,7 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
+                            latestPostSummaryCompletionHandler:(StatsSummaryCompletion)latestPostCompletion
                                commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
                                 commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
                                tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion

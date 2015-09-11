@@ -1040,7 +1040,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
              self.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
          }
      }
-                                              commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
+                                           latestPostSummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+     {
+         // TODO - Do something fancy and exciting here
+     }                                               commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
          self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
