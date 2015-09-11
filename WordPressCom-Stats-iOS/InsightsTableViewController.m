@@ -607,6 +607,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                         forStatsSection:statsSection
                           withStatsItem:item
                        andNextStatsItem:nextItem];
+    } else if ([identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
+        [self configureInsightsWrappingTextCell:(StatsStandardBorderedTableViewCell *)cell];
     } else {
         DDLogWarn(@"ConfigureCell called with unknown cell identifier: %@", identifier);
     }
@@ -995,6 +997,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
+- (void)configureInsightsWrappingTextCell:(StatsStandardBorderedTableViewCell *)cell
+{
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
+    label.attributedText = [self latestPostSummaryAttributedString];
+}
+
+
 
 #pragma mark - Private methods
 
@@ -1317,7 +1326,12 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (NSAttributedString *)latestPostSummaryAttributedString
 {
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"It's been 6 days since iPhone 6 Plus Screen Backlight Issue was published. Here's how the post has performed so far...", @"") attributes:@{NSFontAttributeName : [WPFontManager openSansLightFontOfSize:13.0]}];
+    // TODO : Wire up real data
+    NSString *postTitle = @"iPhone 6 Plus Screen Backlight Issue";
+    NSString *time = @"15 days";
+    NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
+    [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0]} range:[unformattedString rangeOfString:postTitle]];
     
     return text;
 }
