@@ -248,7 +248,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [cell layoutIfNeeded];
         
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        NSLog(@"Cell height: %@", @(size.height));
         
         return size.height;
     }
@@ -920,44 +919,31 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         text = NSLocalizedString(@"An error occurred while retrieving data. Retry in a bit!", @"Error message in section when data failed.");
     } else {
         switch (statsSection) {
-            case StatsSectionClicks:
-                text = NSLocalizedString(@"No clicks recorded", @"");
-                break;
             case StatsSectionComments:
                 text = NSLocalizedString(@"No comments posted", @"");
-                break;
-            case StatsSectionCountry:
-                text = NSLocalizedString(@"No countries recorded", @"");
-                break;
-            case StatsSectionEvents:
-                text = NSLocalizedString(@"No items published during this timeframe", @"");
                 break;
             case StatsSectionFollowers:
                 text = NSLocalizedString(@"No followers", @"");
                 break;
-            case StatsSectionAuthors:
-            case StatsSectionPosts:
-                text = NSLocalizedString(@"No posts or pages viewed", @"");
-                break;
             case StatsSectionPublicize:
                 text = NSLocalizedString(@"No publicize followers recorded", @"");
-                break;
-            case StatsSectionReferrers:
-                text = NSLocalizedString(@"No referrers recorded", @"");
-                break;
-            case StatsSectionSearchTerms:
-                text = NSLocalizedString(@"No search terms recorded", @"");
                 break;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
                 break;
-            case StatsSectionVideos:
-                text = NSLocalizedString(@"No videos played", @"");
-                break;
+            case StatsSectionAuthors:
+            case StatsSectionClicks:
+            case StatsSectionCountry:
+            case StatsSectionEvents:
             case StatsSectionGraph:
+            case StatsSectionPosts:
+            case StatsSectionReferrers:
+            case StatsSectionSearchTerms:
+            case StatsSectionVideos:
             case StatsSectionInsightsAllTime:
             case StatsSectionInsightsMostPopular:
             case StatsSectionInsightsTodaysStats:
+            case StatsSectionInsightsLatestPostSummary:
             case StatsSectionPeriodHeader:
             case StatsSectionWebVersion:
             case StatsSectionPostDetailsAveragePerDay:
