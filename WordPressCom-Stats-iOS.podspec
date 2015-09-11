@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/**/*.storyboard', 'WordPressCom-Stats-iOS/**/*.xib', 'WordPressCom-Stats-iOS/**/*.otf', 'WordPressCom-Stats-iOS/**/*.png'] }
   s.requires_arc = true
 
-  s.dependency 'AFNetworking',	'~> 2.5'
+  s.dependency 'AFNetworking',	'~> 2.6.0'
   s.dependency 'CocoaLumberjack', '2.0.0'
   s.dependency 'WordPress-iOS-Shared', '~> 0.3'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
