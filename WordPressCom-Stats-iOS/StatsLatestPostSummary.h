@@ -2,6 +2,7 @@
 
 @interface StatsLatestPostSummary : NSObject
 
+@property (nonatomic, strong) NSNumber *postID;
 @property (nonatomic, copy)   NSString *postTitle;
 @property (nonatomic, copy)   NSString *postAge;
 

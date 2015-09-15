@@ -261,7 +261,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
-        (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO)) {
+        (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO) ||
+        (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
@@ -374,14 +375,17 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(UITableViewCell *)sender
 {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+
     if ([identifier isEqualToString:@"PostDetails"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
         
         // Only fire the segue for the posts section or authors if a nested row
         return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
+    } else if ([identifier isEqualToString:@"LatestPostDetails"]) {
+        return statsSection == StatsSectionInsightsLatestPostSummary;
     }
     
     return YES;
@@ -406,7 +410,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
-    } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
+    } else if ([segue.identifier isEqualToString:@"PostDetails"]) {
         [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
         
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
@@ -415,6 +419,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
         postVC.postID = statsItem.itemID;
         postVC.postTitle = statsItem.label;
+        postVC.statsService = self.statsService;
+        postVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.identifier isEqualToString:@"LatestPostDetails"]) {
+        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+        
+        StatsLatestPostSummary *summary = [self statsDataForStatsSection:statsSection];
+        
+        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
+        postVC.postID = summary.postID;
+        postVC.postTitle = summary.postTitle;
         postVC.statsService = self.statsService;
         postVC.statsDelegate = self.statsDelegate;
     }
@@ -637,6 +651,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
         case StatsSectionInsightsLatestPostSummary:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Latest Post Summary", @"Insights latest post summary section header");
+            cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
             cell.bottomBorderEnabled = NO;
             break;
         default:

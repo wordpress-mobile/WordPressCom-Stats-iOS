@@ -301,12 +301,13 @@ NSString *const TodayCacheKey = @"Today";
              todaySummaryCompletion(summary, error);
          }
      }
-                                  latestPostSummaryCompletionHandler:^(NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error)
+                                  latestPostSummaryCompletionHandler:^(NSNumber *postID, NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error)
      {
          StatsLatestPostSummary *summary;
          
          if (!error) {
              summary = [StatsLatestPostSummary new];
+             summary.postID = postID;
              summary.postTitle = postTitle;
              summary.postAge = [self.dateUtilities dateAgeForDate:postDate];
              summary.views = views;

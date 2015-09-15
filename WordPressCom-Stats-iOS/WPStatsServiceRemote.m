@@ -622,7 +622,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         
         AFHTTPRequestOperation *operation2 = [self operationForPostViewsWithPostID:postID andCompletionHandler:^(NSString *views, NSNumber *viewsValue, NSError *error) {
             if (completionHandler) {
-                completionHandler(postTitle, postURL, postDate, views, viewsValue, likes, likesValue, comments, commentsValue, error);
+                completionHandler(postID, postTitle, postURL, postDate, views, viewsValue, likes, likesValue, comments, commentsValue, error);
             }
             
         }];
@@ -640,7 +640,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                                                     failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
                                                                         
                                                                         if (completionHandler) {
-                                                                            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
+                                                                            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
                                                                         }
                                                                     }];
     

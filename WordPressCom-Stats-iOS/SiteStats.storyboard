@@ -1604,6 +1604,7 @@
                                     <outlet property="categoryIconLabel" destination="JNH-G7-q6x" id="Zow-wz-u9Q"/>
                                     <outlet property="categoryLabel" destination="AVk-Bx-TWa" id="R89-fW-FBz"/>
                                     <outlet property="valueLabel" destination="NGn-zl-G6q" id="ZXW-Uz-Xxl"/>
+                                    <segue destination="NsQ-9F-hsi" kind="show" identifier="LatestPostDetails" id="2q2-gC-NHT"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="TfQ-TA-Dg5" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
@@ -2121,6 +2122,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="XMM-0q-yqN"/>
-        <segue reference="Qh5-9Z-1Vu"/>
+        <segue reference="2q2-gC-NHT"/>
     </inferredMetricsTieBreakers>
 </document>
