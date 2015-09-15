@@ -1241,7 +1241,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 item.iconURL = components.URL;
             }
             item.value = [self localizedStringForNumber:[author numberForKey:@"comments"]];
-            // TODO follow data
             
             [authorItems addObject:item];
         }
