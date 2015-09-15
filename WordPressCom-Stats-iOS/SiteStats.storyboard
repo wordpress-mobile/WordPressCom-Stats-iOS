@@ -95,6 +95,12 @@
             <string>OpenSans</string>
             <string>OpenSans</string>
             <string>OpenSans</string>
+            <string>OpenSans</string>
+            <string>OpenSans</string>
+            <string>OpenSans</string>
+            <string>OpenSans</string>
+            <string>OpenSans</string>
+            <string>OpenSans</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -959,8 +965,169 @@
                                     <outlet property="todayVisitorsValueButton" destination="g6C-KQ-1fr" id="4NS-Qd-PKg"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="LatestPostDetailsPad" rowHeight="66" id="yBD-VM-EQY" userLabel="Latest Post Details iPad" customClass="InsightsTodaysStatsTableViewCell">
+                                <rect key="frame" x="0.0" y="410" width="600" height="66"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yBD-VM-EQY" id="449-81-xxX">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ki9-o0-9Qy">
+                                            <rect key="frame" x="203" y="0.0" width="194" height="65"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lZ8-CX-rvx" userLabel="Divider View">
+                                                    <rect key="frame" x="193" y="0.0" width="1" height="65"/>
+                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="1" id="ptn-ik-Phj"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="qKd-dx-lfG"/>
+                                                    </constraints>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BuZ-yd-Fyx">
+                                                    <rect key="frame" x="82" y="2" width="30" height="26"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                    <state key="normal" title="LIKES">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="QIA-CG-ukP"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i23-aG-lEg">
+                                                    <rect key="frame" x="8" y="21" width="178" height="34"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
+                                                    <state key="normal" title="0">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="Cr4-dO-G2Z"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="i23-aG-lEg" secondAttribute="trailing" constant="8" id="2Z3-ae-Stk"/>
+                                                <constraint firstItem="BuZ-yd-Fyx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ki9-o0-9Qy" secondAttribute="leading" constant="4" id="65X-Qi-5zs"/>
+                                                <constraint firstItem="BuZ-yd-Fyx" firstAttribute="top" secondItem="Ki9-o0-9Qy" secondAttribute="top" constant="2" id="HUy-MR-Bok"/>
+                                                <constraint firstAttribute="bottom" secondItem="lZ8-CX-rvx" secondAttribute="bottom" id="TbP-H0-KP0"/>
+                                                <constraint firstAttribute="trailing" secondItem="lZ8-CX-rvx" secondAttribute="trailing" id="Uic-ap-Fdq"/>
+                                                <constraint firstItem="lZ8-CX-rvx" firstAttribute="top" secondItem="Ki9-o0-9Qy" secondAttribute="top" id="cUP-4P-uCC"/>
+                                                <constraint firstAttribute="centerX" secondItem="i23-aG-lEg" secondAttribute="centerX" id="irC-pu-he2"/>
+                                                <constraint firstItem="i23-aG-lEg" firstAttribute="leading" secondItem="Ki9-o0-9Qy" secondAttribute="leading" constant="8" id="lai-FC-CcO"/>
+                                                <constraint firstAttribute="centerY" secondItem="i23-aG-lEg" secondAttribute="centerY" constant="-5" id="ncA-MF-A7b"/>
+                                                <constraint firstAttribute="centerX" secondItem="BuZ-yd-Fyx" secondAttribute="centerX" id="sJr-DZ-MBx"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="BuZ-yd-Fyx" secondAttribute="trailing" constant="4" id="wY3-OB-kj8"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="08Z-2s-XvV">
+                                            <rect key="frame" x="397" y="0.0" width="194" height="65"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fq4-X3-8SC">
+                                                    <rect key="frame" x="8" y="21" width="178" height="34"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
+                                                    <state key="normal" title="0">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="0d7-gf-lOJ"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lIx-Tq-VZg">
+                                                    <rect key="frame" x="69" y="2" width="57" height="26"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                    <state key="normal" title="COMMENTS">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="WUW-R6-Skm"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="lIx-Tq-VZg" firstAttribute="top" secondItem="08Z-2s-XvV" secondAttribute="top" constant="2" id="4KA-ZF-z7z"/>
+                                                <constraint firstItem="lIx-Tq-VZg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="08Z-2s-XvV" secondAttribute="leading" constant="4" id="S5f-M5-9ue"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="lIx-Tq-VZg" secondAttribute="trailing" constant="4" id="TwY-vr-5kf"/>
+                                                <constraint firstAttribute="centerX" secondItem="lIx-Tq-VZg" secondAttribute="centerX" id="bPq-fb-UrS"/>
+                                                <constraint firstAttribute="centerX" secondItem="fq4-X3-8SC" secondAttribute="centerX" id="d7I-ti-Qw0"/>
+                                                <constraint firstAttribute="trailing" secondItem="fq4-X3-8SC" secondAttribute="trailing" constant="8" id="dci-Ya-97r"/>
+                                                <constraint firstItem="fq4-X3-8SC" firstAttribute="leading" secondItem="08Z-2s-XvV" secondAttribute="leading" constant="8" id="fyS-Ea-X9m"/>
+                                                <constraint firstAttribute="centerY" secondItem="fq4-X3-8SC" secondAttribute="centerY" constant="-5" id="nMm-q6-un9"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tOg-o5-kP2">
+                                            <rect key="frame" x="9" y="0.0" width="194" height="65"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pJr-cf-AeV" userLabel="Divider View">
+                                                    <rect key="frame" x="193" y="0.0" width="1" height="65"/>
+                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="SUK-48-5r3"/>
+                                                        <constraint firstAttribute="width" constant="1" id="Uxw-E2-gMC"/>
+                                                    </constraints>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ssb-du-0lP">
+                                                    <rect key="frame" x="8" y="21" width="178" height="34"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
+                                                    <state key="normal" title="24">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="ndx-jc-rtQ"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bRL-qF-aLj">
+                                                    <rect key="frame" x="82" y="2" width="30" height="26"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                    <state key="normal" title="VIEWS">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="MVv-mB-VSA"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="bRL-qF-aLj" secondAttribute="trailing" constant="8" id="2C6-DP-G8X"/>
+                                                <constraint firstAttribute="centerX" secondItem="bRL-qF-aLj" secondAttribute="centerX" id="4hx-1J-Onm"/>
+                                                <constraint firstItem="bRL-qF-aLj" firstAttribute="top" secondItem="tOg-o5-kP2" secondAttribute="top" constant="2" id="7oV-39-i9Y"/>
+                                                <constraint firstAttribute="trailing" secondItem="pJr-cf-AeV" secondAttribute="trailing" id="Pl3-Kx-aVw"/>
+                                                <constraint firstAttribute="trailing" secondItem="Ssb-du-0lP" secondAttribute="trailing" constant="8" id="Qnr-WV-5an"/>
+                                                <constraint firstItem="pJr-cf-AeV" firstAttribute="top" secondItem="tOg-o5-kP2" secondAttribute="top" id="XjW-FB-KaG"/>
+                                                <constraint firstAttribute="bottom" secondItem="pJr-cf-AeV" secondAttribute="bottom" id="Z7R-F3-obm"/>
+                                                <constraint firstItem="bRL-qF-aLj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tOg-o5-kP2" secondAttribute="leading" constant="8" id="cWk-Ph-15x"/>
+                                                <constraint firstAttribute="centerY" secondItem="Ssb-du-0lP" secondAttribute="centerY" constant="-5" id="jHh-Uc-Rqg"/>
+                                                <constraint firstAttribute="centerX" secondItem="Ssb-du-0lP" secondAttribute="centerX" id="yT3-rh-orz"/>
+                                                <constraint firstItem="Ssb-du-0lP" firstAttribute="leading" secondItem="tOg-o5-kP2" secondAttribute="leading" constant="8" id="zQm-YZ-BcC"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="08Z-2s-XvV" secondAttribute="bottom" constant="-8" id="4mN-3M-QxD"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="top" secondItem="449-81-xxX" secondAttribute="topMargin" constant="-8" id="7Rb-vE-yRY"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="leading" secondItem="Ki9-o0-9Qy" secondAttribute="trailing" id="9oX-i0-lKg"/>
+                                        <constraint firstItem="Ki9-o0-9Qy" firstAttribute="leading" secondItem="tOg-o5-kP2" secondAttribute="trailing" id="E6b-Wc-6hr"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="width" secondItem="tOg-o5-kP2" secondAttribute="width" id="Gz7-Z2-VGN"/>
+                                        <constraint firstItem="tOg-o5-kP2" firstAttribute="leading" secondItem="449-81-xxX" secondAttribute="leading" constant="9" id="OfH-JA-qew"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Ki9-o0-9Qy" secondAttribute="bottom" constant="-8" id="Q7F-3P-Uto"/>
+                                        <constraint firstItem="Ki9-o0-9Qy" firstAttribute="top" secondItem="449-81-xxX" secondAttribute="topMargin" constant="-8" id="aA3-TH-Mr2"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="width" secondItem="Ki9-o0-9Qy" secondAttribute="width" id="d36-rm-a3E"/>
+                                        <constraint firstItem="tOg-o5-kP2" firstAttribute="top" secondItem="449-81-xxX" secondAttribute="topMargin" constant="-8" id="gW1-jB-lIW"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="tOg-o5-kP2" secondAttribute="bottom" constant="-8" id="jAS-AL-YN3"/>
+                                        <constraint firstAttribute="trailing" secondItem="08Z-2s-XvV" secondAttribute="trailing" constant="9" id="oVZ-4s-feK"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="height" secondItem="Ki9-o0-9Qy" secondAttribute="height" id="qxZ-3J-BNM"/>
+                                        <constraint firstItem="08Z-2s-XvV" firstAttribute="height" secondItem="tOg-o5-kP2" secondAttribute="height" id="xbU-3r-SmP"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="todayCommentsButton" destination="lIx-Tq-VZg" id="hri-Rl-dD3"/>
+                                    <outlet property="todayCommentsValueButton" destination="fq4-X3-8SC" id="2Ke-3D-Shw"/>
+                                    <outlet property="todayLikesButton" destination="BuZ-yd-Fyx" id="qvf-52-2be"/>
+                                    <outlet property="todayLikesValueButton" destination="i23-aG-lEg" id="sye-bB-GP7"/>
+                                    <outlet property="todayViewsButton" destination="bRL-qF-aLj" id="W7Y-Yd-O5z"/>
+                                    <outlet property="todayViewsValueButton" destination="Ssb-du-0lP" id="dtH-Ew-QMn"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetails" rowHeight="185" id="HxC-8t-Lp3" userLabel="All Time Details" customClass="InsightsAllTimeTableViewCell">
-                                <rect key="frame" x="0.0" y="410" width="600" height="185"/>
+                                <rect key="frame" x="0.0" y="476" width="600" height="185"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HxC-8t-Lp3" id="Ids-uQ-XjV">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="184"/>
@@ -1139,7 +1306,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodaysStatsDetails" rowHeight="132" id="5eL-J1-gUX" userLabel="Today's Stats Details" customClass="InsightsTodaysStatsTableViewCell">
-                                <rect key="frame" x="0.0" y="595" width="600" height="132"/>
+                                <rect key="frame" x="0.0" y="661" width="600" height="132"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5eL-J1-gUX" id="QPP-Ts-AGk">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="131"/>
@@ -1352,7 +1519,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodHeader" id="oCI-Df-0ns" userLabel="PeriodHeader">
-                                <rect key="frame" x="0.0" y="727" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="793" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oCI-Df-0ns" id="BN4-I4-0xh">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1373,7 +1540,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" rowHeight="30" id="gHk-H1-M8c" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="771" width="600" height="30"/>
+                                <rect key="frame" x="0.0" y="837" width="600" height="30"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHk-H1-M8c" id="JcX-rB-qb9">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="29"/>
@@ -1393,7 +1560,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TwoColumnHeader" id="Iw0-j3-jCC" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="801" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="867" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iw0-j3-jCC" id="rCI-wQ-nTQ">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1422,7 +1589,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="QMK-Mb-gNa" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
-                                <rect key="frame" x="0.0" y="845" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="911" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QMK-Mb-gNa" id="byc-bZ-DLX">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1483,7 +1650,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="l7t-bZ-H6F" userLabel="MoreRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="889" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="955" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l7t-bZ-H6F" id="CGe-wg-emt">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -1507,7 +1674,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="XeI-oH-BNJ" userLabel="NoResultsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="933" width="600" height="100"/>
+                                <rect key="frame" x="0.0" y="999" width="600" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XeI-oH-BNJ" id="lGI-SP-ja4">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="99"/>
@@ -1535,7 +1702,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="5MJ-qz-Ajh" userLabel="GroupTotalsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1033" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1099" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5MJ-qz-Ajh" id="lvD-ZL-QyN">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1556,7 +1723,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectableRow" id="Z3o-3O-RMY" customClass="StatsSelectableTableViewCell">
-                                <rect key="frame" x="0.0" y="1077" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1143" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z3o-3O-RMY" id="3gx-4d-A4A">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1608,7 +1775,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="TfQ-TA-Dg5" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1121" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1187" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TfQ-TA-Dg5" id="a71-bu-hBO">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>

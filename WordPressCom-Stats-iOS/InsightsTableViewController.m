@@ -43,6 +43,7 @@ static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPop
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
+static NSString *const InsightsTableLatestPostSummaryDetailsiPadCellIdentifier = @"LatestPostDetailsPad";
 static NSString *const InsightsTableWrappingTextCellIdentifier = @"WrappingText";
 static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingText";
 static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
@@ -133,7 +134,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionPeriodHeader:
             return 1;
         case StatsSectionInsightsLatestPostSummary:
-            return 5;
+            return IS_IPAD ? 3 : 5;
             
             // TODO :: Pull offset from StatsGroup
         default:
@@ -231,7 +232,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return 185.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsiPadCellIdentifier]) {
         return 100.0f;
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier] ||
+               [identifier isEqualToString:InsightsTableLatestPostSummaryDetailsiPadCellIdentifier]) {
         return 66.0f;
     } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         return StatsTableGroupHeaderHeight;
@@ -478,7 +480,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             } else if (indexPath.row == 1) {
                 identifier = InsightsTableWrappingTextCellIdentifier;
             } else {
-                identifier = StatsTableSelectableCellIdentifier;
+                identifier = IS_IPAD ? InsightsTableLatestPostSummaryDetailsiPadCellIdentifier : StatsTableSelectableCellIdentifier;
             }
             break;
             
@@ -588,8 +590,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
-        [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier] || [identifier isEqualToString:InsightsTableLatestPostSummaryDetailsiPadCellIdentifier]) {
+        [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:statsSection];
     } else if ([identifier isEqualToString:StatsTableSelectableCellIdentifier]) {
         [self configureSectionSelectableCell:(StatsSelectableTableViewCell *)cell forIndexPath:indexPath];
     } else if ([identifier isEqualToString:StatsTablePeriodHeaderCellIdentifier]) {
@@ -726,16 +728,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
-- (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell
+- (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:(StatsSection)statsSection
 {
     [cell.todayViewsButton setAttributedTitle:[self viewsAttributedStringWithFont:cell.todayViewsButton.titleLabel.font] forState:UIControlStateNormal];
     [cell.todayVisitorsButton setAttributedTitle:[self visitorsAttributedStringWithFont:cell.todayVisitorsButton.titleLabel.font] forState:UIControlStateNormal];
     [cell.todayLikesButton setAttributedTitle:[self likesAttributedStringWithFont:cell.todayLikesButton.titleLabel.font] forState:UIControlStateNormal];
     [cell.todayCommentsButton setAttributedTitle:[self commentsAttributedStringWithFont:cell.todayCommentsButton.titleLabel.font] forState:UIControlStateNormal];
     
-    StatsSummary *todaySummary = self.sectionData[@(StatsSectionInsightsTodaysStats)];
+    id data = [self statsDataForStatsSection:statsSection];
     
-    if (!todaySummary) {
+    if (!data) {
         // Default values for no data
         [cell.todayViewsValueButton setTitle:@"-" forState:UIControlStateNormal];
         [cell.todayViewsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
@@ -745,7 +747,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [cell.todayLikesValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
         [cell.todayCommentsValueButton setTitle:@"-" forState:UIControlStateNormal];
         [cell.todayCommentsValueButton setTitleColor:[WPStyleGuide greyLighten20] forState:UIControlStateNormal];
-    } else {
+    } else if (statsSection == StatsSectionInsightsTodaysStats) {
+        StatsSummary *todaySummary = (StatsSummary *)data;
         [cell.todayViewsValueButton setTitle:todaySummary.views forState:UIControlStateNormal];
         [cell.todayViewsValueButton setTitleColor:todaySummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
         [cell.todayVisitorsValueButton setTitle:todaySummary.visitors forState:UIControlStateNormal];
@@ -754,6 +757,14 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [cell.todayLikesValueButton setTitleColor:todaySummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
         [cell.todayCommentsValueButton setTitle:todaySummary.comments forState:UIControlStateNormal];
         [cell.todayCommentsValueButton setTitleColor:todaySummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary) {
+        StatsLatestPostSummary *latestPostSummary = (StatsLatestPostSummary *)data;
+        [cell.todayViewsValueButton setTitle:latestPostSummary.views forState:UIControlStateNormal];
+        [cell.todayViewsValueButton setTitleColor:latestPostSummary.viewsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitle:latestPostSummary.likes forState:UIControlStateNormal];
+        [cell.todayLikesValueButton setTitleColor:latestPostSummary.likesValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitle:latestPostSummary.comments forState:UIControlStateNormal];
+        [cell.todayCommentsValueButton setTitleColor:latestPostSummary.commentsValue.integerValue == 0 ? [WPStyleGuide grey] : [WPStyleGuide wordPressBlue] forState:UIControlStateNormal];
     }
 
 }
@@ -1058,8 +1069,15 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
      }
                                            latestPostSummaryCompletionHandler:^(StatsLatestPostSummary *summary, NSError *error)
      {
-         // TODO - Do something fancy and exciting here
          self.sectionData[@(StatsSectionInsightsLatestPostSummary)] = summary;
+         [self.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionInsightsLatestPostSummary)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [self.tableView endUpdates];
+
      }                                               commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
