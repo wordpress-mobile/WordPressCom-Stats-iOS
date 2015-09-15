@@ -1,13 +1,17 @@
-//
-//  StatsLatestPostSummary.h
-//  WordPressCom-Stats-iOS
-//
-//  Created by Aaron Douglas on 9/15/15.
-//  Copyright © 2015 Automattic Inc. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 @interface StatsLatestPostSummary : NSObject
+
+@property (nonatomic, copy)   NSString *postTitle;
+@property (nonatomic, copy)   NSString *postAge;
+
+@property (nonatomic, strong) NSString *views;
+@property (nonatomic, strong) NSString *likes;
+@property (nonatomic, strong) NSString *comments;
+
+@property (nonatomic, strong) NSNumber *viewsValue;
+@property (nonatomic, strong) NSNumber *likesValue;
+@property (nonatomic, strong) NSNumber *commentsValue;
+
 
 @end

@@ -136,7 +136,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
-                         latestPostSummaryCompletionHandler:(StatsRemoteSummaryCompletion)latestPostCompletion
+                         latestPostSummaryCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)latestPostCompletion
                                   commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
                             tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -157,7 +157,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:todaySummaryCompletion]];
     }
     if (latestPostCompletion) {
-        // TODO :: Add remote operations
+        [mutableOperations addObject:[self operationForLatestPostSummaryWithCompletionHandler:latestPostCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsWithCompletionHandler:commentsCompletion]];
@@ -600,6 +600,78 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                                                                    success:handler
                                                                    failure:failureHandler];
     
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
+{
+    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *postsDict = [self dictionaryFromResponse:responseObject];
+        NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
+        
+        NSNumber *postID = [postDict numberForKey:@"ID"];
+        NSString *postTitle = [postDict stringForKey:@"title"];
+        NSDate *postDate = [self.rfc3339DateFormatter dateFromString:[postDict stringForKey:@"date"]];
+        NSString *postURL = [postDict stringForKey:@"URL"];
+        NSNumber *likesValue = [postDict numberForKey:@"like_count"];
+        NSString *likes = [self localizedStringForNumber:likesValue];
+        NSNumber *commentsValue = [[postDict dictionaryForKey:@"discussion"] numberForKey:@"comment_count"];
+        NSString *comments = [self localizedStringForNumber:commentsValue];
+        
+        AFHTTPRequestOperation *operation2 = [self operationForPostViewsWithPostID:postID andCompletionHandler:^(NSString *views, NSNumber *viewsValue, NSError *error) {
+            if (completionHandler) {
+                completionHandler(postTitle, postURL, postDate, views, viewsValue, likes, likesValue, comments, commentsValue, error);
+            }
+            
+        }];
+        
+        [operation2 start];
+    };
+    
+    NSDictionary *parameters = @{@"order_by" : @"date",
+                                 @"number"   : @1,
+                                 @"type"     : @"post",
+                                 @"fields"   : @"ID, title, URL, discussion, like_count, date"};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
+                                                                 parameters:parameters
+                                                                    success:postHandler
+                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                        
+                                                                        if (completionHandler) {
+                                                                            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
+                                                                        }
+                                                                    }];
+    
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForPostViewsWithPostID:(NSNumber *)postID andCompletionHandler:(void (^)(NSString *views, NSNumber *viewsValue, NSError *error))completionHandler
+{
+    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *postDict = [self dictionaryFromResponse:responseObject];
+
+        NSNumber *viewsValue = [postDict numberForKey:@"views"];
+        NSString *views = [self localizedStringForNumber:viewsValue];
+        
+        if (completionHandler) {
+            completionHandler(views, viewsValue, nil);
+        }
+    };
+
+    NSString *viewsURL = [NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID];
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:viewsURL
+                                                                parameters:@{@"fields" : @"views"}
+                                                                   success:postHandler
+                                                                   failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                       if (completionHandler) {
+                                                                           completionHandler(nil, nil, error);
+                                                                       }
+                                                                   }];
     return operation;
 }
 

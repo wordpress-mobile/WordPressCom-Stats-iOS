@@ -751,7 +751,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
 
     if (statsSection == StatsSectionInsightsTodaysStats) {
-        StatsSummary *todaySummary = self.sectionData[@(statsSection)];
+        StatsSummary *todaySummary = [self statsDataForStatsSection:statsSection];
         
         switch (indexPath.row) {
             case 1: // Views
@@ -790,28 +790,29 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 break;
         }
     } else if (statsSection == StatsSectionInsightsLatestPostSummary) {
+        StatsLatestPostSummary *latestPostSummary = [self statsDataForStatsSection:statsSection];
         switch (indexPath.row) {
-            case 1: // Views
+            case 2: // Views
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.views ?: @"-";
+                cell.valueLabel.text = latestPostSummary.views ?: @"-";
                 break;
             }
                 
-            case 2: // Likes
+            case 3: // Likes
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.likes ?: @"-";
+                cell.valueLabel.text = latestPostSummary.likes ?: @"-";
                 break;
             }
                 
-            case 3: // Comments
+            case 4: // Comments
             {
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-//                cell.valueLabel.text = todaySummary.comments ?: @"-";
+                cell.valueLabel.text = latestPostSummary.comments ?: @"-";
                 break;
             }
                 
@@ -1040,9 +1041,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
              self.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
          }
      }
-                                           latestPostSummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+                                           latestPostSummaryCompletionHandler:^(StatsLatestPostSummary *summary, NSError *error)
      {
          // TODO - Do something fancy and exciting here
+         self.sectionData[@(StatsSectionInsightsLatestPostSummary)] = summary;
      }                                               commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
@@ -1330,8 +1332,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSAttributedString *)latestPostSummaryAttributedString
 {
     // TODO : Wire up real data
-    NSString *postTitle = @"iPhone 6 Plus Screen Backlight Issue";
-    NSString *time = @"15 days";
+    StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];
+    
+    NSString *postTitle = summary.postTitle ?: @"";
+    NSString *time = summary.postAge;
     NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
     [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0]} range:[unformattedString rangeOfString:postTitle]];
@@ -1489,7 +1493,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:statsSubSection];
                 self.sectionData[statsSectionNumber][statsSubSectionNumber] = group;
             }
-        } else if (statsSection != StatsSectionInsightsAllTime && statsSection != StatsSectionInsightsMostPopular && statsSection != StatsSectionInsightsTodaysStats) {
+        } else if (statsSection != StatsSectionInsightsAllTime
+                   && statsSection != StatsSectionInsightsMostPopular
+                   && statsSection != StatsSectionInsightsTodaysStats
+                   && statsSection != StatsSectionInsightsLatestPostSummary) {
             StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
             self.sectionData[statsSectionNumber] = group;
         }

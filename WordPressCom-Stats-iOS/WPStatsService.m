@@ -166,7 +166,7 @@ NSString *const TodayCacheKey = @"Today";
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
-                            latestPostSummaryCompletionHandler:(StatsSummaryCompletion)latestPostCompletion
+                            latestPostSummaryCompletionHandler:(StatsLatestPostSummaryCompletion)latestPostCompletion
                                commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
                                 commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
                                tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -293,20 +293,37 @@ NSString *const TodayCacheKey = @"Today";
      }
                                        todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
      {
-         cacheDictionary[@(StatsSectionInsightsTodaysStats)] = summary;
+         if (!error) {
+             cacheDictionary[@(StatsSectionInsightsTodaysStats)] = summary;
+         }
          
          if (todaySummaryCompletion) {
              todaySummaryCompletion(summary, error);
          }
      }
-                                  latestPostSummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
+                                  latestPostSummaryCompletionHandler:^(NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error)
      {
-         cacheDictionary[@(StatsSectionInsightsLatestPostSummary)] = summary;
+         StatsLatestPostSummary *summary;
+         
+         if (!error) {
+             summary = [StatsLatestPostSummary new];
+             summary.postTitle = postTitle;
+             summary.postAge = [self.dateUtilities dateAgeForDate:postDate];
+             summary.views = views;
+             summary.viewsValue = viewsValue;
+             summary.likes = likes;
+             summary.likesValue = likesValue;
+             summary.comments = comments;
+             summary.commentsValue = commentsValue;
+             
+             cacheDictionary[@(StatsSectionInsightsLatestPostSummary)] = summary;
+         }
          
          if (latestPostCompletion) {
              latestPostCompletion(summary, error);
          }
-     }                                            commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
+     }
+                                           commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
                                      tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
                                     followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
                                      followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
