@@ -990,7 +990,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="QIA-CG-ukP"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="mEe-Om-9Lf"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i23-aG-lEg">
@@ -1000,7 +1000,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="Cr4-dO-G2Z"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="Jrm-Er-hcU"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -1028,7 +1028,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="0d7-gf-lOJ"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="Wen-WZ-kb5"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lIx-Tq-VZg">
@@ -1038,7 +1038,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="WUW-R6-Skm"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="dyi-Tx-ts7"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -1071,7 +1071,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="ndx-jc-rtQ"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="6fl-uU-b44"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bRL-qF-aLj">
@@ -1081,7 +1081,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="MVv-mB-VSA"/>
+                                                        <action selector="viewPostDetailsForLatestPostSummary:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="voz-gz-65B"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -1124,6 +1124,7 @@
                                     <outlet property="todayLikesValueButton" destination="i23-aG-lEg" id="sye-bB-GP7"/>
                                     <outlet property="todayViewsButton" destination="bRL-qF-aLj" id="W7Y-Yd-O5z"/>
                                     <outlet property="todayViewsValueButton" destination="Ssb-du-0lP" id="dtH-Ew-QMn"/>
+                                    <segue destination="NsQ-9F-hsi" kind="show" identifier="LatestPostDetailsPad" id="NYN-4M-cXh"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetails" rowHeight="185" id="HxC-8t-Lp3" userLabel="All Time Details" customClass="InsightsAllTimeTableViewCell">
@@ -2289,6 +2290,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="XMM-0q-yqN"/>
-        <segue reference="2q2-gC-NHT"/>
+        <segue reference="NYN-4M-cXh"/>
     </inferredMetricsTieBreakers>
 </document>

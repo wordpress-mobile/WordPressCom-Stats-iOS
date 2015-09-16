@@ -56,6 +56,9 @@ static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 
+static NSString *const SegueLatestPostDetails = @"LatestPostDetails";
+static NSString *const SegueLatestPostDetailsiPad = @"LatestPostDetailsPad";
+
 static CGFloat const InsightsTableSectionHeaderHeight = 1.0f;
 static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
@@ -263,7 +266,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
-        (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO) ||
+        (statsSection == StatsSectionInsightsTodaysStats) ||
         (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
@@ -347,7 +350,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 }
             }
         }
-    } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier]) {
+    } else if (statsSection == StatsSectionInsightsTodaysStats &&
+               ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] || [identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier])) {
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
@@ -369,6 +373,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             default:
                 break;
         }
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+        [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
     }
 }
 
@@ -386,7 +392,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         
         // Only fire the segue for the posts section or authors if a nested row
         return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
-    } else if ([identifier isEqualToString:@"LatestPostDetails"]) {
+    } else if ([identifier isEqualToString:SegueLatestPostDetails] ||
+               [identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         return statsSection == StatsSectionInsightsLatestPostSummary;
     }
     
@@ -394,7 +401,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     [super prepareForSegue:segue sender:sender];
     
@@ -423,10 +430,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         postVC.postTitle = statsItem.label;
         postVC.statsService = self.statsService;
         postVC.statsDelegate = self.statsDelegate;
-    } else if ([segue.identifier isEqualToString:@"LatestPostDetails"]) {
+    } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
+               [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
         
-        StatsLatestPostSummary *summary = [self statsDataForStatsSection:statsSection];
+        // This is kind of a hack since we trigger this seque programmatically sometimes
+        // and don't have a reference to the UITableViewCell for section calculation always
+        StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];
         
         StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
         postVC.postID = summary.postID;
@@ -654,6 +664,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsLatestPostSummary:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Latest Post Summary", @"Insights latest post summary section header");
             cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             cell.bottomBorderEnabled = NO;
             break;
         default:
@@ -1277,6 +1288,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     }
 }
 
+- (IBAction)viewPostDetailsForLatestPostSummary:(UIButton *)button
+{
+    [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:button];
+}
+
 
 #pragma mark - Attributed String generation methods
 
@@ -1364,7 +1380,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (NSAttributedString *)latestPostSummaryAttributedString
 {
-    // TODO : Wire up real data
     StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];
     
     NSString *postTitle = summary.postTitle ?: @"";
