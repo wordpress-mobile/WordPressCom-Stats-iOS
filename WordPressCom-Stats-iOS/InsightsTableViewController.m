@@ -127,6 +127,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
+    id data = [self statsDataForStatsSection:statsSection];
     
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
@@ -137,7 +138,12 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionPeriodHeader:
             return 1;
         case StatsSectionInsightsLatestPostSummary:
-            return IS_IPAD ? 3 : 5;
+            if (!data) {
+                // Show only header and text description if no data is present
+                return 2;
+            } else {
+                return IS_IPAD ? 3 : 5;
+            }
             
             // TODO :: Pull offset from StatsGroup
         default:
@@ -293,6 +299,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    id data = [self statsDataForStatsSection:statsSection];
+    
     if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
@@ -373,7 +381,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             default:
                 break;
         }
-    } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
         [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
     }
 }
@@ -385,6 +393,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    id data = [self statsDataForStatsSection:statsSection];
 
     if ([identifier isEqualToString:@"PostDetails"]) {
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
@@ -394,7 +403,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
     } else if ([identifier isEqualToString:SegueLatestPostDetails] ||
                [identifier isEqualToString:SegueLatestPostDetailsiPad]) {
-        return statsSection == StatsSectionInsightsLatestPostSummary;
+        return statsSection == StatsSectionInsightsLatestPostSummary && !!data;
     }
     
     return YES;
@@ -644,6 +653,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (void)configureSectionHeaderCell:(InsightsSectionHeaderTableViewCell *)cell forSection:(NSInteger)section
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
+    id data = [self statsDataForStatsSection:statsSection];
 
     cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -664,7 +674,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsLatestPostSummary:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Latest Post Summary", @"Insights latest post summary section header");
             cell.sectionHeaderLabel.textColor = [WPStyleGuide wordPressBlue];
-            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            cell.selectionStyle = !!data ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
             cell.bottomBorderEnabled = NO;
             break;
         default:
@@ -1381,12 +1391,17 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSAttributedString *)latestPostSummaryAttributedString
 {
     StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];
+    NSMutableAttributedString *text;
     
-    NSString *postTitle = summary.postTitle ?: @"";
-    NSString *time = summary.postAge;
-    NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
-    [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0]} range:[unformattedString rangeOfString:postTitle]];
+    if (!summary) {
+        text = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"You have not published any posts yet.", @"Placeholder text when no latest post summary exists") attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
+    } else {
+        NSString *postTitle = summary.postTitle ?: @"";
+        NSString *time = summary.postAge;
+        NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
+        text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
+        [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0]} range:[unformattedString rangeOfString:postTitle]];
+    }
     
     return text;
 }

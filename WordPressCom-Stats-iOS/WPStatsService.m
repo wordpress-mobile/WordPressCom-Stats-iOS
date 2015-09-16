@@ -305,7 +305,7 @@ NSString *const TodayCacheKey = @"Today";
      {
          StatsLatestPostSummary *summary;
          
-         if (!error) {
+         if (!error && postID.integerValue != 0) {
              summary = [StatsLatestPostSummary new];
              summary.postID = postID;
              summary.postTitle = postTitle;
