@@ -218,7 +218,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = WPS;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
 					939A82ED1A65A30F0041B68A = {
@@ -409,6 +409,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.internal.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = StatsDemo;
 				PROVISIONING_PROFILE = "3b5d0f08-ac3a-4ced-b97e-95d7a8a91ca5";
 				WRAPPER_EXTENSION = app;
@@ -426,6 +427,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.internal.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = StatsDemo;
 				PROVISIONING_PROFILE = "811b8c55-bad6-4b7d-a9a6-e24c8299be32";
 				WRAPPER_EXTENSION = app;
@@ -449,6 +451,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -512,6 +515,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -528,6 +532,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
