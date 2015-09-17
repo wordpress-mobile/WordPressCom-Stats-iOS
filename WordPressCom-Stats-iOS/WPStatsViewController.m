@@ -14,8 +14,9 @@
 @property (nonatomic, weak) IBOutlet UIView *statsContainerView;
 @property (nonatomic, weak) UIActionSheet *periodActionSheet;
 
-@property (nonatomic, assign) StatsPeriodType lastSelectedStatsPeriodType;
+@property (nonatomic, assign) StatsPeriodType previouslySelectedStatsPeriodType;
 @property (nonatomic, assign) StatsPeriodType statsPeriodType;
+@property (nonatomic, assign) StatsPeriodType lastSelectedStatsPeriodType;
 @property (nonatomic, assign) BOOL showingAbbreviatedSegments;
 
 @end
@@ -26,8 +27,8 @@
 {
     [super viewDidLoad];
     
-    self.statsPeriodType = StatsPeriodTypeInsights;
-    self.lastSelectedStatsPeriodType = StatsPeriodTypeDays;
+    self.statsPeriodType = self.lastSelectedStatsPeriodType;
+    self.previouslySelectedStatsPeriodType = self.lastSelectedStatsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeDays : self.lastSelectedStatsPeriodType;
 
     if (IS_IPAD || UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
         [self showAllSegments];
@@ -113,10 +114,10 @@
         }
    
         if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 1) {
-            self.statsPeriodType = self.lastSelectedStatsPeriodType;
+            self.statsPeriodType = self.previouslySelectedStatsPeriodType;
         } else {
             self.statsPeriodType = control.selectedSegmentIndex;
-            self.lastSelectedStatsPeriodType = self.statsPeriodType;
+            self.previouslySelectedStatsPeriodType = self.statsPeriodType;
         }
     }
     
@@ -127,7 +128,7 @@
 
 - (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType
 {
-    self.lastSelectedStatsPeriodType = StatsPeriodTypeDays;
+    self.previouslySelectedStatsPeriodType = StatsPeriodTypeDays;
     self.statsPeriodType = StatsPeriodTypeDays;
     
     [self updateSegmentedControlForceUpdate:YES];
@@ -217,7 +218,7 @@
     }
     
     self.statsPeriodType = buttonIndex + 1;
-    self.lastSelectedStatsPeriodType = self.statsPeriodType;
+    self.previouslySelectedStatsPeriodType = self.statsPeriodType;
     [self showAbbreviatedSegments];
 }
 
@@ -248,13 +249,13 @@
     [self.statsTypeSegmentControl removeAllSegments];
     [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Insights", @"Title of Insights segmented control") atIndex:0 animated:NO];
     
-    if (self.lastSelectedStatsPeriodType == StatsPeriodTypeDays) {
+    if (self.previouslySelectedStatsPeriodType == StatsPeriodTypeDays) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Days", @"Title of Days segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeWeeks) {
+    } else if (self.previouslySelectedStatsPeriodType == StatsPeriodTypeWeeks) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Weeks", @"Title of Weeks segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeMonths) {
+    } else if (self.previouslySelectedStatsPeriodType == StatsPeriodTypeMonths) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Months", @"Title of Months segmented control") atIndex:1 animated:NO];
-    } else if (self.lastSelectedStatsPeriodType == StatsPeriodTypeYears) {
+    } else if (self.previouslySelectedStatsPeriodType == StatsPeriodTypeYears) {
         [self.statsTypeSegmentControl insertSegmentWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") atIndex:1 animated:NO];
     }
     
@@ -292,6 +293,24 @@
     }
     
     _statsPeriodType = statsPeriodType;
+    self.lastSelectedStatsPeriodType = statsPeriodType;
+}
+
+#pragma mark - Stats type persistence helpers
+
+- (StatsPeriodType)lastSelectedStatsPeriodType
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    StatsPeriodType statsPeriodType = (StatsPeriodType)[userDefaults integerForKey:@"LastSelectedStatsPeriodType"];
+    
+    NSLog(@"Last stats period type: %@", @(statsPeriodType));
+    return statsPeriodType;
+}
+
+- (void)setLastSelectedStatsPeriodType:(StatsPeriodType)lastSelectedStatsPeriodType
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setInteger:lastSelectedStatsPeriodType forKey:@"LastSelectedStatsPeriodType"];
 }
 
 @end
