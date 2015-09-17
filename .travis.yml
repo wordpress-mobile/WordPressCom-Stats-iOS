@@ -6,5 +6,5 @@ xcode_sdk: iphonesimulator
 sudo: false
 
 install:
- gem install xcpretty-travis-formatter
- pod install
+- gem install xcpretty-travis-formatter
+- pod install
