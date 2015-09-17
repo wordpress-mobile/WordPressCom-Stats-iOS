@@ -5,6 +5,10 @@ xcode_scheme: WordPressCom-Stats-iOS
 xcode_sdk: iphonesimulator
 sudo: false
 
+before_install:
+  - brew update
+  - brew uninstall xctool && brew install --HEAD xctool
+  
 install:
 - gem install xcpretty-travis-formatter
 - pod install
