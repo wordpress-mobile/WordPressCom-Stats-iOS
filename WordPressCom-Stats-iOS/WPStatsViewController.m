@@ -37,10 +37,6 @@
         [self showAbbreviatedSegments];
         self.showingAbbreviatedSegments = YES;
     }
-
-    self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
-    self.insightsContainerView.hidden = NO;
-    self.statsContainerView.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
