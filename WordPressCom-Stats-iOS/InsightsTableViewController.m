@@ -117,6 +117,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
+#pragma mark - UITraitEnvironment methods
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    [self.tableView reloadData];
+}
+
+
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -134,7 +144,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsMostPopular:
             return 2;
         case StatsSectionInsightsTodaysStats:
-            return IS_IPAD ? 2 : 5;
+            return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 2 : 5;
         case StatsSectionPeriodHeader:
             return 1;
         case StatsSectionInsightsLatestPostSummary:
@@ -142,7 +152,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 // Show only header and text description if no data is present
                 return 2;
             } else {
-                return IS_IPAD ? 3 : 5;
+                return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 3 : 5;
             }
             
             // TODO :: Pull offset from StatsGroup
@@ -363,7 +373,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
-    } else if (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
+    } else if (statsSection == StatsSectionInsightsTodaysStats && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
         switch (indexPath.row) {
             case 0:
             case 1:
@@ -471,7 +481,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
+                identifier = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
             }
             break;
     
@@ -486,7 +496,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
-            } else if (IS_IPAD) {
+            } else if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
                 identifier = InsightsTableTodaysStatsDetailsiPadCellIdentifier;
             } else {
                 identifier = StatsTableSelectableCellIdentifier;
@@ -499,7 +509,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             } else if (indexPath.row == 1) {
                 identifier = InsightsTableWrappingTextCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableLatestPostSummaryDetailsiPadCellIdentifier : StatsTableSelectableCellIdentifier;
+                identifier = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? InsightsTableLatestPostSummaryDetailsiPadCellIdentifier : StatsTableSelectableCellIdentifier;
             }
             break;
             

@@ -30,7 +30,7 @@
     self.statsPeriodType = self.lastSelectedStatsPeriodType;
     self.previouslySelectedStatsPeriodType = self.lastSelectedStatsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeDays : self.lastSelectedStatsPeriodType;
 
-    if (IS_IPAD || UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
         [self showAllSegments];
         self.showingAbbreviatedSegments = NO;
     } else {
@@ -62,12 +62,21 @@
 
 #pragma mark - UIViewController overrides
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+//{
+//    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+//
+//    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
+//    [self updateSegmentedControlForceUpdate:NO];
+//}
+
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [super traitCollectionDidChange:previousTraitCollection];
 
     [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
-    [self updateSegmentedControlForceUpdate:NO];
+    [self updateSegmentedControlForceUpdate:YES];
 }
 
 
@@ -223,14 +232,15 @@
 
 - (void)updateSegmentedControlForceUpdate:(BOOL)forceUpdate
 {
-    if (IS_IPAD) {
-        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
-        return;
-    }
+//    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+//        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
+//        self.showingAbbreviatedSegments = NO;
+//        return;
+//    }
     
     // If rotated from landscape to portrait
     BOOL wasShowingAbbreviatedSegments = self.showingAbbreviatedSegments;
-    self.showingAbbreviatedSegments = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
+    self.showingAbbreviatedSegments = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
     
     if (self.showingAbbreviatedSegments && (wasShowingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAbbreviatedSegments];
