@@ -46,7 +46,7 @@ static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTime
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
 static NSString *const InsightsTableLatestPostSummaryDetailsiPadCellIdentifier = @"LatestPostDetailsPad";
 static NSString *const InsightsTableWrappingTextCellIdentifier = @"WrappingText";
-static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingText";
+static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingTextLayout";
 static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
@@ -264,13 +264,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));
         
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-        label.attributedText = [self latestPostSummaryAttributedString];
         label.preferredMaxLayoutWidth = CGRectGetWidth(tableView.bounds) - 46.0f;
+        label.attributedText = [self latestPostSummaryAttributedString];
         [cell setNeedsLayout];
         [cell layoutIfNeeded];
         
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        
+
         return size.height;
     }
 
@@ -1060,6 +1060,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.attributedText = [self latestPostSummaryAttributedString];
+    label.preferredMaxLayoutWidth = CGRectGetWidth(self.tableView.bounds) - 46.0f;
 }
 
 
