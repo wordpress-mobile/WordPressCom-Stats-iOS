@@ -13,6 +13,7 @@
 #import "StatsItemAction.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
+#import "UIViewController+SizeClass.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -144,7 +145,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsMostPopular:
             return 2;
         case StatsSectionInsightsTodaysStats:
-            return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 2 : 5;
+            return self.isViewHorizontallyCompact ? 5 : 2;
         case StatsSectionPeriodHeader:
             return 1;
         case StatsSectionInsightsLatestPostSummary:
@@ -152,7 +153,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 // Show only header and text description if no data is present
                 return 2;
             } else {
-                return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 3 : 5;
+                return self.isViewHorizontallyCompact ? 5 : 3;
             }
             
             // TODO :: Pull offset from StatsGroup
@@ -373,7 +374,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
-    } else if (statsSection == StatsSectionInsightsTodaysStats && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
+    } else if (statsSection == StatsSectionInsightsTodaysStats && self.isViewHorizontallyCompact && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
         switch (indexPath.row) {
             case 0:
             case 1:
@@ -481,7 +482,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
+                identifier = self.isViewHorizontallyCompact ? InsightsTableAllTimeDetailsCellIdentifier : InsightsTableAllTimeDetailsiPadCellIdentifier;
             }
             break;
     
@@ -496,7 +497,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
-            } else if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+            } else if (!self.isViewHorizontallyCompact) {
                 identifier = InsightsTableTodaysStatsDetailsiPadCellIdentifier;
             } else {
                 identifier = StatsTableSelectableCellIdentifier;
@@ -509,7 +510,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             } else if (indexPath.row == 1) {
                 identifier = InsightsTableWrappingTextCellIdentifier;
             } else {
-                identifier = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? InsightsTableLatestPostSummaryDetailsiPadCellIdentifier : StatsTableSelectableCellIdentifier;
+                identifier = self.isViewHorizontallyCompact ? StatsTableSelectableCellIdentifier : InsightsTableLatestPostSummaryDetailsiPadCellIdentifier;
             }
             break;
             

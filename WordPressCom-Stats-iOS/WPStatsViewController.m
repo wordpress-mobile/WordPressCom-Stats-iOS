@@ -2,6 +2,7 @@
 #import "StatsTableViewController.h"
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
+#import "UIViewController+SizeClass.h"
 
 @interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsSummaryTypeSelectionDelegate, UIActionSheetDelegate>
 
@@ -30,7 +31,7 @@
     self.statsPeriodType = self.lastSelectedStatsPeriodType;
     self.previouslySelectedStatsPeriodType = self.lastSelectedStatsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeDays : self.lastSelectedStatsPeriodType;
 
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+    if (!self.isViewHorizontallyCompact) {
         [self showAllSegments];
         self.showingAbbreviatedSegments = NO;
     } else {
@@ -62,13 +63,13 @@
 
 #pragma mark - UIViewController overrides
 
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-//{
-//    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-//
-//    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
-//    [self updateSegmentedControlForceUpdate:NO];
-//}
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+
+    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
+    [self updateSegmentedControlForceUpdate:NO];
+}
 
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
@@ -240,7 +241,7 @@
     
     // If rotated from landscape to portrait
     BOOL wasShowingAbbreviatedSegments = self.showingAbbreviatedSegments;
-    self.showingAbbreviatedSegments = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
+    self.showingAbbreviatedSegments = self.isViewHorizontallyCompact;
     
     if (self.showingAbbreviatedSegments && (wasShowingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAbbreviatedSegments];
