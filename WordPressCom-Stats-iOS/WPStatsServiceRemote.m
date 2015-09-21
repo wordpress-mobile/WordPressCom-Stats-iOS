@@ -12,6 +12,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 @interface WPStatsServiceRemote ()
 
+@property (nonatomic, assign)   NSUInteger                       numberOfDataPoints;
 @property (nonatomic, copy)     NSString                        *oauth2Token;
 @property (nonatomic, strong)   NSNumber                        *siteId;
 @property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
@@ -36,6 +37,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     
     self = [super init];
     if (self) {
+        // TODO :: Make this value a passed-in init or method parameter
+        _numberOfDataPoints = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 12 : 7;
         _oauth2Token = oauth2Token;
         _siteId = siteId;
         _siteTimeZone = timeZone;
@@ -225,7 +228,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         visits.statsDataByDate = visitsDictionary;
         
         // TODO :: Abstract this out to the local service
-        NSUInteger quantity = IS_IPAD ? 12 : 7;
+        NSUInteger quantity = self.numberOfDataPoints;
         if (visitsData.count > quantity) {
             visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
         }
@@ -729,8 +732,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         }
     };
     
-    // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
+    NSNumber *quantity = @(self.numberOfDataPoints);
     NSDictionary *parameters = @{@"quantity" : quantity,
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};

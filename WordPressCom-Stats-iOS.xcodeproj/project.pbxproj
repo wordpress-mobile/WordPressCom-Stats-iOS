@@ -508,14 +508,14 @@
 				93FABB821A126DC5000C15ED /* StatsTableViewController.m */,
 				9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */,
 				9367D9D31A6EAEBB0033911A /* StatsViewAllTableViewController.m */,
+				9340952B1BAC7A09000788FF /* UIViewController+SizeClass.h */,
+				9340952C1BAC7A09000788FF /* UIViewController+SizeClass.m */,
 				939A83081A6703E00041B68A /* WPStatsViewController.h */,
 				939A83091A6703E00041B68A /* WPStatsViewController.m */,
 				936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */,
 				936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */,
 				93035C391AE97B6300F6FF5C /* WPFontManager+Stats.h */,
 				93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */,
-				9340952B1BAC7A09000788FF /* UIViewController+SizeClass.h */,
-				9340952C1BAC7A09000788FF /* UIViewController+SizeClass.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
