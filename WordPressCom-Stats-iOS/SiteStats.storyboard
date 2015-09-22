@@ -93,14 +93,6 @@
             <string>OpenSans</string>
             <string>OpenSans</string>
             <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
-            <string>OpenSans</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -477,39 +469,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="149"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="voB-PG-oGO">
-                                            <rect key="frame" x="300" y="0.0" width="292" height="149"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8% of Daily Views" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txh-pI-huu">
-                                                    <rect key="frame" x="94" y="107" width="105" height="18"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-Ii-OSN">
-                                                    <rect key="frame" x="108" y="53" width="76" height="44"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="32"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MOST POPULAR HOUR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="owa-7G-DL9">
-                                                    <rect key="frame" x="77" y="24" width="139" height="18"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="owa-7G-DL9" firstAttribute="top" secondItem="voB-PG-oGO" secondAttribute="top" constant="24" id="37A-zt-rpu"/>
-                                                <constraint firstAttribute="centerY" secondItem="xx2-Ii-OSN" secondAttribute="centerY" id="4CI-Bt-hhp"/>
-                                                <constraint firstItem="xx2-Ii-OSN" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="voB-PG-oGO" secondAttribute="leading" constant="8" id="B4c-jZ-Pfy"/>
-                                                <constraint firstAttribute="centerX" secondItem="xx2-Ii-OSN" secondAttribute="centerX" id="HQd-KW-3hY"/>
-                                                <constraint firstAttribute="centerX" secondItem="txh-pI-huu" secondAttribute="centerX" id="IUk-cX-Yd5"/>
-                                                <constraint firstAttribute="bottom" secondItem="txh-pI-huu" secondAttribute="bottom" constant="24" id="cIs-6l-p9A"/>
-                                                <constraint firstAttribute="centerX" secondItem="owa-7G-DL9" secondAttribute="centerX" id="iay-6G-WoS"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xx2-Ii-OSN" secondAttribute="trailing" constant="8" id="mam-0i-kkd"/>
-                                            </constraints>
-                                        </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csy-iV-Ucm">
                                             <rect key="frame" x="8" y="0.0" width="292" height="149"/>
                                             <subviews>
@@ -541,6 +500,39 @@
                                                 <constraint firstAttribute="centerX" secondItem="dPU-t1-atl" secondAttribute="centerX" id="pTv-hu-BaW"/>
                                                 <constraint firstAttribute="centerX" secondItem="yKD-YK-Mra" secondAttribute="centerX" id="yHd-Oh-E3K"/>
                                                 <constraint firstAttribute="centerX" secondItem="LqR-Vc-rtl" secondAttribute="centerX" id="yzq-6H-kYH"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="voB-PG-oGO">
+                                            <rect key="frame" x="300" y="0.0" width="292" height="149"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8% of Daily Views" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txh-pI-huu">
+                                                    <rect key="frame" x="94" y="107" width="105" height="18"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-Ii-OSN">
+                                                    <rect key="frame" x="108" y="53" width="76" height="44"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="32"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MOST POPULAR HOUR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="owa-7G-DL9">
+                                                    <rect key="frame" x="77" y="24" width="139" height="18"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="13"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="owa-7G-DL9" firstAttribute="top" secondItem="voB-PG-oGO" secondAttribute="top" constant="24" id="37A-zt-rpu"/>
+                                                <constraint firstAttribute="centerY" secondItem="xx2-Ii-OSN" secondAttribute="centerY" id="4CI-Bt-hhp"/>
+                                                <constraint firstItem="xx2-Ii-OSN" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="voB-PG-oGO" secondAttribute="leading" constant="8" id="B4c-jZ-Pfy"/>
+                                                <constraint firstAttribute="centerX" secondItem="xx2-Ii-OSN" secondAttribute="centerX" id="HQd-KW-3hY"/>
+                                                <constraint firstAttribute="centerX" secondItem="txh-pI-huu" secondAttribute="centerX" id="IUk-cX-Yd5"/>
+                                                <constraint firstAttribute="bottom" secondItem="txh-pI-huu" secondAttribute="bottom" constant="24" id="cIs-6l-p9A"/>
+                                                <constraint firstAttribute="centerX" secondItem="owa-7G-DL9" secondAttribute="centerX" id="iay-6G-WoS"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xx2-Ii-OSN" secondAttribute="trailing" constant="8" id="mam-0i-kkd"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -1306,221 +1298,8 @@
                                     <outlet property="allTimeVisitorsValueLabel" destination="E8k-cd-ojU" id="HnR-kS-swI"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodaysStatsDetails" rowHeight="132" id="5eL-J1-gUX" userLabel="Today's Stats Details" customClass="InsightsTodaysStatsTableViewCell">
-                                <rect key="frame" x="0.0" y="661" width="600" height="132"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5eL-J1-gUX" id="QPP-Ts-AGk">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="131"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nex-6V-DVP" userLabel="Views">
-                                            <rect key="frame" x="8" y="0.0" width="292" height="66"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MAq-BP-G8l" userLabel="Divider View">
-                                                    <rect key="frame" x="291" y="0.0" width="1" height="66"/>
-                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="1Gy-45-R4j"/>
-                                                        <constraint firstAttribute="width" constant="1" id="NeA-6C-p1p"/>
-                                                    </constraints>
-                                                </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jsj-wA-qH3" userLabel="Horizontal Divider View">
-                                                    <rect key="frame" x="-8" y="65" width="300" height="1"/>
-                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="6Ig-k2-UjH"/>
-                                                    </constraints>
-                                                </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qf-7T-T32">
-                                                    <rect key="frame" x="131" y="21" width="30" height="34"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
-                                                    <state key="normal" title="24">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="HFF-4j-ipw"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LLy-Md-Bib">
-                                                    <rect key="frame" x="131" y="2" width="30" height="26"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <state key="normal" title="VIEWS">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayViews:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="p5f-ie-g0G"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="jsj-wA-qH3" firstAttribute="leading" secondItem="Nex-6V-DVP" secondAttribute="leading" constant="-8" id="2bq-i9-PF8"/>
-                                                <constraint firstItem="LLy-Md-Bib" firstAttribute="top" secondItem="Nex-6V-DVP" secondAttribute="top" constant="2" id="4Y5-1E-GWK"/>
-                                                <constraint firstAttribute="trailing" secondItem="MAq-BP-G8l" secondAttribute="trailing" id="4ZS-QK-Z9x"/>
-                                                <constraint firstAttribute="trailing" secondItem="jsj-wA-qH3" secondAttribute="trailing" id="AkG-Wx-CiN"/>
-                                                <constraint firstAttribute="bottom" secondItem="MAq-BP-G8l" secondAttribute="bottom" id="C7S-eZ-eIt"/>
-                                                <constraint firstAttribute="centerX" secondItem="9qf-7T-T32" secondAttribute="centerX" id="LNX-Yg-cqa"/>
-                                                <constraint firstAttribute="height" constant="66" id="OQM-g1-2rG"/>
-                                                <constraint firstAttribute="centerY" secondItem="9qf-7T-T32" secondAttribute="centerY" constant="-5" id="WBr-cj-1n0"/>
-                                                <constraint firstItem="MAq-BP-G8l" firstAttribute="top" secondItem="Nex-6V-DVP" secondAttribute="top" id="ZxZ-nI-lnN"/>
-                                                <constraint firstAttribute="centerX" secondItem="LLy-Md-Bib" secondAttribute="centerX" id="eEE-bg-9aP"/>
-                                                <constraint firstAttribute="bottom" secondItem="jsj-wA-qH3" secondAttribute="bottom" id="nEO-Bx-131"/>
-                                            </constraints>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q0o-C4-lyC" userLabel="Comments">
-                                            <rect key="frame" x="300" y="66" width="292" height="65"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l3c-1d-9Zr">
-                                                    <rect key="frame" x="131" y="21" width="30" height="34"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
-                                                    <state key="normal" title="0">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="mqc-ik-2RF"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4o-Iq-akx">
-                                                    <rect key="frame" x="118" y="2" width="57" height="26"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <state key="normal" title="COMMENTS">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayComments:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="bSj-X6-Kfa"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="d4o-Iq-akx" firstAttribute="top" secondItem="Q0o-C4-lyC" secondAttribute="top" constant="2" id="M01-VW-uZg"/>
-                                                <constraint firstAttribute="centerY" secondItem="l3c-1d-9Zr" secondAttribute="centerY" constant="-5" id="bAv-zy-aGH"/>
-                                                <constraint firstAttribute="centerX" secondItem="l3c-1d-9Zr" secondAttribute="centerX" id="lIy-yj-uga"/>
-                                                <constraint firstAttribute="centerX" secondItem="d4o-Iq-akx" secondAttribute="centerX" id="uWp-ll-30M"/>
-                                            </constraints>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xGe-pX-eYD" userLabel="Likes">
-                                            <rect key="frame" x="8" y="66" width="292" height="65"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x5q-bl-SYk" userLabel="Divider View">
-                                                    <rect key="frame" x="291" y="0.0" width="1" height="65"/>
-                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="Oh2-tS-gVy"/>
-                                                        <constraint firstAttribute="width" constant="1" id="SB8-fc-y5O"/>
-                                                    </constraints>
-                                                </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m4F-3j-7NG">
-                                                    <rect key="frame" x="131" y="2" width="30" height="26"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <state key="normal" title="LIKES">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="VV2-mY-iAb"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iCZ-K9-CUg">
-                                                    <rect key="frame" x="131" y="21" width="30" height="34"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
-                                                    <state key="normal" title="0">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayLikes:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="3RC-wI-BnZ"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="m4F-3j-7NG" secondAttribute="centerX" id="J25-pe-IW3"/>
-                                                <constraint firstAttribute="trailing" secondItem="x5q-bl-SYk" secondAttribute="trailing" id="QCx-Lm-96U"/>
-                                                <constraint firstAttribute="centerX" secondItem="iCZ-K9-CUg" secondAttribute="centerX" id="e7X-g8-VsV"/>
-                                                <constraint firstItem="x5q-bl-SYk" firstAttribute="top" secondItem="xGe-pX-eYD" secondAttribute="top" id="fAz-NE-1xK"/>
-                                                <constraint firstAttribute="centerY" secondItem="iCZ-K9-CUg" secondAttribute="centerY" constant="-5" id="q9S-Dm-7eb"/>
-                                                <constraint firstAttribute="bottom" secondItem="x5q-bl-SYk" secondAttribute="bottom" id="xDg-qo-fUd"/>
-                                                <constraint firstItem="m4F-3j-7NG" firstAttribute="top" secondItem="xGe-pX-eYD" secondAttribute="top" constant="2" id="ytb-ob-6Up"/>
-                                            </constraints>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BcG-A8-ztZ" userLabel="Visitors">
-                                            <rect key="frame" x="300" y="0.0" width="292" height="66"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rto-Xl-3ts" userLabel="Horizontal Divider View">
-                                                    <rect key="frame" x="0.0" y="65" width="300" height="1"/>
-                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="HmC-y0-zDt"/>
-                                                        <constraint firstAttribute="height" constant="1" id="L1k-HC-lec"/>
-                                                    </constraints>
-                                                </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgb-E0-bmm">
-                                                    <rect key="frame" x="131" y="21" width="30" height="34"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
-                                                    <state key="normal" title="32">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayVisitors:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="Eg4-nR-oXz"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsE-Pg-YZQ">
-                                                    <rect key="frame" x="125" y="2" width="43" height="26"/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <state key="normal" title="VISITORS">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="switchToTodayVisitors:" destination="Pq6-gc-ScC" eventType="touchUpInside" id="mKG-Ex-ygh"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="rto-Xl-3ts" secondAttribute="bottom" id="1RR-NI-kDE"/>
-                                                <constraint firstAttribute="centerX" secondItem="pgb-E0-bmm" secondAttribute="centerX" id="76Z-Mg-IB9"/>
-                                                <constraint firstItem="nsE-Pg-YZQ" firstAttribute="top" secondItem="BcG-A8-ztZ" secondAttribute="top" constant="2" id="FsM-fH-MhU"/>
-                                                <constraint firstAttribute="centerX" secondItem="nsE-Pg-YZQ" secondAttribute="centerX" id="Hy7-d0-sTn"/>
-                                                <constraint firstAttribute="centerY" secondItem="pgb-E0-bmm" secondAttribute="centerY" constant="-5" id="dRE-bU-Oat"/>
-                                                <constraint firstAttribute="trailing" secondItem="rto-Xl-3ts" secondAttribute="trailing" constant="-8" id="r5b-5S-fMJ"/>
-                                                <constraint firstItem="rto-Xl-3ts" firstAttribute="leading" secondItem="BcG-A8-ztZ" secondAttribute="leading" id="z1g-My-ZEb"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="width" secondItem="BcG-A8-ztZ" secondAttribute="width" id="497-rp-x4h"/>
-                                        <constraint firstAttribute="bottom" secondItem="Q0o-C4-lyC" secondAttribute="bottom" id="4MD-SD-Dzh"/>
-                                        <constraint firstItem="Q0o-C4-lyC" firstAttribute="top" secondItem="BcG-A8-ztZ" secondAttribute="bottom" id="66F-Ad-R8J"/>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="leading" secondItem="QPP-Ts-AGk" secondAttribute="leadingMargin" id="6Jq-Oe-5aM"/>
-                                        <constraint firstItem="Q0o-C4-lyC" firstAttribute="height" secondItem="xGe-pX-eYD" secondAttribute="height" id="7Fz-VO-FvS"/>
-                                        <constraint firstItem="Q0o-C4-lyC" firstAttribute="leading" secondItem="xGe-pX-eYD" secondAttribute="trailing" id="7IQ-zm-tX0"/>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="width" secondItem="Nex-6V-DVP" secondAttribute="width" id="AkF-X4-f1p"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Q0o-C4-lyC" secondAttribute="trailing" id="BoN-kx-4Tn"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="BcG-A8-ztZ" secondAttribute="trailing" id="D0o-6p-aRu"/>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="leading" secondItem="QPP-Ts-AGk" secondAttribute="leadingMargin" id="D8j-11-vwe"/>
-                                        <constraint firstItem="Nex-6V-DVP" firstAttribute="height" secondItem="BcG-A8-ztZ" secondAttribute="height" id="ETc-9i-mVL"/>
-                                        <constraint firstItem="Nex-6V-DVP" firstAttribute="leading" secondItem="QPP-Ts-AGk" secondAttribute="leadingMargin" id="IH3-iB-958"/>
-                                        <constraint firstItem="BcG-A8-ztZ" firstAttribute="top" secondItem="QPP-Ts-AGk" secondAttribute="top" id="THh-8Z-ViS"/>
-                                        <constraint firstItem="BcG-A8-ztZ" firstAttribute="leading" secondItem="Nex-6V-DVP" secondAttribute="trailing" id="Tc8-Cy-2Xe"/>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="top" secondItem="Nex-6V-DVP" secondAttribute="bottom" id="hfd-Ak-7Yx"/>
-                                        <constraint firstItem="xGe-pX-eYD" firstAttribute="width" secondItem="Q0o-C4-lyC" secondAttribute="width" id="mNh-Ng-8Ci"/>
-                                        <constraint firstItem="Q0o-C4-lyC" firstAttribute="leading" secondItem="xGe-pX-eYD" secondAttribute="trailing" id="nbK-zm-Xc0"/>
-                                        <constraint firstItem="Nex-6V-DVP" firstAttribute="top" secondItem="QPP-Ts-AGk" secondAttribute="top" id="rBp-eQ-TXe"/>
-                                        <constraint firstAttribute="bottom" secondItem="xGe-pX-eYD" secondAttribute="bottom" id="tWy-sr-UFd"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="todayCommentsButton" destination="d4o-Iq-akx" id="K1Y-no-jrS"/>
-                                    <outlet property="todayCommentsValueButton" destination="l3c-1d-9Zr" id="6Ho-Ub-hYg"/>
-                                    <outlet property="todayLikesButton" destination="m4F-3j-7NG" id="Lns-MU-C5Q"/>
-                                    <outlet property="todayLikesValueButton" destination="iCZ-K9-CUg" id="0Hw-3i-zlV"/>
-                                    <outlet property="todayViewsButton" destination="LLy-Md-Bib" id="mhx-hJ-QEc"/>
-                                    <outlet property="todayViewsValueButton" destination="9qf-7T-T32" id="t3A-Ov-RzQ"/>
-                                    <outlet property="todayVisitorsButton" destination="nsE-Pg-YZQ" id="M4c-IB-1lI"/>
-                                    <outlet property="todayVisitorsValueButton" destination="pgb-E0-bmm" id="4N5-bf-hQb"/>
-                                </connections>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodHeader" id="oCI-Df-0ns" userLabel="PeriodHeader">
-                                <rect key="frame" x="0.0" y="793" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="661" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oCI-Df-0ns" id="BN4-I4-0xh">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1541,7 +1320,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" rowHeight="30" id="gHk-H1-M8c" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="837" width="600" height="30"/>
+                                <rect key="frame" x="0.0" y="705" width="600" height="30"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHk-H1-M8c" id="JcX-rB-qb9">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="29"/>
@@ -1561,7 +1340,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TwoColumnHeader" id="Iw0-j3-jCC" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="867" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="735" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iw0-j3-jCC" id="rCI-wQ-nTQ">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1590,7 +1369,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="QMK-Mb-gNa" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
-                                <rect key="frame" x="0.0" y="911" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="779" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QMK-Mb-gNa" id="byc-bZ-DLX">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1651,7 +1430,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="l7t-bZ-H6F" userLabel="MoreRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="955" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="823" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l7t-bZ-H6F" id="CGe-wg-emt">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -1675,7 +1454,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="XeI-oH-BNJ" userLabel="NoResultsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="999" width="600" height="100"/>
+                                <rect key="frame" x="0.0" y="867" width="600" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XeI-oH-BNJ" id="lGI-SP-ja4">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="99"/>
@@ -1703,7 +1482,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="5MJ-qz-Ajh" userLabel="GroupTotalsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1099" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="967" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5MJ-qz-Ajh" id="lvD-ZL-QyN">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1724,7 +1503,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectableRow" id="Z3o-3O-RMY" customClass="StatsSelectableTableViewCell">
-                                <rect key="frame" x="0.0" y="1143" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1011" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z3o-3O-RMY" id="3gx-4d-A4A">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1776,7 +1555,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="TfQ-TA-Dg5" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1187" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1055" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TfQ-TA-Dg5" id="a71-bu-hBO">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
