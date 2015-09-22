@@ -45,7 +45,8 @@
     XCTestExpectation *overallExpectation = [self expectationWithDescription:@"overallExpectation"];
     
     [self.subject retrieveAllStatsForDate:[NSDate date]
-                                  andUnit:StatsPeriodUnitDay
+                                     unit:StatsPeriodUnitDay
+                    numberOfDaysForVisits:12
               withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error) {
                   [visitsExpectation fulfill];
               }
@@ -317,7 +318,8 @@
     }];
     
     OCMExpect([remote batchFetchStatsForDate:dateCheckBlock
-                                     andUnit:unit
+                                        unit:unit
+                       numberOfDaysForVisits:12
                  withVisitsCompletionHandler:[OCMArg any]
                      eventsCompletionHandler:[OCMArg any]
                       postsCompletionHandler:[OCMArg any]
@@ -333,7 +335,8 @@
     self.subject.remote = remote;
     
     [self.subject retrieveAllStatsForDate:baseDate
-                                  andUnit:unit
+                                     unit:unit
+                    numberOfDaysForVisits:12
               withVisitsCompletionHandler:nil
                   eventsCompletionHandler:nil
                    postsCompletionHandler:nil
@@ -357,7 +360,8 @@
 @implementation WPStatsServiceRemoteMock
 
 - (void)batchFetchStatsForDate:(NSDate *)date
-                       andUnit:(StatsPeriodUnit)unit
+                          unit:(StatsPeriodUnit)unit
+         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
