@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
 #import "StatsGroup.h"
