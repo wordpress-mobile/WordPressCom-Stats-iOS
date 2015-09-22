@@ -859,8 +859,6 @@
          XCTAssertNotNil(visits);
          XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
          XCTAssertNotNil(visits.statsData);
-         NSInteger quantity = IS_IPAD ? 12 : 7;
-         XCTAssertEqual(quantity, visits.statsData.count);
          
          XCTAssertNotNil(monthsYearsItems);
          XCTAssertTrue([[monthsYearsItems[0] label] isEqualToString:@"2014"]);

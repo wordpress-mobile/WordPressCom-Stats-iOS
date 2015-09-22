@@ -1,4 +1,4 @@
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
 #import "StatsGroup.h"
@@ -33,7 +33,8 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
     andCacheExpirationInterval:(NSTimeInterval)cacheExpirationInterval;
 
 - (void)retrieveAllStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
+                           unit:(StatsPeriodUnit)unit
+          numberOfDaysForVisits:(NSUInteger)numberOfDays
     withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
         eventsCompletionHandler:(StatsGroupCompletion)eventsCompletion
          postsCompletionHandler:(StatsGroupCompletion)postsCompletion
@@ -47,6 +48,7 @@ typedef NS_ENUM(NSUInteger, StatsFollowerType) {
      andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    numberOfDaysForVisits:(NSUInteger)numberOfDays
                     withCompletionHandler:(StatsPostDetailsCompletion)completion;
 
 - (void)retrievePostsForDate:(NSDate *)date
