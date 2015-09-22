@@ -68,7 +68,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)batchFetchStatsForDate:(NSDate *)date
-                       andUnit:(StatsPeriodUnit)unit
+                          unit:(StatsPeriodUnit)unit
+         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
@@ -84,7 +85,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     if (visitsCompletion) {
-        [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion]];
+        [mutableOperations addObject:[self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:visitsCompletion]];
     }
     if (eventsCompletion) {
         [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
@@ -198,6 +199,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
+                 numberOfDaysForVisits:(NSUInteger)numberOfDays
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
 {
     NSParameterAssert(postID != nil);
@@ -224,10 +226,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         visits.statsData = visitsArray;
         visits.statsDataByDate = visitsDictionary;
         
-        // TODO :: Abstract this out to the local service
-        NSUInteger quantity = IS_IPAD ? 12 : 7;
-        if (visitsData.count > quantity) {
-            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
+        if (visitsData.count > numberOfDays) {
+            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - numberOfDays, numberOfDays)];
         }
 
         for (NSArray *visit in visitsData) {
@@ -334,11 +334,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)fetchVisitsStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
+                           unit:(StatsPeriodUnit)unit
+          numberOfDaysForVisits:(NSUInteger)numberOfDays
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -677,7 +678,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
-                                              andUnit:(StatsPeriodUnit)unit
+                                                 unit:(StatsPeriodUnit)unit
+                                numberOfDaysForVisits:(NSUInteger)numberOfDays
                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -729,9 +731,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         }
     };
     
-    // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
-    NSDictionary *parameters = @{@"quantity" : quantity,
+    NSDictionary *parameters = @{@"quantity" : @(numberOfDays),
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
     

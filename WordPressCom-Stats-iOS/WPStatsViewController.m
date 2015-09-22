@@ -2,6 +2,7 @@
 #import "StatsTableViewController.h"
 #import "WPStatsService.h"
 #import "InsightsTableViewController.h"
+#import "UIViewController+SizeClass.h"
 
 @interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsSummaryTypeSelectionDelegate, UIActionSheetDelegate>
 
@@ -30,7 +31,7 @@
     self.statsPeriodType = self.lastSelectedStatsPeriodType;
     self.previouslySelectedStatsPeriodType = self.lastSelectedStatsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeDays : self.lastSelectedStatsPeriodType;
 
-    if (IS_IPAD || UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
+    if (!self.isViewHorizontallyCompact) {
         [self showAllSegments];
         self.showingAbbreviatedSegments = NO;
     } else {
@@ -68,6 +69,15 @@
 
     [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
     [self updateSegmentedControlForceUpdate:NO];
+}
+
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+
+    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
+    [self updateSegmentedControlForceUpdate:YES];
 }
 
 
@@ -223,14 +233,15 @@
 
 - (void)updateSegmentedControlForceUpdate:(BOOL)forceUpdate
 {
-    if (IS_IPAD) {
-        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
-        return;
-    }
+//    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+//        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType;
+//        self.showingAbbreviatedSegments = NO;
+//        return;
+//    }
     
     // If rotated from landscape to portrait
     BOOL wasShowingAbbreviatedSegments = self.showingAbbreviatedSegments;
-    self.showingAbbreviatedSegments = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
+    self.showingAbbreviatedSegments = self.isViewHorizontallyCompact;
     
     if (self.showingAbbreviatedSegments && (wasShowingAbbreviatedSegments == NO || forceUpdate)) {
         [self showAbbreviatedSegments];

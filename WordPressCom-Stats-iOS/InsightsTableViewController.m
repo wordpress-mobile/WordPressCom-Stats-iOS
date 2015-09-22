@@ -13,6 +13,7 @@
 #import "StatsItemAction.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
+#import "UIViewController+SizeClass.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -45,7 +46,7 @@ static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTime
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
 static NSString *const InsightsTableLatestPostSummaryDetailsiPadCellIdentifier = @"LatestPostDetailsPad";
 static NSString *const InsightsTableWrappingTextCellIdentifier = @"WrappingText";
-static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingText";
+static NSString *const InsightsTableWrappingTextLayoutCellIdentifier = @"WrappingTextLayout";
 static NSString *const StatsTableSelectableCellIdentifier = @"SelectableRow";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
 static NSString *const StatsTableGroupSelectorCellIdentifier = @"GroupSelector";
@@ -117,6 +118,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 }
 
 
+#pragma mark - UITraitEnvironment methods
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    [self.tableView reloadData];
+}
+
+
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -134,7 +145,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsMostPopular:
             return 2;
         case StatsSectionInsightsTodaysStats:
-            return IS_IPAD ? 2 : 5;
+            return self.isViewHorizontallyCompact ? 5 : 2;
         case StatsSectionPeriodHeader:
             return 1;
         case StatsSectionInsightsLatestPostSummary:
@@ -142,7 +153,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 // Show only header and text description if no data is present
                 return 2;
             } else {
-                return IS_IPAD ? 3 : 5;
+                return self.isViewHorizontallyCompact ? 5 : 3;
             }
             
             // TODO :: Pull offset from StatsGroup
@@ -253,13 +264,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));
         
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-        label.attributedText = [self latestPostSummaryAttributedString];
         label.preferredMaxLayoutWidth = CGRectGetWidth(tableView.bounds) - 46.0f;
+        label.attributedText = [self latestPostSummaryAttributedString];
         [cell setNeedsLayout];
         [cell layoutIfNeeded];
         
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        
+
         return size.height;
     }
 
@@ -363,7 +374,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         if ([self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
             [self.statsTypeSelectionDelegate viewController:self changeStatsSummaryTypeSelection:StatsSummaryTypeViews];
         }
-    } else if (statsSection == StatsSectionInsightsTodaysStats && IS_IPAD == NO && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
+    } else if (statsSection == StatsSectionInsightsTodaysStats && self.isViewHorizontallyCompact && [self.statsTypeSelectionDelegate conformsToProtocol:@protocol(WPStatsSummaryTypeSelectionDelegate)]) {
         switch (indexPath.row) {
             case 0:
             case 1:
@@ -471,7 +482,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableAllTimeDetailsiPadCellIdentifier : InsightsTableAllTimeDetailsCellIdentifier;
+                identifier = self.isViewHorizontallyCompact ? InsightsTableAllTimeDetailsCellIdentifier : InsightsTableAllTimeDetailsiPadCellIdentifier;
             }
             break;
     
@@ -486,7 +497,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
-            } else if (IS_IPAD) {
+            } else if (!self.isViewHorizontallyCompact) {
                 identifier = InsightsTableTodaysStatsDetailsiPadCellIdentifier;
             } else {
                 identifier = StatsTableSelectableCellIdentifier;
@@ -499,7 +510,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             } else if (indexPath.row == 1) {
                 identifier = InsightsTableWrappingTextCellIdentifier;
             } else {
-                identifier = IS_IPAD ? InsightsTableLatestPostSummaryDetailsiPadCellIdentifier : StatsTableSelectableCellIdentifier;
+                identifier = self.isViewHorizontallyCompact ? StatsTableSelectableCellIdentifier : InsightsTableLatestPostSummaryDetailsiPadCellIdentifier;
             }
             break;
             
@@ -1049,6 +1060,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.attributedText = [self latestPostSummaryAttributedString];
+    label.preferredMaxLayoutWidth = CGRectGetWidth(self.tableView.bounds) - 46.0f;
 }
 
 
