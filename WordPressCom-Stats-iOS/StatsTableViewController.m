@@ -14,6 +14,7 @@
 #import "StatsSection.h"
 #import "WPFontManager+Stats.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
+#import "UIViewController+SizeClass.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -507,7 +508,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     }
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
-                                       andUnit:self.selectedPeriodUnit
+                                          unit:self.selectedPeriodUnit
+                         numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                     withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          if (skipGraph) {

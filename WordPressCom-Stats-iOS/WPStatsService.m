@@ -9,6 +9,7 @@
 #import "StatsDateUtilities.h"
 #import "StatsSection.h"
 
+
 NSString *const BatchInsightsCacheKey = @"BatchInsights";
 NSString *const BatchPeriodStatsCacheKey = @"BatchStats";
 NSString *const AllTimeCacheKey = @"AllTime";
@@ -58,7 +59,8 @@ NSString *const TodayCacheKey = @"Today";
 }
 
 - (void)retrieveAllStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
+                           unit:(StatsPeriodUnit)unit
+          numberOfDaysForVisits:(NSUInteger)numberOfDays
     withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
         eventsCompletionHandler:(StatsGroupCompletion)eventsCompletion
          postsCompletionHandler:(StatsGroupCompletion)postsCompletion
@@ -145,7 +147,8 @@ NSString *const TodayCacheKey = @"Today";
 
     [self.remote cancelAllRemoteOperations];
     [self.remote batchFetchStatsForDate:endDate
-                                andUnit:unit
+                                   unit:unit
+                  numberOfDaysForVisits:numberOfDays
             withVisitsCompletionHandler:[self remoteVisitsCompletionWithCache:cacheDictionary andCompletionHandler:visitsCompletion]
                 eventsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionEvents andCompletionHandler:eventsCompletion]
                  postsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPosts andCompletionHandler:postsCompletion]
@@ -340,13 +343,16 @@ NSString *const TodayCacheKey = @"Today";
 
 
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    numberOfDaysForVisits:(NSUInteger)numberOfDays
                     withCompletionHandler:(StatsPostDetailsCompletion)completion
 {
     if (!postID || !completion) {
         return;
     }
     
-    [self.remote fetchPostDetailsStatsForPostID:postID withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
+    [self.remote fetchPostDetailsStatsForPostID:postID
+                          numberOfDaysForVisits:numberOfDays
+                          withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
         StatsGroup *monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
         monthsYears.items = monthsYearsItems;
         monthsYears.errorWhileRetrieving = !error;
