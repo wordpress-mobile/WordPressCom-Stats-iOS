@@ -9,6 +9,7 @@
 #import "StatsDateUtilities.h"
 #import "StatsSection.h"
 
+
 NSString *const BatchInsightsCacheKey = @"BatchInsights";
 NSString *const BatchPeriodStatsCacheKey = @"BatchStats";
 NSString *const AllTimeCacheKey = @"AllTime";
@@ -58,7 +59,8 @@ NSString *const TodayCacheKey = @"Today";
 }
 
 - (void)retrieveAllStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
+                           unit:(StatsPeriodUnit)unit
+          numberOfDaysForVisits:(NSUInteger)numberOfDays
     withVisitsCompletionHandler:(StatsVisitsCompletion)visitsCompletion
         eventsCompletionHandler:(StatsGroupCompletion)eventsCompletion
          postsCompletionHandler:(StatsGroupCompletion)postsCompletion
@@ -145,7 +147,8 @@ NSString *const TodayCacheKey = @"Today";
 
     [self.remote cancelAllRemoteOperations];
     [self.remote batchFetchStatsForDate:endDate
-                                andUnit:unit
+                                   unit:unit
+                  numberOfDaysForVisits:numberOfDays
             withVisitsCompletionHandler:[self remoteVisitsCompletionWithCache:cacheDictionary andCompletionHandler:visitsCompletion]
                 eventsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionEvents andCompletionHandler:eventsCompletion]
                  postsCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPosts andCompletionHandler:postsCompletion]
@@ -166,6 +169,7 @@ NSString *const TodayCacheKey = @"Today";
 - (void)retrieveInsightsStatsWithAllTimeStatsCompletionHandler:(StatsAllTimeCompletion)allTimeCompletion
                                      insightsCompletionHandler:(StatsInsightsCompletion)insightsCompletion
                                  todaySummaryCompletionHandler:(StatsSummaryCompletion)todaySummaryCompletion
+                            latestPostSummaryCompletionHandler:(StatsLatestPostSummaryCompletion)latestPostCompletion
                                commentsAuthorCompletionHandler:(StatsGroupCompletion)commentsAuthorsCompletion
                                 commentsPostsCompletionHandler:(StatsGroupCompletion)commentsPostsCompletion
                                tagsCategoriesCompletionHandler:(StatsGroupCompletion)tagsCategoriesCompletion
@@ -179,6 +183,7 @@ NSString *const TodayCacheKey = @"Today";
     id allTimeData = cacheDictionary[@(StatsSectionInsightsAllTime)];
     id insightsData = cacheDictionary[@(StatsSectionInsightsMostPopular)];
     id todayData = cacheDictionary[@(StatsSectionInsightsTodaysStats)];
+    id latestPostData = cacheDictionary[@(StatsSectionInsightsLatestPostSummary)];
     id commentsAuthorData = cacheDictionary[@(StatsSubSectionCommentsByAuthor)];
     id commentsPostsData = cacheDictionary[@(StatsSubSectionCommentsByPosts)];
     id tagsCategoriesData = cacheDictionary[@(StatsSectionTagsCategories)];
@@ -190,6 +195,7 @@ NSString *const TodayCacheKey = @"Today";
         && (!allTimeCompletion || allTimeData)
         && (!insightsCompletion || insightsData)
         && (!todaySummaryCompletion || todayData)
+        && (!latestPostCompletion || latestPostData)
         && (!commentsAuthorsCompletion || commentsAuthorData)
         && (!commentsPostsCompletion || commentsPostsData)
         && (!tagsCategoriesCompletion || tagsCategoriesData)
@@ -223,13 +229,19 @@ NSString *const TodayCacheKey = @"Today";
         }
 
         if (allTimeCompletion) {
-            allTimeCompletion(cacheDictionary[AllTimeCacheKey], nil);
+            allTimeCompletion(allTimeData, nil);
         }
+        
         if (insightsCompletion) {
-            insightsCompletion(cacheDictionary[InsightsCacheKey], nil);
+            insightsCompletion(insightsData, nil);
         }
+        
         if (todaySummaryCompletion) {
-            todaySummaryCompletion(cacheDictionary[TodayCacheKey], nil);
+            todaySummaryCompletion(todayData, nil);
+        }
+        
+        if (latestPostCompletion) {
+            latestPostCompletion(latestPostData, nil);
         }
         
         if (overallCompletionHandler) {
@@ -240,56 +252,81 @@ NSString *const TodayCacheKey = @"Today";
     }
 
     [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
-    {
-        StatsAllTime *allTime;
-        
-        if (!error) {
-            allTime = [StatsAllTime new];
-            allTime.numberOfPosts = posts;
-            allTime.numberOfPostsValue = postsValue;
-            allTime.numberOfViews = views;
-            allTime.numberOfViewsValue = viewsValue;
-            allTime.numberOfVisitors = visitors;
-            allTime.numberOfVisitorsValue = visitorsValue;
-            allTime.bestNumberOfViews = bestViews;
-            allTime.bestNumberOfViewsValue = bestViewsValue;
-            allTime.bestViewsOn = bestViewsOn;
-            
-            cacheDictionary[AllTimeCacheKey] = allTime;
-        }
-        
-        if (allTimeCompletion) {
-            allTimeCompletion(allTime, error);
-        }
-    }
+     {
+         StatsAllTime *allTime;
+         
+         if (!error) {
+             allTime = [StatsAllTime new];
+             allTime.numberOfPosts = posts;
+             allTime.numberOfPostsValue = postsValue;
+             allTime.numberOfViews = views;
+             allTime.numberOfViewsValue = viewsValue;
+             allTime.numberOfVisitors = visitors;
+             allTime.numberOfVisitorsValue = visitorsValue;
+             allTime.bestNumberOfViews = bestViews;
+             allTime.bestNumberOfViewsValue = bestViewsValue;
+             allTime.bestViewsOn = bestViewsOn;
+             
+             cacheDictionary[@(StatsSectionInsightsAllTime)] = allTime;
+         }
+         
+         if (allTimeCompletion) {
+             allTimeCompletion(allTime, error);
+         }
+     }
                                            insightsCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue,NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error)
-    {
-        StatsInsights *insights;
-        
-        if (!error) {
-            insights = [StatsInsights new];
-            insights.highestHour = highestHour;
-            insights.highestHourPercent = highestHourPercent;
-            insights.highestHourPercentValue = highestHourPercentValue;
-            insights.highestDayOfWeek = highestDayOfWeek;
-            insights.highestDayPercent = highestDayPercent;
-            insights.highestDayPercentValue = highestDayPercentValue;
-            
-            cacheDictionary[InsightsCacheKey] = insights;
-        }
-        
-        if (insightsCompletion) {
-            insightsCompletion(insights, error);
-        }
-    }
+     {
+         StatsInsights *insights;
+         
+         if (!error) {
+             insights = [StatsInsights new];
+             insights.highestHour = highestHour;
+             insights.highestHourPercent = highestHourPercent;
+             insights.highestHourPercentValue = highestHourPercentValue;
+             insights.highestDayOfWeek = highestDayOfWeek;
+             insights.highestDayPercent = highestDayPercent;
+             insights.highestDayPercentValue = highestDayPercentValue;
+             
+             cacheDictionary[@(StatsSectionInsightsMostPopular)] = insights;
+         }
+         
+         if (insightsCompletion) {
+             insightsCompletion(insights, error);
+         }
+     }
                                        todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
-    {
-        cacheDictionary[TodayCacheKey] = summary;
-        
-        if (todaySummaryCompletion) {
-            todaySummaryCompletion(summary, error);
-        }
-    }
+     {
+         if (!error) {
+             cacheDictionary[@(StatsSectionInsightsTodaysStats)] = summary;
+         }
+         
+         if (todaySummaryCompletion) {
+             todaySummaryCompletion(summary, error);
+         }
+     }
+                                  latestPostSummaryCompletionHandler:^(NSNumber *postID, NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error)
+     {
+         StatsLatestPostSummary *summary;
+         
+         if (!error && postID.integerValue != 0) {
+             summary = [StatsLatestPostSummary new];
+             summary.postID = postID;
+             summary.postTitle = postTitle;
+             summary.postAge = [self.dateUtilities dateAgeForDate:postDate];
+             summary.views = views;
+             summary.viewsValue = viewsValue;
+             summary.likes = likes;
+             summary.likesValue = likesValue;
+             summary.comments = comments;
+             summary.commentsValue = commentsValue;
+             
+             cacheDictionary[@(StatsSectionInsightsLatestPostSummary)] = summary;
+         }
+         
+         if (latestPostCompletion) {
+             latestPostCompletion(summary, error);
+         }
+     }
                                            commentsCompletionHandler:[self remoteCommentsCompletionWithCache:cacheDictionary andCommentsAuthorsCompletion:commentsAuthorsCompletion commentsPostsCompletion:commentsPostsCompletion]
                                      tagsCategoriesCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionTagsCategories andCompletionHandler:tagsCategoriesCompletion]
                                     followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
@@ -297,22 +334,25 @@ NSString *const TodayCacheKey = @"Today";
                                           publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
                                                        progressBlock:progressBlock
                                          andOverallCompletionHandler:^
-    {
-        if (overallCompletionHandler) {
-            overallCompletionHandler();
-        }
-    }];
+     {
+         if (overallCompletionHandler) {
+             overallCompletionHandler();
+         }
+     }];
 }
 
 
 - (void)retrievePostDetailsStatsForPostID:(NSNumber *)postID
+                    numberOfDaysForVisits:(NSUInteger)numberOfDays
                     withCompletionHandler:(StatsPostDetailsCompletion)completion
 {
     if (!postID || !completion) {
         return;
     }
     
-    [self.remote fetchPostDetailsStatsForPostID:postID withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
+    [self.remote fetchPostDetailsStatsForPostID:postID
+                          numberOfDaysForVisits:numberOfDays
+                          withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error) {
         StatsGroup *monthsYears = [[StatsGroup alloc] initWithStatsSection:StatsSectionPostDetailsMonthsYears andStatsSubSection:StatsSubSectionNone];
         monthsYears.items = monthsYearsItems;
         monthsYears.errorWhileRetrieving = !error;

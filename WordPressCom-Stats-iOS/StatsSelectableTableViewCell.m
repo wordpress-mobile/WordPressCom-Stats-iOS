@@ -6,6 +6,8 @@
 @interface StatsSelectableTableViewCell ()
 
 @property (nonatomic, strong) UIView *sideBorderView;
+@property (nonatomic, strong) UIView *darkerBackgroundView;
+@property (nonatomic, strong) UIView *lighterBackgroundView;
 
 @end
 
@@ -14,8 +16,15 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    self.backgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:NO];
-    self.selectedBackgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:YES];
+    self.selectedIsLighter = YES;
+    
+    // Standard colors for use in the graph view
+    self.selectedCellTextColor = [WPStyleGuide statsDarkGray];
+    self.selectedCellValueColor = [WPStyleGuide jazzyOrange];
+    self.selectedCellValueZeroColor = [WPStyleGuide jazzyOrange];
+    self.unselectedCellTextColor = [WPStyleGuide statsLessDarkGrey];
+    self.unselectedCellValueColor = [WPStyleGuide littleEddieGrey];
+    self.unselectedCellValueZeroColor = [WPStyleGuide statsLightGrayZeroValue];
 }
 
 - (void)layoutSubviews
@@ -30,19 +39,39 @@
     [super setSelected:selected animated:animated];
 
     if (selected) {
-        self.categoryIconLabel.textColor = [WPStyleGuide statsDarkGray];
-        self.categoryLabel.textColor = [WPStyleGuide statsDarkGray];
-        self.valueLabel.textColor = [WPStyleGuide jazzyOrange];
+        self.categoryIconLabel.textColor = self.selectedCellTextColor;
+        self.categoryLabel.textColor = self.selectedCellTextColor;
+        self.valueLabel.textColor = self.selectedCellValueColor;
     } else {
-        self.categoryIconLabel.textColor = [WPStyleGuide statsLessDarkGrey];
-        self.categoryLabel.textColor = [WPStyleGuide statsLessDarkGrey];
+        self.categoryIconLabel.textColor = self.unselectedCellTextColor;
+        self.categoryLabel.textColor = self.unselectedCellTextColor;
         
         if ([self.valueLabel.text isEqualToString:@"0"]) {
-            self.valueLabel.textColor = [WPStyleGuide statsLightGrayZeroValue];
+            self.valueLabel.textColor = self.unselectedCellValueZeroColor;
         } else {
-            self.valueLabel.textColor = [WPStyleGuide littleEddieGrey];
+            self.valueLabel.textColor = self.unselectedCellValueColor;
         }
     }
+}
+
+- (void)setSelectedIsLighter:(BOOL)selectedIsLighter
+{
+    _selectedIsLighter = selectedIsLighter;
+    
+    if (selectedIsLighter) {
+        self.backgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:NO];
+        self.selectedBackgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:YES];
+    } else {
+        self.backgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:YES];
+        self.selectedBackgroundView = [[StatsBorderedCellBackgroundView alloc] initWithFrame:self.bounds andSelected:NO];
+    }
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.selectedIsLighter = NO;
 }
 
 @end

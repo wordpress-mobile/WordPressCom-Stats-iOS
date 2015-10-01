@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		824C73F5FB3142F9969C52C6 /* libPods-StatsDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05826AF01C0545FBBAB74708 /* libPods-StatsDemo.a */; };
 		932942FC1A30B1A500E88016 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		934095291BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; settings = {ASSET_TAGS = (); }; };
+		9340952A1BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		939A82F01A65A30F0041B68A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B682E0194F95AD00EBF6DF /* main.m */; };
 		939A82F11A65A30F0041B68A /* WPSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B682ED194F95AD00EBF6DF /* WPSViewController.m */; };
 		939A82F21A65A30F0041B68A /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -43,6 +45,7 @@
 		932942FA1A30B1A500E88016 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		9329432D1A322F7900E88016 /* StatsDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StatsDemo.entitlements; sourceTree = "<group>"; };
+		934095281BAAE335000788FF /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		939A83021A65A30F0041B68A /* StatsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		939A83041A65A68E0041B68A /* StatsDemo-Internal.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "StatsDemo-Internal.entitlements"; sourceTree = "<group>"; };
 		939A83061A65A6A20041B68A /* StatsDemo Internal-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "StatsDemo Internal-Info.plist"; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 				93B682E4194F95AD00EBF6DF /* WPSAppDelegate.m */,
 				93B682EC194F95AD00EBF6DF /* WPSViewController.h */,
 				93B682ED194F95AD00EBF6DF /* WPSViewController.m */,
+				934095281BAAE335000788FF /* Launch Screen.storyboard */,
 			);
 			path = StatsDemo;
 			sourceTree = "<group>";
@@ -218,7 +222,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = WPS;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Automattic Inc.";
 				TargetAttributes = {
 					939A82ED1A65A30F0041B68A = {
@@ -263,6 +267,7 @@
 				939A82FA1A65A30F0041B68A /* Main_iPad.storyboard in Resources */,
 				939A82FB1A65A30F0041B68A /* Images.xcassets in Resources */,
 				939A82FC1A65A30F0041B68A /* Main_iPhone.storyboard in Resources */,
+				9340952A1BAAE335000788FF /* Launch Screen.storyboard in Resources */,
 				939A82FD1A65A30F0041B68A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +282,7 @@
 				939A83051A65A68E0041B68A /* StatsDemo-Internal.entitlements in Resources */,
 				93B682E8194F95AD00EBF6DF /* Main_iPhone.storyboard in Resources */,
 				93B682DF194F95AD00EBF6DF /* InfoPlist.strings in Resources */,
+				934095291BAAE335000788FF /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,8 +415,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.internal.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = StatsDemo;
-				PROVISIONING_PROFILE = "3b5d0f08-ac3a-4ced-b97e-95d7a8a91ca5";
+				PROVISIONING_PROFILE = "adf6b035-3270-468d-8a61-268641232ddf";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -426,6 +433,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.internal.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = StatsDemo;
 				PROVISIONING_PROFILE = "811b8c55-bad6-4b7d-a9a6-e24c8299be32";
 				WRAPPER_EXTENSION = app;
@@ -449,6 +457,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -487,6 +497,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -512,6 +523,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -528,6 +540,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StatsDemo/StatsDemo-Prefix.pch";
 				INFOPLIST_FILE = "StatsDemo/StatsDemo-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

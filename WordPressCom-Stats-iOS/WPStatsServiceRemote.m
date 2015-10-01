@@ -68,7 +68,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)batchFetchStatsForDate:(NSDate *)date
-                       andUnit:(StatsPeriodUnit)unit
+                          unit:(StatsPeriodUnit)unit
+         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
@@ -84,7 +85,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     if (visitsCompletion) {
-        [mutableOperations addObject:[self operationForVisitsForDate:date andUnit:unit withCompletionHandler:visitsCompletion]];
+        [mutableOperations addObject:[self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:visitsCompletion]];
     }
     if (eventsCompletion) {
         [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
@@ -136,6 +137,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 - (void)batchFetchInsightsStatsWithAllTimeCompletionHandler:(StatsRemoteAllTimeCompletion)allTimeCompletion
                                   insightsCompletionHandler:(StatsRemoteInsightsCompletion)insightsCompletion
                               todaySummaryCompletionHandler:(StatsRemoteSummaryCompletion)todaySummaryCompletion
+                         latestPostSummaryCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)latestPostCompletion
                                   commentsCompletionHandler:(StatsRemoteItemsCompletion)commentsCompletion
                             tagsCategoriesCompletionHandler:(StatsRemoteItemsCompletion)tagsCategoriesCompletion
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
@@ -154,6 +156,9 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     }
     if (todaySummaryCompletion) {
         [mutableOperations addObject:[self operationForSummaryForDate:nil andUnit:StatsPeriodUnitDay withCompletionHandler:todaySummaryCompletion]];
+    }
+    if (latestPostCompletion) {
+        [mutableOperations addObject:[self operationForLatestPostSummaryWithCompletionHandler:latestPostCompletion]];
     }
     if (commentsCompletion) {
         [mutableOperations addObject:[self operationForCommentsWithCompletionHandler:commentsCompletion]];
@@ -194,6 +199,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
+                 numberOfDaysForVisits:(NSUInteger)numberOfDays
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
 {
     NSParameterAssert(postID != nil);
@@ -220,10 +226,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         visits.statsData = visitsArray;
         visits.statsDataByDate = visitsDictionary;
         
-        // TODO :: Abstract this out to the local service
-        NSUInteger quantity = IS_IPAD ? 12 : 7;
-        if (visitsData.count > quantity) {
-            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - quantity, quantity)];
+        if (visitsData.count > numberOfDays) {
+            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - numberOfDays, numberOfDays)];
         }
 
         for (NSArray *visit in visitsData) {
@@ -330,11 +334,12 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)fetchVisitsStatsForDate:(NSDate *)date
-                        andUnit:(StatsPeriodUnit)unit
+                           unit:(StatsPeriodUnit)unit
+          numberOfDaysForVisits:(NSUInteger)numberOfDays
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date andUnit:unit withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -600,8 +605,81 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 }
 
 
+- (AFHTTPRequestOperation *)operationForLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
+{
+    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *postsDict = [self dictionaryFromResponse:responseObject];
+        NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
+        
+        NSNumber *postID = [postDict numberForKey:@"ID"];
+        NSString *postTitle = [postDict stringForKey:@"title"];
+        NSDate *postDate = [self.rfc3339DateFormatter dateFromString:[postDict stringForKey:@"date"]];
+        NSString *postURL = [postDict stringForKey:@"URL"];
+        NSNumber *likesValue = [postDict numberForKey:@"like_count"];
+        NSString *likes = [self localizedStringForNumber:likesValue];
+        NSNumber *commentsValue = [[postDict dictionaryForKey:@"discussion"] numberForKey:@"comment_count"];
+        NSString *comments = [self localizedStringForNumber:commentsValue];
+        
+        AFHTTPRequestOperation *operation2 = [self operationForPostViewsWithPostID:postID andCompletionHandler:^(NSString *views, NSNumber *viewsValue, NSError *error) {
+            if (completionHandler) {
+                completionHandler(postID, postTitle, postURL, postDate, views, viewsValue, likes, likesValue, comments, commentsValue, error);
+            }
+            
+        }];
+        
+        [operation2 start];
+    };
+    
+    NSDictionary *parameters = @{@"order_by" : @"date",
+                                 @"number"   : @1,
+                                 @"type"     : @"post",
+                                 @"fields"   : @"ID, title, URL, discussion, like_count, date"};
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
+                                                                 parameters:parameters
+                                                                    success:postHandler
+                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                        
+                                                                        if (completionHandler) {
+                                                                            completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
+                                                                        }
+                                                                    }];
+    
+    return operation;
+}
+
+
+- (AFHTTPRequestOperation *)operationForPostViewsWithPostID:(NSNumber *)postID andCompletionHandler:(void (^)(NSString *views, NSNumber *viewsValue, NSError *error))completionHandler
+{
+    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *postDict = [self dictionaryFromResponse:responseObject];
+
+        NSNumber *viewsValue = [postDict numberForKey:@"views"];
+        NSString *views = [self localizedStringForNumber:viewsValue];
+        
+        if (completionHandler) {
+            completionHandler(views, viewsValue, nil);
+        }
+    };
+
+    NSString *viewsURL = [NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID];
+    
+    AFHTTPRequestOperation *operation = [self requestOperationForURLString:viewsURL
+                                                                parameters:@{@"fields" : @"views"}
+                                                                   success:postHandler
+                                                                   failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                       if (completionHandler) {
+                                                                           completionHandler(nil, nil, error);
+                                                                       }
+                                                                   }];
+    return operation;
+}
+
+
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
-                                              andUnit:(StatsPeriodUnit)unit
+                                                 unit:(StatsPeriodUnit)unit
+                                numberOfDaysForVisits:(NSUInteger)numberOfDays
                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -653,9 +731,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         }
     };
     
-    // TODO :: Abstract this out to the local service
-    NSNumber *quantity = IS_IPAD ? @12 : @7;
-    NSDictionary *parameters = @{@"quantity" : quantity,
+    NSDictionary *parameters = @{@"quantity" : @(numberOfDays),
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
     
@@ -1165,7 +1241,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
                 item.iconURL = components.URL;
             }
             item.value = [self localizedStringForNumber:[author numberForKey:@"comments"]];
-            // TODO follow data
             
             [authorItems addObject:item];
         }

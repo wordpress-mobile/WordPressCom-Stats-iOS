@@ -14,6 +14,7 @@
 #import "StatsSection.h"
 #import "WPFontManager+Stats.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
+#import "UIViewController+SizeClass.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -507,7 +508,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     }
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
-                                       andUnit:self.selectedPeriodUnit
+                                          unit:self.selectedPeriodUnit
+                         numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                     withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          if (skipGraph) {
@@ -777,6 +779,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
         case StatsSectionInsightsTodaysStats:
+        case StatsSectionInsightsLatestPostSummary:
         case StatsSectionPostDetailsLoadingIndicator:
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
@@ -983,24 +986,15 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionClicks:
                 text = NSLocalizedString(@"No clicks recorded", @"");
                 break;
-            case StatsSectionComments:
-                text = NSLocalizedString(@"No comments posted", @"");
-                break;
             case StatsSectionCountry:
                 text = NSLocalizedString(@"No countries recorded", @"");
                 break;
             case StatsSectionEvents:
                 text = NSLocalizedString(@"No items published during this timeframe", @"");
                 break;
-            case StatsSectionFollowers:
-                text = NSLocalizedString(@"No followers", @"");
-                break;
             case StatsSectionAuthors:
             case StatsSectionPosts:
                 text = NSLocalizedString(@"No posts or pages viewed", @"");
-                break;
-            case StatsSectionPublicize:
-                text = NSLocalizedString(@"No publicize followers recorded", @"");
                 break;
             case StatsSectionReferrers:
                 text = NSLocalizedString(@"No referrers recorded", @"");
@@ -1008,17 +1002,19 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             case StatsSectionSearchTerms:
                 text = NSLocalizedString(@"No search terms recorded", @"");
                 break;
-            case StatsSectionTagsCategories:
-                text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
-                break;
             case StatsSectionVideos:
                 text = NSLocalizedString(@"No videos played", @"");
                 break;
+            case StatsSectionComments:
+            case StatsSectionFollowers:
             case StatsSectionGraph:
             case StatsSectionInsightsAllTime:
             case StatsSectionInsightsMostPopular:
             case StatsSectionInsightsTodaysStats:
+            case StatsSectionInsightsLatestPostSummary:
             case StatsSectionPeriodHeader:
+            case StatsSectionPublicize:
+            case StatsSectionTagsCategories:
             case StatsSectionWebVersion:
             case StatsSectionPostDetailsAveragePerDay:
             case StatsSectionPostDetailsGraph:

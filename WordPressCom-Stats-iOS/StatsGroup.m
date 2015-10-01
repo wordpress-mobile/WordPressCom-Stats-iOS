@@ -154,6 +154,7 @@
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
         case StatsSectionInsightsTodaysStats:
+        case StatsSectionInsightsLatestPostSummary:
         case StatsSectionPeriodHeader:
         case StatsSectionWebVersion:
         case StatsSectionPostDetailsGraph:
