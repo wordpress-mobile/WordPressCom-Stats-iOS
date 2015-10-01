@@ -7,8 +7,8 @@
 @property (nonatomic, strong) NSDate *date;
 
 // NSArray of StatsSummary objects
-@property (nonatomic, strong) NSArray *statsData;
-@property (nonatomic, strong) NSDictionary *statsDataByDate;
+@property (nonatomic, strong) NSArray<StatsSummary *> *statsData;
+@property (nonatomic, strong) NSDictionary<NSDate *, StatsSummary *> *statsDataByDate;
 
 @property (nonatomic, assign) BOOL errorWhileRetrieving;
 

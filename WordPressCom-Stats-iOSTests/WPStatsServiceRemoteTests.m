@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 #import <OCMock/OCMock.h>
@@ -81,7 +81,8 @@
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
-                                  andUnit:StatsPeriodUnitDay
+                                     unit:StatsPeriodUnitDay
+                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -116,7 +117,8 @@
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
-                                  andUnit:StatsPeriodUnitDay
+                                     unit:StatsPeriodUnitDay
+                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          [expectation fulfill];
@@ -137,7 +139,8 @@
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
-                                  andUnit:StatsPeriodUnitDay
+                                     unit:StatsPeriodUnitDay
+                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -179,7 +182,8 @@
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
-                                  andUnit:StatsPeriodUnitDay
+                                     unit:StatsPeriodUnitDay
+                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -854,13 +858,12 @@
     }];
     
     [self.subject fetchPostDetailsStatsForPostID:@123
+                           numberOfDaysForVisits:12
                            withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error)
      {
          XCTAssertNotNil(visits);
          XCTAssertEqual(StatsPeriodUnitDay, visits.unit);
          XCTAssertNotNil(visits.statsData);
-         NSInteger quantity = IS_IPAD ? 12 : 7;
-         XCTAssertEqual(quantity, visits.statsData.count);
          
          XCTAssertNotNil(monthsYearsItems);
          XCTAssertTrue([[monthsYearsItems[0] label] isEqualToString:@"2014"]);

@@ -7,6 +7,7 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
+#import "UIViewController+SizeClass.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -312,6 +313,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     }
     
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
+                                   numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
 #ifndef AF_APP_EXTENSIONS
