@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'AFNetworking',	'~> 2.6.0'
   s.dependency 'CocoaLumberjack', '2.0.0'
-  s.dependency 'WordPress-iOS-Shared', '~> 0.3'
+  s.dependency 'WordPress-iOS-Shared', '~> 0.4'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
-  s.dependency 'WordPressCom-Analytics-iOS', '~>0.0.34'
+  s.dependency 'WordPressCom-Analytics-iOS', '~>0.0.37'
 end
