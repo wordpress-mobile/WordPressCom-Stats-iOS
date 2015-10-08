@@ -13,7 +13,7 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *statsProgressView;
 @property (nonatomic, weak) IBOutlet UIView *insightsContainerView;
 @property (nonatomic, weak) IBOutlet UIView *statsContainerView;
-@property (nonatomic, weak) UIActionSheet *periodActionSheet;
+@property (nonatomic, weak) UIAlertController *periodActionSheet;
 
 @property (nonatomic, assign) StatsPeriodType previouslySelectedStatsPeriodType;
 @property (nonatomic, assign) StatsPeriodType statsPeriodType;
@@ -63,20 +63,13 @@
 
 #pragma mark - UIViewController overrides
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-
-    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
-    [self updateSegmentedControlForceUpdate:NO];
-}
-
-
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
     [super traitCollectionDidChange:previousTraitCollection];
 
-    [self.periodActionSheet dismissWithClickedButtonIndex:self.periodActionSheet.cancelButtonIndex animated:YES];
+    if (self.presentedViewController == self.periodActionSheet) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
     [self updateSegmentedControlForceUpdate:YES];
 }
 
@@ -97,20 +90,41 @@
     }
     
     if (self.showingAbbreviatedSegments && control.selectedSegmentIndex == 2) {
-#ifndef AF_APP_EXTENSIONS
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select Period Unit"
-                                                                 delegate:self
-                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button title")
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:NSLocalizedString(@"Days", @"Title of Days segmented control"), NSLocalizedString(@"Weeks", @"Title of Weeks segmented control"), NSLocalizedString(@"Months", @"Title of Months segmented control"), NSLocalizedString(@"Years", @"Title of Years segmented control"), nil];
-        UIViewController *viewController = [[[UIApplication sharedApplication] windows].firstObject rootViewController];
-        if ([viewController isKindOfClass:[UITabBarController class]]) {
-            [actionSheet showFromTabBar:[(UITabBarController *)viewController tabBar]];
-        } else {
-            [actionSheet showInView:viewController.view];
-        }
-        self.periodActionSheet = actionSheet;
-#endif
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Select Period Unit", @"Stats Segmented Control Action Sheet on small screens")
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeInsights : 1;
+        }];
+        UIAlertAction *daysAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Days", @"Title of Days segmented control") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            self.statsPeriodType = StatsPeriodTypeDays;
+            self.previouslySelectedStatsPeriodType = StatsPeriodTypeDays;
+            [self showAbbreviatedSegments];
+        }];
+        UIAlertAction *weeksAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Weeks", @"Title of Weeks segmented control") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            self.statsPeriodType = StatsPeriodTypeWeeks;
+            self.previouslySelectedStatsPeriodType = StatsPeriodTypeWeeks;
+            [self showAbbreviatedSegments];
+        }];
+        UIAlertAction *monthsAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Months", @"Title of Months segmented control") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            self.statsPeriodType = StatsPeriodTypeMonths;
+            self.previouslySelectedStatsPeriodType = StatsPeriodTypeMonths;
+            [self showAbbreviatedSegments];
+        }];
+        UIAlertAction *yearsAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Years", @"Title of Years segmented control") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            self.statsPeriodType = StatsPeriodTypeYears;
+            self.previouslySelectedStatsPeriodType = StatsPeriodTypeYears;
+            [self showAbbreviatedSegments];
+        }];
+        
+        [alertController addAction:cancelAction];
+        [alertController addAction:daysAction];
+        [alertController addAction:weeksAction];
+        [alertController addAction:monthsAction];
+        [alertController addAction:yearsAction];
+
+        self.periodActionSheet = alertController;
+        [self presentViewController:alertController animated:YES completion:nil];
     } else {
         self.insightsContainerView.hidden = YES;
         self.insightsProgressView.hidden = YES;
@@ -209,23 +223,6 @@
                              progressView.progress = 0.0f;
                          }];
     });
-}
-
-
-#pragma mark - UIActionSheetDelegate methods
-
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        // If last selected was Insights, reselect it otherwise force segment 1
-        self.statsTypeSegmentControl.selectedSegmentIndex = self.statsPeriodType == StatsPeriodTypeInsights ? StatsPeriodTypeInsights : 1;
-        return;
-    }
-    
-    self.statsPeriodType = buttonIndex + 1;
-    self.previouslySelectedStatsPeriodType = self.statsPeriodType;
-    [self showAbbreviatedSegments];
 }
 
 
