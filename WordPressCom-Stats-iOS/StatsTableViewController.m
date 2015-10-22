@@ -96,14 +96,14 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
+    [self retrieveStatsSkipGraph:NO];
+
     [self trackViewControllerAnalytics];
 }
 
