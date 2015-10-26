@@ -58,10 +58,10 @@ static NSInteger const RecommendedYAxisTicks = 2;
     
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    
+    [super traitCollectionDidChange:previousTraitCollection];
+
     [self.collectionView performBatchUpdates:nil completion:nil];
 }
 

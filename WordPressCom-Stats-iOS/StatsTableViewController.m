@@ -96,14 +96,14 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    [self retrieveStatsSkipGraph:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
+    [self retrieveStatsSkipGraph:NO];
+
     [self trackViewControllerAnalytics];
 }
 
@@ -176,13 +176,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 {
     NSString *cellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
-    
-    // Tweak for Storyboards in iOS 8 SDK breaking constraints in iOS 7
-    // Taken from: http://stackoverflow.com/questions/19132908/auto-layout-constraints-issue-on-ios7-in-uitableviewcell
-    if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 && !CGRectEqualToRect(cell.bounds, cell.contentView.frame)) {
-        cell.contentView.frame = cell.bounds;
-        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    }
     
     [self configureCell:cell forIndexPath:indexPath];
     
