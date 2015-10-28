@@ -213,24 +213,26 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [self.tableView reloadData];
     }
     
+    __weak __typeof(self) weakSelf = self;
+    
     StatsGroupCompletion completion = ^(StatsGroup *group, NSError *error) {
 #ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 #endif
-        [self.refreshControl endRefreshing];
+        [weakSelf.refreshControl endRefreshing];
 
-        self.statsGroup = group;
-        self.statsGroup.offsetRows = 1;
+        weakSelf.statsGroup = group;
+        weakSelf.statsGroup.offsetRows = 1;
         
         NSMutableArray *indexPaths = [NSMutableArray new];
-        for (NSInteger row = 1; row < (NSInteger)(1 + self.statsGroup.items.count); ++row) {
+        for (NSInteger row = 1; row < (NSInteger)(1 + weakSelf.statsGroup.items.count); ++row) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
         }
         
-        [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-        [self.tableView endUpdates];
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+        [weakSelf.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [weakSelf.tableView endUpdates];
     };
     
     if (self.statsSection == StatsSectionPosts) {

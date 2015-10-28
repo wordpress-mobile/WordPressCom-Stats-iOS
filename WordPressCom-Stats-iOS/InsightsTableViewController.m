@@ -1082,145 +1082,147 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         self.refreshControl = nil;
     }
     
+    __weak __typeof(self) weakSelf = self;
+    
     [self.statsService retrieveInsightsStatsWithAllTimeStatsCompletionHandler:^(StatsAllTime *allTime, NSError *error)
      {
          if (allTime) {
-             self.sectionData[@(StatsSectionInsightsAllTime)] = allTime;
+             weakSelf.sectionData[@(StatsSectionInsightsAllTime)] = allTime;
          }
      }
                                                     insightsCompletionHandler:^(StatsInsights *insights, NSError *error)
      {
          if (insights) {
-             self.sectionData[@(StatsSectionInsightsMostPopular)] = insights;
+             weakSelf.sectionData[@(StatsSectionInsightsMostPopular)] = insights;
          }
      }
                                                 todaySummaryCompletionHandler:^(StatsSummary *summary, NSError *error)
      {
          if (summary) {
-             self.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
+             weakSelf.sectionData[@(StatsSectionInsightsTodaysStats)] = summary;
          }
      }
                                            latestPostSummaryCompletionHandler:^(StatsLatestPostSummary *summary, NSError *error)
      {
-         self.sectionData[@(StatsSectionInsightsLatestPostSummary)] = summary;
-         [self.tableView beginUpdates];
+         weakSelf.sectionData[@(StatsSectionInsightsLatestPostSummary)] = summary;
+         [weakSelf.tableView beginUpdates];
          
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionInsightsLatestPostSummary)];
+         NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionInsightsLatestPostSummary)];
          NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
-         [self.tableView endUpdates];
+         [weakSelf.tableView endUpdates];
 
      }                                               commentsAuthorCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
-         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
+         weakSelf.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByAuthor)] = group;
          
-         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
-             [self.tableView beginUpdates];
+         if ([weakSelf.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByAuthor)]) {
+             [weakSelf.tableView beginUpdates];
              
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionComments)];
              NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
              
-             [self.tableView endUpdates];
+             [weakSelf.tableView endUpdates];
          }
      }
                                                commentsPostsCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelector;
-         self.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
+         weakSelf.sectionData[@(StatsSectionComments)][@(StatsSubSectionCommentsByPosts)] = group;
          
-         if ([self.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
-             [self.tableView beginUpdates];
+         if ([weakSelf.selectedSubsections[@(StatsSectionComments)] isEqualToNumber:@(StatsSubSectionCommentsByPosts)]) {
+             [weakSelf.tableView beginUpdates];
              
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionComments)];
+             NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionComments)];
              NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
              
-             [self.tableView endUpdates];
+             [weakSelf.tableView endUpdates];
          }
      }
                                               tagsCategoriesCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
-         self.sectionData[@(StatsSectionTagsCategories)] = group;
+         weakSelf.sectionData[@(StatsSectionTagsCategories)] = group;
          
-         [self.tableView beginUpdates];
+         [weakSelf.tableView beginUpdates];
          
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionTagsCategories)];
+         NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionTagsCategories)];
          NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
-         [self.tableView endUpdates];
+         [weakSelf.tableView endUpdates];
      }
                                              followersDotComCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
-         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
+         weakSelf.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersDotCom)] = group;
          
-         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
-             [self.tableView beginUpdates];
+         if ([weakSelf.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersDotCom)]) {
+             [weakSelf.tableView beginUpdates];
              
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionFollowers)];
              NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
              
-             [self.tableView endUpdates];
+             [weakSelf.tableView endUpdates];
          }
      }
                                               followersEmailCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetWithGroupSelectorAndTotal;
-         self.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
+         weakSelf.sectionData[@(StatsSectionFollowers)][@(StatsSubSectionFollowersEmail)] = group;
          
-         if ([self.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
-             [self.tableView beginUpdates];
+         if ([weakSelf.selectedSubsections[@(StatsSectionFollowers)] isEqualToNumber:@(StatsSubSectionFollowersEmail)]) {
+             [weakSelf.tableView beginUpdates];
              
-             NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionFollowers)];
+             NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionFollowers)];
              NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+             [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
              
-             [self.tableView endUpdates];
+             [weakSelf.tableView endUpdates];
          }
      }
                                                    publicizeCompletionHandler:^(StatsGroup *group, NSError *error)
      {
          group.offsetRows = StatsTableRowDataOffsetStandard;
-         self.sectionData[@(StatsSectionPublicize)] = group;
+         weakSelf.sectionData[@(StatsSectionPublicize)] = group;
          
-         [self.tableView beginUpdates];
+         [weakSelf.tableView beginUpdates];
          
-         NSUInteger sectionNumber = [self.sections indexOfObject:@(StatsSectionPublicize)];
+         NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionPublicize)];
          NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
-         [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
-         [self.tableView endUpdates];
+         [weakSelf.tableView endUpdates];
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
-         if (numberOfFinishedOperations == 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {
-             [self.statsProgressViewDelegate statsViewControllerDidBeginLoadingStats:self];
+         if (numberOfFinishedOperations == 0 && [weakSelf.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]) {
+             [weakSelf.statsProgressViewDelegate statsViewControllerDidBeginLoadingStats:weakSelf];
          }
          
-         if (numberOfFinishedOperations > 0 && [self.statsProgressViewDelegate respondsToSelector:@selector(statsViewController:loadingProgressPercentage:)]) {
+         if (numberOfFinishedOperations > 0 && [weakSelf.statsProgressViewDelegate respondsToSelector:@selector(statsViewController:loadingProgressPercentage:)]) {
              CGFloat percentage = (CGFloat)numberOfFinishedOperations / (CGFloat)totalNumberOfOperations;
-             [self.statsProgressViewDelegate statsViewController:self loadingProgressPercentage:percentage];
+             [weakSelf.statsProgressViewDelegate statsViewController:weakSelf loadingProgressPercentage:percentage];
          }
      }
                                                   andOverallCompletionHandler:^
      {
          // Set the colors to what they should be (previous color for unknown data)
          
-         [self setupRefreshControl];
-         [self.refreshControl endRefreshing];
+         [weakSelf setupRefreshControl];
+         [weakSelf.refreshControl endRefreshing];
          
          
          // FIXME - Do something elegant possibly
-         [self.tableView reloadData];
+         [weakSelf.tableView reloadData];
          
-         if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
-             [self.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:self];
+         if ([weakSelf.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidEndLoadingStats:)]) {
+             [weakSelf.statsProgressViewDelegate statsViewControllerDidEndLoadingStats:weakSelf];
          }
      }];
 }
