@@ -312,6 +312,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         [self.tableView reloadData];
     }
     
+    __weak __typeof(self) weakSelf = self;
+    
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
@@ -319,27 +321,27 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 #ifndef AF_APP_EXTENSIONS
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 #endif
-        [self setupRefreshControl];
-        [self.refreshControl endRefreshing];
+        [weakSelf setupRefreshControl];
+        [weakSelf.refreshControl endRefreshing];
 
-        self.isRefreshing = NO;
+        weakSelf.isRefreshing = NO;
         
         monthsYears.offsetRows = 2;
         averagePerDay.offsetRows = 2;
         recentWeeks.offsetRows = 2;
 
-        self.sectionData[@(StatsSectionPostDetailsGraph)] = visits;
-        self.sectionData[@(StatsSectionPostDetailsMonthsYears)] = monthsYears;
-        self.sectionData[@(StatsSectionPostDetailsAveragePerDay)] = averagePerDay;
-        self.sectionData[@(StatsSectionPostDetailsRecentWeeks)] = recentWeeks;
+        weakSelf.sectionData[@(StatsSectionPostDetailsGraph)] = visits;
+        weakSelf.sectionData[@(StatsSectionPostDetailsMonthsYears)] = monthsYears;
+        weakSelf.sectionData[@(StatsSectionPostDetailsAveragePerDay)] = averagePerDay;
+        weakSelf.sectionData[@(StatsSectionPostDetailsRecentWeeks)] = recentWeeks;
 
-        self.selectedDate = [visits.statsData.lastObject date];
-        [self.tableView reloadData];
+        weakSelf.selectedDate = [visits.statsData.lastObject date];
+        [weakSelf.tableView reloadData];
         
         
-        NSInteger sectionNumber = (NSInteger)[self.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
+        NSInteger sectionNumber = (NSInteger)[weakSelf.sections indexOfObject:@(StatsSectionPostDetailsGraph)];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:sectionNumber];
-        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        [weakSelf.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }];
     
 }
