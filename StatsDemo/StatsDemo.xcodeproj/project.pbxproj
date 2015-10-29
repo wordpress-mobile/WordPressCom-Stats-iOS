@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		824C73F5FB3142F9969C52C6 /* libPods-StatsDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05826AF01C0545FBBAB74708 /* libPods-StatsDemo.a */; };
 		932942FC1A30B1A500E88016 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		934095291BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; settings = {ASSET_TAGS = (); }; };
-		9340952A1BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; settings = {ASSET_TAGS = (); }; };
+		934095291BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; };
+		9340952A1BAAE335000788FF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934095281BAAE335000788FF /* Launch Screen.storyboard */; };
 		939A82F01A65A30F0041B68A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B682E0194F95AD00EBF6DF /* main.m */; };
 		939A82F11A65A30F0041B68A /* WPSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B682ED194F95AD00EBF6DF /* WPSViewController.m */; };
 		939A82F21A65A30F0041B68A /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 932942FB1A30B1A500E88016 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
