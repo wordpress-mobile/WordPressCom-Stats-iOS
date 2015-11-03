@@ -942,7 +942,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
-    label.textColor = [WPStyleGuide greyDarken10];
+    label.textColor = [WPStyleGuide darkGrey];
 
     cell.bottomBorderEnabled = NO;
 }
@@ -961,9 +961,11 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
+    label1.textColor = [WPStyleGuide grey];
     
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+    label2.textColor = [WPStyleGuide grey];
 }
 
 
