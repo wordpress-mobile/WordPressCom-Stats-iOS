@@ -81,8 +81,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-    NSBundle *bundle = [NSBundle bundleWithPath:path];
+    NSBundle *bundle = [self bundle];
     
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
@@ -1433,13 +1432,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)postsImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *postsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        postsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-text_normal" ofType:@"png"]];
-    }
+    UIImage *postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return postsImage;
 }
@@ -1447,13 +1440,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)viewsImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *viewsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        viewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-eye_normal" ofType:@"png"]];
-    }
+    UIImage *viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return viewsImage;
 }
@@ -1461,13 +1448,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)visitorsImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *visitorsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        visitorsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-user_normal" ofType:@"png"]];
-    }
+    UIImage *visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return visitorsImage;
 }
@@ -1475,13 +1456,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)bestViewsImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *bestViewsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        bestViewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-trophy_normal" ofType:@"png"]];
-    }
+    UIImage *bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return bestViewsImage;
 }
@@ -1489,13 +1464,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)likesImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *likesImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        likesImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-star_normal" ofType:@"png"]];
-    }
+    UIImage *likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return likesImage;
 }
@@ -1503,13 +1472,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIImage *)commentsImage
 {
     NSBundle *bundle = [self bundle];
-    UIImage *commentsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        commentsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-comment_normal" ofType:@"png"]];
-    }
+    UIImage *commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
     
     return commentsImage;
 }
