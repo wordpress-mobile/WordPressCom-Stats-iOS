@@ -847,6 +847,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
                 cell.valueLabel.text = latestPostSummary.likes ?: @"-";
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             }
                 
@@ -855,6 +856,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 cell.categoryIconLabel.text = @"";
                 cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
                 cell.valueLabel.text = latestPostSummary.comments ?: @"-";
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             }
                 
