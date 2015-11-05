@@ -745,13 +745,6 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POSTS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qTg-V3-QrG">
-                                                    <rect key="frame" x="58" y="22" width="31" height="14"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PUF-YG-InB" userLabel="Divider View">
                                                     <rect key="frame" x="145" y="16" width="1" height="67"/>
                                                     <animations/>
@@ -760,20 +753,36 @@
                                                         <constraint firstAttribute="width" constant="1" id="vqB-sa-51J"/>
                                                     </constraints>
                                                 </view>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pJr-fc-ma1">
+                                                    <rect key="frame" x="50" y="22" width="47" height="16"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-eye-16x16" translatesAutoresizingMaskIntoConstraints="NO" id="by1-R6-sAT">
+                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                                                            <animations/>
+                                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POSTS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qTg-V3-QrG">
+                                                            <rect key="frame" x="16" y="0.0" width="31" height="16"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <animations/>
+                                                </stackView>
                                             </subviews>
                                             <animations/>
                                             <constraints>
                                                 <constraint firstItem="PUF-YG-InB" firstAttribute="top" secondItem="cPN-KE-hdr" secondAttribute="top" constant="16" id="0jy-Qu-MCM"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="kyf-cc-9Pz" secondAttribute="trailing" constant="8" id="7ZE-R0-YlR"/>
-                                                <constraint firstItem="qTg-V3-QrG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cPN-KE-hdr" secondAttribute="leading" constant="4" id="Kbw-tA-dub"/>
+                                                <constraint firstItem="pJr-fc-ma1" firstAttribute="centerX" secondItem="cPN-KE-hdr" secondAttribute="centerX" id="GJ7-Ls-MDz"/>
                                                 <constraint firstAttribute="centerX" secondItem="kyf-cc-9Pz" secondAttribute="centerX" id="OcQ-Hd-fKy"/>
-                                                <constraint firstAttribute="centerX" secondItem="qTg-V3-QrG" secondAttribute="centerX" id="OtF-0g-um5"/>
-                                                <constraint firstItem="kyf-cc-9Pz" firstAttribute="top" secondItem="qTg-V3-QrG" secondAttribute="baseline" constant="4" id="QO6-x7-uck"/>
                                                 <constraint firstAttribute="trailing" secondItem="PUF-YG-InB" secondAttribute="trailing" id="Snq-2U-n55"/>
                                                 <constraint firstAttribute="bottom" secondItem="PUF-YG-InB" secondAttribute="bottom" constant="16" id="UNd-Dn-DGe"/>
                                                 <constraint firstAttribute="centerY" secondItem="kyf-cc-9Pz" secondAttribute="centerY" constant="-5" id="WPq-Kq-LbB"/>
                                                 <constraint firstItem="kyf-cc-9Pz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cPN-KE-hdr" secondAttribute="leading" constant="8" id="bJ0-aX-Ax5"/>
-                                                <constraint firstItem="PUF-YG-InB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="qTg-V3-QrG" secondAttribute="trailing" constant="4" id="exk-OG-SRH"/>
+                                                <constraint firstItem="pJr-fc-ma1" firstAttribute="centerY" secondItem="cPN-KE-hdr" secondAttribute="centerY" constant="-20" id="mPp-FV-8ro"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -2230,6 +2239,9 @@
             <point key="canvasLocation" x="930" y="98"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon-eye-16x16" width="16" height="16"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="NYN-4M-cXh"/>
     </inferredMetricsTieBreakers>

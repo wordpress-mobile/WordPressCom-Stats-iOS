@@ -1431,48 +1431,42 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (UIImage *)postsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *postsImage = [UIImage imageNamed:@"icon-text_normal.png"];
     
     return postsImage;
 }
 
 - (UIImage *)viewsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *viewsImage = [UIImage imageNamed:@"icon-eye-16x16.png"];
     
     return viewsImage;
 }
 
 - (UIImage *)visitorsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *visitorsImage = [UIImage imageNamed:@"icon-user_normal.png"];
     
     return visitorsImage;
 }
 
 - (UIImage *)bestViewsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png"];
     
     return bestViewsImage;
 }
 
 - (UIImage *)likesImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *likesImage = [UIImage imageNamed:@"icon-star_normal.png"];
     
     return likesImage;
 }
 
 - (UIImage *)commentsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
+    UIImage *commentsImage = [UIImage imageNamed:@"icon-comment_normal.png"];
     
     return commentsImage;
 }
