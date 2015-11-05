@@ -281,12 +281,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
+    if ([identifier isEqualToString:StatsTableViewAllCellIdentifier] ||
         (statsSection == StatsSectionInsightsTodaysStats) ||
         (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+    } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
@@ -394,6 +395,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         }
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
         [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
+        StatsLatestPostSummary *summary = [self statsDataForStatsSection:statsSection];
+        if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+            WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+            [self.statsDelegate statsViewController:statsViewController openURL:summary.postURL];
+        } else {
+#ifndef AF_APP_EXTENSIONS
+            [[UIApplication sharedApplication] openURL:summary.postURL];
+#endif
+        }
     }
 }
 
