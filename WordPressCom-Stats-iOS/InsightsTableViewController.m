@@ -406,14 +406,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     id data = [self statsDataForStatsSection:statsSection];
 
-    if ([identifier isEqualToString:@"PostDetails"]) {
-        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
-        
-        // Only fire the segue for the posts section or authors if a nested row
-        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
-    } else if ([identifier isEqualToString:SegueLatestPostDetails] ||
-               [identifier isEqualToString:SegueLatestPostDetailsiPad]) {
+    if ([identifier isEqualToString:SegueLatestPostDetails]) {
+        return statsSection == StatsSectionInsightsLatestPostSummary && indexPath.row == 2 && !!data;
+    } else if ([identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         return statsSection == StatsSectionInsightsLatestPostSummary && !!data;
     }
     
@@ -439,17 +434,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
-    } else if ([segue.identifier isEqualToString:@"PostDetails"]) {
-        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
-        
-        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
-        
-        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
-        postVC.postID = statsItem.itemID;
-        postVC.postTitle = statsItem.label;
-        postVC.statsService = self.statsService;
-        postVC.statsDelegate = self.statsDelegate;
     } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
                [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
