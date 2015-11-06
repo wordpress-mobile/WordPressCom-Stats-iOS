@@ -361,9 +361,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
-#endif
                     }
                     break;
                 }
