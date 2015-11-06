@@ -353,7 +353,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.statsService.siteId];
         } else {
 #ifndef AF_APP_EXTENSIONS
-            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.statsService.siteId]];
+            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/day/%@", self.statsService.siteId]];
             [[UIApplication sharedApplication] openURL:webURL];
 #endif
         }
