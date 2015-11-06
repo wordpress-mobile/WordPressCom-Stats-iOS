@@ -1,6 +1,5 @@
 #import "WPStatsServiceRemote.h"
-#import "NSObject+SafeExpectations.h"
-#import "NSDictionary+SafeExpectations.h"
+#import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
 #import <AFNetworking/AFNetworking.h>
 #import "StatsItem.h"
 #import "StatsItemAction.h"
