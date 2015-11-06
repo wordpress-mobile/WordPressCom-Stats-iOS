@@ -422,6 +422,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     
     iconLabel.text = @"";
     textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+    textLabel.textColor = [WPStyleGuide darkGrey];
     valueLabel.text = summary.views;
 }
 

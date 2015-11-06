@@ -812,6 +812,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
     } else if ([cellIdentifier isEqualToString:StatsTableViewAllCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        label.textColor = [WPStyleGuide wordPressBlue];
         
     } else if ([cellIdentifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];

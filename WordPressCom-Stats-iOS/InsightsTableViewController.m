@@ -639,6 +639,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     } else if ([identifier isEqualToString:StatsTableViewAllCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        label.textColor = [WPStyleGuide wordPressBlue];
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
