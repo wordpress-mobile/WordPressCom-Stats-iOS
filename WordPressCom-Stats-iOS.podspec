@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'UI' do |sp|
     sp.source_files = 'WordPressCom-Stats-iOS/UI'
-	sp.dependency 'WordPressCom-Stats-iOS/Services'
+    sp.dependency 'WordPressCom-Stats-iOS/Services'
     sp.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/**/*.storyboard', 'WordPressCom-Stats-iOS/**/*.xib', 'WordPressCom-Stats-iOS/**/*.otf', 'WordPressCom-Stats-iOS/**/*.png'] }
   end
   
