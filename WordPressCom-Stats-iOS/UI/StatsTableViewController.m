@@ -336,9 +336,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-#ifndef AF_APP_EXTENSIONS
                         [[UIApplication sharedApplication] openURL:action.url];
-#endif
                     }
                     break;
                 }
@@ -352,10 +350,8 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
             [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.statsService.siteId];
         } else {
-#ifndef AF_APP_EXTENSIONS
             NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/%@", self.statsService.siteId]];
             [[UIApplication sharedApplication] openURL:webURL];
-#endif
         }
     }
 }
@@ -491,9 +487,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
-#ifndef AF_APP_EXTENSIONS
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-#endif
     
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
@@ -640,9 +634,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
      }
                    andOverallCompletionHandler:^
      {
-#ifndef AF_APP_EXTENSIONS
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-#endif
          
          [weakSelf setupRefreshControl];
          [weakSelf.refreshControl endRefreshing];
