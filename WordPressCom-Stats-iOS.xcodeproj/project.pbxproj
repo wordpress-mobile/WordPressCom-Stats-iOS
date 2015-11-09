@@ -251,7 +251,7 @@
 		93E1CECB1BA847EC004E1199 /* StatsLatestPostSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsLatestPostSummary.h; path = Services/StatsLatestPostSummary.h; sourceTree = "<group>"; };
 		93E1CECC1BA847EC004E1199 /* StatsLatestPostSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsLatestPostSummary.m; path = Services/StatsLatestPostSummary.m; sourceTree = "<group>"; };
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
-		93E8B4631BED30FE0072A63C /* StatsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsSection.h; path = UI/StatsSection.h; sourceTree = "<group>"; };
+		93E8B4631BED30FE0072A63C /* StatsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsSection.h; path = Services/StatsSection.h; sourceTree = "<group>"; };
 		93E8B4641BED31150072A63C /* InsightsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsTableViewController.h; path = UI/InsightsTableViewController.h; sourceTree = "<group>"; };
 		93E8B4651BED31150072A63C /* InsightsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsTableViewController.m; path = UI/InsightsTableViewController.m; sourceTree = "<group>"; };
 		93FABB7C1A115D90000C15ED /* SiteStats.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SiteStats.storyboard; path = UI/SiteStats.storyboard; sourceTree = "<group>"; };
@@ -458,6 +458,7 @@
 		9396CFD819215346006A66D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				93E8B4631BED30FE0072A63C /* StatsSection.h */,
 				938A61831B0CAC23007C5EE7 /* StatsAllTime.h */,
 				938A61841B0CAC23007C5EE7 /* StatsAllTime.m */,
 				93A379E219FEAB8100415023 /* StatsGroup.h */,
@@ -503,7 +504,6 @@
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 				936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */,
 				936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */,
-				93E8B4631BED30FE0072A63C /* StatsSection.h */,
 				93FABB811A126DC5000C15ED /* StatsTableViewController.h */,
 				93FABB821A126DC5000C15ED /* StatsTableViewController.m */,
 				9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */,
