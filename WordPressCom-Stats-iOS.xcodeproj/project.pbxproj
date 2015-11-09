@@ -594,6 +594,7 @@
 				9396CFBC1921096B006A66D7 /* Frameworks */,
 				9396CFBD1921096B006A66D7 /* Resources */,
 				213F8522C88B425AACFF737B /* Copy Pods Resources */,
+				06E0D2B115768AB688784DAC /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -667,6 +668,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		06E0D2B115768AB688784DAC /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		0AD6C07F827A4A27903049FA /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
