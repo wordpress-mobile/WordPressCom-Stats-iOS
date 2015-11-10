@@ -788,7 +788,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         [self configurePeriodHeaderCell:cell];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
-        [self configureSectionGraphSelectableCell:cell forRow:indexPath.row];
+        [self configureSectionGraphSelectableCell:(StatsSelectableTableViewCell *)cell forRow:indexPath.row];
         
     } else if ([cellIdentifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
@@ -879,45 +879,37 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 }
 
 
-- (void)configureSectionGraphSelectableCell:(UITableViewCell *)cell forRow:(NSInteger)row
+- (void)configureSectionGraphSelectableCell:(StatsSelectableTableViewCell *)cell forRow:(NSInteger)row
 {
-    UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
-    UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
-    UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
-
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
     StatsSummary *summary = visits.statsDataByDate[self.selectedDate];
 
     switch (row) {
         case 1: // Views
         {
-            iconLabel.text = @"";
-            textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            valueLabel.text = summary.views;
+            cell.cellType = StatsSelectableTableViewCellTypeViews;
+            cell.valueLabel.text = summary.views ?: @"-";
             break;
         }
             
         case 2: // Visitors
         {
-            iconLabel.text = @"";
-            textLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            valueLabel.text = summary.visitors;
+            cell.cellType = StatsSelectableTableViewCellTypeVisitors;
+            cell.valueLabel.text = summary.visitors ?: @"-";
             break;
         }
             
         case 3: // Likes
         {
-            iconLabel.text = @"";
-            textLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            valueLabel.text = summary.likes;
+            cell.cellType = StatsSelectableTableViewCellTypeLikes;
+            cell.valueLabel.text = summary.likes ?: @"-";
             break;
         }
             
         case 4: // Comments
         {
-            iconLabel.text = @"";
-            textLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-            valueLabel.text = summary.comments;
+            cell.cellType = StatsSelectableTableViewCellTypeComments;
+            cell.valueLabel.text = summary.comments ?: @"-";
             break;
         }
             

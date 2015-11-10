@@ -811,32 +811,28 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         switch (indexPath.row) {
             case 1: // Views
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeViews;
                 cell.valueLabel.text = todaySummary.views ?: @"-";
                 break;
             }
                 
             case 2: // Visitors
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeVisitors;
                 cell.valueLabel.text = todaySummary.visitors ?: @"-";
                 break;
             }
                 
             case 3: // Likes
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeLikes;
                 cell.valueLabel.text = todaySummary.likes ?: @"-";
                 break;
             }
                 
             case 4: // Comments
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeComments;
                 cell.valueLabel.text = todaySummary.comments ?: @"-";
                 break;
             }
@@ -849,24 +845,21 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         switch (indexPath.row) {
             case 2: // Views
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeViews;
                 cell.valueLabel.text = latestPostSummary.views ?: @"-";
                 break;
             }
                 
             case 3: // Likes
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeLikes;
                 cell.valueLabel.text = latestPostSummary.likes ?: @"-";
                 break;
             }
                 
             case 4: // Comments
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeComments;
                 cell.valueLabel.text = latestPostSummary.comments ?: @"-";
                 break;
             }
