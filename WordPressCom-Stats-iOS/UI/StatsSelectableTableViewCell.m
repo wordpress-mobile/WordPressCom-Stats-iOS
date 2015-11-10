@@ -1,5 +1,5 @@
 #import "StatsSelectableTableViewCell.h"
-#import <WordPress-iOS-Shared/UIImage+Util.h>
+#import <WordPressShared/UIImage+Util.h>
 #import "WPStyleGuide+Stats.h"
 #import "StatsBorderedCellBackgroundView.h"
 
