@@ -35,10 +35,10 @@ static NSString *const StatsTwoColumnCellCategory = @"";
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
         self.rightEdgeConstraint.constant = 8.0f;
+        self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
         
         if (self.expandable == NO) {
             self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            self.leftLabel.textColor = [WPStyleGuide wordPressBlue];
             self.rightEdgeConstraint.constant = -2.0f;
         } else {
             self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8.0f, 13.0f)];
