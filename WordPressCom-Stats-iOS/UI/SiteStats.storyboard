@@ -1393,56 +1393,6 @@
                                                 <constraint firstAttribute="centerY" secondItem="vE2-2f-R5G" secondAttribute="centerY" constant="-5" id="aUB-WG-IX7"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVz-ur-nje" userLabel="Best Views">
-                                            <rect key="frame" x="300" y="92" width="292" height="92"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3,485" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="KsA-er-QuV">
-                                                    <rect key="frame" x="114" y="34" width="64" height="35"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="25"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJk-oW-O3M">
-                                                    <rect key="frame" x="98" y="18" width="97" height="16"/>
-                                                    <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-comment-16x16.png" translatesAutoresizingMaskIntoConstraints="NO" id="Leq-c5-nv9">
-                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
-                                                            <animations/>
-                                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEST VIEWS EVER" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="81" translatesAutoresizingMaskIntoConstraints="NO" id="TpN-dY-IW4">
-                                                            <rect key="frame" x="16" y="0.0" width="81" height="16"/>
-                                                            <animations/>
-                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <animations/>
-                                                </stackView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APRIL 4, 2015" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Upc-GK-XKb">
-                                                    <rect key="frame" x="114" y="70" width="63" height="14"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <animations/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="Upc-GK-XKb" firstAttribute="top" secondItem="KsA-er-QuV" secondAttribute="bottom" constant="1" id="1qh-Zc-CWA"/>
-                                                <constraint firstAttribute="height" constant="92" id="Awf-XC-GF2"/>
-                                                <constraint firstAttribute="centerX" secondItem="KsA-er-QuV" secondAttribute="centerX" id="FZh-B8-qte"/>
-                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VVz-ur-nje" secondAttribute="leading" constant="4" id="iPN-fK-w9G"/>
-                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="centerX" secondItem="VVz-ur-nje" secondAttribute="centerX" id="neU-Ia-5cB"/>
-                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="centerY" secondItem="VVz-ur-nje" secondAttribute="centerY" constant="-20" id="r8V-Vr-1Px"/>
-                                                <constraint firstAttribute="centerX" secondItem="Upc-GK-XKb" secondAttribute="centerX" id="rVl-tp-XBT"/>
-                                                <constraint firstAttribute="centerY" secondItem="KsA-er-QuV" secondAttribute="centerY" constant="-5" id="uxt-qC-oKT"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="LJk-oW-O3M" secondAttribute="trailing" constant="4" id="xfV-Wa-7jn"/>
-                                            </constraints>
-                                        </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4wd-n6-Mh0" userLabel="Visitors">
                                             <rect key="frame" x="8" y="92" width="292" height="92"/>
                                             <subviews>
@@ -1534,6 +1484,56 @@
                                                 <constraint firstAttribute="centerY" secondItem="ubr-tF-ZJH" secondAttribute="centerY" constant="-5" id="Wqa-gi-zUw"/>
                                                 <constraint firstItem="sRg-BN-364" firstAttribute="centerX" secondItem="MiR-uA-7zk" secondAttribute="centerX" id="h6g-72-N51"/>
                                                 <constraint firstAttribute="centerX" secondItem="ubr-tF-ZJH" secondAttribute="centerX" id="wBA-oZ-qcD"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVz-ur-nje" userLabel="Best Views">
+                                            <rect key="frame" x="300" y="92" width="292" height="92"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3,485" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="KsA-er-QuV">
+                                                    <rect key="frame" x="114" y="34" width="64" height="35"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="25"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJk-oW-O3M">
+                                                    <rect key="frame" x="98" y="18" width="97" height="16"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-comment-16x16.png" translatesAutoresizingMaskIntoConstraints="NO" id="Leq-c5-nv9">
+                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                                                            <animations/>
+                                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEST VIEWS EVER" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="81" translatesAutoresizingMaskIntoConstraints="NO" id="TpN-dY-IW4">
+                                                            <rect key="frame" x="16" y="0.0" width="81" height="16"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <animations/>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APRIL 4, 2015" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Upc-GK-XKb">
+                                                    <rect key="frame" x="114" y="70" width="63" height="14"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="Upc-GK-XKb" firstAttribute="top" secondItem="KsA-er-QuV" secondAttribute="bottom" constant="1" id="1qh-Zc-CWA"/>
+                                                <constraint firstAttribute="height" constant="92" id="Awf-XC-GF2"/>
+                                                <constraint firstAttribute="centerX" secondItem="KsA-er-QuV" secondAttribute="centerX" id="FZh-B8-qte"/>
+                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VVz-ur-nje" secondAttribute="leading" constant="4" id="iPN-fK-w9G"/>
+                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="centerX" secondItem="VVz-ur-nje" secondAttribute="centerX" id="neU-Ia-5cB"/>
+                                                <constraint firstItem="LJk-oW-O3M" firstAttribute="centerY" secondItem="VVz-ur-nje" secondAttribute="centerY" constant="-20" id="r8V-Vr-1Px"/>
+                                                <constraint firstAttribute="centerX" secondItem="Upc-GK-XKb" secondAttribute="centerX" id="rVl-tp-XBT"/>
+                                                <constraint firstAttribute="centerY" secondItem="KsA-er-QuV" secondAttribute="centerY" constant="-5" id="uxt-qC-oKT"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="LJk-oW-O3M" secondAttribute="trailing" constant="4" id="xfV-Wa-7jn"/>
                                             </constraints>
                                         </view>
                                     </subviews>
