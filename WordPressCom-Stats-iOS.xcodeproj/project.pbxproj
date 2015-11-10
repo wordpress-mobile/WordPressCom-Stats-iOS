@@ -38,7 +38,6 @@
 		9340952D1BAC7A09000788FF /* UIViewController+SizeClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9340952C1BAC7A09000788FF /* UIViewController+SizeClass.m */; };
 		9340980D1A5C83A00005DF06 /* StatsEphemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 9340980C1A5C83A00005DF06 /* StatsEphemory.m */; };
 		9340980F1A5D75AC0005DF06 /* StatsEphemoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */; };
-		93554C7D1B03D18700B49657 /* InsightsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93554C7C1B03D18700B49657 /* InsightsTableViewController.m */; };
 		9358D15B19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */; };
 		93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */ = {isa = PBXBuildFile; fileRef = 93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */; };
 		9367D9CF1A6D9D5A0033911A /* StatsDateUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 9367D9CE1A6D9D5A0033911A /* StatsDateUtilities.m */; };
@@ -76,6 +75,7 @@
 		93C3D5681B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json in Resources */ = {isa = PBXBuildFile; fileRef = 93C3D5671B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json */; };
 		93E1CECD1BA847EC004E1199 /* StatsLatestPostSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E1CECC1BA847EC004E1199 /* StatsLatestPostSummary.m */; };
 		93E3679D1922B751000FB32A /* stats-batch.json in Resources */ = {isa = PBXBuildFile; fileRef = 93E3679C1922B751000FB32A /* stats-batch.json */; };
+		93E8B4661BED31150072A63C /* InsightsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E8B4651BED31150072A63C /* InsightsTableViewController.m */; };
 		93FABB831A126DC5000C15ED /* StatsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FABB821A126DC5000C15ED /* StatsTableViewController.m */; };
 		93FE88721B05307D0096F187 /* StatsInsights.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FE88711B05307D0096F187 /* StatsInsights.m */; };
 		FD52A974AEBF4ED186A20C94 /* libPods-WordPressCom-Stats-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */; };
@@ -109,12 +109,32 @@
 		75E10D2A02191F399746881E /* Pods-WordPressCom-Stats-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WordPressCom-Stats-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		90A77DD10827C87146A87506 /* Pods-WordPressCom-Stats-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPressCom-Stats-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		93035C391AE97B6300F6FF5C /* WPFontManager+Stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WPFontManager+Stats.h"; sourceTree = "<group>"; };
-		93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WPFontManager+Stats.m"; sourceTree = "<group>"; };
-		930C2EE6195DB00600C6964D /* WPStatsCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsCollectionViewFlowLayout.h; sourceTree = "<group>"; };
-		930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsCollectionViewFlowLayout.m; sourceTree = "<group>"; };
-		930C2EE9195DB4D300C6964D /* WPStatsGraphBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphBackgroundView.h; sourceTree = "<group>"; };
-		930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphBackgroundView.m; sourceTree = "<group>"; };
+		930001691BF2344A009275DB /* icon-comment-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-comment-16x16.png"; path = "Resources/icon-comment-16x16.png"; sourceTree = "<group>"; };
+		9300016A1BF2344A009275DB /* icon-comment-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-comment-16x16@2x.png"; path = "Resources/icon-comment-16x16@2x.png"; sourceTree = "<group>"; };
+		9300016B1BF2344A009275DB /* icon-comment-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-comment-25x25.png"; path = "Resources/icon-comment-25x25.png"; sourceTree = "<group>"; };
+		9300016C1BF2344A009275DB /* icon-comment-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-comment-25x25@2x.png"; path = "Resources/icon-comment-25x25@2x.png"; sourceTree = "<group>"; };
+		9300016D1BF2344A009275DB /* icon-eye-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-eye-16x16.png"; path = "Resources/icon-eye-16x16.png"; sourceTree = "<group>"; };
+		9300016E1BF2344A009275DB /* icon-eye-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-eye-16x16@2x.png"; path = "Resources/icon-eye-16x16@2x.png"; sourceTree = "<group>"; };
+		9300016F1BF2344A009275DB /* icon-eye-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-eye-25x25.png"; path = "Resources/icon-eye-25x25.png"; sourceTree = "<group>"; };
+		930001701BF2344A009275DB /* icon-eye-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-eye-25x25@2x.png"; path = "Resources/icon-eye-25x25@2x.png"; sourceTree = "<group>"; };
+		930001711BF2344A009275DB /* icon-star-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-star-16x16.png"; path = "Resources/icon-star-16x16.png"; sourceTree = "<group>"; };
+		930001721BF2344A009275DB /* icon-star-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-star-16x16@2x.png"; path = "Resources/icon-star-16x16@2x.png"; sourceTree = "<group>"; };
+		930001731BF2344A009275DB /* icon-star-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-star-25x25.png"; path = "Resources/icon-star-25x25.png"; sourceTree = "<group>"; };
+		930001741BF2344A009275DB /* icon-star-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-star-25x25@2x.png"; path = "Resources/icon-star-25x25@2x.png"; sourceTree = "<group>"; };
+		930001751BF2344A009275DB /* icon-text-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-text-16x16.png"; path = "Resources/icon-text-16x16.png"; sourceTree = "<group>"; };
+		930001761BF2344A009275DB /* icon-text-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-text-16x16@2x.png"; path = "Resources/icon-text-16x16@2x.png"; sourceTree = "<group>"; };
+		930001771BF2344A009275DB /* icon-trophy-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-trophy-16x16.png"; path = "Resources/icon-trophy-16x16.png"; sourceTree = "<group>"; };
+		930001781BF2344A009275DB /* icon-trophy-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-trophy-16x16@2x.png"; path = "Resources/icon-trophy-16x16@2x.png"; sourceTree = "<group>"; };
+		930001791BF2344A009275DB /* icon-user-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-16x16.png"; path = "Resources/icon-user-16x16.png"; sourceTree = "<group>"; };
+		9300017A1BF2344A009275DB /* icon-user-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-16x16@2x.png"; path = "Resources/icon-user-16x16@2x.png"; sourceTree = "<group>"; };
+		9300017B1BF2344A009275DB /* icon-user-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-25x25.png"; path = "Resources/icon-user-25x25.png"; sourceTree = "<group>"; };
+		9300017C1BF2344A009275DB /* icon-user-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-25x25@2x.png"; path = "Resources/icon-user-25x25@2x.png"; sourceTree = "<group>"; };
+		93035C391AE97B6300F6FF5C /* WPFontManager+Stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WPFontManager+Stats.h"; path = "UI/WPFontManager+Stats.h"; sourceTree = "<group>"; };
+		93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WPFontManager+Stats.m"; path = "UI/WPFontManager+Stats.m"; sourceTree = "<group>"; };
+		930C2EE6195DB00600C6964D /* WPStatsCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsCollectionViewFlowLayout.h; path = UI/WPStatsCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsCollectionViewFlowLayout.m; path = UI/WPStatsCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		930C2EE9195DB4D300C6964D /* WPStatsGraphBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsGraphBackgroundView.h; path = UI/WPStatsGraphBackgroundView.h; sourceTree = "<group>"; };
+		930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphBackgroundView.m; path = UI/WPStatsGraphBackgroundView.m; sourceTree = "<group>"; };
 		930F799B1AE72B4C00E27CBF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		930F799C1AE72B4C00E27CBF /* WordPressCom-Stats-iOS.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "WordPressCom-Stats-iOS.podspec"; sourceTree = "<group>"; };
 		931193E71A0BAA660005BED2 /* stats-v1.1-clicks-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-clicks-day.json"; sourceTree = "<group>"; };
@@ -123,23 +143,23 @@
 		931193ED1A0C0D050005BED2 /* stats-v1.1-top-posts-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day-large.json"; sourceTree = "<group>"; };
 		931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-referrers-day-large.json"; sourceTree = "<group>"; };
 		931193F11A0C18C70005BED2 /* stats-v1.1-clicks-month-large.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-clicks-month-large.json"; sourceTree = "<group>"; };
-		9311AC241B581E5200BBC877 /* InsightsAllTimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsAllTimeTableViewCell.h; sourceTree = "<group>"; };
-		9311AC251B581E5200BBC877 /* InsightsAllTimeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsAllTimeTableViewCell.m; sourceTree = "<group>"; };
-		9311AC281B5845FE00BBC877 /* InsightsMostPopularTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsMostPopularTableViewCell.h; sourceTree = "<group>"; };
-		9311AC291B5845FE00BBC877 /* InsightsMostPopularTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsMostPopularTableViewCell.m; sourceTree = "<group>"; };
-		9311AC2B1B58462C00BBC877 /* InsightsSectionHeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsSectionHeaderTableViewCell.h; sourceTree = "<group>"; };
-		9311AC2C1B58462C00BBC877 /* InsightsSectionHeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsSectionHeaderTableViewCell.m; sourceTree = "<group>"; };
-		9311AC2E1B58466900BBC877 /* InsightsTodaysStatsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsTodaysStatsTableViewCell.h; sourceTree = "<group>"; };
-		9311AC2F1B58466900BBC877 /* InsightsTodaysStatsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsTodaysStatsTableViewCell.m; sourceTree = "<group>"; };
-		93274AE21A07C7EA0017238F /* StatsVisits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsVisits.h; sourceTree = "<group>"; };
-		93274AE31A07C7EA0017238F /* StatsVisits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsVisits.m; sourceTree = "<group>"; };
+		9311AC241B581E5200BBC877 /* InsightsAllTimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsAllTimeTableViewCell.h; path = UI/InsightsAllTimeTableViewCell.h; sourceTree = "<group>"; };
+		9311AC251B581E5200BBC877 /* InsightsAllTimeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsAllTimeTableViewCell.m; path = UI/InsightsAllTimeTableViewCell.m; sourceTree = "<group>"; };
+		9311AC281B5845FE00BBC877 /* InsightsMostPopularTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsMostPopularTableViewCell.h; path = UI/InsightsMostPopularTableViewCell.h; sourceTree = "<group>"; };
+		9311AC291B5845FE00BBC877 /* InsightsMostPopularTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsMostPopularTableViewCell.m; path = UI/InsightsMostPopularTableViewCell.m; sourceTree = "<group>"; };
+		9311AC2B1B58462C00BBC877 /* InsightsSectionHeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsSectionHeaderTableViewCell.h; path = UI/InsightsSectionHeaderTableViewCell.h; sourceTree = "<group>"; };
+		9311AC2C1B58462C00BBC877 /* InsightsSectionHeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsSectionHeaderTableViewCell.m; path = UI/InsightsSectionHeaderTableViewCell.m; sourceTree = "<group>"; };
+		9311AC2E1B58466900BBC877 /* InsightsTodaysStatsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsTodaysStatsTableViewCell.h; path = UI/InsightsTodaysStatsTableViewCell.h; sourceTree = "<group>"; };
+		9311AC2F1B58466900BBC877 /* InsightsTodaysStatsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsTodaysStatsTableViewCell.m; path = UI/InsightsTodaysStatsTableViewCell.m; sourceTree = "<group>"; };
+		93274AE21A07C7EA0017238F /* StatsVisits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsVisits.h; path = Services/StatsVisits.h; sourceTree = "<group>"; };
+		93274AE31A07C7EA0017238F /* StatsVisits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsVisits.m; path = Services/StatsVisits.m; sourceTree = "<group>"; };
 		93274AE51A07CCE40017238F /* stats-v1.1-visits-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-visits-day.json"; sourceTree = "<group>"; };
 		93274AE71A091E840017238F /* stats-v1.1-top-posts-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day.json"; sourceTree = "<group>"; };
 		93274AE91A09B4FA0017238F /* stats-v1.1-referrers-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-referrers-day.json"; sourceTree = "<group>"; };
 		9327FD2B1A4A001100FF3A2E /* StatsItemTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItemTests.m; sourceTree = "<group>"; };
 		9327FD2D1A4A058600FF3A2E /* StatsGroupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsGroupTests.m; sourceTree = "<group>"; };
-		93302C501A1BD77900B49CFC /* WPStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsService.h; sourceTree = "<group>"; };
-		93302C511A1BD78300B49CFC /* WPStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsService.m; sourceTree = "<group>"; };
+		93302C501A1BD77900B49CFC /* WPStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsService.h; path = Services/WPStatsService.h; sourceTree = "<group>"; };
+		93302C511A1BD78300B49CFC /* WPStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsService.m; path = Services/WPStatsService.m; sourceTree = "<group>"; };
 		933FF21B1A406E0400336167 /* stats-v1.1-video-plays-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-video-plays-day.json"; sourceTree = "<group>"; };
 		933FF21D1A406E1400336167 /* stats-v1.1-video-plays-day-no-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-video-plays-day-no-data.json"; sourceTree = "<group>"; };
 		933FF21F1A40736D00336167 /* stats-v1.1-tags-categories-views-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-tags-categories-views-day.json"; sourceTree = "<group>"; };
@@ -147,72 +167,49 @@
 		933FF2231A4085C300336167 /* stats-v1.1-followers-email-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-followers-email-day.json"; sourceTree = "<group>"; };
 		933FF2251A40C7FD00336167 /* stats-v1.1-comments-day.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-comments-day.json"; sourceTree = "<group>"; };
 		933FF2271A41C64300336167 /* WPStatsServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceTests.m; sourceTree = "<group>"; };
-		9340952B1BAC7A09000788FF /* UIViewController+SizeClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+SizeClass.h"; sourceTree = "<group>"; };
-		9340952C1BAC7A09000788FF /* UIViewController+SizeClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+SizeClass.m"; sourceTree = "<group>"; };
-		9340980B1A5C83A00005DF06 /* StatsEphemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsEphemory.h; sourceTree = "<group>"; };
-		9340980C1A5C83A00005DF06 /* StatsEphemory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsEphemory.m; sourceTree = "<group>"; };
+		9340952B1BAC7A09000788FF /* UIViewController+SizeClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+SizeClass.h"; path = "UI/UIViewController+SizeClass.h"; sourceTree = "<group>"; };
+		9340952C1BAC7A09000788FF /* UIViewController+SizeClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+SizeClass.m"; path = "UI/UIViewController+SizeClass.m"; sourceTree = "<group>"; };
+		9340980B1A5C83A00005DF06 /* StatsEphemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsEphemory.h; path = Services/StatsEphemory.h; sourceTree = "<group>"; };
+		9340980C1A5C83A00005DF06 /* StatsEphemory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsEphemory.m; path = Services/StatsEphemory.m; sourceTree = "<group>"; };
 		9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsEphemoryTests.m; sourceTree = "<group>"; };
-		934A460E1BF221E30098286C /* icon-comment-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-16x16.png"; sourceTree = "<group>"; };
-		934A460F1BF221E30098286C /* icon-comment-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-16x16@2x.png"; sourceTree = "<group>"; };
-		934A46111BF221E30098286C /* icon-eye-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-16x16.png"; sourceTree = "<group>"; };
-		934A46121BF221E30098286C /* icon-eye-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-16x16@2x.png"; sourceTree = "<group>"; };
-		934A46141BF221E30098286C /* icon-star-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-16x16.png"; sourceTree = "<group>"; };
-		934A46151BF221E30098286C /* icon-star-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-16x16@2x.png"; sourceTree = "<group>"; };
-		934A46171BF221E30098286C /* icon-text-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-text-16x16.png"; sourceTree = "<group>"; };
-		934A46181BF221E30098286C /* icon-text-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-text-16x16@2x.png"; sourceTree = "<group>"; };
-		934A461A1BF221E30098286C /* icon-trophy-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-trophy-16x16.png"; sourceTree = "<group>"; };
-		934A461B1BF221E30098286C /* icon-trophy-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-trophy-16x16@2x.png"; sourceTree = "<group>"; };
-		934A461D1BF221E30098286C /* icon-user-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-16x16.png"; sourceTree = "<group>"; };
-		934A461E1BF221E30098286C /* icon-user-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-16x16@2x.png"; sourceTree = "<group>"; };
-		934A46321BF224860098286C /* icon-comment-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-25x25.png"; sourceTree = "<group>"; };
-		934A46331BF224860098286C /* icon-comment-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-25x25@2x.png"; sourceTree = "<group>"; };
-		934A46341BF224860098286C /* icon-eye-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-25x25.png"; sourceTree = "<group>"; };
-		934A46351BF224860098286C /* icon-eye-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-25x25@2x.png"; sourceTree = "<group>"; };
-		934A46361BF224860098286C /* icon-star-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-25x25.png"; sourceTree = "<group>"; };
-		934A46371BF224860098286C /* icon-star-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-25x25@2x.png"; sourceTree = "<group>"; };
-		934A46381BF224860098286C /* icon-user-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-25x25.png"; sourceTree = "<group>"; };
-		934A46391BF224860098286C /* icon-user-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-25x25@2x.png"; sourceTree = "<group>"; };
-		93554C7B1B03D18700B49657 /* InsightsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsTableViewController.h; sourceTree = "<group>"; };
-		93554C7C1B03D18700B49657 /* InsightsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsTableViewController.m; sourceTree = "<group>"; };
 		9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceRemoteTests.m; sourceTree = "<group>"; };
 		93652B7E19FFFC60006A4C47 /* stats-v1.1-summary.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-summary.json"; sourceTree = "<group>"; };
-		9367D9CD1A6D9D5A0033911A /* StatsDateUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsDateUtilities.h; sourceTree = "<group>"; };
-		9367D9CE1A6D9D5A0033911A /* StatsDateUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsDateUtilities.m; sourceTree = "<group>"; };
+		9367D9CD1A6D9D5A0033911A /* StatsDateUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsDateUtilities.h; path = Services/StatsDateUtilities.h; sourceTree = "<group>"; };
+		9367D9CE1A6D9D5A0033911A /* StatsDateUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsDateUtilities.m; path = Services/StatsDateUtilities.m; sourceTree = "<group>"; };
 		9367D9D01A6E99640033911A /* StatsDateUtilitiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsDateUtilitiesTests.m; sourceTree = "<group>"; };
-		9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsViewAllTableViewController.h; sourceTree = "<group>"; };
-		9367D9D31A6EAEBB0033911A /* StatsViewAllTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsViewAllTableViewController.m; sourceTree = "<group>"; };
-		9367D9D61A6EB5A90033911A /* StatsTwoColumnTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTwoColumnTableViewCell.h; sourceTree = "<group>"; };
-		9367D9D71A6EB5A90033911A /* StatsTwoColumnTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTwoColumnTableViewCell.m; sourceTree = "<group>"; };
-		9367D9D91A6EF5690033911A /* StatsSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StatsSection.h; sourceTree = "<group>"; };
-		9367D9DA1A7018350033911A /* StatsBorderedCellBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsBorderedCellBackgroundView.h; sourceTree = "<group>"; };
-		9367D9DB1A7018350033911A /* StatsBorderedCellBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsBorderedCellBackgroundView.m; sourceTree = "<group>"; };
-		9367D9DD1A70194D0033911A /* StatsStandardBorderedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsStandardBorderedTableViewCell.h; sourceTree = "<group>"; };
-		9367D9DE1A70194D0033911A /* StatsStandardBorderedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsStandardBorderedTableViewCell.m; sourceTree = "<group>"; };
-		936B22461958C3840058C828 /* WPStatsGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphViewController.h; sourceTree = "<group>"; };
-		936B22471958C3840058C828 /* WPStatsGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphViewController.m; sourceTree = "<group>"; };
-		936B224C195AFD380058C828 /* WPStatsGraphLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphLegendView.h; sourceTree = "<group>"; };
-		936B224D195AFD380058C828 /* WPStatsGraphLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphLegendView.m; sourceTree = "<group>"; };
-		936B224F195C48700058C828 /* WPStatsGraphBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphBarCell.h; sourceTree = "<group>"; };
-		936B2250195C48700058C828 /* WPStatsGraphBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphBarCell.m; sourceTree = "<group>"; };
-		936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WPStyleGuide+Stats.h"; sourceTree = "<group>"; };
-		936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WPStyleGuide+Stats.m"; sourceTree = "<group>"; };
+		9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsViewAllTableViewController.h; path = UI/StatsViewAllTableViewController.h; sourceTree = "<group>"; };
+		9367D9D31A6EAEBB0033911A /* StatsViewAllTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsViewAllTableViewController.m; path = UI/StatsViewAllTableViewController.m; sourceTree = "<group>"; };
+		9367D9D61A6EB5A90033911A /* StatsTwoColumnTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsTwoColumnTableViewCell.h; path = UI/StatsTwoColumnTableViewCell.h; sourceTree = "<group>"; };
+		9367D9D71A6EB5A90033911A /* StatsTwoColumnTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsTwoColumnTableViewCell.m; path = UI/StatsTwoColumnTableViewCell.m; sourceTree = "<group>"; };
+		9367D9DA1A7018350033911A /* StatsBorderedCellBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsBorderedCellBackgroundView.h; path = UI/StatsBorderedCellBackgroundView.h; sourceTree = "<group>"; };
+		9367D9DB1A7018350033911A /* StatsBorderedCellBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsBorderedCellBackgroundView.m; path = UI/StatsBorderedCellBackgroundView.m; sourceTree = "<group>"; };
+		9367D9DD1A70194D0033911A /* StatsStandardBorderedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStandardBorderedTableViewCell.h; path = UI/StatsStandardBorderedTableViewCell.h; sourceTree = "<group>"; };
+		9367D9DE1A70194D0033911A /* StatsStandardBorderedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStandardBorderedTableViewCell.m; path = UI/StatsStandardBorderedTableViewCell.m; sourceTree = "<group>"; };
+		936B22461958C3840058C828 /* WPStatsGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsGraphViewController.h; path = UI/WPStatsGraphViewController.h; sourceTree = "<group>"; };
+		936B22471958C3840058C828 /* WPStatsGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphViewController.m; path = UI/WPStatsGraphViewController.m; sourceTree = "<group>"; };
+		936B224C195AFD380058C828 /* WPStatsGraphLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsGraphLegendView.h; path = UI/WPStatsGraphLegendView.h; sourceTree = "<group>"; };
+		936B224D195AFD380058C828 /* WPStatsGraphLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphLegendView.m; path = UI/WPStatsGraphLegendView.m; sourceTree = "<group>"; };
+		936B224F195C48700058C828 /* WPStatsGraphBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsGraphBarCell.h; path = UI/WPStatsGraphBarCell.h; sourceTree = "<group>"; };
+		936B2250195C48700058C828 /* WPStatsGraphBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphBarCell.m; path = UI/WPStatsGraphBarCell.m; sourceTree = "<group>"; };
+		936B2252195CB2FE0058C828 /* WPStyleGuide+Stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WPStyleGuide+Stats.h"; path = "UI/WPStyleGuide+Stats.h"; sourceTree = "<group>"; };
+		936B2253195CB2FE0058C828 /* WPStyleGuide+Stats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WPStyleGuide+Stats.m"; path = "UI/WPStyleGuide+Stats.m"; sourceTree = "<group>"; };
 		936E001D1AA7A28D00DCFA65 /* stats-v1.1-post-details.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-post-details.json"; sourceTree = "<group>"; };
-		936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsPostDetailsTableViewController.h; sourceTree = "<group>"; };
-		936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsPostDetailsTableViewController.m; sourceTree = "<group>"; };
-		936E74A21A688E6F0048F552 /* StatsSelectableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsSelectableTableViewCell.h; sourceTree = "<group>"; };
-		936E74A31A688E6F0048F552 /* StatsSelectableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsSelectableTableViewCell.m; sourceTree = "<group>"; };
-		936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTableSectionHeaderView.h; sourceTree = "<group>"; };
-		936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableSectionHeaderView.m; sourceTree = "<group>"; };
+		936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsPostDetailsTableViewController.h; path = UI/StatsPostDetailsTableViewController.h; sourceTree = "<group>"; };
+		936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsPostDetailsTableViewController.m; path = UI/StatsPostDetailsTableViewController.m; sourceTree = "<group>"; };
+		936E74A21A688E6F0048F552 /* StatsSelectableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsSelectableTableViewCell.h; path = UI/StatsSelectableTableViewCell.h; sourceTree = "<group>"; };
+		936E74A31A688E6F0048F552 /* StatsSelectableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsSelectableTableViewCell.m; path = UI/StatsSelectableTableViewCell.m; sourceTree = "<group>"; };
+		936E74A51A69A8990048F552 /* StatsTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsTableSectionHeaderView.h; path = UI/StatsTableSectionHeaderView.h; sourceTree = "<group>"; };
+		936E74A61A69A8990048F552 /* StatsTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsTableSectionHeaderView.m; path = UI/StatsTableSectionHeaderView.m; sourceTree = "<group>"; };
 		937632801AC1B35700086BC6 /* emptyarray.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = emptyarray.json; sourceTree = "<group>"; };
 		93797AFA1B064A4D006934EF /* stats-v1.1-insights.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-insights.json"; sourceTree = "<group>"; };
 		93797AFC1B064FA2006934EF /* stats-v1.1-alltime.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-alltime.json"; sourceTree = "<group>"; };
-		938056931B989E44001100B9 /* InsightsWrappingTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InsightsWrappingTextCell.xib; sourceTree = "<group>"; };
+		938056931B989E44001100B9 /* InsightsWrappingTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InsightsWrappingTextCell.xib; path = UI/InsightsWrappingTextCell.xib; sourceTree = "<group>"; };
 		9383180E1994F701003B953A /* WordPressCom-Stats-iOSTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOSTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9387DB091A96311E00AB7662 /* stats-v1.1-top-posts-day-exception.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-top-posts-day-exception.json"; sourceTree = "<group>"; };
-		9389C94C197EBBAF0036D437 /* WPStatsGraphToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsGraphToastView.h; sourceTree = "<group>"; };
-		9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsGraphToastView.m; sourceTree = "<group>"; };
-		938A61831B0CAC23007C5EE7 /* StatsAllTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsAllTime.h; sourceTree = "<group>"; };
-		938A61841B0CAC23007C5EE7 /* StatsAllTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsAllTime.m; sourceTree = "<group>"; };
+		9389C94C197EBBAF0036D437 /* WPStatsGraphToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsGraphToastView.h; path = UI/WPStatsGraphToastView.h; sourceTree = "<group>"; };
+		9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphToastView.m; path = UI/WPStatsGraphToastView.m; sourceTree = "<group>"; };
+		938A61831B0CAC23007C5EE7 /* StatsAllTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsAllTime.h; path = Services/StatsAllTime.h; sourceTree = "<group>"; };
+		938A61841B0CAC23007C5EE7 /* StatsAllTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsAllTime.m; path = Services/StatsAllTime.m; sourceTree = "<group>"; };
 		9396CFAF1921096A006A66D7 /* libWordPressCom-Stats-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libWordPressCom-Stats-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9396CFB21921096A006A66D7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -221,29 +218,32 @@
 		9396CFC31921096B006A66D7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		9396CFCA1921096B006A66D7 /* WordPressCom-Stats-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WordPressCom-Stats-iOSTests-Info.plist"; sourceTree = "<group>"; };
 		9396CFCC1921096B006A66D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		939A83081A6703E00041B68A /* WPStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsViewController.h; sourceTree = "<group>"; };
-		939A83091A6703E00041B68A /* WPStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsViewController.m; sourceTree = "<group>"; };
-		93A379DC19FEA9E400415023 /* StatsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItem.h; sourceTree = "<group>"; };
-		93A379DD19FEA9E400415023 /* StatsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItem.m; sourceTree = "<group>"; };
-		93A379DF19FEAB1C00415023 /* StatsItemAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsItemAction.h; sourceTree = "<group>"; };
-		93A379E019FEAB1C00415023 /* StatsItemAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsItemAction.m; sourceTree = "<group>"; };
-		93A379E219FEAB8100415023 /* StatsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsGroup.h; sourceTree = "<group>"; };
-		93A379E319FEAB8100415023 /* StatsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsGroup.m; sourceTree = "<group>"; };
-		93A379E519FEAD8400415023 /* StatsSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsSummary.h; sourceTree = "<group>"; };
-		93A379E619FEAD8400415023 /* StatsSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsSummary.m; sourceTree = "<group>"; };
-		93A379E819FEDEE100415023 /* WPStatsServiceRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsServiceRemote.h; sourceTree = "<group>"; };
-		93A379E919FEDEE100415023 /* WPStatsServiceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceRemote.m; sourceTree = "<group>"; };
+		939A83081A6703E00041B68A /* WPStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsViewController.h; path = UI/WPStatsViewController.h; sourceTree = "<group>"; };
+		939A83091A6703E00041B68A /* WPStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsViewController.m; path = UI/WPStatsViewController.m; sourceTree = "<group>"; };
+		93A379DC19FEA9E400415023 /* StatsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsItem.h; path = Services/StatsItem.h; sourceTree = "<group>"; };
+		93A379DD19FEA9E400415023 /* StatsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsItem.m; path = Services/StatsItem.m; sourceTree = "<group>"; };
+		93A379DF19FEAB1C00415023 /* StatsItemAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsItemAction.h; path = Services/StatsItemAction.h; sourceTree = "<group>"; };
+		93A379E019FEAB1C00415023 /* StatsItemAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsItemAction.m; path = Services/StatsItemAction.m; sourceTree = "<group>"; };
+		93A379E219FEAB8100415023 /* StatsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsGroup.h; path = Services/StatsGroup.h; sourceTree = "<group>"; };
+		93A379E319FEAB8100415023 /* StatsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsGroup.m; path = Services/StatsGroup.m; sourceTree = "<group>"; };
+		93A379E519FEAD8400415023 /* StatsSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsSummary.h; path = Services/StatsSummary.h; sourceTree = "<group>"; };
+		93A379E619FEAD8400415023 /* StatsSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsSummary.m; path = Services/StatsSummary.m; sourceTree = "<group>"; };
+		93A379E819FEDEE100415023 /* WPStatsServiceRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsServiceRemote.h; path = Services/WPStatsServiceRemote.h; sourceTree = "<group>"; };
+		93A379E919FEDEE100415023 /* WPStatsServiceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsServiceRemote.m; path = Services/WPStatsServiceRemote.m; sourceTree = "<group>"; };
 		93C3D5671B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-visits-day-bad-date.json"; sourceTree = "<group>"; };
 		93D3079B19DC543F006826B0 /* WordPressCom-Stats-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		93E1CECB1BA847EC004E1199 /* StatsLatestPostSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsLatestPostSummary.h; sourceTree = "<group>"; };
-		93E1CECC1BA847EC004E1199 /* StatsLatestPostSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsLatestPostSummary.m; sourceTree = "<group>"; };
+		93E1CECB1BA847EC004E1199 /* StatsLatestPostSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsLatestPostSummary.h; path = Services/StatsLatestPostSummary.h; sourceTree = "<group>"; };
+		93E1CECC1BA847EC004E1199 /* StatsLatestPostSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsLatestPostSummary.m; path = Services/StatsLatestPostSummary.m; sourceTree = "<group>"; };
 		93E3679C1922B751000FB32A /* stats-batch.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-batch.json"; sourceTree = "<group>"; };
-		93FABB7C1A115D90000C15ED /* SiteStats.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SiteStats.storyboard; sourceTree = "<group>"; };
-		93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Noticons-Regular.otf"; sourceTree = "<group>"; };
-		93FABB811A126DC5000C15ED /* StatsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsTableViewController.h; sourceTree = "<group>"; };
-		93FABB821A126DC5000C15ED /* StatsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsTableViewController.m; sourceTree = "<group>"; };
-		93FE88701B05307D0096F187 /* StatsInsights.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsInsights.h; sourceTree = "<group>"; };
-		93FE88711B05307D0096F187 /* StatsInsights.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsInsights.m; sourceTree = "<group>"; };
+		93E8B4631BED30FE0072A63C /* StatsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsSection.h; path = Services/StatsSection.h; sourceTree = "<group>"; };
+		93E8B4641BED31150072A63C /* InsightsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InsightsTableViewController.h; path = UI/InsightsTableViewController.h; sourceTree = "<group>"; };
+		93E8B4651BED31150072A63C /* InsightsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InsightsTableViewController.m; path = UI/InsightsTableViewController.m; sourceTree = "<group>"; };
+		93FABB7C1A115D90000C15ED /* SiteStats.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SiteStats.storyboard; path = UI/SiteStats.storyboard; sourceTree = "<group>"; };
+		93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Noticons-Regular.otf"; path = "Resources/Noticons-Regular.otf"; sourceTree = "<group>"; };
+		93FABB811A126DC5000C15ED /* StatsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsTableViewController.h; path = UI/StatsTableViewController.h; sourceTree = "<group>"; };
+		93FABB821A126DC5000C15ED /* StatsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsTableViewController.m; path = UI/StatsTableViewController.m; sourceTree = "<group>"; };
+		93FE88701B05307D0096F187 /* StatsInsights.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsInsights.h; path = Services/StatsInsights.h; sourceTree = "<group>"; };
+		93FE88711B05307D0096F187 /* StatsInsights.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsInsights.m; path = Services/StatsInsights.m; sourceTree = "<group>"; };
 		9D0C9DDA5A784B4AAC2811CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -320,26 +320,26 @@
 		937AB1511AF25ACC00E34D1F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				934A460E1BF221E30098286C /* icon-comment-16x16.png */,
-				934A460F1BF221E30098286C /* icon-comment-16x16@2x.png */,
-				934A46321BF224860098286C /* icon-comment-25x25.png */,
-				934A46331BF224860098286C /* icon-comment-25x25@2x.png */,
-				934A46111BF221E30098286C /* icon-eye-16x16.png */,
-				934A46121BF221E30098286C /* icon-eye-16x16@2x.png */,
-				934A46341BF224860098286C /* icon-eye-25x25.png */,
-				934A46351BF224860098286C /* icon-eye-25x25@2x.png */,
-				934A46141BF221E30098286C /* icon-star-16x16.png */,
-				934A46151BF221E30098286C /* icon-star-16x16@2x.png */,
-				934A46361BF224860098286C /* icon-star-25x25.png */,
-				934A46371BF224860098286C /* icon-star-25x25@2x.png */,
-				934A46171BF221E30098286C /* icon-text-16x16.png */,
-				934A46181BF221E30098286C /* icon-text-16x16@2x.png */,
-				934A461A1BF221E30098286C /* icon-trophy-16x16.png */,
-				934A461B1BF221E30098286C /* icon-trophy-16x16@2x.png */,
-				934A461D1BF221E30098286C /* icon-user-16x16.png */,
-				934A461E1BF221E30098286C /* icon-user-16x16@2x.png */,
-				934A46381BF224860098286C /* icon-user-25x25.png */,
-				934A46391BF224860098286C /* icon-user-25x25@2x.png */,
+				930001691BF2344A009275DB /* icon-comment-16x16.png */,
+				9300016A1BF2344A009275DB /* icon-comment-16x16@2x.png */,
+				9300016B1BF2344A009275DB /* icon-comment-25x25.png */,
+				9300016C1BF2344A009275DB /* icon-comment-25x25@2x.png */,
+				9300016D1BF2344A009275DB /* icon-eye-16x16.png */,
+				9300016E1BF2344A009275DB /* icon-eye-16x16@2x.png */,
+				9300016F1BF2344A009275DB /* icon-eye-25x25.png */,
+				930001701BF2344A009275DB /* icon-eye-25x25@2x.png */,
+				930001711BF2344A009275DB /* icon-star-16x16.png */,
+				930001721BF2344A009275DB /* icon-star-16x16@2x.png */,
+				930001731BF2344A009275DB /* icon-star-25x25.png */,
+				930001741BF2344A009275DB /* icon-star-25x25@2x.png */,
+				930001751BF2344A009275DB /* icon-text-16x16.png */,
+				930001761BF2344A009275DB /* icon-text-16x16@2x.png */,
+				930001771BF2344A009275DB /* icon-trophy-16x16.png */,
+				930001781BF2344A009275DB /* icon-trophy-16x16@2x.png */,
+				930001791BF2344A009275DB /* icon-user-16x16.png */,
+				9300017A1BF2344A009275DB /* icon-user-16x16@2x.png */,
+				9300017B1BF2344A009275DB /* icon-user-25x25.png */,
+				9300017C1BF2344A009275DB /* icon-user-25x25@2x.png */,
 				93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */,
 			);
 			name = Resources;
@@ -426,6 +426,7 @@
 		9396CFD819215346006A66D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				93E8B4631BED30FE0072A63C /* StatsSection.h */,
 				938A61831B0CAC23007C5EE7 /* StatsAllTime.h */,
 				938A61841B0CAC23007C5EE7 /* StatsAllTime.m */,
 				93A379E219FEAB8100415023 /* StatsGroup.h */,
@@ -466,12 +467,11 @@
 			children = (
 				9367D9D51A6EB5770033911A /* Cells */,
 				936B22491958C65A0058C828 /* Graph */,
-				93554C7B1B03D18700B49657 /* InsightsTableViewController.h */,
-				93554C7C1B03D18700B49657 /* InsightsTableViewController.m */,
+				93E8B4641BED31150072A63C /* InsightsTableViewController.h */,
+				93E8B4651BED31150072A63C /* InsightsTableViewController.m */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 				936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */,
 				936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */,
-				9367D9D91A6EF5690033911A /* StatsSection.h */,
 				93FABB811A126DC5000C15ED /* StatsTableViewController.h */,
 				93FABB821A126DC5000C15ED /* StatsTableViewController.m */,
 				9367D9D21A6EAEBB0033911A /* StatsViewAllTableViewController.h */,
@@ -748,10 +748,10 @@
 				9367D9CF1A6D9D5A0033911A /* StatsDateUtilities.m in Sources */,
 				936B2254195CB2FE0058C828 /* WPStyleGuide+Stats.m in Sources */,
 				93E1CECD1BA847EC004E1199 /* StatsLatestPostSummary.m in Sources */,
-				93554C7D1B03D18700B49657 /* InsightsTableViewController.m in Sources */,
 				936B224E195AFD380058C828 /* WPStatsGraphLegendView.m in Sources */,
 				9340952D1BAC7A09000788FF /* UIViewController+SizeClass.m in Sources */,
 				9311AC301B58466900BBC877 /* InsightsTodaysStatsTableViewCell.m in Sources */,
+				93E8B4661BED31150072A63C /* InsightsTableViewController.m in Sources */,
 				939A830A1A6703E00041B68A /* WPStatsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
