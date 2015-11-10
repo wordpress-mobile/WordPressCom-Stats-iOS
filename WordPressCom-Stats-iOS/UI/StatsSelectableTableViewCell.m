@@ -24,10 +24,10 @@
     [self updateLabels];
     
     // Standard colors for use in the graph view
-    self.selectedCellTextColor = [WPStyleGuide statsDarkGray];
+    self.selectedCellTextColor = [WPStyleGuide darkGrey];
     self.selectedCellValueColor = [WPStyleGuide jazzyOrange];
     self.selectedCellValueZeroColor = [WPStyleGuide jazzyOrange];
-    self.unselectedCellTextColor = [WPStyleGuide statsLessDarkGrey];
+    self.unselectedCellTextColor = [WPStyleGuide darkGrey];
     self.unselectedCellValueColor = [WPStyleGuide littleEddieGrey];
     self.unselectedCellValueZeroColor = [WPStyleGuide statsLightGrayZeroValue];
 }

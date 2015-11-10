@@ -312,6 +312,7 @@ NSString *const TodayCacheKey = @"Today";
              summary = [StatsLatestPostSummary new];
              summary.postID = postID;
              summary.postTitle = postTitle;
+             summary.postURL = [NSURL URLWithString:postURL];
              summary.postAge = [self.dateUtilities dateAgeForDate:postDate];
              summary.views = views;
              summary.viewsValue = viewsValue;

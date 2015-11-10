@@ -5,6 +5,7 @@
 @property (nonatomic, strong) NSNumber *postID;
 @property (nonatomic, copy)   NSString *postTitle;
 @property (nonatomic, copy)   NSString *postAge;
+@property (nonatomic, strong) NSURL *postURL;
 
 @property (nonatomic, strong) NSString *views;
 @property (nonatomic, strong) NSString *likes;

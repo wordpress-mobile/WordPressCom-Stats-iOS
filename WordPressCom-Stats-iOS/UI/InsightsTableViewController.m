@@ -280,12 +280,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
+    NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
-    if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier] ||
+    if ([identifier isEqualToString:StatsTableViewAllCellIdentifier] ||
         (statsSection == StatsSectionInsightsTodaysStats) ||
         (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
+    } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
@@ -391,6 +392,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         }
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
         [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
+    } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
+        StatsLatestPostSummary *summary = [self statsDataForStatsSection:statsSection];
+        if ([self.statsDelegate respondsToSelector:@selector(statsViewController:openURL:)]) {
+            WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
+            [self.statsDelegate statsViewController:statsViewController openURL:summary.postURL];
+        } else {
+#ifndef AF_APP_EXTENSIONS
+            [[UIApplication sharedApplication] openURL:summary.postURL];
+#endif
+        }
     }
 }
 
@@ -403,14 +414,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     id data = [self statsDataForStatsSection:statsSection];
 
-    if ([identifier isEqualToString:@"PostDetails"]) {
-        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
-        
-        // Only fire the segue for the posts section or authors if a nested row
-        return statsSection == StatsSectionPosts || (statsSection == StatsSectionAuthors && statsItem.parent != nil);
-    } else if ([identifier isEqualToString:SegueLatestPostDetails] ||
-               [identifier isEqualToString:SegueLatestPostDetailsiPad]) {
+    if ([identifier isEqualToString:SegueLatestPostDetails]) {
+        return statsSection == StatsSectionInsightsLatestPostSummary && indexPath.row == 2 && !!data;
+    } else if ([identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         return statsSection == StatsSectionInsightsLatestPostSummary && !!data;
     }
     
@@ -436,17 +442,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
-    } else if ([segue.identifier isEqualToString:@"PostDetails"]) {
-        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
-        
-        StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
-        StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
-        
-        StatsPostDetailsTableViewController *postVC = (StatsPostDetailsTableViewController *)segue.destinationViewController;
-        postVC.postID = statsItem.itemID;
-        postVC.postTitle = statsItem.label;
-        postVC.statsService = self.statsService;
-        postVC.statsDelegate = self.statsDelegate;
     } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
                [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
@@ -641,6 +636,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     } else if ([identifier isEqualToString:StatsTableViewAllCellIdentifier]) {
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
         label.text = NSLocalizedString(@"View All", @"View All button in stats for larger list");
+        label.textColor = [WPStyleGuide wordPressBlue];
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
         StatsItem *item = [group statsItemForTableViewRow:indexPath.row];
@@ -663,7 +659,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSection statsSection = [self statsSectionForTableViewSection:section];
     id data = [self statsDataForStatsSection:statsSection];
 
-    cell.sectionHeaderLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.sectionHeaderLabel.textColor = [WPStyleGuide darkGrey];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.bottomBorderEnabled = YES;
     
@@ -712,15 +708,15 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         cell.allTimeBestViewsOnValueLabel.text = NSLocalizedString(@"Unknown", @"Unknown data in value label");
         cell.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyLighten20];
     } else {
-        cell.allTimePostsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimePostsValueLabel.textColor = [WPStyleGuide darkGrey];
         cell.allTimePostsValueLabel.text = statsAllTime.numberOfPosts;
-        cell.allTimeViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeViewsValueLabel.textColor = [WPStyleGuide darkGrey];
         cell.allTimeViewsValueLabel.text = statsAllTime.numberOfViews;
-        cell.allTimeVisitorsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeVisitorsValueLabel.textColor = [WPStyleGuide darkGrey];
         cell.allTimeVisitorsValueLabel.text = statsAllTime.numberOfVisitors;
-        cell.allTimeBestViewsValueLabel.textColor = [WPStyleGuide greyDarken30];
+        cell.allTimeBestViewsValueLabel.textColor = [WPStyleGuide darkGrey];
         cell.allTimeBestViewsValueLabel.text = statsAllTime.bestNumberOfViews;
-        cell.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide greyDarken10];
+        cell.allTimeBestViewsOnValueLabel.textColor = [WPStyleGuide darkGrey];
         cell.allTimeBestViewsOnValueLabel.text = statsAllTime.bestViewsOn;
     }
 }
@@ -729,14 +725,14 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (void)configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell
 {
     cell.mostPopularDayLabel.text = [NSLocalizedString(@"Most popular day", @"Insights most popular day section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    cell.mostPopularDayLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.mostPopularDayLabel.textColor = [WPStyleGuide darkGrey];
     cell.mostPopularHourLabel.text = [NSLocalizedString(@"Most popular hour", @"Insights most popular hour section label") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    cell.mostPopularHourLabel.textColor = [WPStyleGuide greyDarken10];
+    cell.mostPopularHourLabel.textColor = [WPStyleGuide darkGrey];
 
     StatsInsights *statsInsights = self.sectionData[@(StatsSectionInsightsMostPopular)];
     
-    cell.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide greyDarken10];
-    cell.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide greyDarken10];
+    cell.mostPopularDayPercentWeeklyViews.textColor = [WPStyleGuide darkGrey];
+    cell.mostPopularHourPercentDailyViews.textColor = [WPStyleGuide darkGrey];
 
     if (!statsInsights) {
         cell.mostPopularDay.text = @"-";
@@ -854,6 +850,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.cellType = StatsSelectableTableViewCellTypeLikes;
                 cell.valueLabel.text = latestPostSummary.likes ?: @"-";
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             }
                 
@@ -861,6 +858,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             {
                 cell.cellType = StatsSelectableTableViewCellTypeComments;
                 cell.valueLabel.text = latestPostSummary.comments ?: @"-";
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             }
                 
@@ -878,7 +876,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     label.text = headerText;
-    label.textColor = [WPStyleGuide greyDarken10];
+    label.textColor = [WPStyleGuide darkGrey];
     
     cell.bottomBorderEnabled = NO;
 }
@@ -897,9 +895,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     UILabel *label1 = (UILabel *)[cell.contentView viewWithTag:100];
     label1.text = leftText;
-    
+    label1.textColor = [WPStyleGuide grey];
+
     UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:200];
     label2.text = rightText;
+    label2.textColor = [WPStyleGuide grey];
 }
 
 
@@ -1319,7 +1319,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [postsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:postsTextAttachment] atIndex:0];
     [postsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
     [postsText appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
-    [postsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, postsText.length)];
+    [postsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, postsText.length)];
 
     return postsText;
 }
@@ -1333,7 +1333,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [viewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:viewsTextAttachment] atIndex:0];
     [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@"  "] atIndex:1];
     [viewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, viewsText.length)];
+    [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, viewsText.length)];
 
     return viewsText;
 }
@@ -1347,7 +1347,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [visitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:visitorsTextAttachment] atIndex:0];
     [visitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
     [visitorsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [visitorsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, visitorsText.length)];
+    [visitorsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, visitorsText.length)];
 
     return visitorsText;
 }
@@ -1404,7 +1404,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         NSString *time = summary.postAge;
         NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
         text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
-        [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0]} range:[unformattedString rangeOfString:postTitle]];
+        [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0], NSForegroundColorAttributeName : [WPStyleGuide wordPressBlue]} range:[unformattedString rangeOfString:postTitle]];
     }
     
     return text;
