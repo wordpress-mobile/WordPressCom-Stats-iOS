@@ -20,8 +20,7 @@ Pod::Spec.new do |s|
   s.exclude_files = "WordPressCom-Stats-iOS/Exclude"
   s.prefix_header_file = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Prefix.pch"
 
-  s.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/*.storyboard', 'WordPressCom-Stats-iOS/*.xib', 'WordPressCom-Stats-iOS/*.otf'] }
-  s.resource = 'WordPressCom-Stats-iOS/Images.xcassets'
+  s.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/*.storyboard', 'WordPressCom-Stats-iOS/*.xib', 'WordPressCom-Stats-iOS/*.otf', 'WordPressCom-Stats-iOS/*.png'] }
   s.requires_arc = true
 
   s.dependency 'AFNetworking',	'~> 2.6.0'
