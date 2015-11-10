@@ -6,7 +6,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
-#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
+#import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
