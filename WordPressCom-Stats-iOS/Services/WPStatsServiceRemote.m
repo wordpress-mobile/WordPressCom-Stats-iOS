@@ -1,11 +1,11 @@
 #import "WPStatsServiceRemote.h"
 #import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
+#import <AFNetworking/AFNetworking.h>
 #import "StatsItem.h"
 #import "StatsItemAction.h"
 #import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
-#import <WordPressShared/NSString+XMLExtensions.h>
-#import <WordPressComAnalytics/WPAnalytics.h>
-#import <AFNetworking/AFNetworking.h>
+#import <WordPress-iOS-Shared/NSString+XMLExtensions.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 

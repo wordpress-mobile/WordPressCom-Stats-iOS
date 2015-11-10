@@ -8,7 +8,7 @@
 #import "InsightsTodaysStatsTableViewCell.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsSection.h"
-#import <WordPressComAnalytics/WPAnalytics.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsItemAction.h"
 #import "StatsViewAllTableViewController.h"

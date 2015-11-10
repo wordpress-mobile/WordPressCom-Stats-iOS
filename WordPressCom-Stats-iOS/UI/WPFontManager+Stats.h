@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <WordPressShared/WPFontManager.h>
+#import <WordPress-iOS-Shared/WPFontManager.h>
 
 @interface WPFontManager (Stats)
 
