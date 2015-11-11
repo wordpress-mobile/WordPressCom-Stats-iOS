@@ -1318,10 +1318,13 @@
                                 <animations/>
                                 <connections>
                                     <outlet property="todayCommentsButton" destination="lIx-Tq-VZg" id="hri-Rl-dD3"/>
+                                    <outlet property="todayCommentsImage" destination="CWT-oS-hJT" id="Lr2-wf-tca"/>
                                     <outlet property="todayCommentsValueButton" destination="fq4-X3-8SC" id="2Ke-3D-Shw"/>
                                     <outlet property="todayLikesButton" destination="BuZ-yd-Fyx" id="qvf-52-2be"/>
+                                    <outlet property="todayLikesImage" destination="cqG-Bu-XST" id="IT2-wN-nMN"/>
                                     <outlet property="todayLikesValueButton" destination="i23-aG-lEg" id="sye-bB-GP7"/>
                                     <outlet property="todayViewsButton" destination="bRL-qF-aLj" id="W7Y-Yd-O5z"/>
+                                    <outlet property="todayViewsImage" destination="4fL-DO-csb" id="aCo-BS-v0G"/>
                                     <outlet property="todayViewsValueButton" destination="Ssb-du-0lP" id="dtH-Ew-QMn"/>
                                     <segue destination="NsQ-9F-hsi" kind="show" identifier="LatestPostDetailsPad" id="NYN-4M-cXh"/>
                                 </connections>
