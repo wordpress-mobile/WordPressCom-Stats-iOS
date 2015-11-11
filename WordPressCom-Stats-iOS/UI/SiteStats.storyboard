@@ -666,7 +666,7 @@
                                                             <animations/>
                                                             <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEST VIEWS EVER" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="Ml6-Iu-wKc">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BEST VIEWS EVER" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="81" translatesAutoresizingMaskIntoConstraints="NO" id="Ml6-Iu-wKc">
                                                             <rect key="frame" x="16" y="0.0" width="81" height="16"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="10"/>
@@ -826,13 +826,17 @@
                                 </tableViewCellContentView>
                                 <animations/>
                                 <connections>
+                                    <outlet property="allTimeBestViewsImage" destination="0Iv-iv-Hvd" id="QN0-mD-52H"/>
                                     <outlet property="allTimeBestViewsLabel" destination="Ml6-Iu-wKc" id="YFc-nz-OAu"/>
                                     <outlet property="allTimeBestViewsOnValueLabel" destination="p0T-y9-dQS" id="AYH-l7-dvy"/>
                                     <outlet property="allTimeBestViewsValueLabel" destination="bhJ-yf-eeg" id="5FG-93-8On"/>
+                                    <outlet property="allTimePostsImage" destination="by1-R6-sAT" id="Kka-Uh-VJL"/>
                                     <outlet property="allTimePostsLabel" destination="qTg-V3-QrG" id="t5s-jm-luq"/>
                                     <outlet property="allTimePostsValueLabel" destination="kyf-cc-9Pz" id="43E-YK-fx6"/>
+                                    <outlet property="allTimeViewsImage" destination="cNQ-8Y-f4C" id="COb-Dd-Gum"/>
                                     <outlet property="allTimeViewsLabel" destination="SnZ-To-N2p" id="ztA-C7-hUE"/>
                                     <outlet property="allTimeViewsValueLabel" destination="qJ0-wu-bhs" id="aMi-ko-LQz"/>
+                                    <outlet property="allTimeVisitorsImage" destination="Oe5-Bv-6IV" id="1FA-qR-2aa"/>
                                     <outlet property="allTimeVisitorsLabel" destination="Ixp-TF-kKn" id="WHS-wX-1SJ"/>
                                     <outlet property="allTimeVisitorsValueLabel" destination="RsC-iV-YWj" id="6G5-A0-BNc"/>
                                 </connections>
@@ -1101,12 +1105,16 @@
                                 <animations/>
                                 <connections>
                                     <outlet property="todayCommentsButton" destination="nUZ-Tg-WTV" id="60h-3p-XDh"/>
+                                    <outlet property="todayCommentsImage" destination="bAh-jb-JT4" id="V73-R3-FTG"/>
                                     <outlet property="todayCommentsValueButton" destination="5Xj-XK-eQ8" id="5oJ-RS-bRZ"/>
                                     <outlet property="todayLikesButton" destination="ab2-8S-y1h" id="Zgk-G4-bDj"/>
+                                    <outlet property="todayLikesImage" destination="N2A-sR-PLc" id="NpC-E7-Z56"/>
                                     <outlet property="todayLikesValueButton" destination="6H5-sV-soQ" id="YHx-y4-zcu"/>
                                     <outlet property="todayViewsButton" destination="4Zp-vE-uY4" id="Shf-ZI-AQQ"/>
+                                    <outlet property="todayViewsImage" destination="ga9-B2-FPO" id="taR-pQ-Avq"/>
                                     <outlet property="todayViewsValueButton" destination="nWH-aO-4eO" id="VYR-Xl-FjA"/>
                                     <outlet property="todayVisitorsButton" destination="g9y-bc-4NQ" id="4JU-4J-3cM"/>
+                                    <outlet property="todayVisitorsImage" destination="ULD-3i-NQr" id="1z3-2L-u5R"/>
                                     <outlet property="todayVisitorsValueButton" destination="g6C-KQ-1fr" id="4NS-Qd-PKg"/>
                                 </connections>
                             </tableViewCell>
@@ -1483,7 +1491,7 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJk-oW-O3M">
                                                     <rect key="frame" x="98" y="18" width="97" height="16"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-comment-16x16.png" translatesAutoresizingMaskIntoConstraints="NO" id="Leq-c5-nv9">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-trophy-16x16.png" translatesAutoresizingMaskIntoConstraints="NO" id="Leq-c5-nv9">
                                                             <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                                             <animations/>
                                                             <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1540,13 +1548,17 @@
                                 </tableViewCellContentView>
                                 <animations/>
                                 <connections>
+                                    <outlet property="allTimeBestViewsImage" destination="Leq-c5-nv9" id="fMU-Ij-m5a"/>
                                     <outlet property="allTimeBestViewsLabel" destination="TpN-dY-IW4" id="udQ-8i-Mu7"/>
                                     <outlet property="allTimeBestViewsOnValueLabel" destination="Upc-GK-XKb" id="zqO-dF-slG"/>
                                     <outlet property="allTimeBestViewsValueLabel" destination="KsA-er-QuV" id="5Lx-eE-WIC"/>
+                                    <outlet property="allTimePostsImage" destination="QHe-mb-3vb" id="dBB-8f-yPP"/>
                                     <outlet property="allTimePostsLabel" destination="Nii-wq-jD8" id="6qO-dy-Q2Y"/>
                                     <outlet property="allTimePostsValueLabel" destination="vE2-2f-R5G" id="pTv-vN-uXb"/>
+                                    <outlet property="allTimeViewsImage" destination="qsI-vR-kDu" id="Apv-S4-Sre"/>
                                     <outlet property="allTimeViewsLabel" destination="xgE-C0-FH2" id="SYK-oF-Ueh"/>
                                     <outlet property="allTimeViewsValueLabel" destination="ubr-tF-ZJH" id="DvI-bi-D12"/>
+                                    <outlet property="allTimeVisitorsImage" destination="Bry-RT-kOf" id="Nu2-DZ-lYx"/>
                                     <outlet property="allTimeVisitorsLabel" destination="EfI-IH-BWM" id="zmx-VA-aRQ"/>
                                     <outlet property="allTimeVisitorsValueLabel" destination="E8k-cd-ojU" id="HnR-kS-swI"/>
                                 </connections>

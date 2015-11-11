@@ -7,7 +7,7 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *allTimePostsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *allTimeViewImage;
+@property (nonatomic, weak) IBOutlet UIImageView *allTimeViewsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeViewsLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *allTimeVisitorsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsLabel;

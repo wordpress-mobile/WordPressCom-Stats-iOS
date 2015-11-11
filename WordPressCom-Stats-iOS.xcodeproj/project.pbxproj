@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7A7F463AD6CE44BEA3DA5F87 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C9DDA5A784B4AAC2811CD /* libPods.a */; };
+		9300019B1BF29CA5009275DB /* NSObject+StatsBundleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9300019A1BF29CA5009275DB /* NSObject+StatsBundleHelper.m */; };
 		93035C3B1AE97B6300F6FF5C /* WPFontManager+Stats.m in Sources */ = {isa = PBXBuildFile; fileRef = 93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */; };
 		930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */; };
 		930C2EEB195DB4D300C6964D /* WPStatsGraphBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EEA195DB4D300C6964D /* WPStatsGraphBackgroundView.m */; };
@@ -129,6 +130,8 @@
 		9300017A1BF2344A009275DB /* icon-user-16x16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-16x16@2x.png"; path = "Resources/icon-user-16x16@2x.png"; sourceTree = "<group>"; };
 		9300017B1BF2344A009275DB /* icon-user-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-25x25.png"; path = "Resources/icon-user-25x25.png"; sourceTree = "<group>"; };
 		9300017C1BF2344A009275DB /* icon-user-25x25@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-user-25x25@2x.png"; path = "Resources/icon-user-25x25@2x.png"; sourceTree = "<group>"; };
+		930001991BF29CA5009275DB /* NSObject+StatsBundleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+StatsBundleHelper.h"; path = "UI/NSObject+StatsBundleHelper.h"; sourceTree = "<group>"; };
+		9300019A1BF29CA5009275DB /* NSObject+StatsBundleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+StatsBundleHelper.m"; path = "UI/NSObject+StatsBundleHelper.m"; sourceTree = "<group>"; };
 		93035C391AE97B6300F6FF5C /* WPFontManager+Stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WPFontManager+Stats.h"; path = "UI/WPFontManager+Stats.h"; sourceTree = "<group>"; };
 		93035C3A1AE97B6300F6FF5C /* WPFontManager+Stats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WPFontManager+Stats.m"; path = "UI/WPFontManager+Stats.m"; sourceTree = "<group>"; };
 		930C2EE6195DB00600C6964D /* WPStatsCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPStatsCollectionViewFlowLayout.h; path = UI/WPStatsCollectionViewFlowLayout.h; sourceTree = "<group>"; };
@@ -210,6 +213,16 @@
 		9389C94D197EBBAF0036D437 /* WPStatsGraphToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPStatsGraphToastView.m; path = UI/WPStatsGraphToastView.m; sourceTree = "<group>"; };
 		938A61831B0CAC23007C5EE7 /* StatsAllTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsAllTime.h; path = Services/StatsAllTime.h; sourceTree = "<group>"; };
 		938A61841B0CAC23007C5EE7 /* StatsAllTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsAllTime.m; path = Services/StatsAllTime.m; sourceTree = "<group>"; };
+		9391F3271BF3C7C000A0B603 /* icon-comment-25x25@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-25x25@3x.png"; sourceTree = "<group>"; };
+		9391F3281BF3C7C000A0B603 /* icon-eye-25x25@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-25x25@3x.png"; sourceTree = "<group>"; };
+		9391F3291BF3C7C000A0B603 /* icon-star-25x25@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-25x25@3x.png"; sourceTree = "<group>"; };
+		9391F32B1BF3C7C000A0B603 /* icon-user-25x25@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-25x25@3x.png"; sourceTree = "<group>"; };
+		9391F32C1BF3C7C600A0B603 /* icon-comment-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-comment-16x16@3x.png"; sourceTree = "<group>"; };
+		9391F32D1BF3C7C600A0B603 /* icon-eye-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-eye-16x16@3x.png"; sourceTree = "<group>"; };
+		9391F32E1BF3C7C600A0B603 /* icon-star-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-star-16x16@3x.png"; sourceTree = "<group>"; };
+		9391F32F1BF3C7C600A0B603 /* icon-trophy-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-trophy-16x16@3x.png"; sourceTree = "<group>"; };
+		9391F3301BF3C7C600A0B603 /* icon-user-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-user-16x16@3x.png"; sourceTree = "<group>"; };
+		9391F3311BF3CDA500A0B603 /* icon-text-16x16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-text-16x16@3x.png"; sourceTree = "<group>"; };
 		9396CFAF1921096A006A66D7 /* libWordPressCom-Stats-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libWordPressCom-Stats-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9396CFB21921096A006A66D7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -322,24 +335,34 @@
 			children = (
 				930001691BF2344A009275DB /* icon-comment-16x16.png */,
 				9300016A1BF2344A009275DB /* icon-comment-16x16@2x.png */,
+				9391F32C1BF3C7C600A0B603 /* icon-comment-16x16@3x.png */,
 				9300016B1BF2344A009275DB /* icon-comment-25x25.png */,
 				9300016C1BF2344A009275DB /* icon-comment-25x25@2x.png */,
+				9391F3271BF3C7C000A0B603 /* icon-comment-25x25@3x.png */,
 				9300016D1BF2344A009275DB /* icon-eye-16x16.png */,
 				9300016E1BF2344A009275DB /* icon-eye-16x16@2x.png */,
+				9391F32D1BF3C7C600A0B603 /* icon-eye-16x16@3x.png */,
 				9300016F1BF2344A009275DB /* icon-eye-25x25.png */,
 				930001701BF2344A009275DB /* icon-eye-25x25@2x.png */,
+				9391F3281BF3C7C000A0B603 /* icon-eye-25x25@3x.png */,
 				930001711BF2344A009275DB /* icon-star-16x16.png */,
 				930001721BF2344A009275DB /* icon-star-16x16@2x.png */,
+				9391F32E1BF3C7C600A0B603 /* icon-star-16x16@3x.png */,
 				930001731BF2344A009275DB /* icon-star-25x25.png */,
 				930001741BF2344A009275DB /* icon-star-25x25@2x.png */,
+				9391F3291BF3C7C000A0B603 /* icon-star-25x25@3x.png */,
 				930001751BF2344A009275DB /* icon-text-16x16.png */,
 				930001761BF2344A009275DB /* icon-text-16x16@2x.png */,
+				9391F3311BF3CDA500A0B603 /* icon-text-16x16@3x.png */,
 				930001771BF2344A009275DB /* icon-trophy-16x16.png */,
 				930001781BF2344A009275DB /* icon-trophy-16x16@2x.png */,
+				9391F32F1BF3C7C600A0B603 /* icon-trophy-16x16@3x.png */,
 				930001791BF2344A009275DB /* icon-user-16x16.png */,
 				9300017A1BF2344A009275DB /* icon-user-16x16@2x.png */,
+				9391F3301BF3C7C600A0B603 /* icon-user-16x16@3x.png */,
 				9300017B1BF2344A009275DB /* icon-user-25x25.png */,
 				9300017C1BF2344A009275DB /* icon-user-25x25@2x.png */,
+				9391F32B1BF3C7C000A0B603 /* icon-user-25x25@3x.png */,
 				93FABB7D1A116BB1000C15ED /* Noticons-Regular.otf */,
 			);
 			name = Resources;
@@ -469,6 +492,8 @@
 				936B22491958C65A0058C828 /* Graph */,
 				93E8B4641BED31150072A63C /* InsightsTableViewController.h */,
 				93E8B4651BED31150072A63C /* InsightsTableViewController.m */,
+				930001991BF29CA5009275DB /* NSObject+StatsBundleHelper.h */,
+				9300019A1BF29CA5009275DB /* NSObject+StatsBundleHelper.m */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
 				936E001F1AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.h */,
 				936E00201AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m */,
@@ -696,21 +721,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		BDD72F09F3F9363C09055643 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		EEF5D0EE43CC4ABA8CCB124E /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -736,6 +746,7 @@
 				93A379DE19FEA9E400415023 /* StatsItem.m in Sources */,
 				930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */,
 				9367D9D81A6EB5A90033911A /* StatsTwoColumnTableViewCell.m in Sources */,
+				9300019B1BF29CA5009275DB /* NSObject+StatsBundleHelper.m in Sources */,
 				9367D9DF1A70194D0033911A /* StatsStandardBorderedTableViewCell.m in Sources */,
 				93FE88721B05307D0096F187 /* StatsInsights.m in Sources */,
 				93274AE41A07C7EA0017238F /* StatsVisits.m in Sources */,
