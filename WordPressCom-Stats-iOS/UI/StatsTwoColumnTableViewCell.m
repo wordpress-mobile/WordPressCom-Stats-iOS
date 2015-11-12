@@ -79,7 +79,7 @@
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeCategory) {
         self.leftHandGlyph.image =  [[UIImage imageNamed:@"icon-folder-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
-    self.leftHandGlyph.tintColor = [WPStyleGuide grey];
+    self.leftHandGlyph.tintColor = self.leftLabel.textColor;
     
     CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 15.0f : 20.0f;
     // Account for chevron or link icon or if its a nested row
