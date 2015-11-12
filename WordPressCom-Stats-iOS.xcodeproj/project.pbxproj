@@ -235,6 +235,9 @@
 		9391F3411BF51BB000A0B603 /* icon-chevron-right-8x13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-chevron-right-8x13.png"; sourceTree = "<group>"; };
 		9391F3421BF51BB000A0B603 /* icon-chevron-right-8x13@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-chevron-right-8x13@2x.png"; sourceTree = "<group>"; };
 		9391F3431BF51BB000A0B603 /* icon-chevron-right-8x13@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-chevron-right-8x13@3x.png"; sourceTree = "<group>"; };
+		9391F3441BF520F500A0B603 /* icon-share-20x20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-share-20x20.png"; sourceTree = "<group>"; };
+		9391F3451BF520F500A0B603 /* icon-share-20x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-share-20x20@2x.png"; sourceTree = "<group>"; };
+		9391F3461BF520F500A0B603 /* icon-share-20x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-share-20x20@3x.png"; sourceTree = "<group>"; };
 		9396CFAF1921096A006A66D7 /* libWordPressCom-Stats-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libWordPressCom-Stats-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9396CFB21921096A006A66D7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9396CFB61921096B006A66D7 /* WordPressCom-Stats-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WordPressCom-Stats-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -368,6 +371,9 @@
 				9391F3351BF516C900A0B603 /* icon-folder-20x20.png */,
 				9391F3361BF516C900A0B603 /* icon-folder-20x20@2x.png */,
 				9391F3371BF516C900A0B603 /* icon-folder-20x20@3x.png */,
+				9391F3441BF520F500A0B603 /* icon-share-20x20.png */,
+				9391F3451BF520F500A0B603 /* icon-share-20x20@2x.png */,
+				9391F3461BF520F500A0B603 /* icon-share-20x20@3x.png */,
 				930001711BF2344A009275DB /* icon-star-16x16.png */,
 				930001721BF2344A009275DB /* icon-star-16x16@2x.png */,
 				9391F32E1BF3C7C600A0B603 /* icon-star-16x16@3x.png */,

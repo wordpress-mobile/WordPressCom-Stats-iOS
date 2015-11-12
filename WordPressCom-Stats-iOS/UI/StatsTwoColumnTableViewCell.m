@@ -73,7 +73,7 @@
     } else if (self.expandable && !self.expanded){
         self.leftHandGlyph.image = [[UIImage imageNamed:@"icon-chevron-down-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
-        self.leftHandGlyph.image = nil;
+        self.leftHandGlyph.image = [[UIImage imageNamed:@"icon-share-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeTag) {
         self.leftHandGlyph.image =  [[UIImage imageNamed:@"icon-tag-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeCategory) {
