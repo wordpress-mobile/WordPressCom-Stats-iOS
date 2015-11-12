@@ -4,13 +4,14 @@
 #import "StatsBorderedCellBackgroundView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WPStyleGuide+Stats.h"
+#import "NSObject+StatsBundleHelper.h"
 
 @interface StatsTwoColumnTableViewCell ()
 
 @property (nonatomic, weak) IBOutlet UILabel *leftLabel;
 @property (nonatomic, weak) IBOutlet UILabel *rightLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
-@property (nonatomic, weak) IBOutlet UILabel *leftHandGlyphLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *leftHandGlyph;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *spaceConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *leadingEdgeConstraint;
@@ -18,19 +19,13 @@
 
 @end
 
-static NSString *const StatsTwoColumnCellChevronExpanded = @"";
-static NSString *const StatsTwoColumnCellChevronCollapsed = @"";
-static NSString *const StatsTwoColumnCellLink = @"";
-static NSString *const StatsTwoColumnCellTag = @"";
-static NSString *const StatsTwoColumnCellCategory = @"";
-
 @implementation StatsTwoColumnTableViewCell
 
 - (void)doneSettingProperties
 {
     self.leftLabel.text = self.leftText;
     self.rightLabel.text = self.rightText;
-    self.leftHandGlyphLabel.hidden = !self.expandable && self.selectType == StatsTwoColumnTableViewCellSelectTypeDetail;
+    self.leftHandGlyph.hidden = !self.expandable && self.selectType == StatsTwoColumnTableViewCellSelectTypeDetail;
 
     if (self.selectable) {
         self.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -61,16 +56,6 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         } failure:^(NSError *error) {
             DDLogWarn(@"Unable to download icon %@", error);
         }];
-    } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-        NSBundle *bundle = [NSBundle bundleWithPath:path];
-        
-        if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-            self.iconImageView.image = [UIImage imageNamed:@"world.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        } else {
-            NSString *imagePath = [bundle pathForResource:@"world" ofType:@"png"];
-            self.iconImageView.image = [UIImage imageWithContentsOfFile:imagePath];
-        }
     } else {
         self.iconImageView.hidden = YES;
         self.widthConstraint.constant = 0.0f;
@@ -83,22 +68,22 @@ static NSString *const StatsTwoColumnCellCategory = @"";
         backgroundView.contentBackgroundView.backgroundColor = [WPStyleGuide statsNestedCellBackground];
     }
     
-    self.leftHandGlyphLabel.textColor = [WPStyleGuide grey];
     if (self.expandable && self.expanded) {
-        self.leftHandGlyphLabel.text = StatsTwoColumnCellChevronExpanded;
+        self.leftHandGlyph.image = [[UIImage imageNamed:@"icon-chevron-up-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.expandable && !self.expanded){
-        self.leftHandGlyphLabel.text = StatsTwoColumnCellChevronCollapsed;
+        self.leftHandGlyph.image = [[UIImage imageNamed:@"icon-chevron-down-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeURL) {
-        self.leftHandGlyphLabel.text = StatsTwoColumnCellLink;
+        self.leftHandGlyph.image = nil;
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeTag) {
-        self.leftHandGlyphLabel.text = StatsTwoColumnCellTag;
+        self.leftHandGlyph.image =  [[UIImage imageNamed:@"icon-tag-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (self.selectType == StatsTwoColumnTableViewCellSelectTypeCategory) {
-        self.leftHandGlyphLabel.text = StatsTwoColumnCellCategory;
+        self.leftHandGlyph.image =  [[UIImage imageNamed:@"icon-folder-20x20" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
+    self.leftHandGlyph.tintColor = [WPStyleGuide grey];
     
-    CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 15.0f : 23.0f;
+    CGFloat indentWidth = self.indentable ? self.indentLevel * 8.0f + 15.0f : 20.0f;
     // Account for chevron or link icon or if its a nested row
-    indentWidth += !self.leftHandGlyphLabel.hidden || self.indentLevel > 1 ? 28.0f : 0.0f;
+    indentWidth += !self.leftHandGlyph.hidden || self.indentLevel > 1 ? 28.0f : 0.0f;
     self.leadingEdgeConstraint.constant = indentWidth;
     
     [self setNeedsUpdateConstraints];
