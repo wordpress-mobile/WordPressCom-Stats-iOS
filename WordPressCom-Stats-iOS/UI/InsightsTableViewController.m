@@ -81,12 +81,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-    NSBundle *bundle = [NSBundle bundleWithPath:path];
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *path = [bundle pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+    NSBundle *resourcesBundle = [NSBundle bundleWithPath:path];
     
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
-    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
-    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
+    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:resourcesBundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
+    [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:resourcesBundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
     
     self.sections = @[@(StatsSectionInsightsMostPopular),
                       @(StatsSectionInsightsAllTime),
@@ -1422,7 +1423,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (NSBundle *)bundle
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+    NSBundle *classBundle = [NSBundle bundleForClass:[self class]];
+    NSString *path = [classBundle pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
     NSBundle *bundle = [NSBundle bundleWithPath:path];
 
     return bundle;
