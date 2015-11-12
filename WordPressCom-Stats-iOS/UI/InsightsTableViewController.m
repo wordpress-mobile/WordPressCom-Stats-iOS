@@ -1,5 +1,4 @@
 #import "InsightsTableViewController.h"
-#import "WPFontManager+Stats.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import "InsightsSectionHeaderTableViewCell.h"
@@ -14,6 +13,8 @@
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "UIViewController+SizeClass.h"
+#import "NSObject+StatsBundleHelper.h"
+#import <WordPress-iOS-Shared/WPFontManager.h>
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -81,8 +82,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-    NSBundle *bundle = [NSBundle bundleWithPath:path];
+    NSBundle *bundle = self.statsBundle;
     
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
@@ -690,11 +690,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell
 {
-    cell.allTimePostsLabel.attributedText = [self postsAttributedStringWithFont:cell.allTimePostsLabel.font];
-    cell.allTimeViewsLabel.attributedText = [self viewsAttributedStringWithFont:cell.allTimeViewsLabel.font];
-    cell.allTimeVisitorsLabel.attributedText = [self visitorsAttributedStringWithFont:cell.allTimeVisitorsLabel.font];
-    cell.allTimeBestViewsLabel.attributedText = [self bestViewsAttributedStringWithFont:cell.allTimeBestViewsLabel.font];
-
     StatsAllTime *statsAllTime = self.sectionData[@(StatsSectionInsightsAllTime)];
     
     if (!statsAllTime) {
@@ -756,11 +751,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:(StatsSection)statsSection
 {
-    [cell.todayViewsButton setAttributedTitle:[self viewsAttributedStringWithFont:cell.todayViewsButton.titleLabel.font] forState:UIControlStateNormal];
-    [cell.todayVisitorsButton setAttributedTitle:[self visitorsAttributedStringWithFont:cell.todayVisitorsButton.titleLabel.font] forState:UIControlStateNormal];
-    [cell.todayLikesButton setAttributedTitle:[self likesAttributedStringWithFont:cell.todayLikesButton.titleLabel.font] forState:UIControlStateNormal];
-    [cell.todayCommentsButton setAttributedTitle:[self commentsAttributedStringWithFont:cell.todayCommentsButton.titleLabel.font] forState:UIControlStateNormal];
-    
     id data = [self statsDataForStatsSection:statsSection];
     
     if (!data) {
@@ -808,32 +798,28 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         switch (indexPath.row) {
             case 1: // Views
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeViews;
                 cell.valueLabel.text = todaySummary.views ?: @"-";
                 break;
             }
                 
             case 2: // Visitors
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeVisitors;
                 cell.valueLabel.text = todaySummary.visitors ?: @"-";
                 break;
             }
                 
             case 3: // Likes
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeLikes;
                 cell.valueLabel.text = todaySummary.likes ?: @"-";
                 break;
             }
                 
             case 4: // Comments
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeComments;
                 cell.valueLabel.text = todaySummary.comments ?: @"-";
                 break;
             }
@@ -846,16 +832,14 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         switch (indexPath.row) {
             case 2: // Views
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeViews;
                 cell.valueLabel.text = latestPostSummary.views ?: @"-";
                 break;
             }
                 
             case 3: // Likes
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeLikes;
                 cell.valueLabel.text = latestPostSummary.likes ?: @"-";
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
@@ -863,8 +847,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                 
             case 4: // Comments
             {
-                cell.categoryIconLabel.text = @"";
-                cell.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+                cell.cellType = StatsSelectableTableViewCellTypeComments;
                 cell.valueLabel.text = latestPostSummary.comments ?: @"-";
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
@@ -1318,88 +1301,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 #pragma mark - Attributed String generation methods
 
-- (NSMutableAttributedString *)postsAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *postsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Posts", @"Stats Posts label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *postsTextAttachment = [InlineTextAttachment new];
-    postsTextAttachment.fontDescender = font.descender;
-    postsTextAttachment.image = [self postsImage];
-    [postsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:postsTextAttachment] atIndex:0];
-    [postsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [postsText appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
-    [postsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, postsText.length)];
-
-    return postsText;
-}
-
-- (NSMutableAttributedString *)viewsAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *viewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Views", @"Stats Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *viewsTextAttachment = [InlineTextAttachment new];
-    viewsTextAttachment.fontDescender = font.descender;
-    viewsTextAttachment.image = [self viewsImage];
-    [viewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:viewsTextAttachment] atIndex:0];
-    [viewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@"  "] atIndex:1];
-    [viewsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [viewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, viewsText.length)];
-
-    return viewsText;
-}
-
-- (NSMutableAttributedString *)visitorsAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *visitorsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *visitorsTextAttachment = [InlineTextAttachment new];
-    visitorsTextAttachment.fontDescender = font.descender;
-    visitorsTextAttachment.image = [self visitorsImage];
-    [visitorsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:visitorsTextAttachment] atIndex:0];
-    [visitorsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [visitorsText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [visitorsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide darkGrey] range:NSMakeRange(0, visitorsText.length)];
-
-    return visitorsText;
-}
-
-- (NSMutableAttributedString *)bestViewsAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *bestViewsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Best Views Ever", @"Stats Best Views label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *bestViewsTextAttachment = [InlineTextAttachment new];
-    bestViewsTextAttachment.fontDescender = font.descender;
-    bestViewsTextAttachment.image = [self bestViewsImage];
-    [bestViewsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:bestViewsTextAttachment] atIndex:0];
-    [bestViewsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [bestViewsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide warningYellow] range:NSMakeRange(0, bestViewsText.length)];
-
-    return bestViewsText;
-}
-
-- (NSMutableAttributedString *)likesAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *likesText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *likesTextAttachment = [InlineTextAttachment new];
-    likesTextAttachment.fontDescender = font.descender;
-    likesTextAttachment.image = [self likesImage];
-    [likesText insertAttributedString:[NSAttributedString attributedStringWithAttachment:likesTextAttachment] atIndex:0];
-    [likesText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [likesText appendAttributedString:[[NSAttributedString alloc] initWithString:@"  "]];
-    [likesText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, likesText.length)];
-
-    return likesText;
-}
-
-- (NSMutableAttributedString *)commentsAttributedStringWithFont:(UIFont *)font
-{
-    NSMutableAttributedString *commentsText = [[NSMutableAttributedString alloc] initWithString:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]]];
-    InlineTextAttachment *commentsTextAttachment = [InlineTextAttachment new];
-    commentsTextAttachment.fontDescender = font.descender;
-    commentsTextAttachment.image = [self commentsImage];
-    [commentsText insertAttributedString:[NSAttributedString attributedStringWithAttachment:commentsTextAttachment] atIndex:0];
-    [commentsText insertAttributedString:[[NSAttributedString alloc] initWithString:@" "] atIndex:1];
-    [commentsText addAttribute:NSForegroundColorAttributeName value:[WPStyleGuide greyDarken20] range:NSMakeRange(0, commentsText.length)];
-
-    return commentsText;
-}
-
 - (NSAttributedString *)latestPostSummaryAttributedString
 {
     StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];
@@ -1420,94 +1321,44 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 #pragma mark - Image methods
 
-- (NSBundle *)bundle
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
-    NSBundle *bundle = [NSBundle bundleWithPath:path];
-
-    return bundle;
-}
-
 - (UIImage *)postsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *postsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        postsImage = [UIImage imageNamed:@"icon-text_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        postsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-text_normal" ofType:@"png"]];
-    }
+    UIImage *postsImage = [UIImage imageNamed:@"icon-text_normal.png"];
     
     return postsImage;
 }
 
 - (UIImage *)viewsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *viewsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        viewsImage = [UIImage imageNamed:@"icon-eye_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        viewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-eye_normal" ofType:@"png"]];
-    }
+    UIImage *viewsImage = [UIImage imageNamed:@"icon-eye-16x16.png"];
     
     return viewsImage;
 }
 
 - (UIImage *)visitorsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *visitorsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        visitorsImage = [UIImage imageNamed:@"icon-user_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        visitorsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-user_normal" ofType:@"png"]];
-    }
+    UIImage *visitorsImage = [UIImage imageNamed:@"icon-user_normal.png"];
     
     return visitorsImage;
 }
 
 - (UIImage *)bestViewsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *bestViewsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        bestViewsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-trophy_normal" ofType:@"png"]];
-    }
+    UIImage *bestViewsImage = [UIImage imageNamed:@"icon-trophy_normal.png"];
     
     return bestViewsImage;
 }
 
 - (UIImage *)likesImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *likesImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        likesImage = [UIImage imageNamed:@"icon-star_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        likesImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-star_normal" ofType:@"png"]];
-    }
+    UIImage *likesImage = [UIImage imageNamed:@"icon-star_normal.png"];
     
     return likesImage;
 }
 
 - (UIImage *)commentsImage
 {
-    NSBundle *bundle = [self bundle];
-    UIImage *commentsImage;
-    
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        commentsImage = [UIImage imageNamed:@"icon-comment_normal.png" inBundle:bundle compatibleWithTraitCollection:nil];
-    } else {
-        commentsImage = [UIImage imageWithContentsOfFile:[bundle pathForResource:@"icon-comment_normal" ofType:@"png"]];
-    }
+    UIImage *commentsImage = [UIImage imageNamed:@"icon-comment_normal.png"];
     
     return commentsImage;
 }

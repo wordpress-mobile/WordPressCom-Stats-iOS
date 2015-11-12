@@ -123,7 +123,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     if ([identifier isEqualToString:StatsTableGraphCellIdentifier]) {
         [self configureSectionGraphCell:cell];
     } else if ([identifier isEqualToString:StatsTableGraphSelectableCellIdentifier]) {
-        [self configureSectionGraphSelectableCell:cell];
+        [self configureSectionGraphSelectableCell:(StatsSelectableTableViewCell *)cell];
     } else if ([identifier isEqualToString:StatsTableGroupHeaderCellIdentifier]) {
         [self configureSectionGroupHeaderCell:(StatsStandardBorderedTableViewCell *)cell
                              withStatsSection:statsSection];
@@ -401,21 +401,15 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 }
 
 
-- (void)configureSectionGraphSelectableCell:(UITableViewCell *)cell
+- (void)configureSectionGraphSelectableCell:(StatsSelectableTableViewCell *)cell
 {
-    UILabel *iconLabel = (UILabel *)[cell.contentView viewWithTag:100];
-    UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:200];
-    UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    
     StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
     StatsSummary *summary = visits.statsDataByDate[self.selectedDate];
     
     cell.selected = YES;
     
-    iconLabel.text = @"";
-    textLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
-    textLabel.textColor = [WPStyleGuide darkGrey];
-    valueLabel.text = summary.views;
+    cell.cellType = StatsSelectableTableViewCellTypeViews;
+    cell.valueLabel.text = summary.views;
 }
 
 

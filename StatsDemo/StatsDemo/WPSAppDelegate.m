@@ -1,9 +1,9 @@
 #import "WPSAppDelegate.h"
 #import <HockeySDK/HockeySDK.h>
-#import <WPStyleGuide.h>
-#import <WPFontManager.h>
-#import <UIImage+Util.h>
-#import <UIColor+Helpers.h>
+#import <WordPressShared/WPStyleGuide.h>
+#import <WordPressShared/WPFontManager.h>
+#import <WordPressShared/UIImage+Util.h>
+#import <WordPressShared/UIColor+Helpers.h>
 
 int ddLogLevel = DDLogLevelVerbose;
 

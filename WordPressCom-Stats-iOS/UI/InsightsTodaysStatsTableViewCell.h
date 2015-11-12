@@ -3,6 +3,11 @@
 
 @interface InsightsTodaysStatsTableViewCell : StatsStandardBorderedTableViewCell
 
+@property (nonatomic, weak) IBOutlet UIImageView *todayViewsImage;
+@property (nonatomic, weak) IBOutlet UIImageView *todayVisitorsImage;
+@property (nonatomic, weak) IBOutlet UIImageView *todayLikesImage;
+@property (nonatomic, weak) IBOutlet UIImageView *todayCommentsImage;
+
 @property (nonatomic, weak) IBOutlet UIButton *todayViewsButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayVisitorsButton;
 @property (nonatomic, weak) IBOutlet UIButton *todayLikesButton;

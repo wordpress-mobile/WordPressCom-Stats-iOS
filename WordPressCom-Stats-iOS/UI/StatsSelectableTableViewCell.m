@@ -2,8 +2,12 @@
 #import <WordPress-iOS-Shared/UIImage+Util.h>
 #import "WPStyleGuide+Stats.h"
 #import "StatsBorderedCellBackgroundView.h"
+#import "NSObject+StatsBundleHelper.h"
 
 @interface StatsSelectableTableViewCell ()
+
+@property (nonatomic, weak) IBOutlet UIImageView *categoryIcon;
+@property (nonatomic, weak) IBOutlet UILabel *categoryLabel;
 
 @property (nonatomic, strong) UIView *sideBorderView;
 @property (nonatomic, strong) UIView *darkerBackgroundView;
@@ -17,6 +21,8 @@
     [super awakeFromNib];
     
     self.selectedIsLighter = YES;
+    self.cellType = StatsSelectableTableViewCellTypeViews;
+    [self updateLabels];
     
     // Standard colors for use in the graph view
     self.selectedCellTextColor = [WPStyleGuide darkGrey];
@@ -39,11 +45,11 @@
     [super setSelected:selected animated:animated];
 
     if (selected) {
-        self.categoryIconLabel.textColor = self.selectedCellTextColor;
+        self.categoryIcon.tintColor = self.selectedCellTextColor;
         self.categoryLabel.textColor = self.selectedCellTextColor;
         self.valueLabel.textColor = self.selectedCellValueColor;
     } else {
-        self.categoryIconLabel.textColor = self.unselectedCellTextColor;
+        self.categoryIcon.tintColor = self.unselectedCellTextColor;
         self.categoryLabel.textColor = self.unselectedCellTextColor;
         
         if ([self.valueLabel.text isEqualToString:@"0"]) {
@@ -72,6 +78,53 @@
     [super prepareForReuse];
     
     self.selectedIsLighter = NO;
+    self.cellType = StatsSelectableTableViewCellTypeViews;
+}
+
+- (void)setCellType:(StatsSelectableTableViewCellType)cellType
+{
+    if (cellType == _cellType) {
+        return;
+    }
+    
+    _cellType = cellType;
+    [self updateLabels];
+}
+
+- (void)updateLabels
+{
+    switch (self.cellType) {
+        case StatsSelectableTableViewCellTypeViews:
+        {
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-eye-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            break;
+        }
+            
+        case StatsSelectableTableViewCellTypeVisitors:
+        {
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-user-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            break;
+        }
+            
+        case StatsSelectableTableViewCellTypeLikes:
+        {
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-star-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            break;
+        }
+            
+        case StatsSelectableTableViewCellTypeComments:
+        {
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-comment-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 @end

@@ -1,9 +1,15 @@
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, StatsSelectableTableViewCellType) {
+    StatsSelectableTableViewCellTypeViews,
+    StatsSelectableTableViewCellTypeVisitors,
+    StatsSelectableTableViewCellTypeLikes,
+    StatsSelectableTableViewCellTypeComments
+};
+
 @interface StatsSelectableTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) IBOutlet UILabel *categoryIconLabel;
-@property (nonatomic, weak) IBOutlet UILabel *categoryLabel;
+@property (nonatomic, assign) StatsSelectableTableViewCellType cellType;
 @property (nonatomic, weak) IBOutlet UILabel *valueLabel;
 
 @property (nonatomic, assign) BOOL selectedIsLighter;

@@ -5,9 +5,13 @@
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *heightConstraint;
 
+@property (nonatomic, weak) IBOutlet UIImageView *allTimePostsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *allTimeViewsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeViewsLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *allTimeVisitorsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeVisitorsLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *allTimeBestViewsImage;
 @property (nonatomic, weak) IBOutlet UILabel *allTimeBestViewsLabel;
 
 @property (nonatomic, weak) IBOutlet UILabel *allTimePostsValueLabel;
