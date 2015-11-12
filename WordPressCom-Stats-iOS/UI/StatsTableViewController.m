@@ -12,7 +12,6 @@
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "StatsSection.h"
-#import "WPFontManager+Stats.h"
 #import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
 
@@ -48,16 +47,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 @end
 
 @implementation StatsTableViewController
-
-- (void)awakeFromNib
-{
-    // Force load fonts from bundle
-    [WPFontManager openSansBoldFontOfSize:1.0f];
-    [WPFontManager openSansRegularFontOfSize:1.0f];
-    [WPFontManager noticonsReguarFontOfSize:1.0f];
-
-    [super awakeFromNib];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

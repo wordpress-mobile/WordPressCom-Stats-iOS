@@ -1,5 +1,4 @@
 #import "InsightsTableViewController.h"
-#import "WPFontManager+Stats.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import "InsightsSectionHeaderTableViewCell.h"
@@ -15,6 +14,7 @@
 #import "StatsPostDetailsTableViewController.h"
 #import "UIViewController+SizeClass.h"
 #import "NSObject+StatsBundleHelper.h"
+#import <WordPress-iOS-Shared/WPFontManager.h>
 
 @interface InlineTextAttachment : NSTextAttachment
 
