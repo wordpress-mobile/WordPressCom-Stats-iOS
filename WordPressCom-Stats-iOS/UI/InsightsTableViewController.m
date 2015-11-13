@@ -7,14 +7,14 @@
 #import "InsightsTodaysStatsTableViewCell.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsSection.h"
-#import <WordPressComAnalytics/WPAnalytics.h>
+#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
 #import "StatsTwoColumnTableViewCell.h"
 #import "StatsItemAction.h"
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "UIViewController+SizeClass.h"
 #import "NSObject+StatsBundleHelper.h"
-#import <WordPressShared/WPFontManager.h>
+#import <WordPress-iOS-Shared/WPFontManager.h>
 
 @interface InlineTextAttachment : NSTextAttachment
 
