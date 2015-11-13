@@ -1,6 +1,6 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
-#import <WordPress-iOS-Shared/WPImageSource.h>
+#import <WordPressShared/WPImageSource.h>
 #import "StatsBorderedCellBackgroundView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WPStyleGuide+Stats.h"
