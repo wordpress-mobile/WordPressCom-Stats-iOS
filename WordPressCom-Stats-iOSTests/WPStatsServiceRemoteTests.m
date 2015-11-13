@@ -5,7 +5,7 @@
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <WordPressCom-Analytics-iOS/WPAnalytics.h>
+#import <WordPressComAnalytics/WPAnalytics.h>
 
 @interface WPStatsServiceRemoteTests : XCTestCase
 
