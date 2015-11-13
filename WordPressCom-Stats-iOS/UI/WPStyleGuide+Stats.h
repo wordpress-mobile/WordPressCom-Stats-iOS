@@ -1,4 +1,4 @@
-#import <WordPressShared/WPStyleGuide.h>
+#import <WordPress-iOS-Shared/WPStyleGuide.h>
 
 extern const CGFloat StatsVCHorizontalOuterPadding;
 extern const CGFloat StatsCVerticalOuterPadding;
