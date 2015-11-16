@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import <WPStatsViewController.h>
+#import <WordPressCom_Stats_iOS/WPStatsViewController.h>
 
 @interface WPSViewController : UIViewController <WPStatsViewControllerDelegate>
 
