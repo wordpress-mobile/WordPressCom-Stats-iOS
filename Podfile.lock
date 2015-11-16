@@ -34,7 +34,7 @@ PODS:
   - WordPress-iOS-Shared (0.5.0):
     - AFNetworking (~> 2.5)
     - CocoaLumberjack (= 2.0.0)
-  - WordPressCom-Analytics-iOS (0.0.40)
+  - WordPressCom-Analytics-iOS (0.1.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6.0)
@@ -43,7 +43,7 @@ DEPENDENCIES:
   - OCMock
   - OHHTTPStubs (= 3.1.1)
   - WordPress-iOS-Shared (~> 0.5.0)
-  - WordPressCom-Analytics-iOS (~> 0.0.40)
+  - WordPressCom-Analytics-iOS (~> 0.1.0)
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
@@ -52,6 +52,6 @@ SPEC CHECKSUMS:
   OCMock: 28def049ef47f996b515a8eeea958be7ccab2dbb
   OHHTTPStubs: cc1b9cb45b963daf891aa736f35d29d74308f0c9
   WordPress-iOS-Shared: 5480e7b5c9c55158ea22c89ff44fca5597852224
-  WordPressCom-Analytics-iOS: 460c40e66cf4e75d19ca691f6a50c30cd16e8a79
+  WordPressCom-Analytics-iOS: 355b8c6cf1d50d64ca7667e6f9e94c989e466775
 
 COCOAPODS: 0.39.0
