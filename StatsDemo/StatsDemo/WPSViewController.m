@@ -78,8 +78,9 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
         [self.statsViewController willMoveToParentViewController:nil];
         [self.statsViewController removeFromParentViewController];
     }
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
+
+    NSBundle *statsBundle = [NSBundle bundleForClass:[WPStatsViewController class]];
+    NSString *path = [statsBundle pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
     NSBundle *bundle = [NSBundle bundleWithPath:path];
 
     UINavigationController *navController = [[UIStoryboard storyboardWithName:@"SiteStats" bundle:bundle] instantiateInitialViewController];
