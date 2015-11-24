@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
     sp.source_files = 'WordPressCom-Stats-iOS/Services'
   end
   
+  s.header_dir = 'WordPressComStatsiOS'
   s.dependency 'AFNetworking',	'~> 2.6.0'
   s.dependency 'CocoaLumberjack', '2.0.0'
   s.dependency 'WordPress-iOS-Shared', '~> 0.5.0'
