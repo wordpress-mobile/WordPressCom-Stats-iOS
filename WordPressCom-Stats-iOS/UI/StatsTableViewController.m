@@ -33,7 +33,6 @@ static NSString *const StatsTableGraphCellIdentifier = @"GraphRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
-static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
 
 @interface StatsTableViewController () <WPStatsGraphViewControllerDelegate>
 
@@ -68,8 +67,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                            @(StatsSectionCountry),
                            @(StatsSectionSearchTerms),
                            @(StatsSectionEvents),
-                           @(StatsSectionVideos),
-                           @(StatsSectionWebVersion)];
+                           @(StatsSectionVideos)];
     
     [self wipeDataAndSeedGroups];
     
@@ -123,7 +121,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionGraph:
             return 5;
         case StatsSectionPeriodHeader:
-        case StatsSectionWebVersion:
             return 1;
             
         // TODO :: Pull offset from StatsGroup
@@ -237,8 +234,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewAllCellIdentifier]) {
         return indexPath;
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
-        return indexPath;
     } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableTwoColumnCellIdentifier]) {
         // Disable taps on rows without children
         StatsGroup *group = [self statsDataForStatsSection:statsSection];
@@ -330,17 +325,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                     break;
                 }
             }
-        }
-    } else if ([[self cellIdentifierForIndexPath:indexPath] isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
-        [WPAnalytics track:WPAnalyticsStatStatsOpenedWebVersion];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-        if ([self.statsDelegate respondsToSelector:@selector(statsViewController:didSelectViewWebStatsForSiteID:)]) {
-            WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
-            [self.statsDelegate statsViewController:statsViewController didSelectViewWebStatsForSiteID:self.statsService.siteId];
-        } else {
-            NSURL *webURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://wordpress.com/stats/day/%@", self.statsService.siteId]];
-            [[UIApplication sharedApplication] openURL:webURL];
         }
     }
 }
@@ -747,9 +731,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
             
             break;
         }
-        case StatsSectionWebVersion:
-            identifier = StatsTableViewWebVersionCellIdentifier;
-            break;
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
         case StatsSectionInsightsAllTime:
@@ -759,6 +740,7 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
         case StatsSectionPostDetailsLoadingIndicator:
         case StatsSectionPostDetailsMonthsYears:
         case StatsSectionPostDetailsRecentWeeks:
+        case StatsSectionWebVersion:
             break;
     }
 
@@ -804,10 +786,6 @@ static NSString *const StatsTableViewWebVersionCellIdentifier = @"WebVersion";
                         forStatsSection:statsSection
                           withStatsItem:item
                        andNextStatsItem:nextItem];
-    } else if ([cellIdentifier isEqualToString:StatsTableViewWebVersionCellIdentifier]) {
-        UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
-        label.text = NSLocalizedString(@"View Web Version", @"View Web Version button in stats");
-        
     }
 }
 
