@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name         = "WordPressCom-Stats-iOS"
-  s.version      = "0.5.1"
+  s.version      = "0.6.0"
   s.summary      = "Reusable component for displaying WordPress.com site stats in an iOS application."
 
   s.description  = <<-DESC
                    Reusable component for displaying WordPress.com site stats in an iOS application
 
-                   * Requires an OAuth2 Token for WordPress.com generated currently by WordPress-Mobile/WordPress-iOS
+                   * Requires an OAuth2 bearer token for WordPress.com generated currently by WordPress-Mobile/WordPress-iOS
                    DESC
 
   s.homepage     = "http://apps.wordpress.org"
