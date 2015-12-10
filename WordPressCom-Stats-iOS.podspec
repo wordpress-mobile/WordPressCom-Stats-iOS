@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "WordPressCom-Stats-iOS"
-  s.version      = "0.4.12"
+  s.version      = "0.5.1"
   s.summary      = "Reusable component for displaying WordPress.com site stats in an iOS application."
 
   s.description  = <<-DESC
@@ -32,9 +32,10 @@ Pod::Spec.new do |s|
     sp.source_files = 'WordPressCom-Stats-iOS/Services'
   end
   
+  s.header_dir = 'WordPressComStatsiOS'
   s.dependency 'AFNetworking',	'~> 2.6.0'
-  s.dependency 'CocoaLumberjack', '2.0.0'
-  s.dependency 'WordPress-iOS-Shared', '~> 0.4.4'
+  s.dependency 'CocoaLumberjack', '~> 2.2.0'
+  s.dependency 'WordPress-iOS-Shared', '~> 0.5.1'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
-  s.dependency 'WordPressCom-Analytics-iOS', '~> 0.0.41'
+  s.dependency 'WordPressCom-Analytics-iOS', '~>0.1.0'
 end

@@ -23,7 +23,6 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 
 @optional
 
-- (void)statsViewController:(WPStatsViewController *)controller didSelectViewWebStatsForSiteID:(NSNumber *)siteID;
 - (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
 
 @end
