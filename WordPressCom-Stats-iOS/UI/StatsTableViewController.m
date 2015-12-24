@@ -471,7 +471,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
                                           unit:self.selectedPeriodUnit
-                         numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                     withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          if (skipGraph) {

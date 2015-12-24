@@ -311,7 +311,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     __weak __typeof(self) weakSelf = self;
     
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
-                                   numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
