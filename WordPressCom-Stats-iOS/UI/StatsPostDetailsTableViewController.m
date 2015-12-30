@@ -77,10 +77,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self abortRetrieveStats];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark - Table view data source
 
@@ -382,8 +378,6 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)configureSectionGraphCell:(UITableViewCell *)cell
 {
-    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
-    
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
         [graphView removeFromSuperview];
@@ -392,11 +386,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
         [cell.contentView addSubview:graphView];
     }
     
-    self.graphViewController.currentSummaryType = StatsSummaryTypeViews;
-    self.graphViewController.visits = visits;
-    [self.graphViewController doneSettingProperties];
-    [self.graphViewController.collectionView reloadData];
-    [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionPostDetailsGraph];
+    [self.graphViewController setVisits:visits forSummaryType:StatsSummaryTypeViews withSelectedDate:self.selectedDate];
 }
 
 

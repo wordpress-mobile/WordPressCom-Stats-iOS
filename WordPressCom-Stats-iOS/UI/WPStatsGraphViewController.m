@@ -4,6 +4,7 @@
 #import "WPStatsCollectionViewFlowLayout.h"
 #import "WPStatsGraphBackgroundView.h"
 #import "WPStyleGuide+Stats.h"
+#import "UIViewController+SizeClass.h"
 
 @interface WPStatsGraphViewController () <UICollectionViewDelegateFlowLayout>
 {
@@ -14,6 +15,10 @@
 @property (nonatomic, assign) CGFloat maximumY;
 @property (nonatomic, assign) NSUInteger numberOfXValues;
 @property (nonatomic, assign) NSUInteger numberOfYValues;
+
+@property (nonatomic, strong) StatsVisits *visits;
+@property (nonatomic, strong) NSArray<StatsSummary *> *statsData;
+@property (nonatomic, assign) StatsSummaryType currentSummaryType;
 
 @end
 
@@ -58,11 +63,15 @@ static NSInteger const RecommendedYAxisTicks = 2;
     
 }
 
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-    [super traitCollectionDidChange:previousTraitCollection];
-
-    [self.collectionView performBatchUpdates:nil completion:nil];
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [self truncateDataIfNecessary];
+        [self.collectionView reloadData];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+    }];
 }
 
 #pragma mark - UICollectionViewDelegate methods
@@ -75,7 +84,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:shouldSelectDate:)]) {
-        StatsSummary *summary = (StatsSummary *)self.visits.statsData[(NSUInteger)indexPath.row];
+        StatsSummary *summary = (StatsSummary *)self.statsData[(NSUInteger)indexPath.row];
         return [self.graphDelegate statsGraphViewController:self shouldSelectDate:summary.date];
     }
     
@@ -92,7 +101,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     }];
     
     if ([self.graphDelegate respondsToSelector:@selector(statsGraphViewController:didSelectDate:)]) {
-        StatsSummary *summary = (StatsSummary *)self.visits.statsData[(NSUInteger)indexPath.row];
+        StatsSummary *summary = (StatsSummary *)self.statsData[(NSUInteger)indexPath.row];
         [self.graphDelegate statsGraphViewController:self didSelectDate:summary.date];
     }
 }
@@ -109,7 +118,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return (NSInteger)self.visits.statsData.count;
+    return (NSInteger)self.statsData.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -121,7 +130,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     cell.numberOfYValues = self.numberOfYValues;
     
     [cell setCategoryBars:barData];
-    cell.barName = [self.visits.statsData[(NSUInteger)indexPath.row] label];
+    cell.barName = [self.statsData[(NSUInteger)indexPath.row] label];
     [cell finishedSettingProperties];
     
     return cell;
@@ -168,11 +177,14 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (void)selectGraphBarWithDate:(NSDate *)selectedDate
 {
-    for (StatsSummary *summary in self.visits.statsData) {
+    for (StatsSummary *summary in self.statsData) {
+        NSInteger index = (NSInteger)[self.statsData indexOfObject:summary];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+
         if ([summary.date isEqualToDate:selectedDate]) {
-            NSInteger index = (NSInteger)[self.visits.statsData indexOfObject:summary];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
             [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        } else {
+            [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
         }
     }
 }
@@ -182,12 +194,32 @@ static NSInteger const RecommendedYAxisTicks = 2;
     [self calculateMaximumYValue];
 }
 
+- (void)setVisits:(StatsVisits *)visits forSummaryType:(StatsSummaryType)summaryType withSelectedDate:(NSDate *)selectedDate
+{
+    self.visits = visits;
+    [self truncateDataIfNecessary];
+    
+    self.currentSummaryType = summaryType;
+
+    [self doneSettingProperties];
+    [self.collectionView reloadData];
+    [self selectGraphBarWithDate:selectedDate];
+}
+
 #pragma mark - Private methods
+
+- (void)truncateDataIfNecessary
+{
+    self.statsData = [self.visits.statsData copy];
+    if (self.isViewHorizontallyCompact && self.visits.statsData.count > 7) {
+        self.statsData = [self.visits.statsData subarrayWithRange:NSMakeRange(self.visits.statsData.count - 7, 7)];
+    }
+}
 
 - (void)calculateMaximumYValue
 {
     CGFloat maximumY = 0.0f;
-    for (StatsSummary *summary in self.visits.statsData) {
+    for (StatsSummary *summary in self.statsData) {
         NSNumber *value = [self valueForCurrentTypeFromSummary:summary];
         if (maximumY < value.floatValue) {
             maximumY = value.floatValue;
@@ -211,7 +243,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
         self.numberOfYValues = yAxisTicks;
     }
     
-    self.numberOfXValues = self.visits.statsData.count;
+    self.numberOfXValues = self.statsData.count;
 }
 
 - (NSArray *)barDataForIndexPath:(NSIndexPath *)indexPath
@@ -219,7 +251,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
     return @[@{ @"color" : [WPStyleGuide wordPressBlue],
                 @"selectedColor" : [WPStyleGuide statsDarkerOrange],
                 @"highlightedColor" : [WPStyleGuide statsMediumBlue],
-                @"value" : [self valueForCurrentTypeFromSummary:self.visits.statsData[(NSUInteger)indexPath.row]],
+                @"value" : [self valueForCurrentTypeFromSummary:self.statsData[(NSUInteger)indexPath.row]],
                 @"name" : @"views"
                 },
              ];

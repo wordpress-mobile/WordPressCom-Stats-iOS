@@ -88,8 +88,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
-    [self retrieveStatsSkipGraph:NO];
+    
+    [self.tableView reloadData];
 
     [self trackViewControllerAnalytics];
 }
@@ -791,8 +791,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell
 {
-    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
-
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
         [graphView removeFromSuperview];
@@ -803,11 +801,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     cell.bottomBorderEnabled = NO;
     
-    self.graphViewController.currentSummaryType = self.selectedSummaryType;
-    self.graphViewController.visits = visits;
-    [self.graphViewController doneSettingProperties];
-    [self.graphViewController.collectionView reloadData];
-    [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
+    [self.graphViewController setVisits:visits forSummaryType:self.selectedSummaryType withSelectedDate:self.selectedDate];
 }
 
 
