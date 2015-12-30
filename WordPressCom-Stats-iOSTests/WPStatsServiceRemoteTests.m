@@ -82,7 +82,6 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                      unit:StatsPeriodUnitDay
-                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -118,7 +117,6 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                      unit:StatsPeriodUnitDay
-                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          [expectation fulfill];
@@ -140,7 +138,6 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                      unit:StatsPeriodUnitDay
-                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -183,7 +180,6 @@
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
                                      unit:StatsPeriodUnitDay
-                    numberOfDaysForVisits:12
                     withCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          XCTAssertNotNil(visits, @"visits should not be nil.");
@@ -858,7 +854,6 @@
     }];
     
     [self.subject fetchPostDetailsStatsForPostID:@123
-                           numberOfDaysForVisits:12
                            withCompletionHandler:^(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error)
      {
          XCTAssertNotNil(visits);
