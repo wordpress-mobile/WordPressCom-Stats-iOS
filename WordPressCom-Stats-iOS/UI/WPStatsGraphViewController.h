@@ -12,7 +12,6 @@
 
 - (void)setVisits:(StatsVisits *)visits forSummaryType:(StatsSummaryType)summaryType withSelectedDate:(NSDate *)selectedDate;
 - (void)selectGraphBarWithDate:(NSDate *)selectedDate;
-- (void)doneSettingProperties;
 
 @end
 
