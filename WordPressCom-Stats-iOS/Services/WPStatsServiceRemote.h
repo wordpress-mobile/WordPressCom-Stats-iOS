@@ -36,7 +36,6 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
  */
 - (void)batchFetchStatsForDate:(NSDate *)date
                           unit:(StatsPeriodUnit)unit
-         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
@@ -62,7 +61,6 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
                                 andOverallCompletionHandler:(void (^)())completionHandler;
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
-                 numberOfDaysForVisits:(NSUInteger)numberOfDays
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler;
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
@@ -74,7 +72,6 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
 
 - (void)fetchVisitsStatsForDate:(NSDate *)date
                            unit:(StatsPeriodUnit)unit
-          numberOfDaysForVisits:(NSUInteger)numberOfDays
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler;
 
 - (void)fetchPostsStatsForDate:(NSDate *)date
