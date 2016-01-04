@@ -8,6 +8,11 @@ target "StatsDemo" do
   pod 'HockeySDK'
 end
 
+target "StatsDemo Internal" do
+  pod 'WordPressCom-Stats-iOS', :path => '../'
+  pod 'HockeySDK'
+end
+
 post_install do |installer_representation|
     # Directly set the Targeted Device Family
     # See https://github.com/CocoaPods/CocoaPods/issues/2292
