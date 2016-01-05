@@ -114,7 +114,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     [super viewDidAppear:animated];
     
-    [WPAnalytics track:WPAnalyticsStatStatsInsightsAccessed];
+    [WPAnalytics track:WPAnalyticsStatStatsInsightsAccessed withProperties:@{ @"blog_id" : self.statsService.siteId}];
 }
 
 

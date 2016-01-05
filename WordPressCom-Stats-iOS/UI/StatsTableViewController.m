@@ -335,7 +335,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     NSInteger numberOfRows = [self.tableView numberOfRowsInSection:(numberOfSections - 1)];
     
     if (indexPath.section == (numberOfSections - 1) && indexPath.row == (numberOfRows - 1)) {
-        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom];
+        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom withProperties:@{ @"blog_id" : self.statsService.siteId}];
     }
 }
 
@@ -397,7 +397,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
-    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart];
+    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart withProperties:@{ @"blog_id" : self.statsService.siteId}];
 
     self.selectedDate = date;
 
@@ -1089,7 +1089,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             break;
     }
     
-    [WPAnalytics track:stat];
+    [WPAnalytics track:stat withProperties:@{ @"blog_id" : self.statsService.siteId}];
 }
 
 
