@@ -434,8 +434,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     StatsSubSection statsSubSection = [self statsSubSectionForStatsSection:statsSection];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
-        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
-        
         StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
         viewAllVC.selectedDate = nil;
         viewAllVC.periodUnit = StatsPeriodUnitDay;
@@ -445,8 +443,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsDelegate = self.statsDelegate;
     } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
                [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
-        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
-        
         // This is kind of a hack since we trigger this seque programmatically sometimes
         // and don't have a reference to the UITableViewCell for section calculation always
         StatsLatestPostSummary *summary = [self statsDataForStatsSection:StatsSectionInsightsLatestPostSummary];

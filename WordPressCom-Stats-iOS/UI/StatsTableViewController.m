@@ -366,8 +366,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
-        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
-
         StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
         viewAllVC.selectedDate = self.selectedDate;
         viewAllVC.periodUnit = self.selectedPeriodUnit;
@@ -376,8 +374,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
     } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
-        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
-        
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
 
