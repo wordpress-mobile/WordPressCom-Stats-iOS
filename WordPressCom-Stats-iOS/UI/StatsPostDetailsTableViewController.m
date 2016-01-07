@@ -35,7 +35,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
+    [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed withProperties:@{ @"blog_id" : self.statsService.siteId, @"post_id" : self.postID }];
     
     self.sections = [@[@(StatsSectionPostDetailsLoadingIndicator), @(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)] mutableCopy];
     self.sectionData = [NSMutableDictionary new];

@@ -33,7 +33,6 @@
 		93B682EE194F95AD00EBF6DF /* WPSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B682ED194F95AD00EBF6DF /* WPSViewController.m */; };
 		93B682F0194F95AD00EBF6DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93B682EF194F95AD00EBF6DF /* Images.xcassets */; };
 		B72E1240C6524ED200BBD883 /* Pods_StatsDemo_Internal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9D7E756B2CB50AF72144E9 /* Pods_StatsDemo_Internal.framework */; };
-		D2B54CB62CB9D04295FA3119 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFB566E523828C3E497251F4 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,7 +89,6 @@
 				93B682D7194F95AD00EBF6DF /* CoreGraphics.framework in Frameworks */,
 				93B682D9194F95AD00EBF6DF /* UIKit.framework in Frameworks */,
 				93B682D5194F95AD00EBF6DF /* Foundation.framework in Frameworks */,
-				D2B54CB62CB9D04295FA3119 /* Pods.framework in Frameworks */,
 				3E98F5216310EABD5E00DE28 /* Pods_StatsDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

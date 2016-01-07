@@ -713,7 +713,8 @@ static NSInteger const NumberOfDays = 12;
             } else {
                 DDLogError(@"operationForVisitsForDate resulted in nil date: raw date: %@", period[periodIndex]);
                 [WPAnalytics track:WPAnalyticsStatLogSpecialCondition withProperties:@{@"error_condition" : @"WPStatsServiceRemote operationForVisitsForDate:andUnit:withCompletionHandler",
-                                                                                       @"error_details" : [NSString stringWithFormat:@"Date in raw format: %@", period[periodIndex]] }];
+                                                                                       @"error_details" : [NSString stringWithFormat:@"Date in raw format: %@, period: %@ ", period[periodIndex], @(unit)],
+                                                                                       @"blog_id" : self.siteId}];
             }
         }
         

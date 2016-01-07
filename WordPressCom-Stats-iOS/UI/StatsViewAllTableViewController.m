@@ -5,6 +5,7 @@
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
+#import <WordPressComAnalytics/WPAnalytics.h>
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
@@ -34,6 +35,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     
     self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
     self.title = self.statsGroup.groupTitle;
+    
+    [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed withProperties:@{ @"blog_id" : self.statsService.siteId}];
 }
 
 - (void)viewDidAppear:(BOOL)animated
