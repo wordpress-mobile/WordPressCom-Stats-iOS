@@ -7,12 +7,11 @@
 @interface WPStatsGraphViewController : UICollectionViewController
 
 @property (nonatomic, weak) id<WPStatsGraphViewControllerDelegate> graphDelegate;
-@property (nonatomic, strong) StatsVisits *visits;
-@property (nonatomic, assign) StatsSummaryType currentSummaryType;
 @property (nonatomic, assign) BOOL allowDeselection; // defaults to YES
 
+
+- (void)setVisits:(StatsVisits *)visits forSummaryType:(StatsSummaryType)summaryType withSelectedDate:(NSDate *)selectedDate;
 - (void)selectGraphBarWithDate:(NSDate *)selectedDate;
-- (void)doneSettingProperties;
 
 @end
 

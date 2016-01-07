@@ -88,8 +88,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
-    [self retrieveStatsSkipGraph:NO];
+    
+    [self.tableView reloadData];
 
     [self trackViewControllerAnalytics];
 }
@@ -335,7 +335,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     NSInteger numberOfRows = [self.tableView numberOfRowsInSection:(numberOfSections - 1)];
     
     if (indexPath.section == (numberOfSections - 1) && indexPath.row == (numberOfRows - 1)) {
-        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom];
+        [WPAnalytics track:WPAnalyticsStatStatsScrolledToBottom withProperties:@{ @"blog_id" : self.statsService.siteId}];
     }
 }
 
@@ -366,8 +366,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     StatsSection statsSection = [self statsSectionForTableViewSection:indexPath.section];
     
     if ([segue.destinationViewController isKindOfClass:[StatsViewAllTableViewController class]]) {
-        [WPAnalytics track:WPAnalyticsStatStatsViewAllAccessed];
-
         StatsViewAllTableViewController *viewAllVC = (StatsViewAllTableViewController *)segue.destinationViewController;
         viewAllVC.selectedDate = self.selectedDate;
         viewAllVC.periodUnit = self.selectedPeriodUnit;
@@ -376,8 +374,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
     } else if ([segue.destinationViewController isKindOfClass:[StatsPostDetailsTableViewController class]]) {
-        [WPAnalytics track:WPAnalyticsStatStatsSinglePostAccessed];
-        
         StatsGroup *statsGroup = [self statsDataForStatsSection:statsSection];
         StatsItem *statsItem = [statsGroup statsItemForTableViewRow:indexPath.row];
 
@@ -397,7 +393,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)statsGraphViewController:(WPStatsGraphViewController *)controller didSelectDate:(NSDate *)date
 {
-    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart];
+    [WPAnalytics track:WPAnalyticsStatStatsTappedBarChart withProperties:@{ @"blog_id" : self.statsService.siteId}];
 
     self.selectedDate = date;
 
@@ -471,7 +467,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     [self.statsService retrieveAllStatsForDate:self.selectedDate
                                           unit:self.selectedPeriodUnit
-                         numberOfDaysForVisits:self.isViewHorizontallyCompact ? 7 : 12
                     withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error)
      {
          if (skipGraph) {
@@ -792,8 +787,6 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)configureSectionGraphCell:(StatsStandardBorderedTableViewCell *)cell
 {
-    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
-
     if (![[cell.contentView subviews] containsObject:self.graphViewController.view]) {
         UIView *graphView = self.graphViewController.view;
         [graphView removeFromSuperview];
@@ -804,11 +797,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     cell.bottomBorderEnabled = NO;
     
-    self.graphViewController.currentSummaryType = self.selectedSummaryType;
-    self.graphViewController.visits = visits;
-    [self.graphViewController doneSettingProperties];
-    [self.graphViewController.collectionView reloadData];
-    [self.graphViewController selectGraphBarWithDate:self.selectedDate];
+    StatsVisits *visits = [self statsDataForStatsSection:StatsSectionGraph];
+    [self.graphViewController setVisits:visits forSummaryType:self.selectedSummaryType withSelectedDate:self.selectedDate];
 }
 
 
@@ -1095,7 +1085,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             break;
     }
     
-    [WPAnalytics track:stat];
+    [WPAnalytics track:stat withProperties:@{ @"blog_id" : self.statsService.siteId}];
 }
 
 

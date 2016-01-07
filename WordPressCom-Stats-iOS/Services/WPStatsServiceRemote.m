@@ -8,6 +8,7 @@
 #import <AFNetworking/AFNetworking.h>
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
+static NSInteger const NumberOfDays = 12;
 
 @interface WPStatsServiceRemote ()
 
@@ -23,9 +24,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 @end
 
-@implementation WPStatsServiceRemote {
-    
-}
+@implementation WPStatsServiceRemote
 
 - (instancetype)initWithOAuth2Token:(NSString *)oauth2Token siteId:(NSNumber *)siteId andSiteTimeZone:(NSTimeZone *)timeZone
 {
@@ -68,7 +67,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (void)batchFetchStatsForDate:(NSDate *)date
                           unit:(StatsPeriodUnit)unit
-         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
@@ -84,7 +82,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
     NSMutableArray *mutableOperations = [NSMutableArray new];
     
     if (visitsCompletion) {
-        [mutableOperations addObject:[self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:visitsCompletion]];
+        [mutableOperations addObject:[self operationForVisitsForDate:date unit:unit withCompletionHandler:visitsCompletion]];
     }
     if (eventsCompletion) {
         [mutableOperations addObject:[self operationForEventsForDate:date andUnit:unit withCompletionHandler:eventsCompletion]];
@@ -198,7 +196,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 
 - (void)fetchPostDetailsStatsForPostID:(NSNumber *)postID
-                 numberOfDaysForVisits:(NSUInteger)numberOfDays
                  withCompletionHandler:(StatsRemotePostDetailsCompletion)completionHandler
 {
     NSParameterAssert(postID != nil);
@@ -225,8 +222,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         visits.statsData = visitsArray;
         visits.statsDataByDate = visitsDictionary;
         
-        if (visitsData.count > numberOfDays) {
-            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - numberOfDays, numberOfDays)];
+        if (visitsData.count > NumberOfDays) {
+            visitsData = [visitsData subarrayWithRange:NSMakeRange(visitsData.count - NumberOfDays, NumberOfDays)];
         }
 
         for (NSArray *visit in visitsData) {
@@ -334,11 +331,10 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (void)fetchVisitsStatsForDate:(NSDate *)date
                            unit:(StatsPeriodUnit)unit
-          numberOfDaysForVisits:(NSUInteger)numberOfDays
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date unit:unit numberOfDaysForVisits:numberOfDays withCompletionHandler:completionHandler];
+    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date unit:unit withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -678,7 +674,6 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
 
 - (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
                                                  unit:(StatsPeriodUnit)unit
-                                numberOfDaysForVisits:(NSUInteger)numberOfDays
                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
@@ -718,7 +713,8 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
             } else {
                 DDLogError(@"operationForVisitsForDate resulted in nil date: raw date: %@", period[periodIndex]);
                 [WPAnalytics track:WPAnalyticsStatLogSpecialCondition withProperties:@{@"error_condition" : @"WPStatsServiceRemote operationForVisitsForDate:andUnit:withCompletionHandler",
-                                                                                       @"error_details" : [NSString stringWithFormat:@"Date in raw format: %@", period[periodIndex]] }];
+                                                                                       @"error_details" : [NSString stringWithFormat:@"Date in raw format: %@, period: %@ ", period[periodIndex], @(unit)],
+                                                                                       @"blog_id" : self.siteId}];
             }
         }
         
@@ -730,7 +726,7 @@ static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.w
         }
     };
     
-    NSDictionary *parameters = @{@"quantity" : @(numberOfDays),
+    NSDictionary *parameters = @{@"quantity" : @(NumberOfDays),
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
     

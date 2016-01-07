@@ -46,7 +46,6 @@
     
     [self.subject retrieveAllStatsForDate:[NSDate date]
                                      unit:StatsPeriodUnitDay
-                    numberOfDaysForVisits:12
               withVisitsCompletionHandler:^(StatsVisits *visits, NSError *error) {
                   [visitsExpectation fulfill];
               }
@@ -319,7 +318,6 @@
     
     OCMExpect([remote batchFetchStatsForDate:dateCheckBlock
                                         unit:unit
-                       numberOfDaysForVisits:12
                  withVisitsCompletionHandler:[OCMArg any]
                      eventsCompletionHandler:[OCMArg any]
                       postsCompletionHandler:[OCMArg any]
@@ -336,7 +334,6 @@
     
     [self.subject retrieveAllStatsForDate:baseDate
                                      unit:unit
-                    numberOfDaysForVisits:12
               withVisitsCompletionHandler:nil
                   eventsCompletionHandler:nil
                    postsCompletionHandler:nil
@@ -361,7 +358,6 @@
 
 - (void)batchFetchStatsForDate:(NSDate *)date
                           unit:(StatsPeriodUnit)unit
-         numberOfDaysForVisits:(NSUInteger)numberOfDays
    withVisitsCompletionHandler:(StatsRemoteVisitsCompletion)visitsCompletion
        eventsCompletionHandler:(StatsRemoteItemsCompletion)eventsCompletion
         postsCompletionHandler:(StatsRemoteItemsCompletion)postsCompletion
