@@ -67,7 +67,7 @@
 {
     [super traitCollectionDidChange:previousTraitCollection];
 
-    if (self.presentedViewController == self.periodActionSheet) {
+    if (self.presentedViewController != nil && self.presentedViewController == self.periodActionSheet) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     [self updateSegmentedControlForceUpdate:YES];
