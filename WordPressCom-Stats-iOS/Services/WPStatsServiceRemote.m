@@ -471,6 +471,12 @@ static NSInteger const NumberOfDays = 12;
     [operation start];
 }
 
+- (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
+{
+    AFHTTPRequestOperation *operation = [self operationForLatestPostSummaryWithCompletionHandler:completionHandler];
+    [operation start];
+}
+
 #pragma mark - Private methods to compose request operations to be reusable
 
 

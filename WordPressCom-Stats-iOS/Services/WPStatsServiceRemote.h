@@ -115,6 +115,8 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
 
 - (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler;
 
+- (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler;
+
 - (void)cancelAllRemoteOperations;
 
 @end
