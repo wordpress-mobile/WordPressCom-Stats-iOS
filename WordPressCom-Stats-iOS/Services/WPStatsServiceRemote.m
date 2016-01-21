@@ -7,20 +7,28 @@
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import <AFNetworking/AFNetworking.h>
 
+// Temporary workaround to handle CocoaPods and how the -Swift.h header is generated
+#ifdef MAIN_PROJECT
+#import "WordPressComStatsiOS-Swift.h"
+#else
+#import <WordPressComStatsiOS/WordPressComStatsiOS-Swift.h>
+#endif
+
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 static NSInteger const NumberOfDays = 12;
 
 @interface WPStatsServiceRemote ()
 
-@property (nonatomic, copy)     NSString                        *oauth2Token;
-@property (nonatomic, strong)   NSNumber                        *siteId;
-@property (nonatomic, strong)   NSTimeZone                      *siteTimeZone;
-@property (nonatomic, copy)     NSString                        *statsPathPrefix;
-@property (nonatomic, copy)     NSString                        *sitesPathPrefix;
-@property (nonatomic, strong)   NSDateFormatter                 *deviceDateFormatter;
-@property (nonatomic, strong)   NSDateFormatter                 *rfc3339DateFormatter;
-@property (nonatomic, strong)   NSNumberFormatter               *deviceNumberFormatter;
-@property (nonatomic, strong)   AFHTTPRequestOperationManager   *manager;
+@property (nonatomic, copy) NSString *oauth2Token;
+@property (nonatomic, strong) NSNumber *siteId;
+@property (nonatomic, strong) NSTimeZone *siteTimeZone;
+@property (nonatomic, copy) NSString *statsPathPrefix;
+@property (nonatomic, copy) NSString *sitesPathPrefix;
+@property (nonatomic, strong) NSDateFormatter *deviceDateFormatter;
+@property (nonatomic, strong) NSDateFormatter *rfc3339DateFormatter;
+@property (nonatomic, strong) NSNumberFormatter *deviceNumberFormatter;
+@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
+@property (nonatomic, strong) StatsStringUtilities *stringUtilities;
 
 @end
 
@@ -56,6 +64,8 @@ static NSInteger const NumberOfDays = 12;
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
         [_manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", _oauth2Token]
                           forHTTPHeaderField:@"Authorization"];
+        
+        _stringUtilities = [StatsStringUtilities new];
     }
     
     return self;
@@ -614,7 +624,7 @@ static NSInteger const NumberOfDays = 12;
         NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
         
         NSNumber *postID = [postDict numberForKey:@"ID"];
-        NSString *postTitle = [[[postDict stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
+        NSString *postTitle = [self.stringUtilities sanitizePostTitle:[postDict stringForKey:@"title"]];
         NSDate *postDate = [self.rfc3339DateFormatter dateFromString:[postDict stringForKey:@"date"]];
         NSString *postURL = [postDict stringForKey:@"URL"];
         NSNumber *likesValue = [postDict numberForKey:@"like_count"];
@@ -764,7 +774,7 @@ static NSInteger const NumberOfDays = 12;
         for (NSDictionary *post in posts) {
             StatsItem *item = [StatsItem new];
             item.itemID = [post numberForKey:@"ID"];
-            item.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
+            item.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
             
             StatsItemAction *itemAction = [StatsItemAction new];
             itemAction.defaultAction = YES;
@@ -811,7 +821,7 @@ static NSInteger const NumberOfDays = 12;
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
             statsItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
-            statsItem.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
+            statsItem.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
             
             id url = post[@"href"];
             if ([url isKindOfClass:[NSString class]]) {
@@ -1071,7 +1081,7 @@ static NSInteger const NumberOfDays = 12;
         for (NSDictionary *play in playsArray) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
-            statsItem.label = [[[play stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
+            statsItem.label = [self.stringUtilities sanitizePostTitle:[play stringForKey:@"title"]];
             statsItem.value = [self localizedStringForNumber:[play numberForKey:@"plays"]];
 
             NSString *url = [play stringForKey:@"url"];
@@ -1133,7 +1143,7 @@ static NSInteger const NumberOfDays = 12;
             for (NSDictionary *post in posts) {
                 StatsItem *postItem = [StatsItem new];
                 postItem.itemID = [post numberForKey:@"id"];
-                postItem.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
+                postItem.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
                 postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
                 
                 StatsItemAction *itemAction = [StatsItemAction new];
