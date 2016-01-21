@@ -608,7 +608,7 @@ static NSInteger const NumberOfDays = 12;
         NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
         
         NSNumber *postID = [postDict numberForKey:@"ID"];
-        NSString *postTitle = [postDict stringForKey:@"title"];
+        NSString *postTitle = [[[postDict stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
         NSDate *postDate = [self.rfc3339DateFormatter dateFromString:[postDict stringForKey:@"date"]];
         NSString *postURL = [postDict stringForKey:@"URL"];
         NSNumber *likesValue = [postDict numberForKey:@"like_count"];
@@ -758,7 +758,7 @@ static NSInteger const NumberOfDays = 12;
         for (NSDictionary *post in posts) {
             StatsItem *item = [StatsItem new];
             item.itemID = [post numberForKey:@"ID"];
-            item.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+            item.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
             
             StatsItemAction *itemAction = [StatsItemAction new];
             itemAction.defaultAction = YES;
@@ -805,7 +805,7 @@ static NSInteger const NumberOfDays = 12;
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
             statsItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
-            statsItem.label = [post stringForKey:@"title"];
+            statsItem.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
             
             id url = post[@"href"];
             if ([url isKindOfClass:[NSString class]]) {
@@ -1065,7 +1065,7 @@ static NSInteger const NumberOfDays = 12;
         for (NSDictionary *play in playsArray) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
-            statsItem.label = [play stringForKey:@"title"];
+            statsItem.label = [[[play stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
             statsItem.value = [self localizedStringForNumber:[play numberForKey:@"plays"]];
 
             NSString *url = [play stringForKey:@"url"];
@@ -1127,7 +1127,7 @@ static NSInteger const NumberOfDays = 12;
             for (NSDictionary *post in posts) {
                 StatsItem *postItem = [StatsItem new];
                 postItem.itemID = [post numberForKey:@"id"];
-                postItem.label = [[post stringForKey:@"title"] stringByDecodingXMLCharacters];
+                postItem.label = [[[post stringForKey:@"title"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] stringByDecodingXMLCharacters];
                 postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
                 
                 StatsItemAction *itemAction = [StatsItemAction new];
