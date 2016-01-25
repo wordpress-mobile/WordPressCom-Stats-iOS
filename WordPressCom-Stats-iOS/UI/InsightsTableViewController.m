@@ -88,10 +88,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
     
-    self.sections = @[@(StatsSectionInsightsMostPopular),
-                      @(StatsSectionInsightsAllTime),
+    self.sections = @[@(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionInsightsTodaysStats),
-                      @(StatsSectionInsightsLatestPostSummary),
+                      @(StatsSectionInsightsAllTime),
+                      @(StatsSectionInsightsMostPopular),
                       @(StatsSectionPeriodHeader),
                       @(StatsSectionComments),
                       @(StatsSectionTagsCategories),

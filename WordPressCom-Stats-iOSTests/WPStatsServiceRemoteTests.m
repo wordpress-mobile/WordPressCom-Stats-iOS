@@ -929,4 +929,39 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
+- (void)testFetchLatestPostSummary
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchLatestPostSummary completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/posts"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-latest-post.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/58"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-latest-post-views.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    
+    [self.subject fetchLatestPostSummaryWithCompletionHandler:^(NSNumber *postID, NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error) {
+        XCTAssertTrue([@58 isEqual:postID]);
+        XCTAssertTrue([@"This “has” special & characters" isEqualToString:postTitle]);
+        XCTAssertTrue([@"https://ardwptest1.wordpress.com/2016/01/21/this-has-special-characters/" isEqualToString:postURL]);
+        XCTAssertNotNil(postDate);
+        XCTAssertTrue([@"10" isEqualToString:views]);
+        XCTAssertTrue([@10 isEqual:viewsValue]);
+        XCTAssertTrue([@"2" isEqualToString:likes]);
+        XCTAssertTrue([@2 isEqual:likesValue]);
+        XCTAssertTrue([@"5" isEqualToString:comments]);
+        XCTAssertTrue([@5 isEqual:commentsValue]);
+        XCTAssertNil(error);
+        
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
 @end

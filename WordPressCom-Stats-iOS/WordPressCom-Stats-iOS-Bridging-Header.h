@@ -3,3 +3,4 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import <WordPressShared/NSString+XMLExtensions.h>
