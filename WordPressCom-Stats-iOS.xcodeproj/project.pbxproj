@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4DFF911D1C6656EB003B9C14 /* WPStatsServiceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DFF911C1C6656EB003B9C14 /* WPStatsServiceCache.m */; };
 		7A7F463AD6CE44BEA3DA5F87 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C9DDA5A784B4AAC2811CD /* libPods.a */; };
 		9300019B1BF29CA5009275DB /* NSObject+StatsBundleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9300019A1BF29CA5009275DB /* NSObject+StatsBundleHelper.m */; };
 		930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */; };
@@ -108,6 +109,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4DFF911B1C6656EB003B9C14 /* WPStatsServiceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsServiceCache.h; sourceTree = "<group>"; };
+		4DFF911C1C6656EB003B9C14 /* WPStatsServiceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPStatsServiceCache.m; sourceTree = "<group>"; };
 		54EA5FB3B639F9207FF4B268 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		59F7A8357DDCE3F86D3BED7B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		75E10D2A02191F399746881E /* Pods-WordPressCom-Stats-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -520,6 +523,8 @@
 				93C7C8C71C516FEE009F2686 /* StatsStringUtilities.swift */,
 				93302C501A1BD77900B49CFC /* WPStatsService.h */,
 				93302C511A1BD78300B49CFC /* WPStatsService.m */,
+				4DFF911B1C6656EB003B9C14 /* WPStatsServiceCache.h */,
+				4DFF911C1C6656EB003B9C14 /* WPStatsServiceCache.m */,
 				93A379E819FEDEE100415023 /* WPStatsServiceRemote.h */,
 				93A379E919FEDEE100415023 /* WPStatsServiceRemote.m */,
 			);
@@ -807,6 +812,7 @@
 				936E74A71A69A8990048F552 /* StatsTableSectionHeaderView.m in Sources */,
 				938A61851B0CAC23007C5EE7 /* StatsAllTime.m in Sources */,
 				936E74A41A688E6F0048F552 /* StatsSelectableTableViewCell.m in Sources */,
+				4DFF911D1C6656EB003B9C14 /* WPStatsServiceCache.m in Sources */,
 				9311AC271B581E5200BBC877 /* InsightsAllTimeTableViewCell.m in Sources */,
 				936E00211AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m in Sources */,
 				93302C521A1BD78300B49CFC /* WPStatsService.m in Sources */,

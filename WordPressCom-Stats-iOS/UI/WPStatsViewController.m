@@ -1,19 +1,21 @@
 #import "WPStatsViewController.h"
 #import "StatsTableViewController.h"
 #import "WPStatsService.h"
+#import "WPStatsServiceCache.h"
 #import "InsightsTableViewController.h"
 #import "UIViewController+SizeClass.h"
+#import "WPStatsServiceCache.h"
 
 @interface WPStatsViewController () <StatsProgressViewDelegate, WPStatsSummaryTypeSelectionDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, weak) StatsTableViewController *statsTableViewController;
-@property (nonatomic, weak) InsightsTableViewController *insightsTableViewController;
-@property (nonatomic, weak) IBOutlet UISegmentedControl *statsTypeSegmentControl;
-@property (nonatomic, weak) IBOutlet UIProgressView *insightsProgressView;
-@property (nonatomic, weak) IBOutlet UIProgressView *statsProgressView;
-@property (nonatomic, weak) IBOutlet UIView *insightsContainerView;
-@property (nonatomic, weak) IBOutlet UIView *statsContainerView;
-@property (nonatomic, weak) UIAlertController *periodActionSheet;
+@property (nullable, nonatomic, weak) StatsTableViewController *statsTableViewController;
+@property (nullable, nonatomic, weak) InsightsTableViewController *insightsTableViewController;
+@property (nullable, nonatomic, weak) IBOutlet UISegmentedControl *statsTypeSegmentControl;
+@property (nullable, nonatomic, weak) IBOutlet UIProgressView *insightsProgressView;
+@property (nullable, nonatomic, weak) IBOutlet UIProgressView *statsProgressView;
+@property (nullable, nonatomic, weak) IBOutlet UIView *insightsContainerView;
+@property (nullable, nonatomic, weak) IBOutlet UIView *statsContainerView;
+@property (nullable, nonatomic, weak) UIAlertController *periodActionSheet;
 
 @property (nonatomic, assign) StatsPeriodType previouslySelectedStatsPeriodType;
 @property (nonatomic, assign) StatsPeriodType statsPeriodType;
@@ -23,6 +25,15 @@
 @end
 
 @implementation WPStatsViewController
+
+- (nonnull instancetype)initWithStatsServiceCache:(nullable WPStatsServiceCache *)cache
+{
+    if (self = [super init]) {
+        self.statsServiceCache = cache;
+    }
+    NSParameterAssert(self); // should never be nil, but just in case
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -40,7 +51,7 @@
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)prepareForSegue:(nonnull UIStoryboardSegue *)segue sender:(nullable id)sender
 {
     [super prepareForSegue:segue sender:sender];
     
@@ -49,17 +60,35 @@
         self.statsTableViewController = tableVC;
         tableVC.statsDelegate = self.statsDelegate;
         tableVC.statsProgressViewDelegate = self;
-        tableVC.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
-;
+        tableVC.statsService = [self serviceForSiteID:self.siteID];
     } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
         InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
         self.insightsTableViewController = insightsTableViewController;
-        insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
+        insightsTableViewController.statsService = [self serviceForSiteID:self.siteID];
         insightsTableViewController.statsProgressViewDelegate = self;
         insightsTableViewController.statsTypeSelectionDelegate = self;
         insightsTableViewController.statsDelegate = self.statsDelegate;
     }
 }
+
+#pragma mark - Convenience methods
+- (nonnull WPStatsService *)serviceForSiteID:(nonnull NSNumber *)siteID
+{
+    NSParameterAssert(siteID);
+    
+    WPStatsService *service;
+    if (self.statsServiceCache) {
+        service = [self.statsServiceCache serviceForSiteID:siteID];
+    }
+    if (!service) {
+        if ((service = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60])) {
+            // add the newly created service to the cache
+            [self.statsServiceCache setService:service forSiteID:siteID];
+        }
+    }
+    return service;
+}
+
 
 #pragma mark - UIViewController overrides
 
