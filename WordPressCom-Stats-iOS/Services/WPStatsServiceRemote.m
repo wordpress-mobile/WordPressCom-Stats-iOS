@@ -4,8 +4,7 @@
 #import <WordPressShared/NSString+XMLExtensions.h>
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import <AFNetworking/AFNetworking.h>
-
-@import NSObject_SafeExpectations;
+#import "NSObject+SafeExpectations.h"
 
 // Temporary workaround to handle CocoaPods and how the -Swift.h header is generated
 #ifdef MAIN_PROJECT
