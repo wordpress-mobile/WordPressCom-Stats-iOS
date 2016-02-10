@@ -984,6 +984,7 @@
 					"-Wunreachable-code",
 				);
 				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "-D MAIN_PROJECT";
 				PRODUCT_MODULE_NAME = WordPressComStatsiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1047,6 +1048,7 @@
 					"-Wunreachable-code",
 				);
 				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "-D MAIN_PROJECT";
 				PRODUCT_MODULE_NAME = WordPressComStatsiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
