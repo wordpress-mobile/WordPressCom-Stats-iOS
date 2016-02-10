@@ -12,10 +12,12 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 };
 
 @class WPStatsViewController;
+@class WPStatsService;
+@class WPStatsServiceCache;
 
 @protocol WPStatsSummaryTypeSelectionDelegate <NSObject>
 
-- (void)viewController:(UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType;
+- (void)viewController:(nonnull UIViewController *)viewController changeStatsSummaryTypeSelection:(StatsSummaryType)statsSummaryType;
 
 @end
 
@@ -23,25 +25,28 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 
 @optional
 
-- (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
+- (void)statsViewController:(nonnull WPStatsViewController *)controller openURL:(nullable NSURL *)url;
 
 @end
 
 @protocol StatsProgressViewDelegate <NSObject>
 
-- (void)statsViewControllerDidBeginLoadingStats:(UIViewController *)controller;
-- (void)statsViewController:(UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage;
-- (void)statsViewControllerDidEndLoadingStats:(UIViewController *)controller;
+- (void)statsViewControllerDidBeginLoadingStats:(nonnull UIViewController *)controller;
+- (void)statsViewController:(nonnull UIViewController *)controller loadingProgressPercentage:(CGFloat)percentage;
+- (void)statsViewControllerDidEndLoadingStats:(nonnull UIViewController *)controller;
 
 @end
 
 @interface WPStatsViewController : UIViewController
 
-@property (nonatomic, strong) NSNumber *siteID;
-@property (nonatomic, copy)   NSString *oauth2Token;
-@property (nonatomic, strong) NSTimeZone *siteTimeZone;
-@property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
+@property (nullable, nonatomic, strong) NSNumber *siteID;
+@property (nullable, nonatomic, copy)   NSString *oauth2Token;
+@property (nullable, nonatomic, strong) NSTimeZone *siteTimeZone;
+@property (nullable, nonatomic, strong) WPStatsServiceCache *statsServiceCache;
+@property (nullable, nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 
-- (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control;
+- (nonnull instancetype)initWithStatsServiceCache:(nullable WPStatsServiceCache *)cache;
+
+- (IBAction)statsTypeControlDidChange:(nonnull UISegmentedControl *)control;
 
 @end
