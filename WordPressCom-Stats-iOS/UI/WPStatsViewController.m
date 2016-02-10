@@ -31,7 +31,6 @@
     if (self = [super init]) {
         self.statsServiceCache = cache;
     }
-    NSParameterAssert(self); // should never be nil, but just in case
     return self;
 }
 
@@ -76,16 +75,15 @@
 {
     NSParameterAssert(siteID);
     
-    WPStatsService *service;
-    if (self.statsServiceCache) {
-        service = [self.statsServiceCache serviceForSiteID:siteID];
-    }
+    WPStatsService *service = [self.statsServiceCache serviceForSiteID:siteID];
+    
     if (!service) {
-        if ((service = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60])) {
-            // add the newly created service to the cache
-            [self.statsServiceCache setService:service forSiteID:siteID];
-        }
+        service = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
+        
+        // add the newly created service to the cache
+        [self.statsServiceCache setService:service forSiteID:siteID];
     }
+    
     return service;
 }
 
