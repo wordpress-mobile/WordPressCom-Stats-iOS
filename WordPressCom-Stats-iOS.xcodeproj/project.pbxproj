@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74C9DCC91C613407009F324A /* StatsStreakItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C9DCC81C613407009F324A /* StatsStreakItem.m */; };
+		74C9DCCB1C613416009F324A /* stats-v1.1-streak.json in Resources */ = {isa = PBXBuildFile; fileRef = 74C9DCCA1C613416009F324A /* stats-v1.1-streak.json */; };
+		74C9DCCD1C61342B009F324A /* StatsStreakItemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C9DCCC1C61342B009F324A /* StatsStreakItemTests.m */; };
 		7A7F463AD6CE44BEA3DA5F87 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C9DDA5A784B4AAC2811CD /* libPods.a */; };
 		9300019B1BF29CA5009275DB /* NSObject+StatsBundleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9300019A1BF29CA5009275DB /* NSObject+StatsBundleHelper.m */; };
 		930C2EE8195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 930C2EE7195DB00600C6964D /* WPStatsCollectionViewFlowLayout.m */; };
@@ -110,6 +113,10 @@
 /* Begin PBXFileReference section */
 		54EA5FB3B639F9207FF4B268 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		59F7A8357DDCE3F86D3BED7B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		74C9DCC71C613407009F324A /* StatsStreakItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStreakItem.h; path = Services/StatsStreakItem.h; sourceTree = "<group>"; };
+		74C9DCC81C613407009F324A /* StatsStreakItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStreakItem.m; path = Services/StatsStreakItem.m; sourceTree = "<group>"; };
+		74C9DCCA1C613416009F324A /* stats-v1.1-streak.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-streak.json"; sourceTree = "<group>"; };
+		74C9DCCC1C61342B009F324A /* StatsStreakItemTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsStreakItemTests.m; sourceTree = "<group>"; };
 		75E10D2A02191F399746881E /* Pods-WordPressCom-Stats-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		803CE65FC9424099B2D613D2 /* libPods-WordPressCom-Stats-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WordPressCom-Stats-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		90A77DD10827C87146A87506 /* Pods-WordPressCom-Stats-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPressCom-Stats-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WordPressCom-Stats-iOSTests/Pods-WordPressCom-Stats-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -469,6 +476,7 @@
 				9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */,
 				9327FD2D1A4A058600FF3A2E /* StatsGroupTests.m */,
 				9327FD2B1A4A001100FF3A2E /* StatsItemTests.m */,
+				74C9DCCC1C61342B009F324A /* StatsStreakItemTests.m */,
 				9383180E1994F701003B953A /* WordPressCom-Stats-iOSTests-Bridging-Header.h */,
 				9358D15A19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m */,
 				933FF2271A41C64300336167 /* WPStatsServiceTests.m */,
@@ -489,6 +497,8 @@
 		9396CFD819215346006A66D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				74C9DCC71C613407009F324A /* StatsStreakItem.h */,
+				74C9DCC81C613407009F324A /* StatsStreakItem.m */,
 				93E8B4631BED30FE0072A63C /* StatsSection.h */,
 				938A61831B0CAC23007C5EE7 /* StatsAllTime.h */,
 				938A61841B0CAC23007C5EE7 /* StatsAllTime.m */,
@@ -564,6 +574,7 @@
 				931193E91A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json */,
 				933FF2231A4085C300336167 /* stats-v1.1-followers-email-day.json */,
 				933FF2211A407F2B00336167 /* stats-v1.1-followers-wpcom-day.json */,
+				74C9DCCA1C613416009F324A /* stats-v1.1-streak.json */,
 				93797AFA1B064A4D006934EF /* stats-v1.1-insights.json */,
 				936E001D1AA7A28D00DCFA65 /* stats-v1.1-post-details.json */,
 				931193EF1A0C12170005BED2 /* stats-v1.1-referrers-day-large.json */,
@@ -696,6 +707,7 @@
 				936E001E1AA7A28D00DCFA65 /* stats-v1.1-post-details.json in Resources */,
 				93652B7F19FFFC60006A4C47 /* stats-v1.1-summary.json in Resources */,
 				931193EA1A0BBF7D0005BED2 /* stats-v1.1-country-views-day.json in Resources */,
+				74C9DCCB1C613416009F324A /* stats-v1.1-streak.json in Resources */,
 				93C3D5681B3A292200A41A1F /* stats-v1.1-visits-day-bad-date.json in Resources */,
 				93274AE61A07CCE40017238F /* stats-v1.1-visits-day.json in Resources */,
 			);
@@ -793,6 +805,7 @@
 				9367D9DF1A70194D0033911A /* StatsStandardBorderedTableViewCell.m in Sources */,
 				93FE88721B05307D0096F187 /* StatsInsights.m in Sources */,
 				93274AE41A07C7EA0017238F /* StatsVisits.m in Sources */,
+				74C9DCC91C613407009F324A /* StatsStreakItem.m in Sources */,
 				93A379E419FEAB8100415023 /* StatsGroup.m in Sources */,
 				9389C94E197EBBAF0036D437 /* WPStatsGraphToastView.m in Sources */,
 				93A379E119FEAB1C00415023 /* StatsItemAction.m in Sources */,
@@ -833,6 +846,7 @@
 				9340980F1A5D75AC0005DF06 /* StatsEphemoryTests.m in Sources */,
 				9367D9D11A6E99640033911A /* StatsDateUtilitiesTests.m in Sources */,
 				9358D15B19FFFB740094BBF5 /* WPStatsServiceRemoteTests.m in Sources */,
+				74C9DCCD1C61342B009F324A /* StatsStreakItemTests.m in Sources */,
 				9327FD2E1A4A058600FF3A2E /* StatsGroupTests.m in Sources */,
 				93C7C8C51C5164BF009F2686 /* StatsStringsUtilitiesTests.swift in Sources */,
 				9327FD2C1A4A001100FF3A2E /* StatsItemTests.m in Sources */,

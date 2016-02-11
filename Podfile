@@ -5,7 +5,7 @@ inhibit_all_warnings!
 
 pod 'AFNetworking',	'~> 2.6.0'
 pod 'CocoaLumberjack', '~> 2.2.0'
-pod 'WordPress-iOS-Shared', '~> 0.5.1'
+pod 'WordPress-iOS-Shared', '~> 0.5.2'
 pod 'NSObject-SafeExpectations', '0.0.2'
 pod 'WordPressCom-Analytics-iOS', '~>0.1.0'
 
