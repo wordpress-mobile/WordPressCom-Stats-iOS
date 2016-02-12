@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7413A6C41C6E4804001E7AB2 /* StatsStreak.m in Sources */ = {isa = PBXBuildFile; fileRef = 7413A6C31C6E4804001E7AB2 /* StatsStreak.m */; };
 		74C9DCC91C613407009F324A /* StatsStreakItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C9DCC81C613407009F324A /* StatsStreakItem.m */; };
 		74C9DCCB1C613416009F324A /* stats-v1.1-streak.json in Resources */ = {isa = PBXBuildFile; fileRef = 74C9DCCA1C613416009F324A /* stats-v1.1-streak.json */; };
 		74C9DCCD1C61342B009F324A /* StatsStreakItemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C9DCCC1C61342B009F324A /* StatsStreakItemTests.m */; };
@@ -113,6 +114,8 @@
 /* Begin PBXFileReference section */
 		54EA5FB3B639F9207FF4B268 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		59F7A8357DDCE3F86D3BED7B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		7413A6C21C6E4804001E7AB2 /* StatsStreak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStreak.h; path = Services/StatsStreak.h; sourceTree = "<group>"; };
+		7413A6C31C6E4804001E7AB2 /* StatsStreak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStreak.m; path = Services/StatsStreak.m; sourceTree = "<group>"; };
 		74C9DCC71C613407009F324A /* StatsStreakItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStreakItem.h; path = Services/StatsStreakItem.h; sourceTree = "<group>"; };
 		74C9DCC81C613407009F324A /* StatsStreakItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStreakItem.m; path = Services/StatsStreakItem.m; sourceTree = "<group>"; };
 		74C9DCCA1C613416009F324A /* stats-v1.1-streak.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-streak.json"; sourceTree = "<group>"; };
@@ -497,6 +500,8 @@
 		9396CFD819215346006A66D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7413A6C21C6E4804001E7AB2 /* StatsStreak.h */,
+				7413A6C31C6E4804001E7AB2 /* StatsStreak.m */,
 				74C9DCC71C613407009F324A /* StatsStreakItem.h */,
 				74C9DCC81C613407009F324A /* StatsStreakItem.m */,
 				93E8B4631BED30FE0072A63C /* StatsSection.h */,
@@ -821,6 +826,7 @@
 				938A61851B0CAC23007C5EE7 /* StatsAllTime.m in Sources */,
 				936E74A41A688E6F0048F552 /* StatsSelectableTableViewCell.m in Sources */,
 				9311AC271B581E5200BBC877 /* InsightsAllTimeTableViewCell.m in Sources */,
+				7413A6C41C6E4804001E7AB2 /* StatsStreak.m in Sources */,
 				936E00211AA8A7E300DCFA65 /* StatsPostDetailsTableViewController.m in Sources */,
 				93302C521A1BD78300B49CFC /* WPStatsService.m in Sources */,
 				936B22481958C3840058C828 /* WPStatsGraphViewController.m in Sources */,

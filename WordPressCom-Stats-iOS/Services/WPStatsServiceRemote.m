@@ -2,6 +2,8 @@
 #import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
 #import "StatsItem.h"
 #import "StatsItemAction.h"
+#import "StatsStreak.h"
+#import "StatsStreakItem.h"
 #import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
 #import <WordPressShared/NSString+XMLExtensions.h>
 #import <WordPressComAnalytics/WPAnalytics.h>
@@ -484,6 +486,19 @@ static NSInteger const NumberOfDays = 12;
 - (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
 {
     AFHTTPRequestOperation *operation = [self operationForLatestPostSummaryWithCompletionHandler:completionHandler];
+    [operation start];
+}
+
+- (void)fetchStreakStatsForStartDate:(NSDate *)startDate
+                          andEndDate:(NSDate *)endDate
+               withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler
+{
+    NSParameterAssert(startDate != nil);
+    NSParameterAssert(endDate != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForStreakWithStartDate:startDate
+                                                                      endDate:endDate
+                                                        withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -1468,12 +1483,11 @@ static NSInteger const NumberOfDays = 12;
 
 - (AFHTTPRequestOperation *)operationForStreakWithStartDate:(NSDate *)startDate
                                                     endDate:(NSDate *)endDate
-                                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+                                      withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler
 {
     id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
-        NSArray *postData = [responseDict arrayForKey:@"data"];
         NSDictionary *streakDict = [responseDict dictionaryForKey:@"streak"];
         
         NSDictionary *longDict = [streakDict dictionaryForKey:@"long"];
@@ -1486,22 +1500,42 @@ static NSInteger const NumberOfDays = 12;
         NSDate *currentStartDate = [self.rfc3339DateFormatter dateFromString:[currentDict stringForKey:@"start"]];
         NSDate *currentEndDate = [self.rfc3339DateFormatter dateFromString:[currentDict stringForKey:@"end"]];
         
+        StatsStreak *statsStreak = [StatsStreak new];
+        statsStreak.longestStreakLength = longLengthValue;
+        statsStreak.longestStreakStartDate = longStartDate;
+        statsStreak.longestStreakEndDate = longEndDate;
+        statsStreak.currentStreakLength = currentLengthValue;
+        statsStreak.currentStreakStartDate = currentStartDate;
+        statsStreak.currentStreakEndDate = currentEndDate;
+        
+        NSDictionary *postData = [responseDict dictionaryForKey:@"data"];
         NSMutableArray *items = [NSMutableArray new];
-        for (NSArray *day in postData) {
-            // TODO: finish processing the data array!
-        }
+        [postData enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            StatsStreakItem *statsStreakItem = [StatsStreakItem new];
+            statsStreakItem.value = key;
+            statsStreakItem.timeStamp = obj;
+            [items addObject:statsStreakItem];
+        }];
+        statsStreak.items = items;
         
         if (completionHandler) {
-            completionHandler(items, nil, false, nil);
+            completionHandler(statsStreak, nil);
         }
     };
     
     NSDictionary *parameters = @{@"startDate" : [self deviceLocalStringForDate:startDate],
                                  @"endDate"   : [self deviceLocalStringForDate:endDate]};
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            completionHandler(nil, error);
+        }
+    };
+    
     AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForStreak]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:[self failureForCompletionHandler:completionHandler]];
+                                                                    failure:[self failureForCompletionHandler:failureHandler]];
     return operation;
 }
 
