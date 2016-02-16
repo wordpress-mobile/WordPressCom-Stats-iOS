@@ -49,6 +49,19 @@
     XCTAssertEqual(dateComponents.hour, 23);
     XCTAssertEqual(dateComponents.minute, 51);
     XCTAssertEqual(dateComponents.second, 56);
+    
+    // One more time...
+    self.streakItem.timeStamp = @"1401473695";
+    result = self.streakItem.date;
+    dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:result];
+    
+    XCTAssertNotNil(result);
+    XCTAssertEqual(dateComponents.year, 2014);
+    XCTAssertEqual(dateComponents.month, 5);
+    XCTAssertEqual(dateComponents.day, 30);
+    XCTAssertEqual(dateComponents.hour, 18);
+    XCTAssertEqual(dateComponents.minute, 14);
+    XCTAssertEqual(dateComponents.second, 55);
 }
 
 - (void)testEmptyTimeStamp {

@@ -1492,13 +1492,13 @@ static NSInteger const NumberOfDays = 12;
         
         NSDictionary *longDict = [streakDict dictionaryForKey:@"long"];
         NSNumber *longLengthValue = [longDict numberForKey:@"length"];
-        NSDate *longStartDate = [self.rfc3339DateFormatter dateFromString:[longDict stringForKey:@"start"]];
-        NSDate *longEndDate = [self.rfc3339DateFormatter dateFromString:[longDict stringForKey:@"end"]];
+        NSDate *longStartDate = [self.deviceDateFormatter dateFromString:[longDict stringForKey:@"start"]];
+        NSDate *longEndDate = [self.deviceDateFormatter dateFromString:[longDict stringForKey:@"end"]];
         
         NSDictionary *currentDict = [streakDict dictionaryForKey:@"current"];
         NSNumber *currentLengthValue = [currentDict numberForKey:@"length"];
-        NSDate *currentStartDate = [self.rfc3339DateFormatter dateFromString:[currentDict stringForKey:@"start"]];
-        NSDate *currentEndDate = [self.rfc3339DateFormatter dateFromString:[currentDict stringForKey:@"end"]];
+        NSDate *currentStartDate = [self.deviceDateFormatter dateFromString:[currentDict stringForKey:@"start"]];
+        NSDate *currentEndDate = [self.deviceDateFormatter dateFromString:[currentDict stringForKey:@"end"]];
         
         StatsStreak *statsStreak = [StatsStreak new];
         statsStreak.longestStreakLength = longLengthValue;
@@ -1512,8 +1512,8 @@ static NSInteger const NumberOfDays = 12;
         NSMutableArray *items = [NSMutableArray new];
         [postData enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             StatsStreakItem *statsStreakItem = [StatsStreakItem new];
-            statsStreakItem.value = key;
-            statsStreakItem.timeStamp = obj;
+            statsStreakItem.timeStamp = key;
+            statsStreakItem.value = obj;
             [items addObject:statsStreakItem];
         }];
         statsStreak.items = items;
