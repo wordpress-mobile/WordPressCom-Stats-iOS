@@ -41,6 +41,7 @@ static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
+static NSString *const StatsTablePostActivityCellIdentifier = @"PostActivity";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
@@ -90,6 +91,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     self.sections = @[@(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionInsightsTodaysStats),
+                      @(StatsSectionInsightsPostActivity),
                       @(StatsSectionInsightsAllTime),
                       @(StatsSectionInsightsMostPopular),
                       @(StatsSectionPeriodHeader),
@@ -246,6 +248,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
         return 44.0f;
+    } else if ([identifier isEqualToString:StatsTablePostActivityCellIdentifier]) {
+        return 185.0f;
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         return 150.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {

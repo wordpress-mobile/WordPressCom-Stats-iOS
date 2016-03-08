@@ -728,6 +728,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
         }
         case StatsSectionPostDetailsAveragePerDay:
         case StatsSectionPostDetailsGraph:
+        case StatsSectionInsightsPostActivity:
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
         case StatsSectionInsightsTodaysStats:
@@ -947,6 +948,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
             case StatsSectionComments:
             case StatsSectionFollowers:
             case StatsSectionGraph:
+            case StatsSectionInsightsPostActivity:
             case StatsSectionInsightsAllTime:
             case StatsSectionInsightsMostPopular:
             case StatsSectionInsightsTodaysStats:
