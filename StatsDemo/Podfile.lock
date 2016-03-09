@@ -36,21 +36,21 @@ PODS:
     - AFNetworking (~> 2.5)
     - CocoaLumberjack (~> 2.2.0)
   - WordPressCom-Analytics-iOS (0.1.4)
-  - WordPressCom-Stats-iOS (0.6.2):
+  - WordPressCom-Stats-iOS (0.6.3):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
     - WordPress-iOS-Shared (~> 0.5.3)
     - WordPressCom-Analytics-iOS (~> 0.1.0)
-    - WordPressCom-Stats-iOS/Services (= 0.6.2)
-    - WordPressCom-Stats-iOS/UI (= 0.6.2)
-  - WordPressCom-Stats-iOS/Services (0.6.2):
+    - WordPressCom-Stats-iOS/Services (= 0.6.3)
+    - WordPressCom-Stats-iOS/UI (= 0.6.3)
+  - WordPressCom-Stats-iOS/Services (0.6.3):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
     - WordPress-iOS-Shared (~> 0.5.3)
     - WordPressCom-Analytics-iOS (~> 0.1.0)
-  - WordPressCom-Stats-iOS/UI (0.6.2):
+  - WordPressCom-Stats-iOS/UI (0.6.3):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
@@ -73,6 +73,6 @@ SPEC CHECKSUMS:
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
   WordPress-iOS-Shared: 43f55f24f0685e431167084071b7914d7c7134a8
   WordPressCom-Analytics-iOS: 1d4cf0426fdc91393ea1ba65daf19133e440ff6a
-  WordPressCom-Stats-iOS: 5779da33b653bfb831d054032708d56174bd5c60
+  WordPressCom-Stats-iOS: 75dbdf4765c09b90a8fe00375dc96a93e64feffa
 
 COCOAPODS: 0.39.0
