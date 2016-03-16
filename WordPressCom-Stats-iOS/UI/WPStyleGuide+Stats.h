@@ -22,6 +22,4 @@ extern const CGFloat StatsCVerticalOuterPadding;
 
 + (UIColor *)statsNestedCellBackground;
 
-+ (UIFont *)subtitleFontBoldItalic;
-
 @end

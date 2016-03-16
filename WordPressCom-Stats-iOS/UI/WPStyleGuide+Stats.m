@@ -7,7 +7,7 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
 @implementation WPStyleGuide (Stats)
 
 + (UIFont *)axisLabelFont {
-    return [WPFontManager openSansRegularFontOfSize:12.0];
+    return [WPFontManager systemRegularFontOfSize:12.0];
 }
 
 
@@ -83,10 +83,5 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.957 green:0.973 blue:0.98 alpha:1]; /*#f4f8fa*/
 }
 
-
-+ (UIFont *)subtitleFontBoldItalic
-{
-    return [WPFontManager openSansBoldItalicFontOfSize:12.0];
-}
 
 @end

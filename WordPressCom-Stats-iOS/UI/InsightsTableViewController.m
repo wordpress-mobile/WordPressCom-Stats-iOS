@@ -1307,13 +1307,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     NSMutableAttributedString *text;
     
     if (!summary) {
-        text = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"You have not published any posts yet.", @"Placeholder text when no latest post summary exists") attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
+        text = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"You have not published any posts yet.", @"Placeholder text when no latest post summary exists") attributes:@{NSFontAttributeName : [WPFontManager systemRegularFontOfSize:13.0]}];
     } else {
         NSString *postTitle = summary.postTitle ?: @"";
         NSString *time = summary.postAge;
         NSString *unformattedString = [NSString stringWithFormat:NSLocalizedString(@"It's been %@ since %@ was published. Here's how the post has performed so far...", @"Latest post summary text including placeholder for time and the post title."), time, postTitle];
-        text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager openSansRegularFontOfSize:13.0]}];
-        [text addAttributes:@{NSFontAttributeName : [WPFontManager openSansBoldFontOfSize:13.0], NSForegroundColorAttributeName : [WPStyleGuide wordPressBlue]} range:[unformattedString rangeOfString:postTitle]];
+        text = [[NSMutableAttributedString alloc] initWithString:unformattedString attributes:@{NSFontAttributeName : [WPFontManager systemRegularFontOfSize:13.0]}];
+        [text addAttributes:@{NSFontAttributeName : [WPFontManager systemBoldFontOfSize:13.0], NSForegroundColorAttributeName : [WPStyleGuide wordPressBlue]} range:[unformattedString rangeOfString:postTitle]];
     }
     
     return text;
