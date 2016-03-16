@@ -7,7 +7,7 @@
 #ifdef __OBJC__
 
 #import <Foundation/Foundation.h>
+#import "WPStatsLogging.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
-static const DDLogLevel ddLogLevel = DDLogLevelWarning;
 
 #endif

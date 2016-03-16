@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/wordpress-mobile/WordPressCom-Stats-iOS.git", :tag => s.version.to_s }
   # s.source_files  = "WordPressCom-Stats-iOS", "WordPressCom-Stats-iOS/**/*.{h,m,swift}"
+  s.source_files  = "WordPressCom-Stats-iOS/Common/*.{h,m,swift}"
   s.exclude_files = "WordPressCom-Stats-iOS/Exclude"
   s.prefix_header_file = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Prefix.pch"
 
