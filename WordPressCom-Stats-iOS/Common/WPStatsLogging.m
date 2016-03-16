@@ -1,6 +1,5 @@
 #import "WPStatsLogging.h"
-
-int ddLogLevel = DDLogLevelWarning;
+#import "Logging.h"
 
 int WPStatsGetLoggingLevel() {
   return ddLogLevel;
