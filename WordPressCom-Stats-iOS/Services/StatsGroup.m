@@ -151,9 +151,9 @@
             break;
 
         case StatsSectionGraph:
-        case StatsSectionInsightsPostActivity:
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
+        case StatsSectionInsightsPostActivity:
         case StatsSectionInsightsTodaysStats:
         case StatsSectionInsightsLatestPostSummary:
         case StatsSectionPeriodHeader:

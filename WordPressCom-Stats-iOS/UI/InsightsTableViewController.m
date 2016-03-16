@@ -4,6 +4,7 @@
 #import "InsightsSectionHeaderTableViewCell.h"
 #import "InsightsAllTimeTableViewCell.h"
 #import "InsightsMostPopularTableViewCell.h"
+#import "InsightsPostingActivityTableViewCell.h"
 #import "InsightsTodaysStatsTableViewCell.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsSection.h"
@@ -41,8 +42,8 @@ static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
-static NSString *const StatsTablePostActivityCellIdentifier = @"PostActivity";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
+static NSString *const InsightsTablePostActivityCellIdentifier = @"PostingActivityDetails";
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
@@ -91,9 +92,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     self.sections = @[@(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionInsightsTodaysStats),
-                      @(StatsSectionInsightsPostActivity),
                       @(StatsSectionInsightsAllTime),
                       @(StatsSectionInsightsMostPopular),
+                      @(StatsSectionInsightsPostActivity),
                       @(StatsSectionPeriodHeader),
                       @(StatsSectionComments),
                       @(StatsSectionTagsCategories),
@@ -145,6 +146,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
+            return 2;
+        case StatsSectionInsightsPostActivity:
             return 2;
         case StatsSectionInsightsTodaysStats:
             return self.isViewHorizontallyCompact ? 5 : 2;
@@ -247,10 +250,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
     if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
-        return 44.0f;
-    } else if ([identifier isEqualToString:StatsTablePostActivityCellIdentifier]) {
-        return 185.0f;
+        return 44.0f;    
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        return 150.0f;
+    } else if ([identifier isEqualToString:InsightsTablePostActivityCellIdentifier]) {
         return 150.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
         return 185.0f;
@@ -487,6 +490,14 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
             break;
 
+        case StatsSectionInsightsPostActivity:
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else {
+                identifier = InsightsTablePostActivityCellIdentifier;
+            }
+            break;
+            
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
@@ -613,6 +624,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTablePostActivityCellIdentifier]) {
+        [self configurePostingActivity:(InsightsPostingActivityTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier] || [identifier isEqualToString:InsightsTableLatestPostSummaryDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:statsSection];
     } else if ([identifier isEqualToString:StatsTableSelectableCellIdentifier]) {
@@ -670,6 +683,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
         case StatsSectionInsightsMostPopular:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
+            break;
+        case StatsSectionInsightsPostActivity:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Posting Activity", @"Insights posting activity header");
             break;
         case StatsSectionInsightsTodaysStats:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
@@ -748,6 +764,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
 }
 
+- (void)configurePostingActivity:(InsightsMostPopularTableViewCell *)cell
+{
+    StatsInsights *statsInsights = self.sectionData[@(StatsSectionInsightsPostActivity)];
+    // TODO: Fill this in
+}
 
 - (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:(StatsSection)statsSection
 {
@@ -984,6 +1005,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             case StatsSectionVideos:
             case StatsSectionInsightsAllTime:
             case StatsSectionInsightsMostPopular:
+            case StatsSectionInsightsPostActivity:
             case StatsSectionInsightsTodaysStats:
             case StatsSectionInsightsLatestPostSummary:
             case StatsSectionPeriodHeader:
@@ -1058,6 +1080,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)retrieveStats
 {
+    //TODO: Add some streak data here!
+    
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
@@ -1421,6 +1445,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
         } else if (statsSection != StatsSectionInsightsAllTime
                    && statsSection != StatsSectionInsightsMostPopular
+                   && statsSection != StatsSectionInsightsPostActivity
                    && statsSection != StatsSectionInsightsTodaysStats
                    && statsSection != StatsSectionInsightsLatestPostSummary) {
             StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
