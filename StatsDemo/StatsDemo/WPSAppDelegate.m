@@ -4,6 +4,7 @@
 #import <WordPressShared/WPFontManager.h>
 #import <WordPressShared/UIImage+Util.h>
 #import <WordPressShared/UIColor+Helpers.h>
+@import WordPressComStatsiOS;
 
 int ddLogLevel = DDLogLevelVerbose;
 
@@ -53,6 +54,7 @@ int ddLogLevel = DDLogLevelVerbose;
     // Override point for customization after application launch.
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    WPStatsSetLoggingLevel(ddLogLevel);
 
 #ifndef DEBUG
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"070b75fd7cb3b4f5068c9d59d7052ec4"];

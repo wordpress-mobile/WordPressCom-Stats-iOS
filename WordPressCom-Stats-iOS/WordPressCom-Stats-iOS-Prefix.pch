@@ -7,8 +7,5 @@
 #ifdef __OBJC__
 
 #import <Foundation/Foundation.h>
-#define LOG_LEVEL_DEF WordPressComStatsLogLevel
-#import <CocoaLumberjack/CocoaLumberjack.h>
-static const DDLogLevel WordPressComStatsLogLevel = DDLogLevelWarning;
 
 #endif

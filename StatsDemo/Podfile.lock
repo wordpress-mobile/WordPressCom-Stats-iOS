@@ -28,9 +28,9 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.2.0):
     - CocoaLumberjack/Default
-  - HockeySDK (3.8.5):
-    - HockeySDK/AllFeaturesLib (= 3.8.5)
-  - HockeySDK/AllFeaturesLib (3.8.5)
+  - HockeySDK (3.8.6):
+    - HockeySDK/AllFeaturesLib (= 3.8.6)
+  - HockeySDK/AllFeaturesLib (3.8.6)
   - NSObject-SafeExpectations (0.0.2)
   - WordPress-iOS-Shared (0.5.3):
     - AFNetworking (~> 2.5)
@@ -69,10 +69,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
-  HockeySDK: dd11a2b9da3372fd025643bee5bc10c8c613d169
+  HockeySDK: ab68303eec6680f6b539de65d747742dd276e934
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
   WordPress-iOS-Shared: 43f55f24f0685e431167084071b7914d7c7134a8
   WordPressCom-Analytics-iOS: 1d4cf0426fdc91393ea1ba65daf19133e440ff6a
-  WordPressCom-Stats-iOS: 75dbdf4765c09b90a8fe00375dc96a93e64feffa
+  WordPressCom-Stats-iOS: 4d87a25dcac4766e7b91e27fbfe0e1c7580cf78c
 
 COCOAPODS: 0.39.0

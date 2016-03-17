@@ -1,11 +1,11 @@
+#import "Logging.h"
 #import "WPStatsServiceRemote.h"
-#import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
 #import "StatsItem.h"
 #import "StatsItemAction.h"
-#import <NSObject-SafeExpectations/NSObject+SafeExpectations.h>
 #import <WordPressShared/NSString+XMLExtensions.h>
 #import <WordPressComAnalytics/WPAnalytics.h>
-#import <AFNetworking/AFNetworking.h>
+@import NSObject_SafeExpectations;
+@import AFNetworking;
 
 // Temporary workaround to handle CocoaPods and how the -Swift.h header is generated
 #ifdef MAIN_PROJECT

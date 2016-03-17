@@ -1,3 +1,4 @@
+#import "Logging.h"
 #import "StatsTwoColumnTableViewCell.h"
 #import "WPStyleGuide+Stats.h"
 #import <WordPressShared/WPImageSource.h>

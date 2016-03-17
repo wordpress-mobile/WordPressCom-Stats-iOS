@@ -1,3 +1,4 @@
+#import "Logging.h"
 #import "InsightsTableViewController.h"
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
