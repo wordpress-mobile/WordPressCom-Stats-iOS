@@ -1,3 +1,4 @@
+#import "Logging.h"
 #import "WPStatsViewController.h"
 #import "StatsTableViewController.h"
 #import "WPStatsService.h"
