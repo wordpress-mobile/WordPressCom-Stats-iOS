@@ -18,7 +18,7 @@ platform :ios, '7.0'
 pod 'WordPressCom-Stats-iOS'
 ```
 
-Or, you can just try out the demo by using the Cocoapods try command:
+Or, you can just try out the demo by using the CocoaPods try command:
 
 ```ruby
 pod try WordPressCom-Stats-iOS
@@ -32,7 +32,7 @@ WordPressCom-Stats-iOS requires iOS 7.0 or higher and ARC. It depends on the fol
 * UIKit.framework
 * CoreGraphics.framework
 
-and the following Cocoapods:
+and the following CocoaPods:
 
 * [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 * [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack)
