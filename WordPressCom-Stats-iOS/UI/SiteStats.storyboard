@@ -464,7 +464,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="149.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rcj-Ei-DAs">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rcj-Ei-DAs" customClass="WPStatsContributionGraph">
                                             <rect key="frame" x="8" y="0.0" width="584" height="149"/>
                                         </view>
                                     </subviews>
@@ -475,6 +475,9 @@
                                         <constraint firstItem="Rcj-Ei-DAs" firstAttribute="top" secondItem="DCf-80-TXq" secondAttribute="top" id="yEv-Pf-dg2"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="contributionGraph" destination="Rcj-Ei-DAs" id="xVv-ub-RWX"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetailsPad" rowHeight="100" id="3Mz-H6-0pu" userLabel="All Time Details iPad" customClass="InsightsAllTimeTableViewCell">
                                 <rect key="frame" x="0.0" y="393.5" width="600" height="100"/>

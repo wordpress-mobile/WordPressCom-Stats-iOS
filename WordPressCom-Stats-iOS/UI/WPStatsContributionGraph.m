@@ -115,7 +115,7 @@ static const NSInteger kDefaultGradeCount = 5;
         [weekdayNames[i] drawInRect:rect withAttributes:attributes];
     }
     
-    for (NSDate *date = firstDay; [date compare:nextMonth] == NSOrderedAscending; date = [self getNextDay]) {
+    for (NSDate *date = firstDay; [date compare:nextMonth] == NSOrderedAscending; date = [self getDateAfterDate:date]) {
         NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *comp = [calendar components:NSCalendarUnitWeekday | NSCalendarUnitWeekOfMonth | NSCalendarUnitDay fromDate:date];
         NSInteger weekday = comp.weekday;
@@ -149,7 +149,7 @@ static const NSInteger kDefaultGradeCount = 5;
             [button addTarget:self action:@selector(daySelected:) forControlEvents:UIControlEventTouchUpInside];
             
             NSDictionary *data = @{
-                                   @"date": [self getNextDay],
+                                   @"date": [self getDateAfterDate:date],
                                    @"value": @([self.delegate valueForDay:day])
                                    };
             objc_setAssociatedObject(button, @"dynamic_key", data, OBJC_ASSOCIATION_COPY);
@@ -181,13 +181,13 @@ static const NSInteger kDefaultGradeCount = 5;
 
 #pragma Privates
 
-- (NSDate *)getNextDay
+- (NSDate *)getDateAfterDate:(NSDate *)date
 {
     NSDateComponents *components = [[NSDateComponents alloc] init];
     components.day = 1;
     
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    return [calendar dateByAddingComponents:components toDate:self options:0];
+    return [calendar dateByAddingComponents:components toDate:date options:0];
 }
 
 @end
