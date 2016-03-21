@@ -457,30 +457,48 @@
                                     <outlet property="mostPopularHourPercentDailyViews" destination="txh-pI-huu" id="WYQ-lm-j1c"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PostingActivityDetails" rowHeight="150" id="Gw4-6X-a5i" userLabel="Posting Activity Details" customClass="InsightsPostingActivityTableViewCell">
-                                <rect key="frame" x="0.0" y="243.5" width="600" height="150"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PostingActivityDetails" rowHeight="200" id="Gw4-6X-a5i" userLabel="Posting Activity Details" customClass="InsightsPostingActivityTableViewCell">
+                                <rect key="frame" x="0.0" y="243.5" width="600" height="200"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Gw4-6X-a5i" id="DCf-80-TXq">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="149.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="199.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rcj-Ei-DAs" customClass="WPStatsContributionGraph">
-                                            <rect key="frame" x="8" y="0.0" width="584" height="149"/>
-                                        </view>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="792-dC-hHX">
+                                            <rect key="frame" x="8" y="-1" width="584" height="200"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="mog-Tq-5dp">
+                                                    <rect key="frame" x="0.0" y="0.0" width="584" height="200"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5BH-PH-2Vg" customClass="WPStatsContributionGraph">
+                                                            <rect key="frame" x="0.0" y="0.0" width="194.5" height="200"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="we6-88-VHC" customClass="WPStatsContributionGraph">
+                                                            <rect key="frame" x="194" y="0.0" width="195" height="200"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rcj-Ei-DAs" customClass="WPStatsContributionGraph">
+                                                            <rect key="frame" x="389" y="0.0" width="194.5" height="200"/>
+                                                        </view>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Rcj-Ei-DAs" firstAttribute="centerY" secondItem="DCf-80-TXq" secondAttribute="centerY" id="ZPB-io-jHH"/>
-                                        <constraint firstItem="Rcj-Ei-DAs" firstAttribute="leading" secondItem="DCf-80-TXq" secondAttribute="leadingMargin" id="dt2-az-cME"/>
-                                        <constraint firstItem="Rcj-Ei-DAs" firstAttribute="trailing" secondItem="DCf-80-TXq" secondAttribute="trailingMargin" id="lyR-21-R52"/>
-                                        <constraint firstItem="Rcj-Ei-DAs" firstAttribute="top" secondItem="DCf-80-TXq" secondAttribute="top" id="yEv-Pf-dg2"/>
+                                        <constraint firstItem="792-dC-hHX" firstAttribute="centerY" secondItem="DCf-80-TXq" secondAttribute="centerY" id="8De-RJ-7L5"/>
+                                        <constraint firstItem="792-dC-hHX" firstAttribute="trailing" secondItem="DCf-80-TXq" secondAttribute="trailingMargin" id="AYH-Bo-Ta8"/>
+                                        <constraint firstItem="792-dC-hHX" firstAttribute="leading" secondItem="DCf-80-TXq" secondAttribute="leadingMargin" id="C0l-iy-Vda"/>
+                                        <constraint firstItem="792-dC-hHX" firstAttribute="top" secondItem="DCf-80-TXq" secondAttribute="topMargin" constant="-9" id="DEA-eP-ioX"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="contributionGraph" destination="Rcj-Ei-DAs" id="xVv-ub-RWX"/>
+                                    <outlet property="contributionGraphCenter" destination="we6-88-VHC" id="dLf-CS-56W"/>
+                                    <outlet property="contributionGraphLeft" destination="5BH-PH-2Vg" id="8hF-yy-6Z7"/>
+                                    <outlet property="contributionGraphRight" destination="Rcj-Ei-DAs" id="dpr-27-YcW"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetailsPad" rowHeight="100" id="3Mz-H6-0pu" userLabel="All Time Details iPad" customClass="InsightsAllTimeTableViewCell">
-                                <rect key="frame" x="0.0" y="393.5" width="600" height="100"/>
+                                <rect key="frame" x="0.0" y="443.5" width="600" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Mz-H6-0pu" id="tND-dE-Btv">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="99.5"/>
@@ -707,7 +725,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodaysStatsDetailsPad" rowHeight="66" id="dRE-rs-NGi" userLabel="Today's Stats Details iPad" customClass="InsightsTodaysStatsTableViewCell">
-                                <rect key="frame" x="0.0" y="493.5" width="600" height="66"/>
+                                <rect key="frame" x="0.0" y="543.5" width="600" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRE-rs-NGi" id="hTu-9f-WBB">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="65.5"/>
@@ -959,7 +977,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="LatestPostDetailsPad" rowHeight="66" id="yBD-VM-EQY" userLabel="Latest Post Details iPad" customClass="InsightsTodaysStatsTableViewCell">
-                                <rect key="frame" x="0.0" y="559.5" width="600" height="66"/>
+                                <rect key="frame" x="0.0" y="609.5" width="600" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yBD-VM-EQY" id="449-81-xxX">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="65.5"/>
@@ -1151,7 +1169,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AllTimeDetails" rowHeight="185" id="HxC-8t-Lp3" userLabel="All Time Details" customClass="InsightsAllTimeTableViewCell">
-                                <rect key="frame" x="0.0" y="625.5" width="600" height="185"/>
+                                <rect key="frame" x="0.0" y="675.5" width="600" height="185"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HxC-8t-Lp3" id="Ids-uQ-XjV">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="184.5"/>
@@ -1363,7 +1381,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PeriodHeader" id="oCI-Df-0ns" userLabel="PeriodHeader">
-                                <rect key="frame" x="0.0" y="810.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="860.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oCI-Df-0ns" id="BN4-I4-0xh">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1384,7 +1402,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupHeader" rowHeight="30" id="gHk-H1-M8c" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="854.5" width="600" height="30"/>
+                                <rect key="frame" x="0.0" y="904.5" width="600" height="30"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHk-H1-M8c" id="JcX-rB-qb9">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="29.5"/>
@@ -1405,7 +1423,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TwoColumnHeader" id="Iw0-j3-jCC" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="884.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="934.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iw0-j3-jCC" id="rCI-wQ-nTQ">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1434,7 +1452,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoResultsRow" rowHeight="100" id="XeI-oH-BNJ" userLabel="NoResultsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="928.5" width="600" height="100"/>
+                                <rect key="frame" x="0.0" y="978.5" width="600" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XeI-oH-BNJ" id="lGI-SP-ja4">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="99.5"/>
@@ -1462,7 +1480,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupTotalsRow" id="5MJ-qz-Ajh" userLabel="GroupTotalsRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1028.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1078.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5MJ-qz-Ajh" id="lvD-ZL-QyN">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1483,7 +1501,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectableRow" id="Z3o-3O-RMY" customClass="StatsSelectableTableViewCell">
-                                <rect key="frame" x="0.0" y="1072.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1122.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z3o-3O-RMY" id="3gx-4d-A4A">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1522,7 +1540,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="GroupSelector" id="TfQ-TA-Dg5" userLabel="GroupSelector" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1116.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1166.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TfQ-TA-Dg5" id="a71-bu-hBO">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1548,7 +1566,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoreRow" id="zai-Rz-N4C" userLabel="MoreRow" customClass="StatsStandardBorderedTableViewCell">
-                                <rect key="frame" x="0.0" y="1160.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1210.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zai-Rz-N4C" id="LY8-HZ-kD3">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
@@ -1572,7 +1590,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwoColumnRow" id="2b7-gu-Z7j" userLabel="TwoColumnRow" customClass="StatsTwoColumnTableViewCell">
-                                <rect key="frame" x="0.0" y="1204.5" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="1254.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2b7-gu-Z7j" id="yZ4-Cw-CWt">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>

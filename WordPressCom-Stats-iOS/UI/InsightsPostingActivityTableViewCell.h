@@ -4,6 +4,8 @@
 
 @interface InsightsPostingActivityTableViewCell : StatsStandardBorderedTableViewCell <WPStatsContributionGraphDataSource>
 
-@property (nonatomic, weak) IBOutlet WPStatsContributionGraph *contributionGraph;
+@property (nonatomic, weak) IBOutlet WPStatsContributionGraph *contributionGraphLeft;
+@property (nonatomic, weak) IBOutlet WPStatsContributionGraph *contributionGraphCenter;
+@property (nonatomic, weak) IBOutlet WPStatsContributionGraph *contributionGraphRight;
 
 @end
