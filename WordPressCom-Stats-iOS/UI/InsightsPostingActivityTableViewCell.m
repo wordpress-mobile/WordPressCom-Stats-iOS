@@ -1,10 +1,17 @@
 #import "InsightsPostingActivityTableViewCell.h"
 
+@interface InsightsPostingActivityTableViewCell ()
+@property (nonatomic, strong) NSDate *currentMonth;
+@end
+
 @implementation InsightsPostingActivityTableViewCell
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.currentMonth = [NSDate date];
+    
     [self.contributionGraphLeft setDelegate:self];
     [self.contributionGraphCenter setDelegate:self];
     [self.contributionGraphRight setDelegate:self];
@@ -24,7 +31,10 @@
 
 - (NSDate *)monthForGraph
 {
-    return [NSDate date];
+    NSDate *returnVal = [self.currentMonth copy];
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    self.currentMonth = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:self.currentMonth options:0];
+    return returnVal;
 }
 
 - (NSInteger)valueForDay:(NSUInteger)day

@@ -1,4 +1,6 @@
 #import "WPStatsContributionGraph.h"
+#import "WPStyleGuide+Stats.h"
+#import <WordPressShared/WPFontManager.h>
 #import <objc/runtime.h>
 
 static const NSInteger kDefaultGradeCount = 5;
@@ -88,39 +90,31 @@ static const NSInteger kDefaultGradeCount = 5;
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-    
+    NSInteger columnCount = 0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    [calendar setFirstWeekday:2]; // Sunday == 1, Saturday == 7...Make the first day of the week Monday
     NSDateComponents *comp = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:_graphMonth];
     comp.day = 1;
     NSDate *firstDay = [calendar dateFromComponents:comp];
-    
     comp.month = comp.month + 1;
     NSDate *nextMonth = [calendar dateFromComponents:comp];
     
-    NSArray *weekdayNames = @[@"S", @"M", @"T", @"W", @"T", @"F", @"S"];
-    
-    [[UIColor colorWithWhite:0.56 alpha:1] setFill];
-    NSInteger textHeight = self.cellSize * 1.2;
-    for (NSInteger i = 0; i < 7; i += 1) {
-        CGRect rect = CGRectMake(i * (self.cellSize + self.cellSpacing), 0, self.cellSize, self.cellSize);
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.lineBreakMode = NSLineBreakByClipping;
-        paragraphStyle.alignment = NSTextAlignmentCenter;
-        NSDictionary *attributes = @{
-                                     NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:self.cellSize * 0.65],
-                                     NSParagraphStyleAttributeName: paragraphStyle,
-                                     };
-        [weekdayNames[i] drawInRect:rect withAttributes:attributes];
+    NSDictionary *dayNumberTextAttributes = nil;
+    if (self.showDayNumbers) {
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        paragraphStyle.alignment = NSTextAlignmentLeft;
+        dayNumberTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:self.cellSize * 0.4], NSParagraphStyleAttributeName: paragraphStyle};
     }
     
     for (NSDate *date = firstDay; [date compare:nextMonth] == NSOrderedAscending; date = [self getDateAfterDate:date]) {
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *comp = [calendar components:NSCalendarUnitWeekday | NSCalendarUnitWeekOfMonth | NSCalendarUnitDay fromDate:date];
-        NSInteger weekday = comp.weekday;
-        NSInteger weekOfMonth = comp.weekOfMonth;
+        NSDateComponents *comp = [calendar components:NSCalendarUnitDay fromDate:date];
         NSInteger day = comp.day;
+        // These two calls will ensure the proper values for weekday & week of month are returned
+        // given we are starting the week on a Monday instead of a Sunday
+        NSInteger weekday = [calendar ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitWeekOfMonth forDate:date];;
+        NSInteger weekOfMonth = [calendar ordinalityOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitMonth forDate:date];;
         
         NSInteger grade = 0;
         NSInteger contributions = 0;
@@ -137,25 +131,33 @@ static const NSInteger kDefaultGradeCount = 5;
         
         [self.colors[grade] setFill];
         
-        CGRect backgroundRect = CGRectMake((weekday - 1) * (self.cellSize + self.cellSpacing),
-                                           (weekOfMonth - 1) * (self.cellSize + self.cellSpacing) + textHeight,
-                                           self.cellSize, self.cellSize);
+        CGFloat column = (weekOfMonth - 1) * (self.cellSize + self.cellSpacing);
+        CGFloat row = (weekday - 1) * (self.cellSize + self.cellSpacing);
+        CGRect backgroundRect = CGRectMake(column, row, self.cellSize, self.cellSize);
         CGContextFillRect(context, backgroundRect);
         
-        if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.backgroundColor = [UIColor clearColor];
-            button.frame = backgroundRect;
-            [button addTarget:self action:@selector(daySelected:) forControlEvents:UIControlEventTouchUpInside];
-            
-            NSDictionary *data = @{
-                                   @"date": [self getDateAfterDate:date],
-                                   @"value": @([self.delegate valueForDay:day])
-                                   };
-            objc_setAssociatedObject(button, @"dynamic_key", data, OBJC_ASSOCIATION_COPY);
-            [self addSubview:button];
+        if (self.showDayNumbers) {
+            NSString *string = [NSString stringWithFormat:@"%ld", (long)day];
+            [string drawInRect:backgroundRect withAttributes:dayNumberTextAttributes];
         }
+        
+        columnCount = (columnCount < weekOfMonth) ? weekOfMonth : columnCount;
     }
+
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setDateFormat:@"MMM"];
+    NSString *monthName = [formatter stringFromDate:_graphMonth];
+    CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/2.0)), self.cellSize * 9.0, self.cellSize * 3.0, self.cellSize * 1.2);
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraphStyle.lineBreakMode = NSLineBreakByClipping;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName: [WPFontManager systemRegularFontOfSize:13.0],
+                                 NSForegroundColorAttributeName: [WPStyleGuide statsDarkGray],
+                                 NSParagraphStyleAttributeName: paragraphStyle,
+                                 };
+    [[monthName uppercaseString] drawInRect:labelRect withAttributes:attributes];
 }
 
 #pragma mark Setters

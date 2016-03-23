@@ -49,6 +49,7 @@
 // If you want to fine tune the size, override these two properties.
 @property (nonatomic) CGFloat cellSize;
 @property (nonatomic) CGFloat cellSpacing;
+@property (nonatomic) BOOL showDayNumbers;
 @property (nonatomic, weak) IBOutlet id<WPStatsContributionGraphDataSource> delegate;
 
 @end
