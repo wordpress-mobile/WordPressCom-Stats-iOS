@@ -59,6 +59,7 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
                             followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
                                  publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                                    streakCompletionHandler:(StatsRemoteStreakCompletion)streakCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler;
 

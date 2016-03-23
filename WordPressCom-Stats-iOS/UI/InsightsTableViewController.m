@@ -766,8 +766,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)configurePostingActivity:(InsightsMostPopularTableViewCell *)cell
 {
-    StatsInsights *statsInsights = self.sectionData[@(StatsSectionInsightsPostActivity)];
-    // TODO: Fill this in
+    id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
+    if (!data) {
+        // TODO: No Data here!
+    } else {
+        StatsStreak *streak = (StatsStreak*)data;
+        // TODO: We have the streak data!
+    }
 }
 
 - (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:(StatsSection)statsSection
@@ -1080,8 +1085,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)retrieveStats
 {
-    //TODO: Add some streak data here!
-    
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
@@ -1203,6 +1206,18 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
          [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
          [weakSelf.tableView endUpdates];
+     }
+                                                      streakCompletionHandler:^(StatsStreak *streak, NSError *error)
+     {
+         weakSelf.sectionData[@(StatsSectionInsightsPostActivity)] = streak;
+         [weakSelf.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionInsightsPostActivity)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [weakSelf.tableView endUpdates];
+
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {

@@ -152,6 +152,7 @@ static NSInteger const NumberOfDays = 12;
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
                             followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
                                  publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                                    streakCompletionHandler:(StatsRemoteStreakCompletion)streakCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -183,6 +184,16 @@ static NSInteger const NumberOfDays = 12;
     }
     if (publicizeCompletion) {
         [mutableOperations addObject:[self operationForPublicizeWithCompletionHandler:publicizeCompletion]];
+    }
+    if (streakCompletion) {
+        unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
+        NSDate *now = [NSDate date];
+        NSCalendar *gregorian = [NSCalendar currentCalendar];
+        NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
+        [comps setDay:1];
+        [comps setMonth:[comps month] - 2]; // TODO: update the month offset here
+        NSDate *startDate = [gregorian dateFromComponents:comps];
+        [mutableOperations addObject:[self operationForStreakWithStartDate:startDate endDate:now withCompletionHandler:streakCompletion]];
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
