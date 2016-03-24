@@ -1,6 +1,8 @@
 #import "InsightsPostingActivityTableViewCell.h"
+#import "StatsStreakItem.h"
 
 @interface InsightsPostingActivityTableViewCell ()
+// TODO: Wack this
 @property (nonatomic, strong) NSDate *currentMonth;
 @end
 
@@ -10,7 +12,9 @@
 {
     [super awakeFromNib];
     
-    self.currentMonth = [NSDate date];
+    // TODO: Wack this
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    self.currentMonth = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
     
     [self.contributionGraphLeft setDelegate:self];
     [self.contributionGraphCenter setDelegate:self];
@@ -37,9 +41,21 @@
     return returnVal;
 }
 
-- (NSInteger)valueForDay:(NSUInteger)day
+- (NSInteger)valueForDay:(NSDate *)date
 {
-    return day % 6;
+    NSInteger returnDate = nil;
+    if (self.statsStreak && self.statsStreak.items) {
+        for (StatsStreakItem *item in self.statsStreak.items) {
+            if (item.date) {
+                NSDateComponents *components1 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:item.date];
+                NSDateComponents *components2 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+                if (components1.month == components2.month && components1.year == components2.year && components1.day == components2.day) {
+                    returnDate++;
+                }
+            }
+        }
+    }
+    return returnDate;
 }
 
 - (NSUInteger)numberOfGrades

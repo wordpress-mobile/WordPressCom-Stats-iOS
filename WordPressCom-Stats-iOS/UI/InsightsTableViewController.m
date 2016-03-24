@@ -764,14 +764,18 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
 }
 
-- (void)configurePostingActivity:(InsightsMostPopularTableViewCell *)cell
+- (void)configurePostingActivity:(InsightsPostingActivityTableViewCell *)cell
 {
     id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
     if (!data) {
         // TODO: No Data here!
     } else {
+        //TODO: Move data to this pig
         StatsStreak *streak = (StatsStreak*)data;
-        // TODO: We have the streak data!
+        cell.statsStreak = streak;
+        [cell.contributionGraphLeft setNeedsDisplay];
+        [cell.contributionGraphCenter setNeedsDisplay];
+        [cell.contributionGraphRight setNeedsDisplay];
     }
 }
 

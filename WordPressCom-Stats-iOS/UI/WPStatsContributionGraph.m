@@ -119,7 +119,7 @@ static const NSInteger kDefaultGradeCount = 5;
         NSInteger grade = 0;
         NSInteger contributions = 0;
         if ([self.delegate respondsToSelector:@selector(valueForDay:)]) {
-            contributions = [self.delegate valueForDay:day];
+            contributions = [self.delegate valueForDay:date];
         }
         
         // Get the grade from the minimum cutoffs
