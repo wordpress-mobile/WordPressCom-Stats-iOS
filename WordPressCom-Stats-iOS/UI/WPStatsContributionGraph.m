@@ -4,7 +4,9 @@
 #import <objc/runtime.h>
 #import "StatsStreakItem.h"
 
-static const NSInteger kDefaultGradeCount = 5;
+static const NSInteger DefaultGradeCount = 5;
+static const CGFloat DefaultCellSize = 12.0;
+static const CGFloat DefaultCellSpacing = 3.0;
 
 @interface WPStatsContributionGraph ()
 
@@ -29,7 +31,7 @@ static const NSInteger kDefaultGradeCount = 5;
         _gradeCount = [_delegate numberOfGrades];
     }
     else {
-        _gradeCount = kDefaultGradeCount;
+        _gradeCount = DefaultGradeCount;
     }
     
     // Load all of the colors from the delegate
@@ -48,7 +50,7 @@ static const NSInteger kDefaultGradeCount = 5;
                    [UIColor colorWithRed:0.267 green:0.639 blue:0.251 alpha:1],
                    [UIColor colorWithRed:0.118 green:0.408 blue:0.137 alpha:1], nil];
         // Check if there is the correct number of colors
-        if (_gradeCount != kDefaultGradeCount) {
+        if (_gradeCount != DefaultGradeCount) {
             [[NSException exceptionWithName:@"Invalid Data" reason:@"The number of grades does not match the number of colors. Implement colorForGrade: to define a different number of colors than the default 5" userInfo:NULL] raise];
         }
     }
@@ -70,7 +72,7 @@ static const NSInteger kDefaultGradeCount = 5;
                            @6,
                            @8, nil];
         
-        if (_gradeCount != kDefaultGradeCount) {
+        if (_gradeCount != DefaultGradeCount) {
             [[NSException exceptionWithName:@"Invalid Data" reason:@"The number of grades does not match the number of grade cutoffs. Implement minimumValueForGrade: to define the correct number of cutoff values" userInfo:NULL] raise];
         }
     }
@@ -83,8 +85,8 @@ static const NSInteger kDefaultGradeCount = 5;
         _graphMonth = [NSDate date];
     }
     
-    _cellSpacing = floor(CGRectGetWidth(self.frame) / 20);
-    _cellSize = _cellSpacing * 2;
+    _cellSpacing = DefaultCellSpacing;
+    _cellSize = DefaultCellSize;
 }
 
 - (void)drawRect:(CGRect)rect
@@ -156,7 +158,7 @@ static const NSInteger kDefaultGradeCount = 5;
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setDateFormat:@"MMM"];
     NSString *monthName = [formatter stringFromDate:_graphMonth];
-    CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/2.0)), self.cellSize * 10.5, self.cellSize * 3.0, self.cellSize * 1.2);
+    CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/2.0)), self.cellSize * 9.0, self.cellSize * 3.0, self.cellSize * 1.2);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     paragraphStyle.lineBreakMode = NSLineBreakByClipping;
     paragraphStyle.alignment = NSTextAlignmentCenter;
