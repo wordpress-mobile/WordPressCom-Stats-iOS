@@ -1,16 +1,7 @@
 #import <UIKit/UIKit.h>
+#import "StatsStreak.h"
 
 @protocol WPStatsContributionGraphDataSource <NSObject>
-
-@required
-
-/**
- @discussion    If there is no value, return nil
- @param     day Defined from 1 to the last day of the month in the graph.
- @returns   The value to display for each day of the month.
- */
-//TODO: Update text here
-- (NSInteger)valueForDay:(NSDate *)date;
 
 @optional
 /**
@@ -50,5 +41,10 @@
  @description   A NSDate in month that the graph should display
  */
 @property (nonatomic, strong) NSDate *monthForGraph;
+
+/**
+ @description   Values used to populate contrib graph
+ */
+@property (nonatomic, strong) StatsStreak *streak;
 
 @end

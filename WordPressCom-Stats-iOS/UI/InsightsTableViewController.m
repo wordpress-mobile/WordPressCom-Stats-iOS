@@ -769,20 +769,22 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 {
     id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
     if (!data) {
-        // TODO: No Data here!
+        // TODO: No Data view
     } else {
+        StatsStreak *streak = (StatsStreak *)data;
         NSCalendar *cal = [NSCalendar currentCalendar];
         NSDate *twoMonthsAgo = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
         cell.contributionGraphLeft.monthForGraph = twoMonthsAgo;
         cell.contributionGraphCenter.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
         cell.contributionGraphRight.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
+        cell.contributionGraphLeft.streak = streak;
+        cell.contributionGraphCenter.streak = streak;
+        cell.contributionGraphRight.streak = streak;
+        
+        // TODO: this should really only be called once. Remove the notion of delegates completely from the contrib graph
         [cell.contributionGraphLeft setDelegate:self];
         [cell.contributionGraphCenter setDelegate:self];
         [cell.contributionGraphRight setDelegate:self];
-        
-        [cell.contributionGraphLeft setNeedsDisplay];
-        [cell.contributionGraphCenter setNeedsDisplay];
-        [cell.contributionGraphRight setNeedsDisplay];
     }
 }
 
@@ -1482,26 +1484,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 #pragma mark - WPStatsContributionGraphDataSource methods
 
-- (NSInteger)valueForDay:(NSDate *)date
-{
-    NSInteger returnDate = nil;
-    id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
-    StatsStreak *streak = (StatsStreak*)data;
-
-    if (data && streak && streak.items) {
-        for (StatsStreakItem *item in streak.items) {
-            if (item.date) {
-                NSDateComponents *components1 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:item.date];
-                NSDateComponents *components2 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
-                if (components1.month == components2.month && components1.year == components2.year && components1.day == components2.day) {
-                    returnDate++;
-                }
-            }
-        }
-    }
-    return returnDate;
-}
-
 - (NSUInteger)numberOfGrades
 {
     return 5;
@@ -1510,19 +1492,19 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (UIColor *)colorForGrade:(NSUInteger)grade
 {
     switch (grade) {
-        case 1:
+        case 0:
             return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1]; // #c8d7e1
             break;
-        case 2:
+        case 1:
             return [UIColor colorWithRed:0.569 green:0.886 blue:0.984 alpha:1]; // #91e2fb
             break;
-        case 3:
+        case 2:
             return [UIColor colorWithRed:0 green:0.745 blue:0.965 alpha:1]; // #00bef6
             break;
-        case 4:
+        case 3:
             return [UIColor colorWithRed:0 green:0.514 blue:0.663 alpha:1]; // #0083a9
             break;
-        case 5:
+        case 4:
             return [UIColor colorWithRed:0 green:0.204 blue:0.263 alpha:1]; // #003443
             break;
         default:

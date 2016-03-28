@@ -2,6 +2,7 @@
 #import "WPStyleGuide+Stats.h"
 #import <WordPressShared/WPFontManager.h>
 #import <objc/runtime.h>
+#import "StatsStreakItem.h"
 
 static const NSInteger kDefaultGradeCount = 5;
 
@@ -13,7 +14,6 @@ static const NSInteger kDefaultGradeCount = 5;
 @property (nonatomic, strong) NSMutableArray *colors;
 
 @end
-
 
 @implementation WPStatsContributionGraph
 
@@ -118,8 +118,16 @@ static const NSInteger kDefaultGradeCount = 5;
         
         NSInteger grade = 0;
         NSInteger contributions = 0;
-        if ([self.delegate respondsToSelector:@selector(valueForDay:)]) {
-            contributions = [self.delegate valueForDay:date];
+        if (self.streak && self.streak.items) {
+            for (StatsStreakItem *item in self.streak.items) {
+                if (item.date) {
+                    NSDateComponents *components1 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:item.date];
+                    NSDateComponents *components2 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+                    if (components1.month == components2.month && components1.year == components2.year && components1.day == components2.day) {
+                        contributions++;
+                    }
+                }
+            }
         }
         
         // Get the grade from the minimum cutoffs
