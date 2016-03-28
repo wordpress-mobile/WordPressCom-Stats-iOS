@@ -1,8 +1,9 @@
 #import <UIKit/UIKit.h>
 #import "WPStatsService.h"
 #import "WPStatsViewController.h"
+#import "WPStatsContributionGraph.h"
 
-@interface InsightsTableViewController : UITableViewController
+@interface InsightsTableViewController : UITableViewController <WPStatsContributionGraphDataSource>
 
 @property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;

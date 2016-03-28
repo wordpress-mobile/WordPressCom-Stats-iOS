@@ -5,12 +5,6 @@
 @required
 
 /**
- @discussion    For the current date, return [NSDate date]
- @returns   A NSDate in month that the graph should display
- */
-- (NSDate *)monthForGraph;
-
-/**
  @discussion    If there is no value, return nil
  @param     day Defined from 1 to the last day of the month in the graph.
  @returns   The value to display for each day of the month.
@@ -47,10 +41,14 @@
 
 #pragma mark - Properties
 
-// If you want to fine tune the size, override these two properties.
 @property (nonatomic) CGFloat cellSize;
 @property (nonatomic) CGFloat cellSpacing;
 @property (nonatomic) BOOL showDayNumbers;
 @property (nonatomic, weak) IBOutlet id<WPStatsContributionGraphDataSource> delegate;
+
+/**
+ @description   A NSDate in month that the graph should display
+ */
+@property (nonatomic, strong) NSDate *monthForGraph;
 
 @end

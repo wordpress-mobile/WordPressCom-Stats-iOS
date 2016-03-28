@@ -75,8 +75,8 @@ static const NSInteger kDefaultGradeCount = 5;
         }
     }
     
-    if ([_delegate respondsToSelector:@selector(monthForGraph)]) {
-        _graphMonth = [_delegate monthForGraph];
+    if (self.monthForGraph) {
+        _graphMonth = self.monthForGraph;
     }
     else {
         // Use the current month by default
@@ -148,7 +148,7 @@ static const NSInteger kDefaultGradeCount = 5;
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setDateFormat:@"MMM"];
     NSString *monthName = [formatter stringFromDate:_graphMonth];
-    CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/2.0)), self.cellSize * 9.0, self.cellSize * 3.0, self.cellSize * 1.2);
+    CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/2.0)), self.cellSize * 10.5, self.cellSize * 3.0, self.cellSize * 1.2);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     paragraphStyle.lineBreakMode = NSLineBreakByClipping;
     paragraphStyle.alignment = NSTextAlignmentCenter;
