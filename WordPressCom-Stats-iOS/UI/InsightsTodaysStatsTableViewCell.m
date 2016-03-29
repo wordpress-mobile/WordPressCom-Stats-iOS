@@ -19,12 +19,12 @@
     [self.todayVisitorsButton setTitle:[NSLocalizedString(@"Visitors", @"Stats Visitors label") uppercaseStringWithLocale:[NSLocale currentLocale]] forState:UIControlStateNormal];
     [self.todayVisitorsButton setTitleColor:[WPStyleGuide darkGrey] forState:UIControlStateNormal];
     
-    self.todayLikesImage.image = [[UIImage imageNamed:@"icon-eye-16x16" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.todayLikesImage.image = [[UIImage imageNamed:@"icon-star-16x16" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.todayLikesImage.tintColor = [WPStyleGuide darkGrey];
     [self.todayLikesButton setTitle:[NSLocalizedString(@"Likes", @"Stats Likes label") uppercaseStringWithLocale:[NSLocale currentLocale]] forState:UIControlStateNormal];
     [self.todayLikesButton setTitleColor:[WPStyleGuide darkGrey] forState:UIControlStateNormal];
     
-    self.todayCommentsImage.image = [[UIImage imageNamed:@"icon-eye-16x16" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.todayCommentsImage.image = [[UIImage imageNamed:@"icon-comment-16x16" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.todayCommentsImage.tintColor = [WPStyleGuide darkGrey];
     [self.todayCommentsButton setTitle:[NSLocalizedString(@"Comments", @"Stats Comments label") uppercaseStringWithLocale:[NSLocale currentLocale]] forState:UIControlStateNormal];
     [self.todayCommentsButton setTitleColor:[WPStyleGuide darkGrey] forState:UIControlStateNormal];
