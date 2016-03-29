@@ -774,17 +774,14 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         StatsStreak *streak = (StatsStreak *)data;
         NSCalendar *cal = [NSCalendar currentCalendar];
         NSDate *twoMonthsAgo = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
+        
         cell.contributionGraphLeft.monthForGraph = twoMonthsAgo;
         cell.contributionGraphCenter.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
         cell.contributionGraphRight.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
-        cell.contributionGraphLeft.streak = streak;
-        cell.contributionGraphCenter.streak = streak;
-        cell.contributionGraphRight.streak = streak;
         
-        // TODO: this should really only be called once. Remove the notion of delegates completely from the contrib graph
-        [cell.contributionGraphLeft setDelegate:self];
-        [cell.contributionGraphCenter setDelegate:self];
-        [cell.contributionGraphRight setDelegate:self];
+        cell.contributionGraphLeft.graphData = streak;
+        cell.contributionGraphCenter.graphData = streak;
+        cell.contributionGraphRight.graphData = streak;
     }
 }
 
@@ -1479,37 +1476,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
             self.sectionData[statsSectionNumber] = group;
         }
-    }
-}
-
-#pragma mark - WPStatsContributionGraphDataSource methods
-
-- (NSUInteger)numberOfGrades
-{
-    return 5;
-}
-
-- (UIColor *)colorForGrade:(NSUInteger)grade
-{
-    switch (grade) {
-        case 0:
-            return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1]; // #c8d7e1
-            break;
-        case 1:
-            return [UIColor colorWithRed:0.569 green:0.886 blue:0.984 alpha:1]; // #91e2fb
-            break;
-        case 2:
-            return [UIColor colorWithRed:0 green:0.745 blue:0.965 alpha:1]; // #00bef6
-            break;
-        case 3:
-            return [UIColor colorWithRed:0 green:0.514 blue:0.663 alpha:1]; // #0083a9
-            break;
-        case 4:
-            return [UIColor colorWithRed:0 green:0.204 blue:0.263 alpha:1]; // #003443
-            break;
-        default:
-            return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1]; //Default grey #c8d7e1
-            break;
     }
 }
 

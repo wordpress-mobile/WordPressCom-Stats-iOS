@@ -1,28 +1,29 @@
 #import <UIKit/UIKit.h>
 #import "StatsStreak.h"
 
-@protocol WPStatsContributionGraphDataSource <NSObject>
+@protocol WPStatsContributionGraphDelegate <NSObject>
 
 @optional
 /**
- @description If this method isn't implemented, the default value of 5 is used.
- @returns  Returns the number of color divides in the graph.
+ @description   The total number of grades in the graph. If this method isn't implemented,
+                the default value of 5 is used.
+ @returns       An NSUInteger that specifies the total number of color divides in the graph.
  */
 - (NSUInteger)numberOfGrades;
 
 /**
- @description   Each grade requires exactly one color.
- If this method isn't implemented, the default 5 color scheme is used.
- @param grade   The grade index. From 0-numberOfGrades
- @returns   A UIColor for the specified grade.
+ @description   The single color assigned to each grade. If this method isn't implemented,
+                the default 5 color scheme is used.
+ @param grade   The grade index starting at zero to the numberOfGrades-1
+ @returns       A UIColor for the specified grade.
  */
 - (UIColor *)colorForGrade:(NSUInteger)grade;
 
 /**
- @description   defines how values are translated into grades
- If this method isn't implemented, the default values are used.
- @param grade   The grade from 0-numberOfGrades
- @returns   An NSUInteger that specifies the minimum cutoff for a grade
+ @description   Defines how values are translated into grades If this method isn't implemented,
+                the default values are used.
+ @param grade   The grade starting at zero to the numberOfGrades-1
+ @returns       An NSUInteger that specifies the minimum cutoff for a grade
  */
 - (NSInteger)minimumValueForGrade:(NSUInteger)grade;
 
@@ -32,10 +33,14 @@
 
 #pragma mark - Properties
 
+@property (nonatomic, weak) IBOutlet id<WPStatsContributionGraphDelegate> delegate;
 @property (nonatomic) CGFloat cellSize;
 @property (nonatomic) CGFloat cellSpacing;
+
+/**
+ @description   A BOOL when set to YES will display the day number within each cell. Default is NO.
+ */
 @property (nonatomic) BOOL showDayNumbers;
-@property (nonatomic, weak) IBOutlet id<WPStatsContributionGraphDataSource> delegate;
 
 /**
  @description   A NSDate in month that the graph should display
@@ -43,8 +48,8 @@
 @property (nonatomic, strong) NSDate *monthForGraph;
 
 /**
- @description   Values used to populate contrib graph
+ @description   Values used to populate this graph
  */
-@property (nonatomic, strong) StatsStreak *streak;
+@property (nonatomic, strong) StatsStreak *graphData;
 
 @end
