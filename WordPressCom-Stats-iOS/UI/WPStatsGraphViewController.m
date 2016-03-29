@@ -19,6 +19,7 @@
 @property (nonatomic, strong) StatsVisits *visits;
 @property (nonatomic, strong) NSArray<StatsSummary *> *statsData;
 @property (nonatomic, assign) StatsSummaryType currentSummaryType;
+@property (nonatomic, strong) NSDate *selectedDate;
 
 @end
 
@@ -68,8 +69,8 @@ static NSInteger const RecommendedYAxisTicks = 2;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        [self truncateDataIfNecessary];
-        [self.collectionView reloadData];
+        // Forces data to be re-analyzed and drawn
+        [self setVisits:self.visits forSummaryType:self.currentSummaryType withSelectedDate:self.selectedDate];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
     }];
 }
@@ -177,6 +178,8 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
 - (void)selectGraphBarWithDate:(NSDate *)selectedDate
 {
+    self.selectedDate = selectedDate;
+    
     for (StatsSummary *summary in self.statsData) {
         NSInteger index = (NSInteger)[self.statsData indexOfObject:summary];
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
