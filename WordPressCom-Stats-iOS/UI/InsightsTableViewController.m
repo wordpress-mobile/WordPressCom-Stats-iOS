@@ -168,7 +168,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             } else if (statsSection == StatsSectionFollowers) {
                 count += StatsTableRowDataOffsetWithGroupSelectorAndTotal;
                 
-                if (group.errorWhileRetrieving) {
+                if (group.errorWhileRetrieving || count == StatsTableRowDataOffsetWithGroupSelectorAndTotal) {
                     count--;
                 }
             } else if (statsSection == StatsSectionEvents) {
