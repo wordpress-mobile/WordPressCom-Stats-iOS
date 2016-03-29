@@ -2,7 +2,7 @@
 #import <WordPressShared/UIImage+Util.h>
 #import "WPStyleGuide+Stats.h"
 #import "StatsBorderedCellBackgroundView.h"
-#import "NSObject+StatsBundleHelper.h"
+#import "NSBundle+StatsBundleHelper.h"
 
 @interface StatsSelectableTableViewCell ()
 
@@ -93,31 +93,33 @@
 
 - (void)updateLabels
 {
+    NSBundle *statsBundle = [NSBundle statsBundle];
+    
     switch (self.cellType) {
         case StatsSelectableTableViewCellTypeViews:
         {
-            self.categoryIcon.image = [[UIImage imageNamed:@"icon-eye-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-eye-25x25" inBundle:statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             self.categoryLabel.text = [NSLocalizedString(@"Views", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             break;
         }
             
         case StatsSelectableTableViewCellTypeVisitors:
         {
-            self.categoryIcon.image = [[UIImage imageNamed:@"icon-user-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-user-25x25" inBundle:statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             self.categoryLabel.text = [NSLocalizedString(@"Visitors", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             break;
         }
             
         case StatsSelectableTableViewCellTypeLikes:
         {
-            self.categoryIcon.image = [[UIImage imageNamed:@"icon-star-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-star-25x25" inBundle:statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             self.categoryLabel.text = [NSLocalizedString(@"Likes", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             break;
         }
             
         case StatsSelectableTableViewCellTypeComments:
         {
-            self.categoryIcon.image = [[UIImage imageNamed:@"icon-comment-25x25" inBundle:self.statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.categoryIcon.image = [[UIImage imageNamed:@"icon-comment-25x25" inBundle:statsBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             self.categoryLabel.text = [NSLocalizedString(@"Comments", @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
             break;
         }
