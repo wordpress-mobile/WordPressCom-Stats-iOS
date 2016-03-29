@@ -14,7 +14,7 @@
 #import "StatsViewAllTableViewController.h"
 #import "StatsPostDetailsTableViewController.h"
 #import "UIViewController+SizeClass.h"
-#import "NSObject+StatsBundleHelper.h"
+#import "NSBundle+StatsBundleHelper.h"
 #import <WordPressShared/WPFontManager.h>
 
 @interface InlineTextAttachment : NSTextAttachment
@@ -83,12 +83,13 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    NSBundle *bundle = self.statsBundle;
+    NSBundle *bundle = [NSBundle statsBundle];
     
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
-    
+    [self.tableView registerNib:[UINib nibWithNibName:@"StatsNoResultsRowTableViewCell" bundle:bundle] forCellReuseIdentifier:StatsTableNoResultsCellIdentifier];
+
     self.sections = @[@(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionInsightsTodaysStats),
                       @(StatsSectionInsightsAllTime),
