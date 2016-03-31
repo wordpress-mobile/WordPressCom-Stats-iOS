@@ -492,12 +492,17 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
 
         case StatsSectionInsightsPostActivity:
+        {
+            id data = (StatsGroup *)[self statsDataForStatsSection:statsSection];
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
-            } else {
+            } else if (data) {
                 identifier = InsightsTablePostActivityCellIdentifier;
+            } else {
+                identifier = StatsTableNoResultsCellIdentifier;
             }
             break;
+        }
             
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
@@ -768,9 +773,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (void)configurePostingActivity:(InsightsPostingActivityTableViewCell *)cell
 {
     id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
-    if (!data) {
-        // TODO: No Data view
-    } else {
+    if (data) {
         StatsStreak *streak = (StatsStreak *)data;
         NSCalendar *cal = [NSCalendar currentCalendar];
         NSDate *twoMonthsAgo = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
@@ -1009,6 +1012,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
                 break;
+            case StatsSectionInsightsPostActivity:
+                text = NSLocalizedString(@"No post activity data available", @"");
+                break;
             case StatsSectionAuthors:
             case StatsSectionClicks:
             case StatsSectionCountry:
@@ -1020,7 +1026,6 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             case StatsSectionVideos:
             case StatsSectionInsightsAllTime:
             case StatsSectionInsightsMostPopular:
-            case StatsSectionInsightsPostActivity:
             case StatsSectionInsightsTodaysStats:
             case StatsSectionInsightsLatestPostSummary:
             case StatsSectionPeriodHeader:

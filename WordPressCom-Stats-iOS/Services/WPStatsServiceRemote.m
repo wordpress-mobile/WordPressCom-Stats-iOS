@@ -1539,7 +1539,9 @@ static NSInteger const NumberOfDays = 12;
     
     id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completionHandler) {
-            completionHandler(nil, error);
+            StatsStreak *statsStreak = [StatsStreak new];
+            statsStreak.errorWhileRetrieving = YES;
+            completionHandler(statsStreak, error);
         }
     };
     

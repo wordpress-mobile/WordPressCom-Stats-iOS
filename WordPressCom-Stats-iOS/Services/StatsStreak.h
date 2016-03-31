@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) NSArray *items; // StatsStreakItem
 
+@property (nonatomic, assign) BOOL errorWhileRetrieving;
+
 @end
