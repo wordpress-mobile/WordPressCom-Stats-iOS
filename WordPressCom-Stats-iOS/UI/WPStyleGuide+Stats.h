@@ -1,4 +1,4 @@
-#import <WordPressShared/WPStyleGuide.h>
+@import WordPressShared;
 
 extern const CGFloat StatsVCHorizontalOuterPadding;
 extern const CGFloat StatsCVerticalOuterPadding;
@@ -21,7 +21,5 @@ extern const CGFloat StatsCVerticalOuterPadding;
 + (UIColor *)statsLightGrayZeroValue;
 
 + (UIColor *)statsNestedCellBackground;
-
-+ (UIFont *)subtitleFontBoldItalic;
 
 @end

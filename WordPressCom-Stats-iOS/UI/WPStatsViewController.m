@@ -1,3 +1,4 @@
+#import "Logging.h"
 #import "WPStatsViewController.h"
 #import "StatsTableViewController.h"
 #import "WPStatsService.h"
@@ -307,7 +308,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     StatsPeriodType statsPeriodType = (StatsPeriodType)[userDefaults integerForKey:@"LastSelectedStatsPeriodType"];
     
-    NSLog(@"Last stats period type: %@", @(statsPeriodType));
+    DDLogVerbose(@"Last stats period type: %@", @(statsPeriodType));
     return statsPeriodType;
 }
 

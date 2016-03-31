@@ -1,4 +1,5 @@
 import UIKit
+import WordPressShared
 
 @objc public class StatsStringUtilities: NSObject {
     public func sanitizePostTitle(var postTitle: String) -> String {
