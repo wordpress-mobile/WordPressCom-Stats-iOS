@@ -482,7 +482,6 @@
                                                                     </constraints>
                                                                 </view>
                                                             </subviews>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstItem="5BH-PH-2Vg" firstAttribute="centerX" secondItem="VZv-1Q-6M3" secondAttribute="centerX" id="4EU-6e-fBR"/>
                                                                 <constraint firstItem="5BH-PH-2Vg" firstAttribute="centerY" secondItem="VZv-1Q-6M3" secondAttribute="centerY" id="CZi-zM-8Pr"/>
@@ -515,7 +514,6 @@
                                                                     </constraints>
                                                                 </view>
                                                             </subviews>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstItem="Rcj-Ei-DAs" firstAttribute="centerY" secondItem="nh4-9v-qaS" secondAttribute="centerY" id="2tT-1p-Vzt"/>
                                                                 <constraint firstItem="Rcj-Ei-DAs" firstAttribute="centerX" secondItem="nh4-9v-qaS" secondAttribute="centerX" id="RZp-Sm-hNp"/>
