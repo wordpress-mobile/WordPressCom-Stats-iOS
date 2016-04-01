@@ -190,7 +190,7 @@ static const CGFloat DefaultCellSpacing = 3.0;
     [self setNeedsDisplay];
 }
 
-- (void)setShowDayNumbers:(CGFloat)showDayNumbers
+- (void)setShowDayNumbers:(BOOL)showDayNumbers
 {
     _showDayNumbers = showDayNumbers;
     [self setNeedsDisplay];
