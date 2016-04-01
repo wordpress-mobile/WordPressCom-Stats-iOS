@@ -43,7 +43,7 @@ DEPENDENCIES:
   - OCMock
   - OHHTTPStubs (= 3.1.1)
   - WordPress-iOS-Shared (~> 0.5.3)
-  - WordPressCom-Analytics-iOS (~> 0.1.5)
+  - WordPressCom-Analytics-iOS (~> 0.1.4)
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
