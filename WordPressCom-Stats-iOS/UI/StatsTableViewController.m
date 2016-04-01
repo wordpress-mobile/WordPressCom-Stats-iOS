@@ -14,6 +14,7 @@
 #import "StatsSection.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
+#import "NSBundle+StatsBundleHelper.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -50,10 +51,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    NSBundle *bundle = [NSBundle statsBundle];
+    
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
+    [self.tableView registerNib:[UINib nibWithNibName:@"StatsNoResultsRowTableViewCell" bundle:bundle] forCellReuseIdentifier:StatsTableNoResultsCellIdentifier];
     
     [self setupRefreshControl];
     

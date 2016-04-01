@@ -2,8 +2,8 @@
 #import <XCTest/XCTest.h>
 #import "WPStatsService.h"
 #import "WPStatsServiceRemote.h"
-#import <OCMock.h>
 #import "StatsItem.h"
+@import OCMock;
 
 @interface WPStatsServiceRemoteMock : WPStatsServiceRemote
 

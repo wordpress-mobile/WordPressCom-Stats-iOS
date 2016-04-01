@@ -1,9 +1,9 @@
-#import "NSObject+StatsBundleHelper.h"
+#import "NSBundle+StatsBundleHelper.h"
 #import "WPStatsViewController.h"
 
-@implementation NSObject (StatsBundleHelper)
+@implementation NSBundle (StatsBundleHelper)
 
-- (NSBundle *)statsBundle
++ (NSBundle *)statsBundle
 {
     NSBundle *statsBundle = [NSBundle bundleForClass:[WPStatsViewController class]];
     NSString *path = [statsBundle pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];

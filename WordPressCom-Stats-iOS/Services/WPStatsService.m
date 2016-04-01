@@ -1,3 +1,4 @@
+#import "Logging.h"
 #import "WPStatsService.h"
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
