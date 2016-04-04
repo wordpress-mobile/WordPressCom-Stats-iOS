@@ -295,6 +295,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     if ([identifier isEqualToString:StatsTableViewAllCellIdentifier] ||
         (statsSection == StatsSectionInsightsTodaysStats) ||
+        (statsSection == StatsSectionInsightsPostActivity) ||
         (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
