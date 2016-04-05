@@ -12,23 +12,12 @@ static NSString * const reuseIdentifier = @"PostingActivityCollectionViewCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];    
-    [self.collectionView registerClass:[InsightsPostingActivityCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -37,17 +26,20 @@ static NSString * const reuseIdentifier = @"PostingActivityCollectionViewCell";
     return 1;
 }
 
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 0;
+    return 12;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     InsightsPostingActivityCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
-    // Configure the cell
+    NSInteger monthIndex = (-1*indexPath.item);
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDate *graphMonth = [cal dateByAddingUnit:NSCalendarUnitMonth value:monthIndex toDate:[NSDate date] options:0];
+    cell.contributionGraph.monthForGraph = graphMonth;
+    cell.contributionGraph.graphData = self.streakData;
     
     return cell;
 }

@@ -330,41 +330,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4la-3v-sSe">
-                            <size key="itemSize" width="195" height="200"/>
+                            <size key="itemSize" width="200" height="200"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="q7c-K4-9un" customClass="InsightsPostingActivityCollectionViewCell">
-                                <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PostingActivityCollectionViewCell" id="q7c-K4-9un" customClass="InsightsPostingActivityCollectionViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view autoresizesSubviews="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1IM-uk-HDg">
-                                            <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
+                                            <rect key="frame" x="13" y="13" width="174" height="174"/>
                                             <subviews>
                                                 <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="yT3-DZ-AYJ" customClass="WPStatsContributionGraph">
-                                                    <rect key="frame" x="60" y="37" width="75" height="125"/>
+                                                    <rect key="frame" x="49.5" y="24.5" width="75" height="125"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="1fF-Rr-RjQ"/>
+                                                        <constraint firstAttribute="height" constant="125" id="ed3-cf-0eK"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerX" secondItem="1IM-uk-HDg" secondAttribute="centerX" id="FSR-lN-yp2"/>
-                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="leading" secondItem="1IM-uk-HDg" secondAttribute="leading" constant="60" id="adl-eh-DSf"/>
-                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="top" secondItem="1IM-uk-HDg" secondAttribute="top" constant="37" id="cZB-da-9g1"/>
-                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerY" secondItem="1IM-uk-HDg" secondAttribute="centerY" id="ko6-YQ-ODr"/>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerY" secondItem="1IM-uk-HDg" secondAttribute="centerY" id="QUJ-NF-1NX"/>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerX" secondItem="1IM-uk-HDg" secondAttribute="centerX" id="Ujf-3P-MLg"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="1IM-uk-HDg" secondAttribute="bottom" id="8hi-lV-3Gp"/>
-                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="leading" secondItem="q7c-K4-9un" secondAttribute="leading" id="JiJ-5s-zef"/>
-                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="top" secondItem="q7c-K4-9un" secondAttribute="top" id="XGA-FD-gk9"/>
-                                    <constraint firstAttribute="trailing" secondItem="1IM-uk-HDg" secondAttribute="trailing" id="qsU-gN-1Zg"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="1IM-uk-HDg" secondAttribute="bottom" constant="5" id="IFs-1y-jxf"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="1IM-uk-HDg" secondAttribute="trailing" constant="5" id="ZAb-bO-aD6"/>
+                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="top" secondItem="q7c-K4-9un" secondAttribute="topMargin" constant="5" id="ahm-rl-xJ0"/>
+                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="leading" secondItem="q7c-K4-9un" secondAttribute="leadingMargin" constant="5" id="gax-hP-RFE"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="contributionGraph" destination="yT3-DZ-AYJ" id="awu-00-1vI"/>

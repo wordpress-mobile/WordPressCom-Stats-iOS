@@ -191,7 +191,7 @@ static NSInteger const NumberOfDays = 12;
         NSCalendar *gregorian = [NSCalendar currentCalendar];
         NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
         [comps setDay:1];
-        [comps setMonth:[comps month] - 2]; // TODO: update the month offset here
+        [comps setMonth:[comps month] - 12]; // Default to 12 months prior
         NSDate *startDate = [gregorian dateFromComponents:comps];
         [mutableOperations addObject:[self operationForStreakWithStartDate:startDate endDate:now withCompletionHandler:streakCompletion]];
     }
