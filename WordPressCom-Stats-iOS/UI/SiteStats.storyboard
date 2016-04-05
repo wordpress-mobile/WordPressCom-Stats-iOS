@@ -328,21 +328,47 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="hAj-at-GMa">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4la-3v-sSe">
-                            <size key="itemSize" width="197" height="243"/>
+                            <size key="itemSize" width="195" height="200"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="q7c-K4-9un">
-                                <rect key="frame" x="0.0" y="0.0" width="197" height="243"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="q7c-K4-9un" customClass="InsightsPostingActivityCollectionViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="197" height="243"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view autoresizesSubviews="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1IM-uk-HDg">
+                                            <rect key="frame" x="0.0" y="0.0" width="195" height="200"/>
+                                            <subviews>
+                                                <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="yT3-DZ-AYJ" customClass="WPStatsContributionGraph">
+                                                    <rect key="frame" x="60" y="37" width="75" height="125"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerX" secondItem="1IM-uk-HDg" secondAttribute="centerX" id="FSR-lN-yp2"/>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="leading" secondItem="1IM-uk-HDg" secondAttribute="leading" constant="60" id="adl-eh-DSf"/>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="top" secondItem="1IM-uk-HDg" secondAttribute="top" constant="37" id="cZB-da-9g1"/>
+                                                <constraint firstItem="yT3-DZ-AYJ" firstAttribute="centerY" secondItem="1IM-uk-HDg" secondAttribute="centerY" id="ko6-YQ-ODr"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="1IM-uk-HDg" secondAttribute="bottom" id="8hi-lV-3Gp"/>
+                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="leading" secondItem="q7c-K4-9un" secondAttribute="leading" id="JiJ-5s-zef"/>
+                                    <constraint firstItem="1IM-uk-HDg" firstAttribute="top" secondItem="q7c-K4-9un" secondAttribute="top" id="XGA-FD-gk9"/>
+                                    <constraint firstAttribute="trailing" secondItem="1IM-uk-HDg" secondAttribute="trailing" id="qsU-gN-1Zg"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="contributionGraph" destination="yT3-DZ-AYJ" id="awu-00-1vI"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>

@@ -18,6 +18,7 @@
 #import "NSBundle+StatsBundleHelper.h"
 #import <WordPressShared/WPFontManager.h>
 #import "StatsStreakItem.h"
+#import "InsightsPostingActivityCollectionViewController.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -62,6 +63,7 @@ static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 
+static NSString *const SeguePostActivity = @"PostingActivity";
 static NSString *const SegueLatestPostDetails = @"LatestPostDetails";
 static NSString *const SegueLatestPostDetailsiPad = @"LatestPostDetailsPad";
 
@@ -430,6 +432,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return statsSection == StatsSectionInsightsLatestPostSummary && indexPath.row == 2 && !!data;
     } else if ([identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         return statsSection == StatsSectionInsightsLatestPostSummary && !!data;
+    } else if ([identifier isEqualToString:SeguePostActivity]) {
+        return statsSection == StatsSectionInsightsPostActivity && !!data;
     }
     
     return YES;
@@ -452,6 +456,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.identifier isEqualToString:SeguePostActivity]) {
+        InsightsPostingActivityCollectionViewController *postActivityCollectionVC = (InsightsPostingActivityCollectionViewController *)segue.destinationViewController;
+        StatsStreak *streak = [self statsDataForStatsSection:StatsSectionInsightsPostActivity];
+        postActivityCollectionVC.streakData = streak;
     } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
                [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         // This is kind of a hack since we trigger this seque programmatically sometimes
@@ -496,7 +504,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
         case StatsSectionInsightsPostActivity:
         {
-            id data = (StatsGroup *)[self statsDataForStatsSection:statsSection];
+            id data = (StatsStreak *)[self statsDataForStatsSection:statsSection];
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
             } else if (data) {
