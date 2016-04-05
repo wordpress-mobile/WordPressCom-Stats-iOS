@@ -519,7 +519,7 @@
                                     <outlet property="mostPopularHourPercentDailyViews" destination="txh-pI-huu" id="WYQ-lm-j1c"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PostingActivityDetails" rowHeight="200" id="Gw4-6X-a5i" userLabel="Posting Activity Details" customClass="InsightsPostingActivityTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostingActivityDetails" rowHeight="200" id="Gw4-6X-a5i" userLabel="Posting Activity Details" customClass="InsightsPostingActivityTableViewCell">
                                 <rect key="frame" x="0.0" y="243.5" width="600" height="200"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Gw4-6X-a5i" id="DCf-80-TXq">

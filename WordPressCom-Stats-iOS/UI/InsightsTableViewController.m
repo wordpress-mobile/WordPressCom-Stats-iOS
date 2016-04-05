@@ -404,6 +404,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             default:
                 break;
         }
+    } else if (statsSection == StatsSectionInsightsPostActivity && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
+        [self performSegueWithIdentifier:SeguePostActivity sender:[tableView cellForRowAtIndexPath:indexPath]];
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
         [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
@@ -703,6 +705,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
         case StatsSectionInsightsPostActivity:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Posting Activity", @"Insights posting activity header");
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         case StatsSectionInsightsTodaysStats:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
