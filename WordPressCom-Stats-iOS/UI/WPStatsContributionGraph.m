@@ -181,13 +181,11 @@ static const CGFloat DefaultCellSpacing = 3.0;
 - (void)setCellSize:(CGFloat)cellSize
 {
     _cellSize = cellSize;
-    [self setNeedsDisplay];
 }
 
 - (void)setCellSpacing:(CGFloat)cellSpacing
 {
     _cellSpacing = cellSpacing;
-    [self setNeedsDisplay];
 }
 
 - (void)setShowDayNumbers:(BOOL)showDayNumbers
