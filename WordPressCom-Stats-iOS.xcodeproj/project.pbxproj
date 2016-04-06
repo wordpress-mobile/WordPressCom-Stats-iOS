@@ -18,6 +18,10 @@
 		748541BA1CAF17C600850830 /* StatsStreakItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 748541B61CAF17C600850830 /* StatsStreakItem.m */; };
 		748541BC1CAF17F200850830 /* StatsStreakItemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 748541BB1CAF17F200850830 /* StatsStreakItemTests.m */; };
 		748541BE1CAF180600850830 /* stats-v1.1-streak.json in Resources */ = {isa = PBXBuildFile; fileRef = 748541BD1CAF180600850830 /* stats-v1.1-streak.json */; };
+		74A03CBC1CB55E88008F7481 /* InsightsContributionGraphFooterView.h in Headers */ = {isa = PBXBuildFile; fileRef = 74A03CB81CB55E88008F7481 /* InsightsContributionGraphFooterView.h */; };
+		74A03CBD1CB55E88008F7481 /* InsightsContributionGraphFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A03CB91CB55E88008F7481 /* InsightsContributionGraphFooterView.m */; };
+		74A03CBE1CB55E88008F7481 /* InsightsContributionGraphHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 74A03CBA1CB55E88008F7481 /* InsightsContributionGraphHeaderView.h */; };
+		74A03CBF1CB55E88008F7481 /* InsightsContributionGraphHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A03CBB1CB55E88008F7481 /* InsightsContributionGraphHeaderView.m */; };
 		74AEB06D1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 74AEB06B1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h */; };
 		74AEB06E1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 74AEB06C1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m */; };
 		74AEB0711CAF1B84002EA9E0 /* WPStatsContributionGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 74AEB06F1CAF1B84002EA9E0 /* WPStatsContributionGraph.h */; };
@@ -173,6 +177,10 @@
 		748541B61CAF17C600850830 /* StatsStreakItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStreakItem.m; path = Services/StatsStreakItem.m; sourceTree = "<group>"; };
 		748541BB1CAF17F200850830 /* StatsStreakItemTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsStreakItemTests.m; sourceTree = "<group>"; };
 		748541BD1CAF180600850830 /* stats-v1.1-streak.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "stats-v1.1-streak.json"; sourceTree = "<group>"; };
+		74A03CB81CB55E88008F7481 /* InsightsContributionGraphFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsContributionGraphFooterView.h; sourceTree = "<group>"; };
+		74A03CB91CB55E88008F7481 /* InsightsContributionGraphFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsContributionGraphFooterView.m; sourceTree = "<group>"; };
+		74A03CBA1CB55E88008F7481 /* InsightsContributionGraphHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsContributionGraphHeaderView.h; sourceTree = "<group>"; };
+		74A03CBB1CB55E88008F7481 /* InsightsContributionGraphHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsContributionGraphHeaderView.m; sourceTree = "<group>"; };
 		74AEB06B1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsPostingActivityTableViewCell.h; sourceTree = "<group>"; };
 		74AEB06C1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsPostingActivityTableViewCell.m; sourceTree = "<group>"; };
 		74AEB06F1CAF1B84002EA9E0 /* WPStatsContributionGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPStatsContributionGraph.h; sourceTree = "<group>"; };
@@ -379,6 +387,16 @@
 			children = (
 				74AEB06F1CAF1B84002EA9E0 /* WPStatsContributionGraph.h */,
 				74AEB0701CAF1B84002EA9E0 /* WPStatsContributionGraph.m */,
+				74AEB06B1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h */,
+				74AEB06C1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m */,
+				740C2BB51CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h */,
+				740C2BB61CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.m */,
+				740C2BB11CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.h */,
+				740C2BB21CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.m */,
+				74A03CB81CB55E88008F7481 /* InsightsContributionGraphFooterView.h */,
+				74A03CB91CB55E88008F7481 /* InsightsContributionGraphFooterView.m */,
+				74A03CBA1CB55E88008F7481 /* InsightsContributionGraphHeaderView.h */,
+				74A03CBB1CB55E88008F7481 /* InsightsContributionGraphHeaderView.m */,
 			);
 			name = Contribution;
 			sourceTree = "<group>";
@@ -401,10 +419,6 @@
 		9367D9D51A6EB5770033911A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				740C2BB11CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.h */,
-				740C2BB21CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.m */,
-				74AEB06B1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h */,
-				74AEB06C1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m */,
 				9311AC241B581E5200BBC877 /* InsightsAllTimeTableViewCell.h */,
 				9311AC251B581E5200BBC877 /* InsightsAllTimeTableViewCell.m */,
 				9311AC281B5845FE00BBC877 /* InsightsMostPopularTableViewCell.h */,
@@ -630,8 +644,6 @@
 				74AEB0731CAF1BF6002EA9E0 /* Contribution */,
 				93E8B4641BED31150072A63C /* InsightsTableViewController.h */,
 				93E8B4651BED31150072A63C /* InsightsTableViewController.m */,
-				740C2BB51CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h */,
-				740C2BB61CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.m */,
 				930001991BF29CA5009275DB /* NSBundle+StatsBundleHelper.h */,
 				9300019A1BF29CA5009275DB /* NSBundle+StatsBundleHelper.m */,
 				93FABB7C1A115D90000C15ED /* SiteStats.storyboard */,
@@ -722,11 +734,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74A03CBE1CB55E88008F7481 /* InsightsContributionGraphHeaderView.h in Headers */,
 				74AEB06D1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.h in Headers */,
 				748541B71CAF17C600850830 /* StatsStreak.h in Headers */,
 				E18623131C9A15D800557646 /* Logging.h in Headers */,
 				E184E11D1C99B34E006AA92D /* WPStatsLogging.h in Headers */,
 				740C2BB71CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h in Headers */,
+				74A03CBC1CB55E88008F7481 /* InsightsContributionGraphFooterView.h in Headers */,
 				74AEB0711CAF1B84002EA9E0 /* WPStatsContributionGraph.h in Headers */,
 				748541B91CAF17C600850830 /* StatsStreakItem.h in Headers */,
 				740C2BB31CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.h in Headers */,
@@ -997,6 +1011,7 @@
 				936DA3851C999E7800D1E440 /* WPStatsGraphViewController.m in Sources */,
 				936DA39A1C999E9E00D1E440 /* StatsItem.m in Sources */,
 				936DA3961C999E9200D1E440 /* WPStatsServiceRemote.m in Sources */,
+				74A03CBD1CB55E88008F7481 /* InsightsContributionGraphFooterView.m in Sources */,
 				936DA3991C999E9E00D1E440 /* StatsInsights.m in Sources */,
 				936DA3831C999E7000D1E440 /* InsightsSectionHeaderTableViewCell.m in Sources */,
 				936DA3861C999E7800D1E440 /* WPStatsGraphLegendView.m in Sources */,
@@ -1015,6 +1030,7 @@
 				74AEB06E1CAF1B65002EA9E0 /* InsightsPostingActivityTableViewCell.m in Sources */,
 				936DA3941C999E9200D1E440 /* StatsStringUtilities.swift in Sources */,
 				936DA3971C999E9E00D1E440 /* StatsAllTime.m in Sources */,
+				74A03CBF1CB55E88008F7481 /* InsightsContributionGraphHeaderView.m in Sources */,
 				936DA37A1C999E6000D1E440 /* NSBundle+StatsBundleHelper.m in Sources */,
 				748541B81CAF17C600850830 /* StatsStreak.m in Sources */,
 				936DA3951C999E9200D1E440 /* WPStatsService.m in Sources */,
