@@ -17,6 +17,7 @@
 
 - (UIColor *)colorForGrade:(NSUInteger)grade
 {
+    //TODO: consolodate this
     switch (grade) {
         case 0:
             return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1]; // #c8d7e1
