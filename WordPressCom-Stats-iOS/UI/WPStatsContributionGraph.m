@@ -151,8 +151,10 @@ static const CGFloat DefaultCellSpacing = 3.0;
         
         if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.backgroundColor = [UIColor clearColor];
             button.frame = backgroundRect;
+            [button setImage:[UIImage imageWithColor:[UIColor clearColor] havingSize:backgroundRect.size] forState:UIControlStateNormal];
+            [button setImage:[UIImage imageWithColor:[WPStyleGuide statsLighterOrange] havingSize:backgroundRect.size] forState:UIControlStateHighlighted];
+            [button setImage:[UIImage imageWithColor:[WPStyleGuide statsDarkerOrange] havingSize:backgroundRect.size] forState:UIControlStateSelected];
             [button addTarget:self action:@selector(daySelected:) forControlEvents:UIControlEventTouchUpInside];
             
             NSDictionary *data = @{
@@ -233,6 +235,9 @@ static const CGFloat DefaultCellSpacing = 3.0;
 
 - (void)daySelected:(id)sender
 {
+    UIButton *selectedButton = (UIButton*)sender;
+    selectedButton.selected = !selectedButton.selected;
+    
     NSDictionary *data = (NSDictionary *)objc_getAssociatedObject(sender, @"dynamic_key");
     if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
         [self.delegate dateTapped:data];
