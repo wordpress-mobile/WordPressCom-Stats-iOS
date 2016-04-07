@@ -1,6 +1,11 @@
 #import "InsightsPostingActivityCollectionViewController.h"
 #import "InsightsPostingActivityCollectionViewCell.h"
+#import "InsightsContributionGraphHeaderView.h"
 #import "InsightsContributionGraphFooterView.h"
+
+static NSString *const PostActivityCollectionCellIdentifier = @"PostActivityCollectionViewCell";
+static NSString *const PostActivityCollectionHeaderIdentifier = @"PostingActivityCollectionHeaderView";
+static NSString *const PostActivityCollectionFooterIdentifier = @"PostingActivityCollectionFooterView";
 
 @interface InsightsPostingActivityCollectionViewController ()
 
@@ -8,11 +13,16 @@
 
 @implementation InsightsPostingActivityCollectionViewController
 
-static NSString * const reuseIdentifier = @"PostingActivityCollectionViewCell";
-
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    
+    // Make the header sticky
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)self.collectionViewLayout;
+    layout.sectionHeadersPinToVisibleBounds = YES;
+    layout.sectionFootersPinToVisibleBounds = YES;
+    layout.minimumInteritemSpacing = 1;
+    layout.minimumLineSpacing = 1;
 }
 
 - (void)didReceiveMemoryWarning
@@ -34,7 +44,8 @@ static NSString * const reuseIdentifier = @"PostingActivityCollectionViewCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    InsightsPostingActivityCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    InsightsPostingActivityCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PostActivityCollectionCellIdentifier
+                                                                                                forIndexPath:indexPath];
     
     NSInteger monthIndex = (-1*indexPath.item);
     NSCalendar *cal = [NSCalendar currentCalendar];
@@ -49,11 +60,17 @@ static NSString * const reuseIdentifier = @"PostingActivityCollectionViewCell";
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath
 {
-    if (kind == UICollectionElementKindSectionFooter){
-        InsightsContributionGraphFooterView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"PostingActivityCollectionFooterView" forIndexPath:indexPath];
+    if (kind == UICollectionElementKindSectionHeader) {
+        InsightsContributionGraphHeaderView *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                                                         withReuseIdentifier:PostActivityCollectionHeaderIdentifier
+                                                                                                forIndexPath:indexPath];
+        return header;
+    } else if (kind == UICollectionElementKindSectionFooter) {
+        InsightsContributionGraphFooterView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                                                         withReuseIdentifier:PostActivityCollectionFooterIdentifier
+                                                                                                forIndexPath:indexPath];
         return footer;
     }
-
 }
 
 @end
