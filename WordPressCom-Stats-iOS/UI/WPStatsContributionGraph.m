@@ -158,7 +158,7 @@ static const CGFloat DefaultCellSpacing = 3.0;
             [button addTarget:self action:@selector(daySelected:) forControlEvents:UIControlEventTouchUpInside];
             
             NSDictionary *data = @{
-                                   @"date": [self getDateAfterDate:date],
+                                   @"date": date,
                                    @"value": @(contributions)
                                    };
             objc_setAssociatedObject(button, @"dynamic_key", data, OBJC_ASSOCIATION_COPY);
