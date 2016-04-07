@@ -1,5 +1,7 @@
 #import "InsightsPostingActivityCollectionViewCell.h"
 
+static NSString *const DidTouchPostActivityDateNotification = @"DidTouchPostActivityDate";
+
 @implementation InsightsPostingActivityCollectionViewCell
 
 - (void)awakeFromNib
@@ -38,6 +40,13 @@
             return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1]; //Default grey #c8d7e1
             break;
     }
+}
+
+- (void)dateTapped:(NSDictionary *)dict
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:DidTouchPostActivityDateNotification
+                                                        object:self
+                                                      userInfo:dict];
 }
 
 @end

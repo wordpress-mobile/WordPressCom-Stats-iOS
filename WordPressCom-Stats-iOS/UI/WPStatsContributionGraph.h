@@ -27,6 +27,13 @@
  */
 - (NSInteger)minimumValueForGrade:(NSUInteger)grade;
 
+
+/**
+ @description   Called when
+ @returns       A NSDictionary that contains the date and number of posts on that day.
+ */
+- (void)dateTapped:(NSDictionary *)dict;
+
 @end
 
 @interface WPStatsContributionGraph : UIView

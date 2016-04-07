@@ -149,6 +149,20 @@ static const CGFloat DefaultCellSpacing = 3.0;
             [string drawInRect:backgroundRect withAttributes:dayNumberTextAttributes];
         }
         
+        if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.backgroundColor = [UIColor clearColor];
+            button.frame = backgroundRect;
+            [button addTarget:self action:@selector(daySelected:) forControlEvents:UIControlEventTouchUpInside];
+            
+            NSDictionary *data = @{
+                                   @"date": [self getDateAfterDate:date],
+                                   @"value": @(contributions)
+                                   };
+            objc_setAssociatedObject(button, @"dynamic_key", data, OBJC_ASSOCIATION_COPY);
+            [self addSubview:button];
+        }
+        
         columnCount = (columnCount < weekOfMonth) ? weekOfMonth : columnCount;
     }
 
@@ -215,6 +229,14 @@ static const CGFloat DefaultCellSpacing = 3.0;
     
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     return [calendar dateByAddingComponents:components toDate:date options:0];
+}
+
+- (void)daySelected:(id)sender
+{
+    NSDictionary *data = (NSDictionary *)objc_getAssociatedObject(sender, @"dynamic_key");
+    if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
+        [self.delegate dateTapped:data];
+    }
 }
 
 @end
