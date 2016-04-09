@@ -7,16 +7,36 @@
 static const NSInteger DefaultGradeCount = 5;
 static const CGFloat DefaultCellSize = 12.0;
 static const CGFloat DefaultCellSpacing = 3.0;
+static NSString *const ClearPostActivityDateNotification = @"ClearPostActivityDate";
 
 @interface WPStatsContributionGraph ()
 
 @property (nonatomic) NSUInteger gradeCount;
 @property (nonatomic, strong) NSMutableArray *gradeMinimumCutoff;
 @property (nonatomic, strong) NSMutableArray *colors;
+@property (nonatomic, strong) NSMutableArray *dateButtons;
 
 @end
 
 @implementation WPStatsContributionGraph
+
+- (void)awakeFromNib
+{
+    _dateButtons = [NSMutableArray array];
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    __weak __typeof(self) weakSelf = self;
+    [nc addObserverForName: ClearPostActivityDateNotification
+                    object: nil
+                     queue: [NSOperationQueue mainQueue]
+                usingBlock: ^(NSNotification *notification) {
+                    [weakSelf clearAllButtons];
+                }];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 // Load one-time setup data from the delegate
 - (void)loadDefaults
@@ -87,6 +107,7 @@ static const CGFloat DefaultCellSpacing = 3.0;
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
+    [self.dateButtons removeAllObjects];
     NSInteger columnCount = 0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -163,6 +184,7 @@ static const CGFloat DefaultCellSpacing = 3.0;
                                    };
             objc_setAssociatedObject(button, @"dynamic_key", data, OBJC_ASSOCIATION_COPY);
             [self addSubview:button];
+            [self.dateButtons addObject:button];
         }
         
         columnCount = (columnCount < weekOfMonth) ? weekOfMonth : columnCount;
@@ -235,12 +257,22 @@ static const CGFloat DefaultCellSpacing = 3.0;
 
 - (void)daySelected:(id)sender
 {
+    // Clear all the already-selected buttons
+    [[NSNotificationCenter defaultCenter] postNotificationName:ClearPostActivityDateNotification object:self];
+    
     UIButton *selectedButton = (UIButton*)sender;
     selectedButton.selected = !selectedButton.selected;
     
     NSDictionary *data = (NSDictionary *)objc_getAssociatedObject(sender, @"dynamic_key");
     if ([self.delegate respondsToSelector:@selector(dateTapped:)]) {
         [self.delegate dateTapped:data];
+    }
+}
+
+- (void)clearAllButtons
+{
+    for (UIButton *button in self.dateButtons) {
+        button.selected = NO;
     }
 }
 
