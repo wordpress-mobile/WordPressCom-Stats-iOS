@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface StatsStreakItem : NSObject
+@interface StatsStreakItem : NSObject <NSCopying>
 
 @property (nonatomic, strong)   NSString *value;
 @property (nonatomic, strong)   NSString *timeStamp;

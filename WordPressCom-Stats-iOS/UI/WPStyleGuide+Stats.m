@@ -52,7 +52,6 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.196 green:0.255 blue:0.333 alpha:1]; /*#324155*/
 }
 
-
 + (UIColor *)statsLessDarkGrey
 {
     return [UIColor colorWithRed:0.345 green:0.447 blue:0.584 alpha:1]; /*#587295*/

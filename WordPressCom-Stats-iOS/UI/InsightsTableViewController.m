@@ -793,12 +793,19 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         NSDate *twoMonthsAgo = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
         
         cell.contributionGraphLeft.monthForGraph = twoMonthsAgo;
-        cell.contributionGraphCenter.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
-        cell.contributionGraphRight.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
+        StatsStreak *streakLeft = [streak copy];
+        [streakLeft pruneItemsOutsideOfMonth:twoMonthsAgo];
+        cell.contributionGraphLeft.graphData = streakLeft;
         
-        cell.contributionGraphLeft.graphData = streak;
-        cell.contributionGraphCenter.graphData = streak;
-        cell.contributionGraphRight.graphData = streak;
+        cell.contributionGraphCenter.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
+        StatsStreak *streakCenter = [streak copy];
+        [streakCenter pruneItemsOutsideOfMonth:cell.contributionGraphCenter.monthForGraph];
+        cell.contributionGraphCenter.graphData = streakCenter;
+        
+        cell.contributionGraphRight.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
+        StatsStreak *streakRight = [streak copy];
+        [streakRight pruneItemsOutsideOfMonth:cell.contributionGraphRight.monthForGraph];
+        cell.contributionGraphRight.graphData = streakRight;
     }
 }
 

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface StatsStreak : NSObject
+@interface StatsStreak : NSObject <NSCopying>
 
 @property (nonatomic, strong) NSNumber *longestStreakLength;
 @property (nonatomic, strong) NSDate   *longestStreakStartDate;
@@ -13,5 +13,7 @@
 @property (nonatomic, strong) NSArray *items; // StatsStreakItem
 
 @property (nonatomic, assign) BOOL errorWhileRetrieving;
+
+- (void)pruneItemsOutsideOfMonth:(NSDate*)date;
 
 @end
