@@ -61,17 +61,18 @@ static NSString *const PostActivityCollectionFooterIdentifier = @"PostingActivit
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath
 {
+    UICollectionReusableView *reusableview = nil;
+    
     if (kind == UICollectionElementKindSectionHeader) {
-        InsightsContributionGraphHeaderView *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind
-                                                                                         withReuseIdentifier:PostActivityCollectionHeaderIdentifier
-                                                                                                forIndexPath:indexPath];
-        return header;
+        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                          withReuseIdentifier:PostActivityCollectionHeaderIdentifier
+                                                                 forIndexPath:indexPath];
     } else if (kind == UICollectionElementKindSectionFooter) {
-        InsightsContributionGraphFooterView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind
-                                                                                         withReuseIdentifier:PostActivityCollectionFooterIdentifier
-                                                                                                forIndexPath:indexPath];
-        return footer;
+        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                          withReuseIdentifier:PostActivityCollectionFooterIdentifier
+                                                                 forIndexPath:indexPath];
     }
+    return reusableview;
 }
 
 @end
