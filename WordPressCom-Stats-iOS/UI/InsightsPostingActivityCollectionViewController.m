@@ -45,14 +45,15 @@ static NSString *const PostActivityCollectionFooterIdentifier = @"PostingActivit
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     InsightsPostingActivityCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PostActivityCollectionCellIdentifier
-                                                                                                forIndexPath:indexPath];
-    
+                                                                                                forIndexPath:indexPath];    
     NSInteger monthIndex = (-1*indexPath.item);
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *graphMonth = [cal dateByAddingUnit:NSCalendarUnitMonth value:monthIndex toDate:[NSDate date] options:0];
     cell.contributionGraph.monthForGraph = graphMonth;
-    cell.contributionGraph.graphData = self.streakData;
-    
+    StatsStreak *streakForGraphMonth = [self.streakData copy];
+    [streakForGraphMonth pruneItemsOutsideOfMonth:graphMonth];
+    cell.contributionGraph.graphData = streakForGraphMonth;
+
     return cell;
 }
 
