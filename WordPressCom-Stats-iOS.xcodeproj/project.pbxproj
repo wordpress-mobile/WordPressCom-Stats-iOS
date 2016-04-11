@@ -12,6 +12,7 @@
 		740C2BB41CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 740C2BB21CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.m */; };
 		740C2BB71CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 740C2BB51CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h */; };
 		740C2BB81CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 740C2BB61CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.m */; };
+		740D01EE1CBC2FEC00FF074B /* StatsStreakTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 740D01ED1CBC2FEC00FF074B /* StatsStreakTests.m */; };
 		748541B71CAF17C600850830 /* StatsStreak.h in Headers */ = {isa = PBXBuildFile; fileRef = 748541B31CAF17C600850830 /* StatsStreak.h */; };
 		748541B81CAF17C600850830 /* StatsStreak.m in Sources */ = {isa = PBXBuildFile; fileRef = 748541B41CAF17C600850830 /* StatsStreak.m */; };
 		748541B91CAF17C600850830 /* StatsStreakItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 748541B51CAF17C600850830 /* StatsStreakItem.h */; };
@@ -171,6 +172,7 @@
 		740C2BB21CB3433E00D7B9BB /* InsightsPostingActivityCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsPostingActivityCollectionViewCell.m; sourceTree = "<group>"; };
 		740C2BB51CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsightsPostingActivityCollectionViewController.h; sourceTree = "<group>"; };
 		740C2BB61CB3435100D7B9BB /* InsightsPostingActivityCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsightsPostingActivityCollectionViewController.m; sourceTree = "<group>"; };
+		740D01ED1CBC2FEC00FF074B /* StatsStreakTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsStreakTests.m; sourceTree = "<group>"; };
 		748541B31CAF17C600850830 /* StatsStreak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStreak.h; path = Services/StatsStreak.h; sourceTree = "<group>"; };
 		748541B41CAF17C600850830 /* StatsStreak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StatsStreak.m; path = Services/StatsStreak.m; sourceTree = "<group>"; };
 		748541B51CAF17C600850830 /* StatsStreakItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatsStreakItem.h; path = Services/StatsStreakItem.h; sourceTree = "<group>"; };
@@ -404,6 +406,7 @@
 		9312EFC91C99A6B500A18550 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				740D01ED1CBC2FEC00FF074B /* StatsStreakTests.m */,
 				748541BB1CAF17F200850830 /* StatsStreakItemTests.m */,
 				9367D9D01A6E99640033911A /* StatsDateUtilitiesTests.m */,
 				9340980E1A5D75AC0005DF06 /* StatsEphemoryTests.m */,
@@ -1063,6 +1066,7 @@
 				748541BC1CAF17F200850830 /* StatsStreakItemTests.m in Sources */,
 				936DA3CF1C999F2900D1E440 /* StatsDateUtilitiesTests.m in Sources */,
 				936DA3D51C999F2E00D1E440 /* StatsStringsUtilitiesTests.swift in Sources */,
+				740D01EE1CBC2FEC00FF074B /* StatsStreakTests.m in Sources */,
 				936DA3D31C999F2900D1E440 /* WPStatsServiceRemoteTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
