@@ -2,8 +2,8 @@
 
 @interface StatsStreakItem : NSObject <NSCopying>
 
-@property (nonatomic, strong)   NSString *value;
-@property (nonatomic, strong)   NSString *timeStamp;
+@property (nonatomic, copy)   NSString *value;
+@property (nonatomic, copy)   NSString *timeStamp;
 @property (nonatomic, readonly) NSDate   *date;
 
 @end
