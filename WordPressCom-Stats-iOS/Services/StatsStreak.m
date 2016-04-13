@@ -1,5 +1,4 @@
 #import "StatsStreak.h"
-#import "StatsStreakItem.h"
 
 @implementation StatsStreak
 

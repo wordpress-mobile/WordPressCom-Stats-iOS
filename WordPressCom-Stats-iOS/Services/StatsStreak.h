@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "StatsStreakItem.h"
 
 @interface StatsStreak : NSObject <NSCopying>
 
@@ -10,7 +11,7 @@
 @property (nonatomic, strong) NSDate   *currentStreakStartDate;
 @property (nonatomic, strong) NSDate   *currentStreakEndDate;
 
-@property (nonatomic, strong) NSArray *items; // StatsStreakItem
+@property (nonatomic, strong) NSArray<StatsStreakItem *> *items;
 
 @property (nonatomic, assign) BOOL errorWhileRetrieving;
 
