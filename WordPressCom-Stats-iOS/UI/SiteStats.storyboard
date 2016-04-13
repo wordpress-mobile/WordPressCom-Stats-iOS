@@ -698,6 +698,7 @@
                                     <outlet property="contributionGraphCenter" destination="we6-88-VHC" id="dLf-CS-56W"/>
                                     <outlet property="contributionGraphLeft" destination="5BH-PH-2Vg" id="8hF-yy-6Z7"/>
                                     <outlet property="contributionGraphRight" destination="Rcj-Ei-DAs" id="dpr-27-YcW"/>
+                                    <outlet property="rightConstraint" destination="AYH-Bo-Ta8" id="Rvn-RB-ffr"/>
                                     <segue destination="UNM-aq-4A0" kind="show" identifier="PostingActivity" id="Hf1-xM-9Dj"/>
                                 </connections>
                             </tableViewCell>

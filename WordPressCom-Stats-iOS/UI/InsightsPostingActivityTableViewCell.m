@@ -12,6 +12,15 @@
     [self.contributionGraphRight setDelegate:self];
 }
 
+- (void)doneSettingProperties
+{
+    if (self.selectable) {
+        self.selectionStyle = UITableViewCellSelectionStyleDefault;
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        self.rightConstraint.constant = 20.0f;
+    }
+}
+
 #pragma mark - WPStatsContributionGraphDelegate methods
 
 - (NSUInteger)numberOfGrades

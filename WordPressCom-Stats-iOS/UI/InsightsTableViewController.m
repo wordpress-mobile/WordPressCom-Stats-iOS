@@ -806,6 +806,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         StatsStreak *streakRight = [streak copy];
         [streakRight pruneItemsOutsideOfMonth:cell.contributionGraphRight.monthForGraph];
         cell.contributionGraphRight.graphData = streakRight;
+        
+        cell.selectable = YES;
+        [cell doneSettingProperties];
     }
 }
 
