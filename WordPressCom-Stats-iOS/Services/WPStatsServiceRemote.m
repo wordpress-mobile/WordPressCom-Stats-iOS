@@ -188,7 +188,7 @@ static NSInteger const NumberOfDays = 12;
     if (streakCompletion) {
         unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
         NSDate *now = [NSDate date];
-        NSCalendar *gregorian = [NSCalendar currentCalendar];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
         [comps setDay:1];
         [comps setMonth:[comps month] - 12]; // Default to 12 months prior

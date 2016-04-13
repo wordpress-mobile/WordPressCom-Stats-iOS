@@ -789,20 +789,20 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
     if (data) {
         StatsStreak *streak = (StatsStreak *)data;
-        NSCalendar *cal = [NSCalendar currentCalendar];
-        NSDate *twoMonthsAgo = [cal dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDate *twoMonthsAgo = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
         
         cell.contributionGraphLeft.monthForGraph = twoMonthsAgo;
         StatsStreak *streakLeft = [streak copy];
         [streakLeft pruneItemsOutsideOfMonth:twoMonthsAgo];
         cell.contributionGraphLeft.graphData = streakLeft;
         
-        cell.contributionGraphCenter.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
+        cell.contributionGraphCenter.monthForGraph = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
         StatsStreak *streakCenter = [streak copy];
         [streakCenter pruneItemsOutsideOfMonth:cell.contributionGraphCenter.monthForGraph];
         cell.contributionGraphCenter.graphData = streakCenter;
         
-        cell.contributionGraphRight.monthForGraph = [cal dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
+        cell.contributionGraphRight.monthForGraph = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
         StatsStreak *streakRight = [streak copy];
         [streakRight pruneItemsOutsideOfMonth:cell.contributionGraphRight.monthForGraph];
         cell.contributionGraphRight.graphData = streakRight;

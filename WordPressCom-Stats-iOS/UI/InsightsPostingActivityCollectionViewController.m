@@ -47,8 +47,8 @@ static NSString *const PostActivityCollectionFooterIdentifier = @"PostingActivit
     InsightsPostingActivityCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PostActivityCollectionCellIdentifier
                                                                                                 forIndexPath:indexPath];    
     NSInteger monthIndex = (-1*indexPath.item);
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDate *graphMonth = [cal dateByAddingUnit:NSCalendarUnitMonth value:monthIndex toDate:[NSDate date] options:0];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDate *graphMonth = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:monthIndex toDate:[NSDate date] options:0];
     cell.contributionGraph.monthForGraph = graphMonth;
     StatsStreak *streakForGraphMonth = [self.streakData copy];
     [streakForGraphMonth pruneItemsOutsideOfMonth:graphMonth];

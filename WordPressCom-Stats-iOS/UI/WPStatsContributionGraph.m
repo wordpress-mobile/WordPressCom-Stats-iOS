@@ -142,8 +142,9 @@ static NSString *const ClearPostActivityDateNotification = @"ClearPostActivityDa
         if (self.graphData && self.graphData.items) {
             for (StatsStreakItem *item in self.graphData.items) {
                 if (item.date) {
-                    NSDateComponents *components1 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:item.date];
-                    NSDateComponents *components2 = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+                    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+                    NSDateComponents *components1 = [gregorian components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:item.date];
+                    NSDateComponents *components2 = [gregorian components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
                     if (components1.month == components2.month && components1.year == components2.year && components1.day == components2.day) {
                         contributions++;
                     }
