@@ -175,6 +175,7 @@ NSString *const TodayCacheKey = @"Today";
                               followersDotComCompletionHandler:(StatsGroupCompletion)followersDotComCompletion
                                followersEmailCompletionHandler:(StatsGroupCompletion)followersEmailCompletion
                                     publicizeCompletionHandler:(StatsGroupCompletion)publicizeCompletion
+                                       streakCompletionHandler:(StatsStreakCompletion)streakCompletion
                                                  progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)) progressBlock
                                    andOverallCompletionHandler:(void (^)())overallCompletionHandler
 {
@@ -189,6 +190,7 @@ NSString *const TodayCacheKey = @"Today";
     id followersDotComData = cacheDictionary[@(StatsSubSectionFollowersDotCom)];
     id followersEmailData = cacheDictionary[@(StatsSubSectionFollowersEmail)];
     id publicizeData = cacheDictionary[@(StatsSectionPublicize)];
+    id streakData = cacheDictionary[@(StatsSectionInsightsPostActivity)];
 
     if (cacheDictionary
         && (!allTimeCompletion || allTimeData)
@@ -201,6 +203,7 @@ NSString *const TodayCacheKey = @"Today";
         && (!followersDotComCompletion || followersDotComData)
         && (!followersEmailCompletion || followersEmailData)
         && (!publicizeCompletion || publicizeData)
+        && (!streakCompletion || streakData)
         )
     {
         if (commentsAuthorsCompletion) {
@@ -237,6 +240,10 @@ NSString *const TodayCacheKey = @"Today";
         
         if (todaySummaryCompletion) {
             todaySummaryCompletion(todayData, nil);
+        }
+        
+        if (streakCompletion) {
+            streakCompletion(streakData, nil);
         }
         
         if (latestPostCompletion) {
@@ -332,6 +339,7 @@ NSString *const TodayCacheKey = @"Today";
                                     followersDotComCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeDotCom andCompletionHandler:followersDotComCompletion]
                                      followersEmailCompletionHandler:[self remoteFollowersCompletionWithCache:cacheDictionary followerType:StatsFollowerTypeEmail andCompletionHandler:followersEmailCompletion]
                                           publicizeCompletionHandler:[self remoteItemCompletionWithCache:cacheDictionary forStatsSection:StatsSectionPublicize andCompletionHandler:publicizeCompletion]
+                                             streakCompletionHandler:[self remoteStreakCompletionHandlerWithCache:cacheDictionary andCompletionHandler:streakCompletion]
                                                        progressBlock:progressBlock
                                          andOverallCompletionHandler:^
      {
@@ -527,6 +535,21 @@ NSString *const TodayCacheKey = @"Today";
     };
 }
 
+- (StatsRemoteStreakCompletion)remoteStreakCompletionHandlerWithCache:(NSMutableDictionary *)cacheDictionary andCompletionHandler:(StatsStreakCompletion)streakCompletion
+{
+    return ^(StatsStreak *streak, NSError *error)
+    {
+        cacheDictionary[@(StatsSectionInsightsPostActivity)] = streak;
+        
+        if (error) {
+            DDLogError(@"Error while fetching Streak: %@", error);
+        }
+        
+        if (streakCompletion) {
+            streakCompletion(streak, error);
+        }
+    };
+}
 
 - (StatsRemoteItemsCompletion)remoteItemCompletionWithCache:(NSMutableDictionary *)cacheDictionary forStatsSection:(StatsSection)statsSection andCompletionHandler:(StatsGroupCompletion)groupCompletion
 {

@@ -5,6 +5,7 @@
 #import "InsightsSectionHeaderTableViewCell.h"
 #import "InsightsAllTimeTableViewCell.h"
 #import "InsightsMostPopularTableViewCell.h"
+#import "InsightsPostingActivityTableViewCell.h"
 #import "InsightsTodaysStatsTableViewCell.h"
 #import "StatsTableSectionHeaderView.h"
 #import "StatsSection.h"
@@ -16,6 +17,8 @@
 #import "UIViewController+SizeClass.h"
 #import "NSBundle+StatsBundleHelper.h"
 #import <WordPressShared/WPFontManager.h>
+#import "StatsStreakItem.h"
+#import "InsightsPostingActivityCollectionViewController.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -43,6 +46,7 @@ static NSInteger const StatsTableRowDataOffsetWithGroupSelectorAndTotal = 4;
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const InsightsTableSectionHeaderCellIdentifier = @"HeaderRow";
 static NSString *const InsightsTableMostPopularDetailsCellIdentifier = @"MostPopularDetails";
+static NSString *const InsightsTablePostActivityCellIdentifier = @"PostingActivityDetails";
 static NSString *const InsightsTableAllTimeDetailsCellIdentifier = @"AllTimeDetails";
 static NSString *const InsightsTableAllTimeDetailsiPadCellIdentifier = @"AllTimeDetailsPad";
 static NSString *const InsightsTableTodaysStatsDetailsiPadCellIdentifier = @"TodaysStatsDetailsPad";
@@ -59,6 +63,7 @@ static NSString *const StatsTableViewAllCellIdentifier = @"MoreRow";
 static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 static NSString *const StatsTablePeriodHeaderCellIdentifier = @"PeriodHeader";
 
+static NSString *const SeguePostActivity = @"PostingActivity";
 static NSString *const SegueLatestPostDetails = @"LatestPostDetails";
 static NSString *const SegueLatestPostDetailsiPad = @"LatestPostDetailsPad";
 
@@ -94,6 +99,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                       @(StatsSectionInsightsTodaysStats),
                       @(StatsSectionInsightsAllTime),
                       @(StatsSectionInsightsMostPopular),
+                      @(StatsSectionInsightsPostActivity),
                       @(StatsSectionPeriodHeader),
                       @(StatsSectionComments),
                       @(StatsSectionTagsCategories),
@@ -145,6 +151,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     switch (statsSection) {
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
+            return 2;
+        case StatsSectionInsightsPostActivity:
             return 2;
         case StatsSectionInsightsTodaysStats:
             return self.isViewHorizontallyCompact ? 5 : 2;
@@ -247,8 +255,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     NSString *identifier = [self cellIdentifierForIndexPath:indexPath];
     
     if ([identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier]) {
-        return 44.0f;
+        return 44.0f;    
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
+        return 150.0f;
+    } else if ([identifier isEqualToString:InsightsTablePostActivityCellIdentifier]) {
         return 150.0f;
     } else if ([identifier isEqualToString:InsightsTableAllTimeDetailsCellIdentifier]) {
         return 185.0f;
@@ -287,6 +297,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
     if ([identifier isEqualToString:StatsTableViewAllCellIdentifier] ||
         (statsSection == StatsSectionInsightsTodaysStats) ||
+        (statsSection == StatsSectionInsightsPostActivity) ||
         (statsSection == StatsSectionInsightsLatestPostSummary)) {
         return indexPath;
     } else if ([identifier isEqualToString:StatsTableTwoColumnCellIdentifier]) {
@@ -393,6 +404,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             default:
                 break;
         }
+    } else if (statsSection == StatsSectionInsightsPostActivity && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
+        [self performSegueWithIdentifier:SeguePostActivity sender:[tableView cellForRowAtIndexPath:indexPath]];
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableSectionHeaderCellIdentifier] && !!data) {
         [self performSegueWithIdentifier:SegueLatestPostDetailsiPad sender:[tableView cellForRowAtIndexPath:indexPath]];
     } else if (statsSection == StatsSectionInsightsLatestPostSummary && [identifier isEqualToString:InsightsTableWrappingTextCellIdentifier]) {
@@ -421,6 +434,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         return statsSection == StatsSectionInsightsLatestPostSummary && indexPath.row == 2 && !!data;
     } else if ([identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         return statsSection == StatsSectionInsightsLatestPostSummary && !!data;
+    } else if ([identifier isEqualToString:SeguePostActivity]) {
+        return statsSection == StatsSectionInsightsPostActivity && !!data;
     }
     
     return YES;
@@ -443,6 +458,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         viewAllVC.statsSubSection = statsSubSection;
         viewAllVC.statsService = self.statsService;
         viewAllVC.statsDelegate = self.statsDelegate;
+    } else if ([segue.identifier isEqualToString:SeguePostActivity]) {
+        InsightsPostingActivityCollectionViewController *postActivityCollectionVC = (InsightsPostingActivityCollectionViewController *)segue.destinationViewController;
+        StatsStreak *streak = [self statsDataForStatsSection:StatsSectionInsightsPostActivity];
+        postActivityCollectionVC.streakData = streak;
     } else if ([segue.identifier isEqualToString:SegueLatestPostDetails] ||
                [segue.identifier isEqualToString:SegueLatestPostDetailsiPad]) {
         // This is kind of a hack since we trigger this seque programmatically sometimes
@@ -485,6 +504,19 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
             break;
 
+        case StatsSectionInsightsPostActivity:
+        {
+            id data = (StatsStreak *)[self statsDataForStatsSection:statsSection];
+            if (indexPath.row == 0) {
+                identifier = InsightsTableSectionHeaderCellIdentifier;
+            } else if (data) {
+                identifier = InsightsTablePostActivityCellIdentifier;
+            } else {
+                identifier = StatsTableNoResultsCellIdentifier;
+            }
+            break;
+        }
+            
         case StatsSectionInsightsTodaysStats:
             if (indexPath.row == 0) {
                 identifier = InsightsTableSectionHeaderCellIdentifier;
@@ -611,6 +643,8 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         [self configureAllTimeCell:(InsightsAllTimeTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableMostPopularDetailsCellIdentifier]) {
         [self configureMostPopularCell:(InsightsMostPopularTableViewCell *)cell];
+    } else if ([identifier isEqualToString:InsightsTablePostActivityCellIdentifier]) {
+        [self configurePostingActivity:(InsightsPostingActivityTableViewCell *)cell];
     } else if ([identifier isEqualToString:InsightsTableTodaysStatsDetailsiPadCellIdentifier] || [identifier isEqualToString:InsightsTableLatestPostSummaryDetailsiPadCellIdentifier]) {
         [self configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:statsSection];
     } else if ([identifier isEqualToString:StatsTableSelectableCellIdentifier]) {
@@ -668,6 +702,10 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             break;
         case StatsSectionInsightsMostPopular:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Most popular day and hour", @"Insights popular section header");
+            break;
+        case StatsSectionInsightsPostActivity:
+            cell.sectionHeaderLabel.text = NSLocalizedString(@"Posting Activity", @"Insights posting activity header");
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         case StatsSectionInsightsTodaysStats:
             cell.sectionHeaderLabel.text = NSLocalizedString(@"Today's Stats", @"Insights today section header");
@@ -746,6 +784,33 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     
 }
 
+- (void)configurePostingActivity:(InsightsPostingActivityTableViewCell *)cell
+{
+    id data = self.sectionData[@(StatsSectionInsightsPostActivity)];
+    if (data) {
+        StatsStreak *streak = (StatsStreak *)data;
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDate *twoMonthsAgo = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:-2 toDate:[NSDate date] options:0];
+        
+        cell.contributionGraphLeft.monthForGraph = twoMonthsAgo;
+        StatsStreak *streakLeft = [streak copy];
+        [streakLeft pruneItemsOutsideOfMonth:twoMonthsAgo];
+        cell.contributionGraphLeft.graphData = streakLeft;
+        
+        cell.contributionGraphCenter.monthForGraph = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:twoMonthsAgo options:0];
+        StatsStreak *streakCenter = [streak copy];
+        [streakCenter pruneItemsOutsideOfMonth:cell.contributionGraphCenter.monthForGraph];
+        cell.contributionGraphCenter.graphData = streakCenter;
+        
+        cell.contributionGraphRight.monthForGraph = [gregorian dateByAddingUnit:NSCalendarUnitMonth value:2 toDate:twoMonthsAgo options:0];
+        StatsStreak *streakRight = [streak copy];
+        [streakRight pruneItemsOutsideOfMonth:cell.contributionGraphRight.monthForGraph];
+        cell.contributionGraphRight.graphData = streakRight;
+        
+        cell.selectable = YES;
+        [cell doneSettingProperties];
+    }
+}
 
 - (void)configureTodaysStatsCell:(InsightsTodaysStatsTableViewCell *)cell forStatsSection:(StatsSection)statsSection
 {
@@ -971,6 +1036,9 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             case StatsSectionTagsCategories:
                 text = NSLocalizedString(@"No tagged posts or pages viewed", @"");
                 break;
+            case StatsSectionInsightsPostActivity:
+                text = NSLocalizedString(@"No post activity data available", @"");
+                break;
             case StatsSectionAuthors:
             case StatsSectionClicks:
             case StatsSectionCountry:
@@ -1177,6 +1245,18 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
          [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
          
          [weakSelf.tableView endUpdates];
+     }
+                                                      streakCompletionHandler:^(StatsStreak *streak, NSError *error)
+     {
+         weakSelf.sectionData[@(StatsSectionInsightsPostActivity)] = streak;
+         [weakSelf.tableView beginUpdates];
+         
+         NSUInteger sectionNumber = [weakSelf.sections indexOfObject:@(StatsSectionInsightsPostActivity)];
+         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionNumber];
+         [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+         
+         [weakSelf.tableView endUpdates];
+
      }
                                                                 progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations)
      {
@@ -1419,6 +1499,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             }
         } else if (statsSection != StatsSectionInsightsAllTime
                    && statsSection != StatsSectionInsightsMostPopular
+                   && statsSection != StatsSectionInsightsPostActivity
                    && statsSection != StatsSectionInsightsTodaysStats
                    && statsSection != StatsSectionInsightsLatestPostSummary) {
             StatsGroup *group = [[StatsGroup alloc] initWithStatsSection:statsSection andStatsSubSection:StatsSubSectionNone];
@@ -1426,6 +1507,5 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         }
     }
 }
-
 
 @end

@@ -22,4 +22,10 @@ extern const CGFloat StatsCVerticalOuterPadding;
 
 + (UIColor *)statsNestedCellBackground;
 
++ (UIColor *)statsPostActivityLevel1CellBackground;
++ (UIColor *)statsPostActivityLevel2CellBackground;
++ (UIColor *)statsPostActivityLevel3CellBackground;
++ (UIColor *)statsPostActivityLevel4CellBackground;
++ (UIColor *)statsPostActivityLevel5CellBackground;
+
 @end

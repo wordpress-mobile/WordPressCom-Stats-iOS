@@ -1,10 +1,12 @@
 #import <Foundation/Foundation.h>
 #import "StatsSummary.h"
 #import "StatsVisits.h"
+#import "StatsStreak.h"
 #import "WPStatsService.h"
 
 typedef void (^StatsRemoteSummaryCompletion)(StatsSummary *summary, NSError *error);
 typedef void (^StatsRemoteVisitsCompletion)(StatsVisits *visits, NSError *error);
+typedef void (^StatsRemoteStreakCompletion)(StatsStreak *streak, NSError *error);
 typedef void (^StatsRemoteItemsCompletion)(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error);
 typedef void (^StatsRemotePostDetailsCompletion)(StatsVisits *visits, NSArray *monthsYearsItems, NSArray *averagePerDayItems, NSArray *recentWeeksItems, NSError *error);
 typedef void (^StatsRemoteAllTimeCompletion)(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error);
@@ -57,6 +59,7 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
                             followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
                                  publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                                    streakCompletionHandler:(StatsRemoteStreakCompletion)streakCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler;
 
@@ -116,6 +119,10 @@ typedef void (^StatsRemoteInsightsCompletion)(NSString *highestHour, NSString *h
 - (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler;
 
 - (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler;
+
+- (void)fetchStreakStatsForStartDate:(NSDate *)startDate
+                          andEndDate:(NSDate *)endDate
+               withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler;
 
 - (void)cancelAllRemoteOperations;
 

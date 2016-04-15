@@ -32,25 +32,24 @@ PODS:
     - HockeySDK/AllFeaturesLib (= 3.8.6)
   - HockeySDK/AllFeaturesLib (3.8.6)
   - NSObject-SafeExpectations (0.0.2)
-  - WordPress-iOS-Shared (0.5.3):
-    - AFNetworking (~> 2.5)
+  - WordPress-iOS-Shared (0.5.5):
     - CocoaLumberjack (~> 2.2.0)
-  - WordPressCom-Analytics-iOS (0.1.7)
-  - WordPressCom-Stats-iOS (0.6.5):
+  - WordPressCom-Analytics-iOS (0.1.9)
+  - WordPressCom-Stats-iOS (0.7.0):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
     - WordPress-iOS-Shared (~> 0.5.3)
     - WordPressCom-Analytics-iOS (~> 0.1.4)
-    - WordPressCom-Stats-iOS/Services (= 0.6.5)
-    - WordPressCom-Stats-iOS/UI (= 0.6.5)
-  - WordPressCom-Stats-iOS/Services (0.6.5):
+    - WordPressCom-Stats-iOS/Services (= 0.7.0)
+    - WordPressCom-Stats-iOS/UI (= 0.7.0)
+  - WordPressCom-Stats-iOS/Services (0.7.0):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
     - WordPress-iOS-Shared (~> 0.5.3)
     - WordPressCom-Analytics-iOS (~> 0.1.4)
-  - WordPressCom-Stats-iOS/UI (0.6.5):
+  - WordPressCom-Stats-iOS/UI (0.7.0):
     - AFNetworking (~> 2.6.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (= 0.0.2)
@@ -64,15 +63,15 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   WordPressCom-Stats-iOS:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   HockeySDK: ab68303eec6680f6b539de65d747742dd276e934
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
-  WordPress-iOS-Shared: 43f55f24f0685e431167084071b7914d7c7134a8
-  WordPressCom-Analytics-iOS: bc738227f7b497585e81836e94d54939df551b81
-  WordPressCom-Stats-iOS: 9f0ee0c51b3cc3c33626790669cc4c4aaeef393d
+  WordPress-iOS-Shared: 3805d8df12ebfd5748ad99d7ade0fee170b14504
+  WordPressCom-Analytics-iOS: 3fccb433506f136cc04b735e6ab2efae9edfae7e
+  WordPressCom-Stats-iOS: d1996675fadd5a2c8548344a40663834898114f3
 
 COCOAPODS: 0.39.0

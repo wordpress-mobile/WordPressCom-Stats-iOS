@@ -5,6 +5,8 @@
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
+#import "StatsStreak.h"
+#import "StatsStreakItem.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
 
 @interface WPStatsServiceRemoteTests : XCTestCase
@@ -958,6 +960,49 @@
         XCTAssertTrue([@5 isEqual:commentsValue]);
         XCTAssertNil(error);
         
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testStreak
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testStreak completion"];
+    
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/streak/?endDate=2016-01-28&startDate=2014-01-01"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-streak.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+    }];
+    NSDateComponents *startDateComponent = [[NSDateComponents alloc] init];
+    [startDateComponent setDay:01];
+    [startDateComponent setMonth:01];
+    [startDateComponent setYear:2014];
+    NSDateComponents *endDateComponent = [[NSDateComponents alloc] init];
+    [endDateComponent setDay:28];
+    [endDateComponent setMonth:01];
+    [endDateComponent setYear:2016];
+    [self.subject fetchStreakStatsForStartDate:[[NSCalendar currentCalendar] dateFromComponents:startDateComponent]
+                                    andEndDate:[[NSCalendar currentCalendar] dateFromComponents:endDateComponent]
+                         withCompletionHandler:^(StatsStreak *streak, NSError *error) {
+        XCTAssertNotNil(streak, @"streak should not be nil.");
+        XCTAssertNil(error);
+        XCTAssertNotNil(streak.longestStreakStartDate);
+        XCTAssertNotNil(streak.longestStreakEndDate);
+        XCTAssertEqual(13, [streak.longestStreakLength intValue]);
+        XCTAssertNotNil(streak.currentStreakStartDate);
+        XCTAssertNotNil(streak.currentStreakEndDate);
+        XCTAssertEqual(1, [streak.currentStreakLength intValue]);
+        
+        XCTAssertNotNil(streak.items, @"streak items should not be nil.");
+        XCTAssertEqual(1095, streak.items.count);                             
+        StatsStreakItem *testStreakItem = (StatsStreakItem*)streak.items.firstObject;
+        XCTAssertNotNil(testStreakItem);
+        XCTAssertNotNil(testStreakItem.value);
+        XCTAssertNotNil(testStreakItem.timeStamp);
+        XCTAssertNotNil(testStreakItem.date);
+                             
         [expectation fulfill];
     }];
     
