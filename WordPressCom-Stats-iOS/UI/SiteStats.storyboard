@@ -377,8 +377,8 @@
                             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3/21/2014" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rOF-je-4Zm">
-                                    <rect key="frame" x="261" y="14" width="78" height="21"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3/21/2014" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="rOF-je-4Zm">
+                                    <rect key="frame" x="18" y="14" width="564" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -386,6 +386,8 @@
                             </subviews>
                             <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
+                                <constraint firstAttribute="trailingMargin" secondItem="rOF-je-4Zm" secondAttribute="trailing" constant="10" id="DaR-rO-bPG"/>
+                                <constraint firstItem="rOF-je-4Zm" firstAttribute="leading" secondItem="hGZ-en-vDF" secondAttribute="leadingMargin" constant="10" id="FKf-Ed-toW"/>
                                 <constraint firstItem="rOF-je-4Zm" firstAttribute="centerX" secondItem="hGZ-en-vDF" secondAttribute="centerX" id="krs-xN-Ynd"/>
                                 <constraint firstItem="rOF-je-4Zm" firstAttribute="centerY" secondItem="hGZ-en-vDF" secondAttribute="centerY" id="y9l-As-qe4"/>
                             </constraints>

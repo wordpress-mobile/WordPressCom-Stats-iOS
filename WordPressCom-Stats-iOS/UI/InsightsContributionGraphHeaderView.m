@@ -10,7 +10,9 @@ static NSString *const DidTouchPostActivityDateNotification = @"DidTouchPostActi
 {
     [super awakeFromNib];
     self.backgroundColor = [WPStyleGuide statsUltraLightGray];
-    [self.dateLabel setText:NSLocalizedString(@"Touch a square to see the date", @"Contribution graph default header label prompting user to tap on a date.")];
+    [self.dateLabel setText:NSLocalizedString(@"Tap a square to view number of posts on that day", @"Contribution graph default header label prompting user to tap on a date.")];
+    self.dateLabel.adjustsFontSizeToFitWidth = YES;
+    self.dateLabel.minimumScaleFactor = .5f;
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     __weak __typeof(self) weakSelf = self;
