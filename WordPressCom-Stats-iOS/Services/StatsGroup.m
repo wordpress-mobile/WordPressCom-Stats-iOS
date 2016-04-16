@@ -153,6 +153,7 @@
         case StatsSectionGraph:
         case StatsSectionInsightsAllTime:
         case StatsSectionInsightsMostPopular:
+        case StatsSectionInsightsPostActivity:
         case StatsSectionInsightsTodaysStats:
         case StatsSectionInsightsLatestPostSummary:
         case StatsSectionPeriodHeader:

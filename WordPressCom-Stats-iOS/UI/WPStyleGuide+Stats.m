@@ -52,7 +52,6 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.196 green:0.255 blue:0.333 alpha:1]; /*#324155*/
 }
 
-
 + (UIColor *)statsLessDarkGrey
 {
     return [UIColor colorWithRed:0.345 green:0.447 blue:0.584 alpha:1]; /*#587295*/
@@ -83,5 +82,34 @@ const CGFloat StatsVCVerticalOuterPadding = 16.0f;
     return [UIColor colorWithRed:0.957 green:0.973 blue:0.98 alpha:1]; /*#f4f8fa*/
 }
 
++ (UIColor *)statsPostActivityLevel1CellBackground
+{
+    // Default grey #c8d7e1
+    return [UIColor colorWithRed:0.784 green:0.843 blue:0.882 alpha:1];
+}
+
++ (UIColor *)statsPostActivityLevel2CellBackground
+{
+    // #91e2fb
+    return [UIColor colorWithRed:0.569 green:0.886 blue:0.984 alpha:1];
+}
+
++ (UIColor *)statsPostActivityLevel3CellBackground
+{
+    // #00bef6
+    return [UIColor colorWithRed:0 green:0.745 blue:0.965 alpha:1];
+}
+
++ (UIColor *)statsPostActivityLevel4CellBackground
+{
+    // #0083a9
+    return [UIColor colorWithRed:0 green:0.514 blue:0.663 alpha:1];
+}
+
++ (UIColor *)statsPostActivityLevel5CellBackground
+{
+    // #003443
+    return [UIColor colorWithRed:0 green:0.204 blue:0.263 alpha:1];
+}
 
 @end

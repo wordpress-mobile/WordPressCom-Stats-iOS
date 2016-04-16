@@ -391,7 +391,7 @@
 				INFOPLIST_FILE = "StatsDemo/StatsDemo Internal-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.wordpress.internal.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = StatsDemo;
-				PROVISIONING_PROFILE = "9208fd96-83c8-4e37-8b30-38ac42c876c6";
+				PROVISIONING_PROFILE = "7781a7da-e524-4e6b-ad2c-9539d22ff5e0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

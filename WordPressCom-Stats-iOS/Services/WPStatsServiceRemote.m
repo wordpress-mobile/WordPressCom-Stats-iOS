@@ -2,6 +2,8 @@
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
+#import "StatsStreak.h"
+#import "StatsStreakItem.h"
 #import <WordPressShared/NSString+XMLExtensions.h>
 #import <WordPressComAnalytics/WPAnalytics.h>
 @import NSObject_SafeExpectations;
@@ -150,6 +152,7 @@ static NSInteger const NumberOfDays = 12;
                            followersDotComCompletionHandler:(StatsRemoteItemsCompletion)followersDotComCompletion
                             followersEmailCompletionHandler:(StatsRemoteItemsCompletion)followersEmailCompletion
                                  publicizeCompletionHandler:(StatsRemoteItemsCompletion)publicizeCompletion
+                                    streakCompletionHandler:(StatsRemoteStreakCompletion)streakCompletion
                                               progressBlock:(void (^)(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations))progressBlock
                                 andOverallCompletionHandler:(void (^)())completionHandler
 {
@@ -181,6 +184,16 @@ static NSInteger const NumberOfDays = 12;
     }
     if (publicizeCompletion) {
         [mutableOperations addObject:[self operationForPublicizeWithCompletionHandler:publicizeCompletion]];
+    }
+    if (streakCompletion) {
+        unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
+        NSDate *now = [NSDate date];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
+        [comps setDay:1];
+        [comps setMonth:[comps month] - 12]; // Default to 12 months prior
+        NSDate *startDate = [gregorian dateFromComponents:comps];
+        [mutableOperations addObject:[self operationForStreakWithStartDate:startDate endDate:now withCompletionHandler:streakCompletion]];
     }
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
@@ -484,6 +497,19 @@ static NSInteger const NumberOfDays = 12;
 - (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
 {
     AFHTTPRequestOperation *operation = [self operationForLatestPostSummaryWithCompletionHandler:completionHandler];
+    [operation start];
+}
+
+- (void)fetchStreakStatsForStartDate:(NSDate *)startDate
+                          andEndDate:(NSDate *)endDate
+               withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler
+{
+    NSParameterAssert(startDate != nil);
+    NSParameterAssert(endDate != nil);
+    
+    AFHTTPRequestOperation *operation = [self operationForStreakWithStartDate:startDate
+                                                                      endDate:endDate
+                                                        withCompletionHandler:completionHandler];
     [operation start];
 }
 
@@ -1466,6 +1492,67 @@ static NSInteger const NumberOfDays = 12;
 }
 
 
+- (AFHTTPRequestOperation *)operationForStreakWithStartDate:(NSDate *)startDate
+                                                    endDate:(NSDate *)endDate
+                                      withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler
+{
+    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
+        NSDictionary *streakDict = [responseDict dictionaryForKey:@"streak"];
+        
+        NSDictionary *longDict = [streakDict dictionaryForKey:@"long"];
+        NSNumber *longLengthValue = [longDict numberForKey:@"length"];
+        NSDate *longStartDate = [self.deviceDateFormatter dateFromString:[longDict stringForKey:@"start"]];
+        NSDate *longEndDate = [self.deviceDateFormatter dateFromString:[longDict stringForKey:@"end"]];
+        
+        NSDictionary *currentDict = [streakDict dictionaryForKey:@"current"];
+        NSNumber *currentLengthValue = [currentDict numberForKey:@"length"];
+        NSDate *currentStartDate = [self.deviceDateFormatter dateFromString:[currentDict stringForKey:@"start"]];
+        NSDate *currentEndDate = [self.deviceDateFormatter dateFromString:[currentDict stringForKey:@"end"]];
+        
+        StatsStreak *statsStreak = [StatsStreak new];
+        statsStreak.longestStreakLength = longLengthValue;
+        statsStreak.longestStreakStartDate = longStartDate;
+        statsStreak.longestStreakEndDate = longEndDate;
+        statsStreak.currentStreakLength = currentLengthValue;
+        statsStreak.currentStreakStartDate = currentStartDate;
+        statsStreak.currentStreakEndDate = currentEndDate;
+        
+        NSDictionary *postData = [responseDict dictionaryForKey:@"data"];
+        NSMutableArray *items = [NSMutableArray new];
+        [postData enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            StatsStreakItem *statsStreakItem = [StatsStreakItem new];
+            statsStreakItem.timeStamp = key;
+            statsStreakItem.value = obj;
+            [items addObject:statsStreakItem];
+        }];
+        statsStreak.items = items;
+        
+        if (completionHandler) {
+            completionHandler(statsStreak, nil);
+        }
+    };
+    
+    NSDictionary *parameters = @{@"startDate" : [self deviceLocalStringForDate:startDate],
+                                 @"endDate"   : [self deviceLocalStringForDate:endDate]};
+    
+    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionHandler) {
+            StatsStreak *statsStreak = [StatsStreak new];
+            statsStreak.errorWhileRetrieving = YES;
+            completionHandler(statsStreak, error);
+        }
+    };
+    
+    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForStreak]
+                                                                 parameters:parameters
+                                                                    success:handler
+                                                                    failure:[self failureForCompletionHandler:failureHandler]];
+    return operation;
+}
+
+
 #pragma mark - Private convenience methods for building requests
 
 - (AFHTTPRequestOperation *)requestOperationForURLString:(NSString *)url
@@ -1581,6 +1668,11 @@ static NSInteger const NumberOfDays = 12;
 - (NSString *)urlForPublicize
 {
     return [NSString stringWithFormat:@"%@/publicize/", self.statsPathPrefix];
+}
+
+- (NSString *)urlForStreak
+{
+    return [NSString stringWithFormat:@"%@/streak/", self.statsPathPrefix];
 }
 
 
