@@ -1,22 +1,16 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
+
 use_frameworks!
 inhibit_all_warnings!
 
-target "StatsDemo" do
+abstract_target 'StatsDemo_Abstract' do
   pod 'WordPressCom-Stats-iOS', :path => '../'
   pod 'HockeySDK'
-end
+  
+  target "StatsDemo" do
+  end
 
-target "StatsDemo Internal" do
-  pod 'WordPressCom-Stats-iOS', :path => '../'
-  pod 'HockeySDK'
-end
-
-post_install do |installer_representation|
-    # Directly set the Targeted Device Family
-    # See https://github.com/CocoaPods/CocoaPods/issues/2292
-    installer_representation.pods_project.build_configurations.each do |config|
-        config.build_settings['TARGETED_DEVICE_FAMILY'] = '1,2'
-    end
+  target "StatsDemo Internal" do
+  end
 end

@@ -1,11 +1,8 @@
+install:
+- gem install cocoapods -v 1.0.0 && pod repo update && pod install
 osx_image: xcode7
 language: objective-c
 xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
 xcode_scheme: WordPressCom-Stats-iOS
 xcode_sdk: iphonesimulator
 sudo: false
-
-# Xcode 7 workaround with xctool https://github.com/facebook/xctool/issues/528
-before_install:
-  - brew update
-  - brew uninstall xctool && brew install --HEAD xctool
