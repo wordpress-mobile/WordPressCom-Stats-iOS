@@ -88,7 +88,7 @@ NSString *const TodayCacheKey = @"Today";
     id videosData = cacheDictionary[@(StatsSectionVideos)];
     id authorsData = cacheDictionary[@(StatsSectionAuthors)];
     id searchTermsData = cacheDictionary[@(StatsSectionSearchTerms)];
-    
+
     if (cacheDictionary
         && (!visitsCompletion || visitsData)
         && (!eventsCompletion || eventsData)
@@ -257,6 +257,8 @@ NSString *const TodayCacheKey = @"Today";
         return;
     }
 
+    cacheDictionary = [NSMutableDictionary new];
+    
     [self.remote batchFetchInsightsStatsWithAllTimeCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error)
      {
          StatsAllTime *allTime;
@@ -346,6 +348,7 @@ NSString *const TodayCacheKey = @"Today";
          if (overallCompletionHandler) {
              overallCompletionHandler();
          }
+         [self.ephemory setObject:cacheDictionary forKey:BatchInsightsCacheKey];
      }];
 }
 
