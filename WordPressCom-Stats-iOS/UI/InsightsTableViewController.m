@@ -113,10 +113,12 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
     [self wipeDataAndSeedGroups];
 
     [self setupRefreshControl];
-
-    [self retrieveStats];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self retrieveStats];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -1128,7 +1130,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
         && self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
     }
-    
+
     __weak __typeof(self) weakSelf = self;
     
     [self.statsService retrieveInsightsStatsWithAllTimeStatsCompletionHandler:^(StatsAllTime *allTime, NSError *error)
