@@ -117,6 +117,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self retrieveStats];
 }
 
