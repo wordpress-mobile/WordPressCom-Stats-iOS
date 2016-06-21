@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
 #import <OCMock/OCMock.h>
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
@@ -8,6 +7,7 @@
 #import "StatsStreak.h"
 #import "StatsStreakItem.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
+@import OHHTTPStubs;
 
 @interface WPStatsServiceRemoteTests : XCTestCase
 
@@ -36,7 +36,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-summary.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-summary.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary, NSError *error) {
@@ -62,7 +62,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"emptyarray.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchSummaryStatsForDate:[NSDate date] withCompletionHandler:^(StatsSummary *summary, NSError *error) {
@@ -79,7 +79,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-visits-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
@@ -114,7 +114,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"emptyarray.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
@@ -135,7 +135,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-visits-day-large.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
@@ -177,7 +177,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-visits-day-bad-date.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-visits-day-bad-date.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVisitsStatsForDate:[NSDate date]
@@ -206,7 +206,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-top-posts-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
@@ -242,7 +242,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day-exception.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-top-posts-day-exception.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
@@ -271,7 +271,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-top-posts-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-top-posts-day-large.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchPostsStatsForDate:[NSDate date]
@@ -307,7 +307,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-referrers-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-referrers-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
@@ -385,7 +385,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-referrers-day-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-referrers-day-large.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchReferrersStatsForDate:[NSDate date]
@@ -470,7 +470,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-clicks-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-clicks-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
@@ -521,7 +521,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-clicks-month-large.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-clicks-month-large.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchClicksStatsForDate:[NSDate date]
@@ -580,7 +580,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/country-views"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-country-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-country-views-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchCountryStatsForDate:[NSDate date]
@@ -615,7 +615,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-video-plays-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-video-plays-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
@@ -650,7 +650,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-video-plays-day-no-data.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-video-plays-day-no-data.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchVideosStatsForDate:[NSDate date]
@@ -677,7 +677,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/comments"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-comments-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-comments-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchCommentsStatsWithCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
@@ -721,7 +721,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-tags-categories-views-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-tags-categories-views-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchTagsCategoriesStatsWithCompletionHandler:^(NSArray *items, NSString *totalViews, BOOL moreViewsAvailable, NSError *error)
@@ -762,7 +762,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-followers-wpcom-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-followers-wpcom-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeDotCom
@@ -796,7 +796,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-followers-email-day.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-followers-email-day.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchFollowersStatsForFollowerType:StatsFollowerTypeEmail
@@ -831,7 +831,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"emptyarray.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"emptyarray.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchEventsForDate:[NSDate date]
@@ -852,7 +852,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-post-details.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-post-details.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchPostDetailsStatsForPostID:@123
@@ -890,7 +890,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-insights.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-insights.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchInsightsWithCompletionHandler:^(NSString *highestHour, NSString *highestHourPercent, NSNumber *highestHourPercentValue, NSString *highestDayOfWeek, NSString *highestDayPercent, NSNumber *highestDayPercentValue, NSError *error) {
@@ -913,7 +913,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-alltime.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-alltime.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchAllTimeStatsWithCompletionHandler:^(NSString *posts, NSNumber *postsValue, NSString *views, NSNumber *viewsValue, NSString *visitors, NSNumber *visitorsValue, NSString *bestViews, NSNumber *bestViewsValue, NSString *bestViewsOn, NSError *error) {
@@ -938,13 +938,13 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/posts"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-latest-post.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-latest-post.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/58"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-latest-post-views.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-latest-post-views.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     
     [self.subject fetchLatestPostSummaryWithCompletionHandler:^(NSNumber *postID, NSString *postTitle, NSString *postURL, NSDate *postDate, NSString *views, NSNumber *viewsValue, NSString *likes, NSNumber *likesValue, NSString *comments, NSNumber *commentsValue, NSError *error) {
@@ -973,7 +973,7 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [[request.URL absoluteString] hasPrefix:@"https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/streak/?endDate=2016-01-28&startDate=2014-01-01"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"stats-v1.1-streak.json", nil) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFile(@"stats-v1.1-streak.json", self.class) statusCode:200 headers:@{@"Content-Type" : @"application/json"}];
     }];
     NSDateComponents *startDateComponent = [[NSDateComponents alloc] init];
     [startDateComponent setDay:01];
