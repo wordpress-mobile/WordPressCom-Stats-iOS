@@ -19,6 +19,8 @@
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 static NSInteger const NumberOfDays = 12;
 
+typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*> *);
+
 @interface WPStatsServiceRemote ()
 
 @property (nonatomic, copy) NSString *oauth2Token;
@@ -29,8 +31,10 @@ static NSInteger const NumberOfDays = 12;
 @property (nonatomic, strong) NSDateFormatter *deviceDateFormatter;
 @property (nonatomic, strong) NSDateFormatter *rfc3339DateFormatter;
 @property (nonatomic, strong) NSNumberFormatter *deviceNumberFormatter;
-@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
 @property (nonatomic, strong) StatsStringUtilities *stringUtilities;
+@property (nonatomic, strong) NSObject *tasksTrackingMutex;
+@property (nonatomic, strong) NSMutableDictionary *onGoingTasks;
 
 @end
 
@@ -62,11 +66,17 @@ static NSInteger const NumberOfDays = 12;
         _rfc3339DateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ssZ";
         _rfc3339DateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 
-        _manager = [AFHTTPRequestOperationManager manager];
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        sessionConfiguration.HTTPShouldUsePipelining = YES;
+        sessionConfiguration.HTTPAdditionalHeaders = @{@"Authorization":[NSString stringWithFormat:@"Bearer %@", _oauth2Token]};
+        _manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:sessionConfiguration];
+        [_manager setTaskDidCompleteBlock:^(NSURLSession * _Nonnull session, NSURLSessionTask * _Nonnull task, NSError * _Nullable error) {
+            [self updateTaskProgress:session task:task error:error];
+        }];
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
-        [_manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", _oauth2Token]
-                          forHTTPHeaderField:@"Authorization"];
-        
+        _tasksTrackingMutex = [NSObject new];
+        _onGoingTasks = [NSMutableDictionary new];
+
         _stringUtilities = [StatsStringUtilities new];
     }
     
@@ -75,7 +85,32 @@ static NSInteger const NumberOfDays = 12;
 
 
 #pragma mark - Public methods
+- (void)trackTasks:(NSArray *)tasks
+               update:(TaskUpdateHandler) updateBlock
+{
+    @synchronized (_tasksTrackingMutex) {
+        self.onGoingTasks[tasks] = updateBlock;
+    }
+}
 
+- (void)stopTrackOfTasks:(NSArray *)tasks
+{
+    @synchronized (_tasksTrackingMutex) {
+        [self.onGoingTasks removeObjectForKey:tasks];
+    }
+}
+
+- (void)updateTaskProgress:(NSURLSession *)session
+                      task:(NSURLSessionTask *)task
+                     error:(NSError *)error {
+    @synchronized (_tasksTrackingMutex) {
+        [self.onGoingTasks enumerateKeysAndObjectsUsingBlock:^(NSArray *key, TaskUpdateHandler updateBlock, BOOL * stop) {
+            if ([key containsObject:task] ) {
+                updateBlock(task, key);
+            }
+        }];
+    }
+}
 
 - (void)batchFetchStatsForDate:(NSDate *)date
                           unit:(StatsPeriodUnit)unit
@@ -92,7 +127,7 @@ static NSInteger const NumberOfDays = 12;
     andOverallCompletionHandler:(void (^)())completionHandler
 {
     NSMutableArray *mutableOperations = [NSMutableArray new];
-    
+
     if (visitsCompletion) {
         [mutableOperations addObject:[self operationForVisitsForDate:date unit:unit withCompletionHandler:visitsCompletion]];
     }
@@ -120,25 +155,25 @@ static NSInteger const NumberOfDays = 12;
     if (searchTermsCompletion) {
         [mutableOperations addObject:[self operationForSearchTermsForDate:date andUnit:unit viewAll:NO withCompletionHandler:searchTermsCompletion]];
     }
-    
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
-                                                               progressBlock:progressBlock
-                                                             completionBlock:^(NSArray *allOperations)
-                           {
-                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
-                               if (!zeroOperationsCancelled) {
-                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
-                               }
-                               
-                               if (completionHandler && zeroOperationsCancelled) {
-                                   completionHandler();
-                               }
-                           }];
-    
-    [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
-    
+
+    NSInteger totalTasks = mutableOperations.count;
+    [self trackTasks:mutableOperations update:^(NSURLSessionTask *task, NSArray<NSURLSessionTask *> *allTasks) {
+        NSInteger completedTasks = [allTasks filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"state == %@", @(NSURLSessionTaskStateCompleted)]].count;
+        if (progressBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progressBlock(completedTasks, totalTasks);
+            });
+
+        }
+        if (totalTasks == completedTasks && completionHandler) {
+            [self stopTrackOfTasks:mutableOperations];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler();
+            });
+        }
+    }];
     if (progressBlock) {
-        progressBlock(0, mutableOperations.count);
+        progressBlock(0, totalTasks);
     }
 }
 
@@ -195,25 +230,25 @@ static NSInteger const NumberOfDays = 12;
         NSDate *startDate = [gregorian dateFromComponents:comps];
         [mutableOperations addObject:[self operationForStreakWithStartDate:startDate endDate:now withCompletionHandler:streakCompletion]];
     }
-    
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:mutableOperations
-                                                               progressBlock:progressBlock
-                                                             completionBlock:^(NSArray *allOperations)
-                           {
-                               BOOL zeroOperationsCancelled = [allOperations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isCancelled == YES"]].count == 0;
-                               if (!zeroOperationsCancelled) {
-                                   DDLogWarn(@"At least one operation was cancelled - skipping the completion handler");
-                               }
-                               
-                               if (completionHandler && zeroOperationsCancelled) {
-                                   completionHandler();
-                               }
-                           }];
-    
-    [self.manager.operationQueue addOperations:operations waitUntilFinished:NO];
-    
+
+    NSInteger totalTasks = mutableOperations.count;
+    [self trackTasks:mutableOperations update:^(NSURLSessionTask *task, NSArray<NSURLSessionTask *> *allTasks) {
+        NSInteger completedTasks = [allTasks filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"state == %@", @(NSURLSessionTaskStateCompleted)]].count;
+        if (progressBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progressBlock(completedTasks, totalTasks);
+            });
+
+        }
+        if (totalTasks == completedTasks && completionHandler) {
+            [self stopTrackOfTasks:mutableOperations];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler();
+            });
+        }
+    }];
     if (progressBlock) {
-        progressBlock(0, mutableOperations.count);
+        progressBlock(0, totalTasks);
     }
 }
 
@@ -230,7 +265,7 @@ static NSInteger const NumberOfDays = 12;
         return [number1 compare:number2];
     };
 
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDictionary = (NSDictionary *)responseObject;
         NSArray *visitsData = [responseDictionary arrayForKey:@"data"];
@@ -330,25 +365,22 @@ static NSInteger const NumberOfDays = 12;
         completionHandler(visits, yearsItems, averageItems, weekItems, nil);
     };
     
-    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+    id failureHandler = ^(NSURLSessionDataTask *task, NSError *error) {
         if (completionHandler) {
             completionHandler(nil, nil, nil, nil, error);
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
-                                                                parameters:nil
-                                                                   success:handler
-                                                                   failure:failureHandler];
-    
-    [operation start];
+    [self requestOperationForURLString:[NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID]
+                            parameters:nil
+                               success:handler
+                               failure:failureHandler];
 }
 
 - (void)fetchSummaryStatsForDate:(NSDate *)date
            withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForSummaryForDate:date andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForSummaryForDate:date andUnit:StatsPeriodUnitDay withCompletionHandler:completionHandler];
 }
 
 
@@ -357,8 +389,7 @@ static NSInteger const NumberOfDays = 12;
           withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
     
-    AFHTTPRequestOperation *operation = [self operationForVisitsForDate:date unit:unit withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForVisitsForDate:date unit:unit withCompletionHandler:completionHandler];
 }
 
 
@@ -368,8 +399,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForEventsForDate:date andUnit:unit withCompletionHandler:completionHandler];
 }
 
 
@@ -379,8 +409,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForPostsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForPostsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -390,8 +419,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForReferrersForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForReferrersForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -401,8 +429,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForClicksForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForClicksForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -412,8 +439,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForCountryForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForCountryForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -423,8 +449,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForVideosForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForVideosForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -435,8 +460,7 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForAuthorsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForAuthorsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
@@ -446,58 +470,48 @@ static NSInteger const NumberOfDays = 12;
 {
     NSParameterAssert(date != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForSearchTermsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForSearchTermsForDate:date andUnit:unit viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
 - (void)fetchCommentsStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForCommentsWithCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForCommentsWithCompletionHandler:completionHandler];
 }
 
 
 - (void)fetchTagsCategoriesStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForTagsCategoriesWithCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForTagsCategoriesWithCompletionHandler:completionHandler];
 }
 
 
 - (void)fetchFollowersStatsForFollowerType:(StatsFollowerType)followerType
                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForFollowersOfType:followerType viewAll:YES withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForFollowersOfType:followerType viewAll:YES withCompletionHandler:completionHandler];
 }
 
 
 - (void)fetchPublicizeStatsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForPublicizeWithCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForPublicizeWithCompletionHandler:completionHandler];
 }
 
 
 - (void)fetchInsightsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForInsightsStatsWithCompletionHandler:completionHandler];
-    
-    [operation start];
+    [self operationForInsightsStatsWithCompletionHandler:completionHandler];
 }
 
 - (void)fetchAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForAllTimeStatsWithCompletionHandler:completionHandler];
-    
-    [operation start];
+    [self operationForAllTimeStatsWithCompletionHandler:completionHandler];
 }
 
 - (void)fetchLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
 {
-    AFHTTPRequestOperation *operation = [self operationForLatestPostSummaryWithCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForLatestPostSummaryWithCompletionHandler:completionHandler];
 }
 
 - (void)fetchStreakStatsForStartDate:(NSDate *)startDate
@@ -507,21 +521,20 @@ static NSInteger const NumberOfDays = 12;
     NSParameterAssert(startDate != nil);
     NSParameterAssert(endDate != nil);
     
-    AFHTTPRequestOperation *operation = [self operationForStreakWithStartDate:startDate
-                                                                      endDate:endDate
-                                                        withCompletionHandler:completionHandler];
-    [operation start];
+    [self operationForStreakWithStartDate:startDate
+                                  endDate:endDate
+                    withCompletionHandler:completionHandler];
 }
 
 #pragma mark - Private methods to compose request operations to be reusable
 
 
-- (AFHTTPRequestOperation *)operationForSummaryForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForSummaryForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
                                  withCompletionHandler:(StatsRemoteSummaryCompletion)completionHandler
 {
     
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *statsSummaryDict = [self dictionaryFromResponse:responseObject];
         StatsSummary *statsSummary = [StatsSummary new];
@@ -542,20 +555,20 @@ static NSInteger const NumberOfDays = 12;
         }
     };
     
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForSummary]
+    NSURLSessionDataTask *task =  [self requestOperationForURLString:[self urlForSummary]
                                                                  parameters:nil
                                                                     success:handler
-                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                    failure:^(NSURLSessionDataTask *task, NSError *error) {
                                                                         if (completionHandler) {
                                                                             completionHandler(nil, error);
                                                                         }
                                                                     }];
-    return operation;
+    return task;
 }
 
-- (AFHTTPRequestOperation *)operationForAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForAllTimeStatsWithCompletionHandler:(StatsRemoteAllTimeCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *allTimeDict = [[self dictionaryFromResponse:responseObject] dictionaryForKey:@"stats"];
         NSNumber *postsValue = [allTimeDict numberForKey:@"posts"];
@@ -576,24 +589,24 @@ static NSInteger const NumberOfDays = 12;
         completionHandler(posts, postsValue, views, viewsValue, visitors, visitorsValue, bestViews, bestViewsValue, bestViewsOn, nil);
     };
     
-    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+    id failureHandler = ^(NSURLSessionDataTask *task, NSError *error) {
         if (completionHandler) {
             completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:self.statsPathPrefix
+    NSURLSessionDataTask *task = [self requestOperationForURLString:self.statsPathPrefix
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:failureHandler];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForInsightsStatsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForInsightsStatsWithCompletionHandler:(StatsRemoteInsightsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *insightsDict = [self dictionaryFromResponse:responseObject];
         NSInteger highestHourValue = [insightsDict numberForKey:@"highest_hour"].integerValue;
@@ -627,24 +640,24 @@ static NSInteger const NumberOfDays = 12;
         completionHandler(highestHour, highestHourPercent, highestHourPercentValue, highestDayOfWeek, highestDayPercent, highestDayPercentValue, nil);
     };
     
-    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+    id failureHandler = ^(NSURLSessionDataTask *task, NSError *error) {
         if (completionHandler) {
             completionHandler(nil, nil, nil, nil, nil, nil, error);
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[NSString stringWithFormat:@"%@/insights", self.statsPathPrefix]
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:failureHandler];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForLatestPostSummaryWithCompletionHandler:(StatsRemoteLatestPostSummaryCompletion)completionHandler
 {
-    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id postHandler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *postsDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
@@ -658,37 +671,35 @@ static NSInteger const NumberOfDays = 12;
         NSNumber *commentsValue = [[postDict dictionaryForKey:@"discussion"] numberForKey:@"comment_count"];
         NSString *comments = [self localizedStringForNumber:commentsValue];
         
-        AFHTTPRequestOperation *operation2 = [self operationForPostViewsWithPostID:postID andCompletionHandler:^(NSString *views, NSNumber *viewsValue, NSError *error) {
+        [self operationForPostViewsWithPostID:postID andCompletionHandler:^(NSString *views, NSNumber *viewsValue, NSError *error) {
             if (completionHandler) {
                 completionHandler(postID, postTitle, postURL, postDate, views, viewsValue, likes, likesValue, comments, commentsValue, error);
             }
             
         }];
-        
-        [operation2 start];
     };
     
     NSDictionary *parameters = @{@"order_by" : @"date",
                                  @"number"   : @1,
                                  @"type"     : @"post",
                                  @"fields"   : @"ID, title, URL, discussion, like_count, date"};
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
+    NSURLSessionDataTask *task =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:postHandler
-                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                    failure:^(NSURLSessionDataTask *task, NSError *error) {
                                                                         
                                                                         if (completionHandler) {
                                                                             completionHandler(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, error);
                                                                         }
                                                                     }];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForPostViewsWithPostID:(NSNumber *)postID andCompletionHandler:(void (^)(NSString *views, NSNumber *viewsValue, NSError *error))completionHandler
+- (NSURLSessionDataTask *)operationForPostViewsWithPostID:(NSNumber *)postID andCompletionHandler:(void (^)(NSString *views, NSNumber *viewsValue, NSError *error))completionHandler
 {
-    id postHandler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id postHandler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *postDict = [self dictionaryFromResponse:responseObject];
 
@@ -702,23 +713,23 @@ static NSInteger const NumberOfDays = 12;
 
     NSString *viewsURL = [NSString stringWithFormat:@"%@/post/%@", self.statsPathPrefix, postID];
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:viewsURL
+   NSURLSessionDataTask *task = [self requestOperationForURLString:viewsURL
                                                                 parameters:@{@"fields" : @"views"}
                                                                    success:postHandler
-                                                                   failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                   failure:^(NSURLSessionDataTask *task, NSError *error) {
                                                                        if (completionHandler) {
                                                                            completionHandler(nil, nil, error);
                                                                        }
                                                                    }];
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForVisitsForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForVisitsForDate:(NSDate *)date
                                                  unit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteVisitsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *statsVisitsDict = [self dictionaryFromResponse:responseObject];
         
@@ -772,10 +783,10 @@ static NSInteger const NumberOfDays = 12;
                                  @"unit"     : [self stringForPeriodUnit:unit],
                                  @"date"     : [self deviceLocalStringForDate:date]};
     
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForVisits]
+    NSURLSessionDataTask *task =  [self requestOperationForURLString:[self urlForVisits]
                                                                  parameters:parameters
                                                                     success:handler
-                                                                    failure:^(AFHTTPRequestOperation *failedOperation, NSError *error) {
+                                                                    failure:^(NSURLSessionDataTask *task, NSError *error) {
                                                                         if (completionHandler) {
                                                                             StatsVisits *visits = [StatsVisits new];
                                                                             visits.errorWhileRetrieving = YES;
@@ -783,15 +794,15 @@ static NSInteger const NumberOfDays = 12;
                                                                             completionHandler(visits, error);
                                                                         }
                                                                     }];
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForEventsForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForEventsForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *rootDict = [self dictionaryFromResponse:responseObject];
         NSArray *posts = [rootDict arrayForKey:@"posts"];
@@ -819,20 +830,20 @@ static NSInteger const NumberOfDays = 12;
                                  @"before"  : [self deviceLocalISOStringForDate:date],
                                  @"number"  : @10,
                                  @"fields"  : @"ID, title, URL"};
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForPosts]
+    NSURLSessionDataTask *task =  [self requestOperationForURLString:[self urlForPosts]
                                                                  parameters:parameters
                                                                     success:handler
                                                                     failure:[self failureForCompletionHandler:completionHandler]];
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForPostsForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForPostsForDate:(NSDate *)date
                                              andUnit:(StatsPeriodUnit)unit
                                              viewAll:(BOOL)viewAll
                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *statsPostsDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [statsPostsDict dictionaryForKey:@"days"];
@@ -870,20 +881,20 @@ static NSInteger const NumberOfDays = 12;
     NSDictionary *parameters = @{@"period" : [self stringForPeriodUnit:unit],
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForTopPosts]
+    NSURLSessionDataTask *task =  [self requestOperationForURLString:[self urlForTopPosts]
                                                                  parameters:parameters
                                                                     success:handler
                                                                     failure:[self failureForCompletionHandler:completionHandler]];
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForReferrersForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForReferrersForDate:(NSDate *)date
                                                  andUnit:(StatsPeriodUnit)unit
                                                  viewAll:(BOOL)viewAll
                                    withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *referrersDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
@@ -959,21 +970,21 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForReferrers]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForReferrers]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForClicksForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForClicksForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                               viewAll:(BOOL)viewAll
                                withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *referrersDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [referrersDict dictionaryForKey:@"days"];
@@ -1029,20 +1040,20 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForClicks]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForClicks]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForCountryForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForCountryForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
                                                viewAll:(BOOL)viewAll
                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *countryViewsDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [countryViewsDict dictionaryForKey:@"days"];
@@ -1079,21 +1090,21 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForCountryViews]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForCountryViews]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
 
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForVideosForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForVideosForDate:(NSDate *)date
                                               andUnit:(StatsPeriodUnit)unit
                                               viewAll:(BOOL)viewAll
                                 withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *videosDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [videosDict dictionaryForKey:@"days"];
@@ -1130,21 +1141,21 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForVideos]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForVideos]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForAuthorsForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForAuthorsForDate:(NSDate *)date
                                                andUnit:(StatsPeriodUnit)unit
                                                viewAll:(BOOL)viewAll
                                  withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [responseDict dictionaryForKey:@"days"];
@@ -1192,23 +1203,23 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForAuthors]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForAuthors]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
 
 
-- (AFHTTPRequestOperation *)operationForSearchTermsForDate:(NSDate *)date
+- (NSURLSessionDataTask *)operationForSearchTermsForDate:(NSDate *)date
                                                    andUnit:(StatsPeriodUnit)unit
                                                    viewAll:(BOOL)viewAll
                                      withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *days = [responseDict dictionaryForKey:@"days"];
@@ -1248,18 +1259,18 @@ static NSInteger const NumberOfDays = 12;
                                  @"date"   : [self deviceLocalStringForDate:date],
                                  @"max"    : (viewAll ? @0 : @10) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForSearchTerms]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForSearchTerms]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForCommentsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForCommentsWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSMutableArray *authorItems = [NSMutableArray new];
         NSMutableArray *postsItems = [NSMutableArray new];
@@ -1305,18 +1316,18 @@ static NSInteger const NumberOfDays = 12;
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForComments]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForComments]
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForTagsCategoriesWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForTagsCategoriesWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSArray *tagGroups = [responseDict arrayForKey:@"tags"];
@@ -1378,18 +1389,19 @@ static NSInteger const NumberOfDays = 12;
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForTagsCategories]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForTagsCategories]
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
-    return operation;}
+    return task;
+}
 
 
-- (AFHTTPRequestOperation *)operationForFollowersOfType:(StatsFollowerType)followerType
+- (NSURLSessionDataTask *)operationForFollowersOfType:(StatsFollowerType)followerType
                                                 viewAll:(BOOL)viewAll
                                   withCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSArray *subscribers = [responseDict arrayForKey:@"subscribers"];
@@ -1427,18 +1439,18 @@ static NSInteger const NumberOfDays = 12;
     NSDictionary *parameters = @{@"type"   : followerType == StatsFollowerTypeDotCom ? @"wpcom" : @"email",
                                  @"max"    : (viewAll ? @0 : @7) };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForFollowers]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForFollowers]
                                                                 parameters:parameters
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForPublicizeWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (NSURLSessionDataTask *)operationForPublicizeWithCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSArray *services = [responseDict arrayForKey:@"services"];
@@ -1483,20 +1495,20 @@ static NSInteger const NumberOfDays = 12;
         }
     };
     
-    AFHTTPRequestOperation *operation = [self requestOperationForURLString:[self urlForPublicize]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForPublicize]
                                                                 parameters:nil
                                                                    success:handler
                                                                    failure:[self failureForCompletionHandler:completionHandler]];
     
-    return operation;
+    return task;
 }
 
 
-- (AFHTTPRequestOperation *)operationForStreakWithStartDate:(NSDate *)startDate
+- (NSURLSessionDataTask *)operationForStreakWithStartDate:(NSDate *)startDate
                                                     endDate:(NSDate *)endDate
                                       withCompletionHandler:(StatsRemoteStreakCompletion)completionHandler
 {
-    id handler = ^(AFHTTPRequestOperation *operation, id responseObject)
+    id handler = ^(NSURLSessionDataTask *task, id responseObject)
     {
         NSDictionary *responseDict = [self dictionaryFromResponse:responseObject];
         NSDictionary *streakDict = [responseDict dictionaryForKey:@"streak"];
@@ -1537,7 +1549,7 @@ static NSInteger const NumberOfDays = 12;
     NSDictionary *parameters = @{@"startDate" : [self deviceLocalStringForDate:startDate],
                                  @"endDate"   : [self deviceLocalStringForDate:endDate]};
     
-    id failureHandler = ^(AFHTTPRequestOperation *operation, NSError *error) {
+    id failureHandler = ^(NSURLSessionDataTask *task, NSError *error) {
         if (completionHandler) {
             StatsStreak *statsStreak = [StatsStreak new];
             statsStreak.errorWhileRetrieving = YES;
@@ -1545,36 +1557,29 @@ static NSInteger const NumberOfDays = 12;
         }
     };
     
-    AFHTTPRequestOperation *operation =  [self requestOperationForURLString:[self urlForStreak]
+    NSURLSessionDataTask *task = [self requestOperationForURLString:[self urlForStreak]
                                                                  parameters:parameters
                                                                     success:handler
                                                                     failure:[self failureForCompletionHandler:failureHandler]];
-    return operation;
+    return task;
 }
 
 
 #pragma mark - Private convenience methods for building requests
 
-- (AFHTTPRequestOperation *)requestOperationForURLString:(NSString *)url
+- (NSURLSessionDataTask *)requestOperationForURLString:(NSString *)url
                                               parameters:(NSDictionary *)parameters
-                                                 success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                                                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+                                                 success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+                                                 failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
-    NSURLRequest *request = [self.manager.requestSerializer requestWithMethod:@"GET"
-                                                                    URLString:url
-                                                                   parameters:parameters
-                                                                        error:nil];
-    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request
-                                                                              success:success
-                                                                              failure:failure];
-    
-    return operation;
+    NSURLSessionDataTask *task = [self.manager GET:url parameters:parameters success:success failure:failure];
+    return task;
 }
 
 
-- (void(^)(AFHTTPRequestOperation *operation, NSError *error))failureForCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
+- (void(^)(NSURLSessionDataTask *task, NSError *error))failureForCompletionHandler:(StatsRemoteItemsCompletion)completionHandler
 {
-    return ^(AFHTTPRequestOperation *operation, NSError *error)
+    return ^(NSURLSessionDataTask *task, NSError *error)
     {
         if (completionHandler) {
             completionHandler(nil, nil, false, error);
