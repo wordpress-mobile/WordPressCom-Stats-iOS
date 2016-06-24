@@ -30,7 +30,19 @@ PODS:
     - CocoaLumberjack/Default
   - NSObject-SafeExpectations (0.0.2)
   - OCMock (3.3)
-  - OHHTTPStubs (3.1.1)
+  - OHHTTPStubs (4.6.0):
+    - OHHTTPStubs/Default (= 4.6.0)
+  - OHHTTPStubs/Core (4.6.0)
+  - OHHTTPStubs/Default (4.6.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (4.6.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (4.6.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (4.6.0)
   - WordPress-iOS-Shared (0.5.9):
     - CocoaLumberjack (~> 2.2.0)
   - WordPressCom-Analytics-iOS (0.1.11)
@@ -40,7 +52,7 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 2.2.0)
   - NSObject-SafeExpectations (= 0.0.2)
   - OCMock
-  - OHHTTPStubs (= 3.1.1)
+  - OHHTTPStubs (~> 4.6.0)
   - WordPress-iOS-Shared (~> 0.5.3)
   - WordPressCom-Analytics-iOS (~> 0.1.4)
 
@@ -49,10 +61,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
   OCMock: d68685bde31f69cb61d518dcb39269080c78b5ed
-  OHHTTPStubs: cc1b9cb45b963daf891aa736f35d29d74308f0c9
+  OHHTTPStubs: cb1aefbbeb4de4e741644455d4b945538e5248a2
   WordPress-iOS-Shared: 50a7bd7056b8721e86c3cbe167eab49ef85ec07b
   WordPressCom-Analytics-iOS: a844ac791b2627dbb64ba62090654f43dd2abc1c
 
-PODFILE CHECKSUM: 815627aad71e90c64eddf579f2a0e24a79e2bd19
+PODFILE CHECKSUM: b4a0349adafb154fc6b6bf54371047a0212c3c6c
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.0.1
