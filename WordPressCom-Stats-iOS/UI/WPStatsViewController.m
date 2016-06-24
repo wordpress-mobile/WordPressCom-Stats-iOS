@@ -51,14 +51,20 @@
         tableVC.statsDelegate = self.statsDelegate;
         tableVC.statsProgressViewDelegate = self;
         tableVC.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
-;
     } else if ([segue.identifier isEqualToString:@"InsightsTableEmbed"]) {
         InsightsTableViewController *insightsTableViewController = (InsightsTableViewController *)segue.destinationViewController;
         self.insightsTableViewController = insightsTableViewController;
-        insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
         insightsTableViewController.statsProgressViewDelegate = self;
         insightsTableViewController.statsTypeSelectionDelegate = self;
         insightsTableViewController.statsDelegate = self.statsDelegate;
+        if ([self.statsDelegate respondsToSelector:@selector(statsService)])
+        {
+            insightsTableViewController.statsService = [self.statsDelegate statsService];
+        }
+        if (insightsTableViewController.statsService == nil)
+        {
+            insightsTableViewController.statsService = [[WPStatsService alloc] initWithSiteId:self.siteID siteTimeZone:self.siteTimeZone oauth2Token:self.oauth2Token andCacheExpirationInterval:5 * 60];
+        }
     }
 }
 
