@@ -11,7 +11,7 @@ target 'WordPressCom-Stats-iOS' do
   pod 'WordPressCom-Analytics-iOS', '~> 0.1.4'
 
   target 'WordPressCom-Stats-iOSTests' do
-    pod 'OHHTTPStubs', '3.1.1'
+    pod 'OHHTTPStubs', '~> 4.6.0'
     pod 'OCMock'
   end
 end
