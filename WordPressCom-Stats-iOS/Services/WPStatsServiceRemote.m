@@ -70,8 +70,9 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         sessionConfiguration.HTTPShouldUsePipelining = YES;
         sessionConfiguration.HTTPAdditionalHeaders = @{@"Authorization":[NSString stringWithFormat:@"Bearer %@", _oauth2Token]};
         _manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:sessionConfiguration];
+        __weak __typeof__(self) weakSelf = self;
         [_manager setTaskDidCompleteBlock:^(NSURLSession * _Nonnull session, NSURLSessionTask * _Nonnull task, NSError * _Nullable error) {
-            [self updateTaskProgress:session task:task error:error];
+            [weakSelf updateTaskProgress:session task:task error:error];
         }];
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
         _tasksTrackingMutex = [NSObject new];
