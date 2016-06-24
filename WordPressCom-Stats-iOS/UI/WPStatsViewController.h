@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import "StatsTableViewController.h"
 #import "StatsSummary.h"
+#import "WPStatsService.h"
 
 typedef NS_ENUM(NSInteger, StatsPeriodType)
 {
@@ -24,6 +25,7 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 @optional
 
 - (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
+- (nullable NSObject *)statsService;
 
 @end
 
@@ -40,6 +42,7 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 @property (nonatomic, strong) NSNumber *siteID;
 @property (nonatomic, copy)   NSString *oauth2Token;
 @property (nonatomic, strong) NSTimeZone *siteTimeZone;
+@property (nonatomic, strong) WPStatsService *statsService;
 @property (nonatomic, weak) id<WPStatsViewControllerDelegate> statsDelegate;
 
 - (IBAction)statsTypeControlDidChange:(UISegmentedControl *)control;
