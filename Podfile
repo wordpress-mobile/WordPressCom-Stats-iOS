@@ -4,7 +4,7 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'WordPressCom-Stats-iOS' do
-  pod 'AFNetworking',	'~> 2.6.0'
+  pod 'AFNetworking',	'~> 3.1.0'
   pod 'CocoaLumberjack', '~> 2.2.0'
   pod 'WordPress-iOS-Shared', '~> 0.5.3'
   pod 'NSObject-SafeExpectations', '0.0.2'
