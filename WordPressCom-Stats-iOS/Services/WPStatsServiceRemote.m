@@ -1573,7 +1573,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
                                                  success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
                                                  failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
-    NSURLSessionDataTask *task = [self.manager GET:url parameters:parameters success:success failure:failure];
+    NSURLSessionDataTask *task = [self.manager GET:url parameters:parameters progress:nil success:success failure:failure];
     return task;
 }
 
