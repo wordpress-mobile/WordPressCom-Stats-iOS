@@ -814,23 +814,23 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     switch (self.selectedPeriodUnit) {
         case StatsPeriodUnitDay:
-            dateFormatter.dateFormat = @"MMMM d";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"MMMM d"];
             labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
             break;
         case StatsPeriodUnitWeek:
         {
-            dateFormatter.dateFormat = @"MMMM d";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"MMMM d"];
             StatsDateUtilities *dateUtils = [StatsDateUtilities new];
             NSDate *endDate = [dateUtils calculateEndDateForPeriodUnit:self.selectedPeriodUnit withDateWithinPeriod:self.selectedDate];
             labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@ - %@", @"Stats header label for date range"), [dateFormatter stringFromDate:self.selectedDate], [dateFormatter stringFromDate:endDate]];
             break;
         }
         case StatsPeriodUnitMonth:
-            dateFormatter.dateFormat = @"MMMM";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"MMMM"];
             labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
             break;
         case StatsPeriodUnitYear:
-            dateFormatter.dateFormat = @"yyyy";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"yyyy"];
             labelText = [NSString stringWithFormat:NSLocalizedString(@"Stats for %@", @"Stats header for single date"), [dateFormatter stringFromDate:self.selectedDate]];
             break;
     }
