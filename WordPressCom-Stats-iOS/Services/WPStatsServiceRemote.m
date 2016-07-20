@@ -1775,16 +1775,16 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
     
     switch (unit) {
         case StatsPeriodUnitDay:
-            dateFormatter.dateFormat = @"LLL d";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"LLL d"];
             break;
         case StatsPeriodUnitWeek:
-            dateFormatter.dateFormat = @"LLL d";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"LLL d"];
             break;
         case StatsPeriodUnitMonth:
-            dateFormatter.dateFormat = @"LLL";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"LLL"];
             break;
         case StatsPeriodUnitYear:
-            dateFormatter.dateFormat = @"yyyy";
+            [dateFormatter setLocalizedDateFormatFromTemplate:@"yyyy"];
             break;
     }
     
@@ -1818,7 +1818,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
-    formatter.dateFormat = @"MMM dd";
+    [formatter setLocalizedDateFormatFromTemplate:@"MMM dd"];
     formatter.timeZone = [NSTimeZone localTimeZone];
     
     NSString *startString = [formatter stringFromDate:startDate];
@@ -1832,7 +1832,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
-    formatter.dateFormat = @"EEE, MMM dd";
+    [formatter setLocalizedDateFormatFromTemplate:@"EEE, MMM dd"];
     formatter.timeZone = [NSTimeZone localTimeZone];
     
     NSString *dateString = [formatter stringFromDate:date];

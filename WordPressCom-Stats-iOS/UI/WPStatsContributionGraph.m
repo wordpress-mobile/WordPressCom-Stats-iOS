@@ -193,8 +193,7 @@ static NSString *const ClearPostActivityDateNotification = @"ClearPostActivityDa
 
     // Draw the abbreviated month name below the graph
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setDateFormat:@"MMM"];
+    [formatter setLocalizedDateFormatFromTemplate:@"MMM"];
     NSString *monthName = [formatter stringFromDate:self.monthForGraph];
     CGRect labelRect = CGRectMake( (((self.cellSize * columnCount)/2.0)-(self.cellSize/1.1)), self.cellSize * 9.0, self.cellSize * 3.0, self.cellSize * 1.2);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
