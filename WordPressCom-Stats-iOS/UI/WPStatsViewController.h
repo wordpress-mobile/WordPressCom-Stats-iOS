@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, StatsPeriodType)
 @optional
 
 - (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url;
-- (NSObject *)statsService;
+- (WPStatsService *)statsService;
 
 @end
 
