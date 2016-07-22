@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   s.module_name = 'WordPressComStatsiOS'
   s.dependency 'AFNetworking',	'~> 3.1.0'
   s.dependency 'CocoaLumberjack', '~> 2.2.0'
-  s.dependency 'WordPress-iOS-Shared', '~> 0.5.3'
+  s.dependency 'WordPress-iOS-Shared', '~> 0.6.0'
   s.dependency 'NSObject-SafeExpectations', '0.0.2'
   s.dependency 'WordPressCom-Analytics-iOS', '~> 0.1.4'
 end
