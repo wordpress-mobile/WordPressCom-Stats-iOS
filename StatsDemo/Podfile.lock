@@ -28,26 +28,26 @@ PODS:
   - NSObject-SafeExpectations (0.0.2)
   - WordPress-iOS-Shared (0.6.0):
     - CocoaLumberjack (~> 2.2.0)
-  - WordPressCom-Analytics-iOS (0.1.16)
-  - WordPressCom-Stats-iOS (0.7.6):
+  - WordPressCom-Analytics-iOS (0.1.17)
+  - WordPressCom-Stats-iOS (0.7.7):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.2.0)
-    - NSObject-SafeExpectations (= 0.0.2)
-    - WordPress-iOS-Shared (~> 0.6.0)
+    - NSObject-SafeExpectations (~> 0.0.2)
+    - WordPress-iOS-Shared (~> 0.5)
     - WordPressCom-Analytics-iOS (~> 0.1.4)
-    - WordPressCom-Stats-iOS/Services (= 0.7.6)
-    - WordPressCom-Stats-iOS/UI (= 0.7.6)
-  - WordPressCom-Stats-iOS/Services (0.7.6):
+    - WordPressCom-Stats-iOS/Services (= 0.7.7)
+    - WordPressCom-Stats-iOS/UI (= 0.7.7)
+  - WordPressCom-Stats-iOS/Services (0.7.7):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.2.0)
-    - NSObject-SafeExpectations (= 0.0.2)
-    - WordPress-iOS-Shared (~> 0.6.0)
+    - NSObject-SafeExpectations (~> 0.0.2)
+    - WordPress-iOS-Shared (~> 0.5)
     - WordPressCom-Analytics-iOS (~> 0.1.4)
-  - WordPressCom-Stats-iOS/UI (0.7.6):
+  - WordPressCom-Stats-iOS/UI (0.7.7):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.2.0)
-    - NSObject-SafeExpectations (= 0.0.2)
-    - WordPress-iOS-Shared (~> 0.6.0)
+    - NSObject-SafeExpectations (~> 0.0.2)
+    - WordPress-iOS-Shared (~> 0.5)
     - WordPressCom-Analytics-iOS (~> 0.1.4)
     - WordPressCom-Stats-iOS/Services
 
@@ -65,8 +65,8 @@ SPEC CHECKSUMS:
   HockeySDK: ebaabf41808b4e4ea85b4d5266d425aef0d19c88
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
   WordPress-iOS-Shared: f799334b41f3af509ccb76d7970f8c74a7716f14
-  WordPressCom-Analytics-iOS: 46cbb47a84670f3b8548c8617da939c6b74cfda8
-  WordPressCom-Stats-iOS: 2689a457fd18268d36266fca76e96dd13e4af991
+  WordPressCom-Analytics-iOS: 02c94167d80f43684bdc83cf8df2f4b6fc0909ba
+  WordPressCom-Stats-iOS: 5996ea5bc7ce2096400fdc33e3368b5524f7288a
 
 PODFILE CHECKSUM: 370d0f0593d313302b1555d22d18108c29964011
 
