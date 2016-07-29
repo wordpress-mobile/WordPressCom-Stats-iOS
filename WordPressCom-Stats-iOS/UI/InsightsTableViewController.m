@@ -84,16 +84,16 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
-    self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
     NSBundle *bundle = [NSBundle statsBundle];
-    
+
     [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextCellIdentifier];
     [self.tableView registerNib:[UINib nibWithNibName:@"InsightsWrappingTextCell" bundle:bundle] forCellReuseIdentifier:InsightsTableWrappingTextLayoutCellIdentifier];
     [self.tableView registerNib:[UINib nibWithNibName:@"StatsNoResultsRowTableViewCell" bundle:bundle] forCellReuseIdentifier:StatsTableNoResultsCellIdentifier];
+
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
+    self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     self.sections = @[@(StatsSectionInsightsLatestPostSummary),
                       @(StatsSectionInsightsTodaysStats),

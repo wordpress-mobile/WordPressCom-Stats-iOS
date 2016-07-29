@@ -40,11 +40,12 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     self.sections = [@[@(StatsSectionPostDetailsLoadingIndicator), @(StatsSectionPostDetailsGraph), @(StatsSectionPostDetailsMonthsYears), @(StatsSectionPostDetailsAveragePerDay), @(StatsSectionPostDetailsRecentWeeks)] mutableCopy];
     self.sectionData = [NSMutableDictionary new];
 
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
+
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
-    
+
     [self setupRefreshControl];
     
     self.graphViewController = [WPStatsGraphViewController new];

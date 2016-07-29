@@ -53,12 +53,13 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
     NSBundle *bundle = [NSBundle statsBundle];
     
+    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
+    [self.tableView registerNib:[UINib nibWithNibName:@"StatsNoResultsRowTableViewCell" bundle:bundle] forCellReuseIdentifier:StatsTableNoResultsCellIdentifier];
+
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 20.0f)];
     self.tableView.backgroundColor = [WPStyleGuide itsEverywhereGrey];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView registerClass:[StatsTableSectionHeaderView class] forHeaderFooterViewReuseIdentifier:StatsTableSectionHeaderSimpleBorder];
-    [self.tableView registerNib:[UINib nibWithNibName:@"StatsNoResultsRowTableViewCell" bundle:bundle] forCellReuseIdentifier:StatsTableNoResultsCellIdentifier];
-    
+
     [self setupRefreshControl];
     
     // Posts, Referrers, Clicks, Authors, Countries, Search Terms, Published, Videos, Comments, Tags, Followers, Publicize
