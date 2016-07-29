@@ -48,7 +48,11 @@ static NSInteger const RecommendedYAxisTicks = 2;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
+    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
+    [self.collectionView registerClass:[WPStatsGraphBackgroundView class] forSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground withReuseIdentifier:GraphBackgroundView];
+
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
     
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -57,11 +61,6 @@ static NSInteger const RecommendedYAxisTicks = 2;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;
     self.collectionView.contentInset = UIEdgeInsetsMake(0.0f, 15.0f, 10.0f, 40.0f);
-    
-    [self.collectionView registerClass:[WPStatsGraphBarCell class] forCellWithReuseIdentifier:CategoryBarCell];
-    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:FooterView];
-    [self.collectionView registerClass:[WPStatsGraphBackgroundView class] forSupplementaryViewOfKind:WPStatsCollectionElementKindGraphBackground withReuseIdentifier:GraphBackgroundView];
-    
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
