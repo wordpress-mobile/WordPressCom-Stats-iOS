@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "WordPressCom-Stats-iOS"
-  s.version      = "0.7.7"
+  s.version      = "0.7.8"
   s.summary      = "Reusable component for displaying WordPress.com site stats in an iOS application."
 
   s.description  = <<-DESC
