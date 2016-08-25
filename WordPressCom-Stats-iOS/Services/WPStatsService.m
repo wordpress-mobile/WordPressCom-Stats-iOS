@@ -206,53 +206,55 @@ NSString *const TodayCacheKey = @"Today";
         && (!streakCompletion || streakData)
         )
     {
-        if (commentsAuthorsCompletion) {
-            commentsAuthorsCompletion(commentsAuthorData, nil);
-        }
-        
-        if (commentsPostsCompletion) {
-            commentsPostsCompletion(commentsPostsData, nil);
-        }
-        
-        if (tagsCategoriesCompletion) {
-            tagsCategoriesCompletion(tagsCategoriesData, nil);
-        }
-        
-        if (followersDotComCompletion) {
-            followersDotComCompletion(followersDotComData, nil);
-        }
-        
-        if (followersEmailCompletion) {
-            followersEmailCompletion(followersEmailData, nil);
-        }
-        
-        if (publicizeCompletion) {
-            publicizeCompletion(publicizeData, nil);
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (commentsAuthorsCompletion) {
+                commentsAuthorsCompletion(commentsAuthorData, nil);
+            }
+            
+            if (commentsPostsCompletion) {
+                commentsPostsCompletion(commentsPostsData, nil);
+            }
+            
+            if (tagsCategoriesCompletion) {
+                tagsCategoriesCompletion(tagsCategoriesData, nil);
+            }
+            
+            if (followersDotComCompletion) {
+                followersDotComCompletion(followersDotComData, nil);
+            }
+            
+            if (followersEmailCompletion) {
+                followersEmailCompletion(followersEmailData, nil);
+            }
+            
+            if (publicizeCompletion) {
+                publicizeCompletion(publicizeData, nil);
+            }
 
-        if (allTimeCompletion) {
-            allTimeCompletion(allTimeData, nil);
-        }
-        
-        if (insightsCompletion) {
-            insightsCompletion(insightsData, nil);
-        }
-        
-        if (todaySummaryCompletion) {
-            todaySummaryCompletion(todayData, nil);
-        }
-        
-        if (streakCompletion) {
-            streakCompletion(streakData, nil);
-        }
-        
-        if (latestPostCompletion) {
-            latestPostCompletion(latestPostData, nil);
-        }
-        
-        if (overallCompletionHandler) {
-            overallCompletionHandler();
-        }
+            if (allTimeCompletion) {
+                allTimeCompletion(allTimeData, nil);
+            }
+            
+            if (insightsCompletion) {
+                insightsCompletion(insightsData, nil);
+            }
+            
+            if (todaySummaryCompletion) {
+                todaySummaryCompletion(todayData, nil);
+            }
+            
+            if (streakCompletion) {
+                streakCompletion(streakData, nil);
+            }
+            
+            if (latestPostCompletion) {
+                latestPostCompletion(latestPostData, nil);
+            }
+            
+            if (overallCompletionHandler) {
+                overallCompletionHandler();
+            }
+        });
 
         return;
     }
