@@ -15,6 +15,7 @@
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
 #import "NSBundle+StatsBundleHelper.h"
+#import "ExtensionUtils.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -325,11 +326,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-                        #ifndef TARGET_IOS_EXTENSION
-                        [[UIApplication sharedApplication] openURL:action.url];
-                        #else
-                        [[self extensionContext] openURL:action.url completionHandler:nil];
-                        #endif
+                        [ExtensionUtils openURL:action.url fromController:self];
                     }
                     break;
                 }
@@ -465,9 +462,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
-#ifndef TARGET_IOS_EXTENSION
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-#endif
+    [ExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
     
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
@@ -613,10 +608,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
      }
                    andOverallCompletionHandler:^
      {
-#ifndef TARGET_IOS_EXTENSION
-         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-#endif
-         
+         [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
          [weakSelf setupRefreshControl];
          [weakSelf.refreshControl endRefreshing];
          

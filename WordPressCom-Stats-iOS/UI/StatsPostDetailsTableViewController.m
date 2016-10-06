@@ -8,6 +8,7 @@
 #import "StatsTableSectionHeaderView.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
+#import "ExtensionUtils.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -233,12 +234,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-#ifndef TARGET_IOS_EXTENSION
-                        [[UIApplication sharedApplication] openURL:action.url];
-#else
-                        [self.extensionContext openURL:action.url completionHandler:nil];
-#endif
-
+                        [ExtensionUtils openURL:action.url fromController:self];
                     }
                     break;
                 }
@@ -302,10 +298,8 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStats
 {
-    #ifndef TARGET_IOS_EXTENSION
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    #endif
-    
+    [ExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
+
     if (self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
         self.isRefreshing = YES;
@@ -317,9 +311,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
-        #ifndef TARGET_IOS_EXTENSION
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        #endif
+        [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
         [weakSelf setupRefreshControl];
         [weakSelf.refreshControl endRefreshing];
 
@@ -349,9 +341,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
-    #ifndef TARGET_IOS_EXTENSION
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    #endif
+    [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
 }
 
 

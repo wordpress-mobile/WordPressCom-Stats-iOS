@@ -6,6 +6,7 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
+#import "ExtensionUtils.h"
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
@@ -211,10 +212,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (void)retrieveStats
 {
-#ifndef TARGET_IOS_EXTENSION
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-#endif
-    
+    [ExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
+
     if (self.statsGroup) {
         self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
         [self.tableView reloadData];
@@ -223,9 +222,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     __weak __typeof(self) weakSelf = self;
     
     StatsGroupCompletion completion = ^(StatsGroup *group, NSError *error) {
-#ifndef TARGET_IOS_EXTENSION
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-#endif
+        [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
         [weakSelf.refreshControl endRefreshing];
 
         weakSelf.statsGroup = group;
@@ -266,9 +263,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
-#ifndef TARGET_IOS_EXTENSION
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-#endif
+    [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
 }
 
 

@@ -19,6 +19,7 @@
 #import <WordPressShared/WPFontManager.h>
 #import "StatsStreakItem.h"
 #import "InsightsPostingActivityCollectionViewController.h"
+#import "ExtensionUtils.h"
 
 @interface InlineTextAttachment : NSTextAttachment
 
@@ -378,11 +379,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-#ifndef TARGET_IOS_EXTENSION
-                        [[UIApplication sharedApplication] openURL:action.url];
-#else
-                        [self.extensionContext openURL:action.url completionHandler:nil];
-#endif
+                        [ExtensionUtils openURL:action.url fromController:self];
                     }
                     break;
                 }
@@ -421,12 +418,7 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
             [self.statsDelegate statsViewController:statsViewController openURL:summary.postURL];
         } else {
-#ifndef TARGET_IOS_EXTENSION
-            [[UIApplication sharedApplication] openURL:summary.postURL];
-#else
-            [self.extensionContext openURL:summary.postURL completionHandler:nil];
-#endif
-
+            [ExtensionUtils openURL:summary.postURL fromController:self];
         }
     }
 }
