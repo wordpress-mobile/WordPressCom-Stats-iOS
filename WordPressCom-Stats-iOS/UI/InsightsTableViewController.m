@@ -378,7 +378,11 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+#ifndef TARGET_IOS_EXTENSION
                         [[UIApplication sharedApplication] openURL:action.url];
+#else
+                        [self.extensionContext openURL:action.url completionHandler:nil];
+#endif
                     }
                     break;
                 }
@@ -417,9 +421,12 @@ static CGFloat const InsightsTableSectionFooterHeight = 10.0f;
             WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
             [self.statsDelegate statsViewController:statsViewController openURL:summary.postURL];
         } else {
-#ifndef AF_APP_EXTENSIONS
+#ifndef TARGET_IOS_EXTENSION
             [[UIApplication sharedApplication] openURL:summary.postURL];
+#else
+            [self.extensionContext openURL:summary.postURL completionHandler:nil];
 #endif
+
         }
     }
 }

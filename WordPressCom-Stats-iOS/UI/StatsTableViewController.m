@@ -325,7 +325,11 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
+                        #ifndef TARGET_IOS_EXTENSION
                         [[UIApplication sharedApplication] openURL:action.url];
+                        #else
+                        [[self extensionContext] openURL:action.url completionHandler:nil];
+                        #endif
                     }
                     break;
                 }
@@ -461,7 +465,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
+#ifndef TARGET_IOS_EXTENSION
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
     
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
@@ -607,7 +613,9 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
      }
                    andOverallCompletionHandler:^
      {
+#ifndef TARGET_IOS_EXTENSION
          [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
          
          [weakSelf setupRefreshControl];
          [weakSelf.refreshControl endRefreshing];
