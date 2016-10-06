@@ -159,12 +159,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                     WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                     [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                 } else {
-#ifndef TARGET_IOS_EXTENSION
-                    [[UIApplication sharedApplication] openURL:action.url];
-#else
-                    [[self extensionContext] openURL:actionURL completionHandler:nil];
-#endif
-
+                    [ExtensionUtils openURL:action.url fromController:self];
                 }
                 break;
             }
