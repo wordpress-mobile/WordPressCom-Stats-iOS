@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/wordpress-mobile/WordPressCom-Stats-iOS.git", :tag => s.version.to_s }
   s.source_files  = "WordPressCom-Stats-iOS", "WordPressCom-Stats-iOS/**/*.{h,m,swift}"
   s.private_header_files = "WordPressCom-Stats-iOS/Private/*.h"
+  s.resource_bundle = { 'WordPressCom-Stats-iOS' => ['WordPressCom-Stats-iOS/UI/*.storyboard', 'WordPressCom-Stats-iOS/UI/*.xib', 'WordPressCom-Stats-iOS/Resources/*.otf', 'WordPressCom-Stats-iOS/Resources/*.png'] }
   s.exclude_files = "WordPressCom-Stats-iOS/Exclude"
   s.prefix_header_file = "WordPressCom-Stats-iOS/WordPressCom-Stats-iOS-Prefix.pch"
 
