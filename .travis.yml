@@ -1,10 +1,7 @@
 install:
-- pod repo update && pod install
+- pod install
 osx_image: xcode8
 language: objective-c
-xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
-xcode_scheme: WordPressCom-Stats-iOS
-xcode_sdk: iphonesimulator
 sudo: false
 script:
-- set -o pipefail && xcodebuild -workspace $xcode_workspace -scheme $xcode_scheme -sdk $xcode_sdk | xcpretty
+- set -o pipefail && xcodebuild -workspace WordPressCom-Stats-iOS.xcworkspace -scheme WordPressCom-Stats-iOS -sdk iphonesimulator | xcpretty
