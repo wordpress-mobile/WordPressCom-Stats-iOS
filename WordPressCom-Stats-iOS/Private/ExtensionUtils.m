@@ -7,7 +7,7 @@
         [viewController.extensionContext openURL:url completionHandler:nil];
     } else {
         NSObject *application = [UIApplication performSelector:@selector(sharedApplication)];
-        [application performSelector:@selector(openURL) withObject:url];
+        [application performSelector:@selector(openURL:) withObject:url];
 
     }
 }
