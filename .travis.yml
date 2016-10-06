@@ -7,4 +7,4 @@ xcode_scheme: WordPressCom-Stats-iOS
 xcode_sdk: iphonesimulator
 sudo: false
 script:
-- set -o pipefail && xcodebuild -workspace $xcode_workspace -scheme $xcode_sdk -sdk $xcode_sdk | xcpretty
+- set -o pipefail && xcodebuild -workspace $xcode_workspace -scheme $xcode_scheme -sdk $xcode_sdk | xcpretty
