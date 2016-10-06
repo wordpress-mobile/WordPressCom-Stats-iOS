@@ -8,7 +8,7 @@
 #import "StatsTableSectionHeaderView.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
-#import "ExtensionUtils.h"
+#import "AppExtensionUtils.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -234,7 +234,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-                        [ExtensionUtils openURL:action.url fromController:self];
+                        [AppExtensionUtils openURL:action.url fromController:self];
                     }
                     break;
                 }
@@ -298,7 +298,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 
 - (void)retrieveStats
 {
-    [ExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
+    [AppExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
 
     if (self.refreshControl.isRefreshing == NO) {
         self.refreshControl = nil;
@@ -311,7 +311,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
     [self.statsService retrievePostDetailsStatsForPostID:self.postID
                                    withCompletionHandler:^(StatsVisits *visits, StatsGroup *monthsYears, StatsGroup *averagePerDay, StatsGroup *recentWeeks, NSError *error)
     {
-        [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
+        [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
         [weakSelf setupRefreshControl];
         [weakSelf.refreshControl endRefreshing];
 
@@ -341,7 +341,7 @@ static NSString *const StatsTableNoResultsCellIdentifier = @"NoResultsRow";
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
-    [ExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
+    [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
 }
 
 

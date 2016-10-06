@@ -1,7 +1,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface ExtensionUtils : NSObject
+/**
+ This class provides methods that are safe to call on extension or regular apps, depending of the use.
+ */
+@interface AppExtensionUtils : NSObject
 
 + (void)openURL:(NSURL *)url fromController:(UIViewController *)viewController;
 

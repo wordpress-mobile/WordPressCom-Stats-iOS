@@ -1,6 +1,6 @@
-#import "ExtensionUtils.h"
+#import "AppExtensionUtils.h"
 
-@implementation ExtensionUtils
+@implementation AppExtensionUtils
 
 + (void)openURL:(NSURL *)url fromController:(UIViewController *)viewController {
     if (viewController.extensionContext != nil) {
