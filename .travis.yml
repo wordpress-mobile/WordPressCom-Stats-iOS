@@ -1,8 +1,7 @@
 install:
-- gem install cocoapods -v 1.0.0 && pod repo update && pod install
-osx_image: xcode7
+- pod install
+osx_image: xcode8
 language: objective-c
-xcode_workspace: WordPressCom-Stats-iOS.xcworkspace
-xcode_scheme: WordPressCom-Stats-iOS
-xcode_sdk: iphonesimulator
 sudo: false
+script:
+- set -o pipefail && xcodebuild -workspace WordPressCom-Stats-iOS.xcworkspace -scheme WordPressCom-Stats-iOS -sdk iphonesimulator | xcpretty

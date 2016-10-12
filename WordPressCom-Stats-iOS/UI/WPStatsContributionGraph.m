@@ -22,6 +22,7 @@ static NSString *const ClearPostActivityDateNotification = @"ClearPostActivityDa
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     _dateButtons = [NSMutableArray array];
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     __weak __typeof(self) weakSelf = self;
