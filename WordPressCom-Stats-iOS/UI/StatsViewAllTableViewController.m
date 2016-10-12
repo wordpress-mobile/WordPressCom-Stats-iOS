@@ -6,6 +6,7 @@
 #import "WPStyleGuide+Stats.h"
 #import "StatsTableSectionHeaderView.h"
 #import <WordPressComAnalytics/WPAnalytics.h>
+#import "AppExtensionUtils.h"
 
 static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSectionHeaderSimpleBorder";
 static NSString *const StatsTableGroupHeaderCellIdentifier = @"GroupHeader";
@@ -158,7 +159,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
                     WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                     [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                 } else {
-                    [[UIApplication sharedApplication] openURL:action.url];
+                    [AppExtensionUtils openURL:action.url fromController:self];
                 }
                 break;
             }
@@ -206,8 +207,8 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 
 - (void)retrieveStats
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
+    [AppExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
+
     if (self.statsGroup) {
         self.statsGroup = [[StatsGroup alloc] initWithStatsSection:self.statsSection andStatsSubSection:self.statsSubSection];
         [self.tableView reloadData];
@@ -216,7 +217,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
     __weak __typeof(self) weakSelf = self;
     
     StatsGroupCompletion completion = ^(StatsGroup *group, NSError *error) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
         [weakSelf.refreshControl endRefreshing];
 
         weakSelf.statsGroup = group;
@@ -257,7 +258,7 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
 - (void)abortRetrieveStats
 {
     [self.statsService cancelAnyRunningOperations];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
 }
 
 

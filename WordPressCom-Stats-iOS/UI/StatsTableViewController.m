@@ -15,6 +15,7 @@
 #import <WordPressComAnalytics/WPAnalytics.h>
 #import "UIViewController+SizeClass.h"
 #import "NSBundle+StatsBundleHelper.h"
+#import "AppExtensionUtils.h"
 
 static CGFloat const StatsTableGraphHeight = 185.0f;
 static CGFloat const StatsTableNoResultsHeight = 100.0f;
@@ -325,7 +326,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
                         WPStatsViewController *statsViewController = (WPStatsViewController *)self.navigationController;
                         [self.statsDelegate statsViewController:statsViewController openURL:action.url];
                     } else {
-                        [[UIApplication sharedApplication] openURL:action.url];
+                        [AppExtensionUtils openURL:action.url fromController:self];
                     }
                     break;
                 }
@@ -461,7 +462,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
 
 - (void)retrieveStatsSkipGraph:(BOOL)skipGraph
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [AppExtensionUtils setNetworkActivityIndicatorVisible:YES fromController:self];
     
     if ([self.statsProgressViewDelegate respondsToSelector:@selector(statsViewControllerDidBeginLoadingStats:)]
         && self.refreshControl.isRefreshing == NO) {
@@ -607,8 +608,7 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
      }
                    andOverallCompletionHandler:^
      {
-         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-         
+         [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
          [weakSelf setupRefreshControl];
          [weakSelf.refreshControl endRefreshing];
          
