@@ -130,6 +130,11 @@
         [alertController addAction:monthsAction];
         [alertController addAction:yearsAction];
 
+        // If not displayed full screen, the alert controller is automatically displayed in a popover by the system
+        alertController.popoverPresentationController.sourceView = control;
+        CGFloat segmentWidth = CGRectGetWidth(control.bounds) / control.numberOfSegments;
+        alertController.popoverPresentationController.sourceRect = CGRectMake(control.selectedSegmentIndex * segmentWidth, 0, segmentWidth, CGRectGetHeight(control.bounds));
+
         self.periodActionSheet = alertController;
         [self presentViewController:alertController animated:YES completion:nil];
     } else {

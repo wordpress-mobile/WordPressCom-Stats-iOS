@@ -4,17 +4,11 @@
 #import "StatsItemAction.h"
 #import "StatsStreak.h"
 #import "StatsStreakItem.h"
+#import "StatsStringUtilities.h"
 #import <WordPressShared/NSString+XMLExtensions.h>
 #import <WordPressComAnalytics/WPAnalytics.h>
 @import NSObject_SafeExpectations;
 @import AFNetworking;
-
-// Temporary workaround to handle CocoaPods and how the -Swift.h header is generated
-#ifdef MAIN_PROJECT
-#import "WordPressComStatsiOS-Swift.h"
-#else
-#import <WordPressComStatsiOS/WordPressComStatsiOS-Swift.h>
-#endif
 
 static NSString *const WordPressComApiClientEndpointURL = @"https://public-api.wordpress.com/rest/v1.1";
 static NSInteger const NumberOfDays = 12;
