@@ -220,6 +220,10 @@ static NSString *const StatsTableLoadingIndicatorCellIdentifier = @"LoadingIndic
         [AppExtensionUtils setNetworkActivityIndicatorVisible:NO fromController:self];
         [weakSelf.refreshControl endRefreshing];
 
+        if (error != nil) {
+            return;
+        }
+
         weakSelf.statsGroup = group;
         weakSelf.statsGroup.offsetRows = 1;
         

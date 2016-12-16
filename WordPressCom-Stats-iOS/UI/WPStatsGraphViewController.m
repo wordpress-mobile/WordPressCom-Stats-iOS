@@ -157,8 +157,8 @@ static NSInteger const RecommendedYAxisTicks = 2;
     CGRect rect = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
     CGFloat width = floor((CGRectGetWidth(rect) / self.numberOfXValues) - 5.0);
     CGFloat height = CGRectGetHeight(rect);
-    
-    CGSize size = CGSizeMake(width, height);
+
+    CGSize size = CGSizeMake(width < 0 ? 0 : width, height < 0 ? 0 : height);
     
     return size;
 }
@@ -170,7 +170,7 @@ static NSInteger const RecommendedYAxisTicks = 2;
 
     CGFloat spacing = floor((CGRectGetWidth(rect) - (width * self.numberOfXValues)) / self.numberOfXValues);
 
-    return spacing;
+    return spacing < 0 ? 0 : spacing;
 }
 
 #pragma mark - Public class methods
