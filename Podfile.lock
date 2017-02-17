@@ -23,7 +23,7 @@ PODS:
   - CocoaLumberjack/Extensions (2.2.0):
     - CocoaLumberjack/Default
   - NSObject-SafeExpectations (0.0.2)
-  - OCMock (3.3.1)
+  - OCMock (3.4)
   - OHHTTPStubs (4.6.0):
     - OHHTTPStubs/Default (= 4.6.0)
   - OHHTTPStubs/Core (4.6.0)
@@ -39,7 +39,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.6.0)
   - WordPress-iOS-Shared (0.6.3):
     - CocoaLumberjack (~> 2.2.0)
-  - WordPressCom-Analytics-iOS (0.1.21)
+  - WordPressCom-Analytics-iOS (0.1.22)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
@@ -54,10 +54,10 @@ SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
-  OCMock: f3f61e6eaa16038c30caa5798c5e49d3307b6f22
+  OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
   OHHTTPStubs: cb1aefbbeb4de4e741644455d4b945538e5248a2
   WordPress-iOS-Shared: 2496fba282efcdcb8182f8f282ca0eb56dc4eb32
-  WordPressCom-Analytics-iOS: ee6cc3a4feb63cebba167ce762c6e12c0b7b6671
+  WordPressCom-Analytics-iOS: 66b890823ffd54aee871fbba3ed0278d4ae1aa0a
 
 PODFILE CHECKSUM: 135829e601ad5d50b885138b363f337f7d6309e3
 
