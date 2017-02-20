@@ -26,10 +26,10 @@ PODS:
     - HockeySDK/DefaultLib (= 4.1.3)
   - HockeySDK/DefaultLib (4.1.3)
   - NSObject-SafeExpectations (0.0.2)
-  - WordPress-iOS-Shared (0.7.0):
+  - WordPress-iOS-Shared (0.8.0):
     - CocoaLumberjack (~> 2.2.0)
-  - WordPressCom-Analytics-iOS (0.1.21)
-  - WordPressCom-Stats-iOS (0.8.1):
+  - WordPressCom-Analytics-iOS (0.1.22)
+  - WordPressCom-Stats-iOS (0.9.0):
     - AFNetworking (~> 3.1.0)
     - CocoaLumberjack (~> 2.2.0)
     - NSObject-SafeExpectations (~> 0.0.2)
@@ -49,10 +49,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   HockeySDK: 7dd8d7f5a4d71b7a5eebb320c8515cb22e99221b
   NSObject-SafeExpectations: 7d7f48df90df4e11da7cfe86b64f45eff7a7f521
-  WordPress-iOS-Shared: 4bec543bac6543480b10d904bea122dcba43cc37
-  WordPressCom-Analytics-iOS: ee6cc3a4feb63cebba167ce762c6e12c0b7b6671
-  WordPressCom-Stats-iOS: 07b1796831c31c0c8c8a0f2e314bb2e6636af5df
+  WordPress-iOS-Shared: 4d073fb8efa96f3c902d1e1ac2557bb720f416d7
+  WordPressCom-Analytics-iOS: 66b890823ffd54aee871fbba3ed0278d4ae1aa0a
+  WordPressCom-Stats-iOS: cf78f0dd05ba586fd7b3c01b6cdcd5ca12e032ea
 
-PODFILE CHECKSUM: 370d0f0593d313302b1555d22d18108c29964011
+PODFILE CHECKSUM: f178828e77ff34e378da32749c69833c0f1046f3
 
 COCOAPODS: 1.1.1

@@ -1062,8 +1062,12 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         
         for (NSDictionary *view in views) {
             NSString *key = [view stringForKey:@"country_code"];
+            NSString *countryName = [[NSLocale currentLocale] localizedStringForCountryCode:key];
+            if (!countryName) {
+                countryName = [countryInfoDict[key] stringForKey:@"country_full"];
+            }
             StatsItem *statsItem = [StatsItem new];
-            statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
+            statsItem.label = countryName;
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
 
             NSString *urlString = [countryInfoDict[key] stringForKey:@"flat_flag_icon"];
