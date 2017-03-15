@@ -10,7 +10,7 @@
         return result;
 }
 
-+ (NSString *)emojiFlagForCountryCode:(NSString *)countryCode
+- (NSString *)emojiFlagForCountryCode:(NSString *)countryCode
 {
     if (countryCode.length != 2) {
         return @"";

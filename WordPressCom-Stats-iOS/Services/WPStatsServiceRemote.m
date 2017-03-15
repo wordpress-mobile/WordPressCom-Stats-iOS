@@ -1068,7 +1068,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
             }
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = [NSString stringWithFormat:@"%@ %@",
-                                                         [StatsStringUtilities emojiFlagForCountryCode:key],
+                                                         [self.stringUtilities emojiFlagForCountryCode:key],
                                                          countryName];
 
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
