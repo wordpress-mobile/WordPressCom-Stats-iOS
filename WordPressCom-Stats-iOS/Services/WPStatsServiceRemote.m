@@ -1067,16 +1067,12 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
                 countryName = [countryInfoDict[key] stringForKey:@"country_full"];
             }
             StatsItem *statsItem = [StatsItem new];
-            statsItem.label = countryName;
+            statsItem.label = [NSString stringWithFormat:@"%@ %@",
+                                                         [StatsStringUtilities emojiFlagForCountryCode:key],
+                                                         countryName];
+
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
 
-            NSString *urlString = [countryInfoDict[key] stringForKey:@"flat_flag_icon"];
-            if (urlString.length > 0) {
-                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
-                components.query = @"s=60";
-                statsItem.iconURL = components.URL;
-            }
-            
             [items addObject:statsItem];
         }
         
