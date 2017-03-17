@@ -1,4 +1,5 @@
 #import "Logging.h"
+#import "NSBundle+StatsBundleHelper.h"
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
@@ -1069,14 +1070,8 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = countryName;
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
+            statsItem.iconURL = [[NSBundle statsBundle] URLForResource:key withExtension:@"png"];
 
-            NSString *urlString = [countryInfoDict[key] stringForKey:@"flat_flag_icon"];
-            if (urlString.length > 0) {
-                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
-                components.query = @"s=60";
-                statsItem.iconURL = components.URL;
-            }
-            
             [items addObject:statsItem];
         }
         
