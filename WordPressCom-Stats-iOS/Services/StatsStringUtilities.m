@@ -10,13 +10,11 @@
     return result;
 }
 
-- (NSString *)displayablePostTitle:(NSString *)postTitle withId:(NSNumber *)postId
+- (NSString *)displayablePostTitle:(NSString *)postTitle
 {
     NSString *result = [self sanitizePostTitle:postTitle];
     if (result.length == 0) {
-        result = [NSString stringWithFormat:@"#%@ %@",
-                                            postId,
-                                            NSLocalizedString(@"(untitled)", @"Title for an untitled post, should match WP core")];
+        result = NSLocalizedString(@"(no title)", @"Title for an untitled post, should match WP core");
     }
     return result;
 }
