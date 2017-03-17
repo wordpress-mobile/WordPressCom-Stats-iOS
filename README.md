@@ -14,7 +14,7 @@ WordPressCom-Stats-iOS is a reusable component used in the [WordPress iOS app](h
 You can install the stats component in your app via [CocoaPods](http://cocoapods.org):
 
 ```ruby
-platform :ios, '7.0'
+platform :ios, '10.0'
 pod 'WordPressCom-Stats-iOS'
 ```
 

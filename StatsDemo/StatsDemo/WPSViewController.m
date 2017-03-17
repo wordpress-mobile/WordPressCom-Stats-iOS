@@ -102,7 +102,7 @@ NSString *const WPStatsTodayWidgetOAuth2TokenKeychainAccessGroup = @"99KV9Z6BKV.
 - (void)statsViewController:(WPStatsViewController *)controller openURL:(NSURL *)url
 {
     NSLog(@"Opening URL from StatsDemo WPSViewController: %@", url);
-    [[UIApplication sharedApplication] openURL:url];
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 }
 
 

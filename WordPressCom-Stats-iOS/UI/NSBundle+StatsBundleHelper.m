@@ -9,7 +9,7 @@
     NSString *path = [statsBundle pathForResource:@"WordPressCom-Stats-iOS" ofType:@"bundle"];
     NSBundle *bundle = [NSBundle bundleWithPath:path];
     
-    return bundle;
+    return bundle ?: statsBundle;
 }
 
 @end

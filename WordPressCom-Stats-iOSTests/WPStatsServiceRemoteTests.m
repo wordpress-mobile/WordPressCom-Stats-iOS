@@ -598,7 +598,7 @@
          XCTAssertTrue([item.label isEqualToString:@"United States"]);
          XCTAssertTrue([@"8" isEqualToString:item.value]);
          XCTAssertNil(item.itemID);
-         XCTAssertTrue([item.iconURL.absoluteString isEqualToString:@"https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=60"]);
+         XCTAssertNotNil(item.iconURL);
          XCTAssertEqual(0, item.actions.count);
          XCTAssertEqual(0, item.children.count);
          

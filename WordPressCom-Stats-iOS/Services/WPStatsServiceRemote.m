@@ -1,4 +1,5 @@
 #import "Logging.h"
+#import "NSBundle+StatsBundleHelper.h"
 #import "WPStatsServiceRemote.h"
 #import "StatsItem.h"
 #import "StatsItemAction.h"
@@ -658,7 +659,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         NSDictionary *postDict = [[postsDict arrayForKey:@"posts"] firstObject];
         
         NSNumber *postID = [postDict numberForKey:@"ID"];
-        NSString *postTitle = [self.stringUtilities sanitizePostTitle:[postDict stringForKey:@"title"]];
+        NSString *postTitle = [self.stringUtilities displayablePostTitle:[postDict stringForKey:@"title"]];
         NSDate *postDate = [self.rfc3339DateFormatter dateFromString:[postDict stringForKey:@"date"]];
         NSString *postURL = [postDict stringForKey:@"URL"];
         NSNumber *likesValue = [postDict numberForKey:@"like_count"];
@@ -806,7 +807,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         for (NSDictionary *post in posts) {
             StatsItem *item = [StatsItem new];
             item.itemID = [post numberForKey:@"ID"];
-            item.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
+            item.label = [self.stringUtilities displayablePostTitle:[post stringForKey:@"title"]];
             
             StatsItemAction *itemAction = [StatsItemAction new];
             itemAction.defaultAction = YES;
@@ -853,7 +854,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = post[@"id"];
             statsItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
-            statsItem.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
+            statsItem.label = [self.stringUtilities displayablePostTitle:[post stringForKey:@"title"]];
             
             id url = post[@"href"];
             if ([url isKindOfClass:[NSString class]]) {
@@ -1062,17 +1063,15 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         
         for (NSDictionary *view in views) {
             NSString *key = [view stringForKey:@"country_code"];
-            StatsItem *statsItem = [StatsItem new];
-            statsItem.label = [countryInfoDict[key] stringForKey:@"country_full"];
-            statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
-
-            NSString *urlString = [countryInfoDict[key] stringForKey:@"flat_flag_icon"];
-            if (urlString.length > 0) {
-                NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
-                components.query = @"s=60";
-                statsItem.iconURL = components.URL;
+            NSString *countryName = [[NSLocale currentLocale] localizedStringForCountryCode:key];
+            if (!countryName) {
+                countryName = [countryInfoDict[key] stringForKey:@"country_full"];
             }
-            
+            StatsItem *statsItem = [StatsItem new];
+            statsItem.label = countryName;
+            statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
+            statsItem.iconURL = [[NSBundle statsBundle] URLForResource:key withExtension:@"png"];
+
             [items addObject:statsItem];
         }
         
@@ -1113,7 +1112,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
         for (NSDictionary *play in playsArray) {
             StatsItem *statsItem = [StatsItem new];
             statsItem.itemID = [play numberForKey:@"post_id"];
-            statsItem.label = [self.stringUtilities sanitizePostTitle:[play stringForKey:@"title"]];
+            statsItem.label = [self.stringUtilities displayablePostTitle:[play stringForKey:@"title"]];
             statsItem.value = [self localizedStringForNumber:[play numberForKey:@"plays"]];
 
             NSString *url = [play stringForKey:@"url"];
@@ -1175,7 +1174,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
             for (NSDictionary *post in posts) {
                 StatsItem *postItem = [StatsItem new];
                 postItem.itemID = [post numberForKey:@"id"];
-                postItem.label = [self.stringUtilities sanitizePostTitle:[post stringForKey:@"title"]];
+                postItem.label = [self.stringUtilities displayablePostTitle:[post stringForKey:@"title"]];
                 postItem.value = [self localizedStringForNumber:[post numberForKey:@"views"]];
                 
                 StatsItemAction *itemAction = [StatsItemAction new];

@@ -52,5 +52,19 @@
     XCTAssertEqualObjects(result, @"This “has” special & characters");
 }
 
+- (void)testDisplayablePostTitle {
+    NSString *result = [self.subject displayablePostTitle:@"This &#8220;has&#8221; special &amp; characters"];
+    XCTAssertEqualObjects(result, @"This “has” special & characters");
+}
+
+- (void)testDisplayablePostTitleWithEmptyTitle {
+    NSString *result = [self.subject displayablePostTitle:@""];
+    NSString *expected = NSLocalizedString(@"(no title)", @"");
+    XCTAssertEqualObjects(result, expected);
+
+    NSString *result2 = [self.subject displayablePostTitle:@" "];
+    NSString *expected2 = NSLocalizedString(@"(no title)", @"");
+    XCTAssertEqualObjects(result2, expected2);
+}
 
 @end
