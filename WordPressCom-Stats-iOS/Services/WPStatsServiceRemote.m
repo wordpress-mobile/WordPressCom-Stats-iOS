@@ -1070,7 +1070,7 @@ typedef void (^TaskUpdateHandler)(NSURLSessionTask *, NSArray<NSURLSessionTask*>
             StatsItem *statsItem = [StatsItem new];
             statsItem.label = countryName;
             statsItem.value = [self localizedStringForNumber:[view numberForKey:@"views"]];
-            statsItem.iconURL = [[NSBundle statsBundle]URLForResource:key withExtension:@"png"];
+            statsItem.iconURL = [[NSBundle statsBundle] URLForResource:key withExtension:@"png"];
 
             [items addObject:statsItem];
         }
