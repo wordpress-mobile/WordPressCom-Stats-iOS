@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wordpress-mobile/WordPressCom-Stats-iOS.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPressCom-Stats-iOS)
+**🚨 Deprecation Notice: 🚨** As of 8-May-2017 this project has been deprecated and will no longer be updated. The code is here for historical purposes only. The WordPressCom-Stats-iOS project [was merged into the main WordPress-iOS project](https://github.com/wordpress-mobile/WordPress-iOS/issues/7120) as a dynamic framework. Please report any stats-related issues to the main [WordPress-iOS repo](https://github.com/wordpress-mobile/WordPress-iOS/issues).
 
 ![WordPress Logo](http://s.w.org/about/images/logos/wordpress-logo-hoz-rgb.png)
 
