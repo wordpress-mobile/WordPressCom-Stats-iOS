@@ -11,8 +11,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "http://apps.wordpress.org"
   s.license      = "GPLv2"
-  s.author             = { "Aaron Douglas" => "astralbodies@gmail.com" }
-  # s.authors            = { "Aaron Douglas" => "astralbodies@gmail.com" }
+  s.author             = { "WordPress" => "mobile@automattic.com" }
   s.social_media_url   = "http://twitter.com/WordPressiOS"
   s.platform     = :ios, "10.0"
   s.source       = { :git => "https://github.com/wordpress-mobile/WordPressCom-Stats-iOS.git", :tag => s.version.to_s }
